@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hoi4 FocusTreeMaker", "Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker.csproj", "{B8E5949E-1B48-451A-9AA9-85DE0D1AAB1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8E5949E-1B48-451A-9AA9-85DE0D1AAB1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E5949E-1B48-451A-9AA9-85DE0D1AAB1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E5949E-1B48-451A-9AA9-85DE0D1AAB1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E5949E-1B48-451A-9AA9-85DE0D1AAB1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7D2A53B8-4024-4463-BB7E-38A72A8266A0}
+	EndGlobalSection
+EndGlobal

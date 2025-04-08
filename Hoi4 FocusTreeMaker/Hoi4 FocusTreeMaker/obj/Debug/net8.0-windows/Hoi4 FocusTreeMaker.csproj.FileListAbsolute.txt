@@ -1,0 +1,40 @@
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.exe
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.deps.json
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.runtimeconfig.json
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.dll
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.pdb
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker_MarkupCompile.cache
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker_MarkupCompile.lref
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.g.resources
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.AssemblyInfoInputs.cache
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.AssemblyInfo.cs
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.csproj.CoreCompileInputs.cache
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.dll
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\refint\Hoi4 FocusTreeMaker.dll
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.pdb
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.genruntimeconfig.cache
+C:\Users\KKK\source\repos\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\ref\Hoi4 FocusTreeMaker.dll
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.exe
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.deps.json
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.runtimeconfig.json
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.dll
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\bin\Debug\net8.0-windows\Hoi4 FocusTreeMaker.pdb
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\MainWindow.g.cs
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\App.g.cs
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker_MarkupCompile.cache
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker_MarkupCompile.lref
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\MainWindow.baml
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.g.resources
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.AssemblyInfoInputs.cache
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.AssemblyInfo.cs
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.csproj.CoreCompileInputs.cache
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.dll
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\refint\Hoi4 FocusTreeMaker.dll
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.pdb
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\Hoi4 FocusTreeMaker.genruntimeconfig.cache
+C:\Users\KKK\Documents\GitHub\Hoi4-FocusTreeMaker\Hoi4 FocusTreeMaker\Hoi4 FocusTreeMaker\obj\Debug\net8.0-windows\ref\Hoi4 FocusTreeMaker.dll
