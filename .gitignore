@@ -1,29 +1,42 @@
-*.d
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
 
-*.slo
-*.lo
-*.o
-*.obj
+[Bb]in/
+[Oo]bj/
 
-*.gch
-*.pch
+packages/
 
-*.so
-*.dylib
-*.dll
+TestResults/
+*.VisualState.xml
 
-*.mod
-*.smod
+*.log
+*.tlog
+*.zip
+*.            # Visual Studio PowerTools
 
-*.lai
-*.la
-*.a
-*.lib
+*.pubxml
+*.publishproj
 
-*.exe
-*.out
-*.app
+_ReSharper.*/
+*.[Ss]ln.DotSettings.user
 
-/.vs
-Debug/
-Release/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# OS generated files
+# Mac
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+# Windows
+Thumbs.db
+ehthumbs.db
