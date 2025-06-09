@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "YYxfjRgHfb0=",
+  "dgSpecHash": "J3e9QgA3Cm0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\KKK\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.0\\communitytoolkit.mvvm.8.4.0.nupkg.sha512"
+  ],
   "logs": []
 }

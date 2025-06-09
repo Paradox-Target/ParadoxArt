@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj": {}
+    "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj": {}
   },
   "projects": {
-    "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj": {
+    "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
+        "projectUniqueName": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
         "projectName": "Hoi4BlueprintEditor",
-        "projectPath": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
+        "projectPath": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
         "packagesPath": "C:\\Users\\KKK\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor\\obj\\",
+        "outputPath": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -49,6 +49,12 @@
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[8.4.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

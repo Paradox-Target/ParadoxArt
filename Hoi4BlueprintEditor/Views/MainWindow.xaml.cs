@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Hoi4BlueprintEditor
+namespace Hoi4BlueprintEditor.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
