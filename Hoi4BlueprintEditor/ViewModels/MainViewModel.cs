@@ -4,25 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using WPFLocalizeExtension.Engine;
+using System.Globalization;
 
 namespace Hoi4BlueprintEditor.ViewModels
 {
     public class MainViewModel : ObservableObject
     {
-        //属性变更通知
-        private string _title = "Hoi4 Blueprint Editor";
-
-        public string Title //属性绑定窗口
-        {
-            get => _title;
-            set => SetProperty(ref _title, value); //自动处理变更通知
-        }
+        public ICommand SetLanguageToEnglishCommand { get; }
+        public ICommand SetLanguageToChineseCommand { get; }
 
         public MainViewModel()
         {
-            //初始化
+            SetLanguageToEnglishCommand = new RelayCommand(SetLanguageToEnglish);
+            SetLanguageToChineseCommand = new RelayCommand(SetLanguageToChinese);
         }
+
+        private void SetLanguage(string cultureCode)
+        {
+            var newCulture = new CultureInfo(cultureCode);
+            LocalizeDictionary.Instance.Culture = newCulture;
+            Thread.CurrentThread.CurrentUICulture = newCulture;
+        }
+
+        private void SetLanguageToEnglish() => SetLanguage("en-US");
+        private void SetLanguageToChinese() => SetLanguage("zh-CN");
     }
 }

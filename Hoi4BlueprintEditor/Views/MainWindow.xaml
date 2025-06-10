@@ -29,16 +29,20 @@
                 <Separator />
                 <MenuItem Header="{lex:Loc ExitMenuItem}" />
             </MenuItem>
-            <MenuItem Header="_Edit(E)">
-                <MenuItem Header="_Undo(U)" />
-                <MenuItem Header="_Redo(R)" />
+            <MenuItem Header="{lex:Loc EditMenuItem}">
+                <MenuItem Header="{lex:Loc UndoMenuItem}" />
+                <MenuItem Header="{lex:Loc RedoMenuItem}" />
             </MenuItem>
-            <MenuItem Header="_View(V)">
-                <MenuItem Header="_Zoom In" />
-                <MenuItem Header="_Zoom Out" />
+            <MenuItem Header="{lex:Loc ViewMenuItem}">
+                <MenuItem Header="{lex:Loc ZInMenuItem}" />
+                <MenuItem Header="{lex:Loc ZOutMenuItem}" />
             </MenuItem>
-            <MenuItem Header="_Help(H)">
-                <MenuItem Header="_About" />
+            <MenuItem Header="{lex:Loc HelpMenuItem}">
+                <MenuItem Header="{lex:Loc AboutMenuItem}" />
+            </MenuItem>
+            <MenuItem Header="语言(Language)">
+                <MenuItem Header="中文" Command="{Binding SetLanguageToChineseCommand}"/>
+                <MenuItem Header="English" Command="{Binding SetLanguageToEnglishCommand}"/>
             </MenuItem>
         </Menu>
 

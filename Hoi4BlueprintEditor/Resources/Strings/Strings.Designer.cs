@@ -61,11 +61,29 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _About.
+        /// </summary>
+        public static string AboutMenuItem {
+            get {
+                return ResourceManager.GetString("AboutMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hoi4 Blueprint Editor.
         /// </summary>
         public static string AppTitle {
             get {
                 return ResourceManager.GetString("AppTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Edit(E).
+        /// </summary>
+        public static string EditMenuItem {
+            get {
+                return ResourceManager.GetString("EditMenuItem", resourceCulture);
             }
         }
         
@@ -88,6 +106,15 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Help(H).
+        /// </summary>
+        public static string HelpMenuItem {
+            get {
+                return ResourceManager.GetString("HelpMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _New(N).
         /// </summary>
         public static string NewMenuItem {
@@ -106,6 +133,15 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Redo(R).
+        /// </summary>
+        public static string RedoMenuItem {
+            get {
+                return ResourceManager.GetString("RedoMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Save(S).
         /// </summary>
         public static string SaveMenuItem {
@@ -120,6 +156,42 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         public static string StatusReady {
             get {
                 return ResourceManager.GetString("StatusReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Undo(U).
+        /// </summary>
+        public static string UndoMenuItem {
+            get {
+                return ResourceManager.GetString("UndoMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _View(V).
+        /// </summary>
+        public static string ViewMenuItem {
+            get {
+                return ResourceManager.GetString("ViewMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Zoom In.
+        /// </summary>
+        public static string ZInMenuItem {
+            get {
+                return ResourceManager.GetString("ZInMenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Zoom Out.
+        /// </summary>
+        public static string ZOutMenuItem {
+            get {
+                return ResourceManager.GetString("ZOutMenuItem", resourceCulture);
             }
         }
     }

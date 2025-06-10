@@ -4,8 +4,8 @@
 *.sln.docstates
 .vs/
 
-[Bb]in/
-[Oo]bj/
+**/bin/
+**/obj/
 
 packages/
 

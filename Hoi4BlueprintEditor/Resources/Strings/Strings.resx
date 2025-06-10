@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutMenuItem" xml:space="preserve">
+    <value>_About</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Hoi4 Blueprint Editor</value>
+  </data>
+  <data name="EditMenuItem" xml:space="preserve">
+    <value>_Edit(E)</value>
   </data>
   <data name="ExitMenuItem" xml:space="preserve">
     <value>_Exit(X)</value>
@@ -126,16 +132,34 @@
   <data name="FileMenu" xml:space="preserve">
     <value>_File(F)</value>
   </data>
+  <data name="HelpMenuItem" xml:space="preserve">
+    <value>_Help(H)</value>
+  </data>
   <data name="NewMenuItem" xml:space="preserve">
     <value>_New(N)</value>
   </data>
   <data name="OpenMenuItem" xml:space="preserve">
     <value>_Open(O)</value>
   </data>
+  <data name="RedoMenuItem" xml:space="preserve">
+    <value>_Redo(R)</value>
+  </data>
   <data name="SaveMenuItem" xml:space="preserve">
     <value>_Save(S)</value>
   </data>
   <data name="StatusReady" xml:space="preserve">
     <value>Ready</value>
+  </data>
+  <data name="UndoMenuItem" xml:space="preserve">
+    <value>_Undo(U)</value>
+  </data>
+  <data name="ViewMenuItem" xml:space="preserve">
+    <value>_View(V)</value>
+  </data>
+  <data name="ZInMenuItem" xml:space="preserve">
+    <value>_Zoom In</value>
+  </data>
+  <data name="ZOutMenuItem" xml:space="preserve">
+    <value>_Zoom Out</value>
   </data>
 </root>

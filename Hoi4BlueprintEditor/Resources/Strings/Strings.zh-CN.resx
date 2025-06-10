@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutMenuItem" xml:space="preserve">
+    <value>_关于</value>
+  </data>
   <data name="AppTitle" xml:space="preserve">
     <value>Hoi4 蓝图编辑器</value>
+  </data>
+  <data name="EditMenuItem" xml:space="preserve">
+    <value>_编辑(E)</value>
   </data>
   <data name="ExitMenuItem" xml:space="preserve">
     <value>_退出(X)</value>
@@ -126,16 +132,34 @@
   <data name="FileMenu" xml:space="preserve">
     <value>_文件(F)</value>
   </data>
+  <data name="HelpMenuItem" xml:space="preserve">
+    <value>_帮助(H)</value>
+  </data>
   <data name="NewMenuItem" xml:space="preserve">
     <value>_新建(N)</value>
   </data>
   <data name="OpenMenuItem" xml:space="preserve">
     <value>_打开(O)</value>
   </data>
+  <data name="RedoMenuItem" xml:space="preserve">
+    <value>_重做(R)</value>
+  </data>
   <data name="SaveMenuItem" xml:space="preserve">
     <value>_保存(S)</value>
   </data>
   <data name="StatusReady" xml:space="preserve">
     <value>准备就绪</value>
+  </data>
+  <data name="UndoMenuItem" xml:space="preserve">
+    <value>_撤销(U)</value>
+  </data>
+  <data name="ViewMenuItem" xml:space="preserve">
+    <value>_视图(V)</value>
+  </data>
+  <data name="ZInMenuItem" xml:space="preserve">
+    <value>_放大</value>
+  </data>
+  <data name="ZOutMenuItem" xml:space="preserve">
+    <value>_缩小</value>
   </data>
 </root>
