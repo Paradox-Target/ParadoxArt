@@ -16,7 +16,7 @@ namespace Hoi4BlueprintEditor
             base.OnStartup(e);
 
             LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
-            LocalizeDictionary.Instance.Culture = new CultureInfo("zh-CN");
+            LocalizeDictionary.Instance.Culture = Thread.CurrentThread.CurrentUICulture;
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(LocalizeDictionary.Instance.Culture.Name);
         }
