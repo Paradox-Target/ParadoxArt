@@ -1,10 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "J3e9QgA3Cm0=",
+  "dgSpecHash": "aXWa1lzpWHY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\KKK\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
+  "projectFilePath": "C:\\Users\\23259\\Documents\\GitHub\\Hoi4-FocusTreeMaker\\Hoi4BlueprintEditor\\Hoi4BlueprintEditor.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\KKK\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.0\\communitytoolkit.mvvm.8.4.0.nupkg.sha512"
+    "C:\\Users\\23259\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.0\\communitytoolkit.mvvm.8.4.0.nupkg.sha512",
+    "C:\\Users\\23259\\.nuget\\packages\\microsoft.win32.systemevents\\7.0.0\\microsoft.win32.systemevents.7.0.0.nupkg.sha512",
+    "C:\\Users\\23259\\.nuget\\packages\\system.codedom\\7.0.0\\system.codedom.7.0.0.nupkg.sha512",
+    "C:\\Users\\23259\\.nuget\\packages\\system.drawing.common\\7.0.0\\system.drawing.common.7.0.0.nupkg.sha512",
+    "C:\\Users\\23259\\.nuget\\packages\\system.management\\7.0.0\\system.management.7.0.0.nupkg.sha512",
+    "C:\\Users\\23259\\.nuget\\packages\\wpflocalizeextension\\3.10.0\\wpflocalizeextension.3.10.0.nupkg.sha512",
+    "C:\\Users\\23259\\.nuget\\packages\\xamlmarkupextensions\\2.1.3\\xamlmarkupextensions.2.1.3.nupkg.sha512"
   ],
   "logs": []
 }

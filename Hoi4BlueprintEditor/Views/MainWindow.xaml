@@ -4,9 +4,57 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hoi4BlueprintEditor"
+        
+        xmlns:lex="http://wpflocalizeextension.codeplex.com"
+        
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        
+        Height="768" Width="1024"
+        WindowStartupLocation="CenterScreen"
+        
+        lex:LocalizeDictionary.DesignCulture="zh-CN"
+        
+        Title="{lex:Loc AppTitle}"
+        
+        lex:ResxLocalizationProvider.DefaultAssembly="Hoi4BlueprintEditor"
+        lex:ResxLocalizationProvider.DefaultDictionary="Resources.Strings.Strings">
 
-    </Grid>
+    <DockPanel LastChildFill="True">
+
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="{lex:Loc FileMenu}">
+                <MenuItem Header="{lex:Loc NewMenuItem}" />
+                <MenuItem Header="{lex:Loc OpenMenuItem}" />
+                <MenuItem Header="{lex:Loc SaveMenuItem}" />
+                <Separator />
+                <MenuItem Header="{lex:Loc ExitMenuItem}" />
+            </MenuItem>
+            <MenuItem Header="_Edit(E)">
+                <MenuItem Header="_Undo(U)" />
+                <MenuItem Header="_Redo(R)" />
+            </MenuItem>
+            <MenuItem Header="_View(V)">
+                <MenuItem Header="_Zoom In" />
+                <MenuItem Header="_Zoom Out" />
+            </MenuItem>
+            <MenuItem Header="_Help(H)">
+                <MenuItem Header="_About" />
+            </MenuItem>
+        </Menu>
+
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="准备就绪" />
+            </StatusBarItem>
+        </StatusBar>
+
+        <Grid Background="#333333">
+            <TextBlock Text="这里是国策树编辑区" 
+                       Foreground="White"
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       FontSize="24"/>
+        </Grid>
+
+    </DockPanel>
 </Window>
