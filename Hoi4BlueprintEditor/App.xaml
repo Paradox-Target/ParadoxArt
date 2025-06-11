@@ -2,6 +2,7 @@
     x:Class="Hoi4BlueprintEditor.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:Hoi4BlueprintEditor">
+    xmlns:local="clr-namespace:Hoi4BlueprintEditor"
+    xmlns:converters="clr-namespace:Hoi4BlueprintEditor.Core.Converters">
     <Application.Resources />
 </Application>

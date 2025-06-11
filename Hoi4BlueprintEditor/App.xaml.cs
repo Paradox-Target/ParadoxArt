@@ -33,6 +33,8 @@ public partial class App : Application
             return new MainWindowViewModel(settings, localizationService);
         });
 
+        services.AddTransient<EditorCanvasViewModel>();
+
         return services.BuildServiceProvider();
     }
 

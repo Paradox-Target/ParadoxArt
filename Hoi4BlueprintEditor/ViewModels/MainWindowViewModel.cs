@@ -11,13 +11,19 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly ISettingsService _settingsService;
     private readonly ILocalizationService _localizationService;
 
+    public EditorCanvasViewModel EditorCanvas { get; }
+
     public MainWindowViewModel(
         ISettingsService settingsService,
         ILocalizationService localizationService
     )
     {
+        var serviceProvider = App.Current.Services;
+
         _settingsService = settingsService;
         _localizationService = localizationService;
+
+        EditorCanvas = new EditorCanvasViewModel();
     }
 
     private void SetLanguage(string cultureCode)
