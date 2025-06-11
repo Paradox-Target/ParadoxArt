@@ -1,36 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using WPFLocalizeExtension.Engine;
-using System.Globalization;
 
-namespace Hoi4BlueprintEditor.ViewModels
+namespace Hoi4BlueprintEditor.ViewModels;
+
+public partial class MainViewModel : ObservableObject
 {
-    public class MainViewModel : ObservableObject
+    private void SetLanguage(string cultureCode)
     {
-        public ICommand SetLanguageToEnglishCommand { get; }
-        public ICommand SetLanguageToChineseCommand { get; }
-
-        public MainViewModel()
-        {
-            SetLanguageToEnglishCommand = new RelayCommand(SetLanguageToEnglish);
-            SetLanguageToChineseCommand = new RelayCommand(SetLanguageToChinese);
-        }
-
-        private void SetLanguage(string cultureCode)
-        {
-            var newCulture = new CultureInfo(cultureCode);
-            LocalizeDictionary.Instance.Culture = newCulture;
-            Thread.CurrentThread.CurrentUICulture = newCulture;
-        }
-
-        private void SetLanguageToEnglish() => SetLanguage("en-US");
-        private void SetLanguageToChinese() => SetLanguage("zh-CN");
+        var newCulture = new CultureInfo(cultureCode);
+        Thread.CurrentThread.CurrentUICulture = newCulture;
+        CultureInfo.CurrentUICulture = newCulture;
+        CultureInfo.CurrentCulture = newCulture;
     }
+
+    [RelayCommand]
+    private void SetLanguageToEnglish() => SetLanguage("en-US");
+
+    [RelayCommand]
+    private void SetLanguageToChinese() => SetLanguage("zh-CN");
 }
