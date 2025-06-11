@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using WPFLocalizeExtension.Engine;
 using System.Globalization;
 
 namespace Hoi4BlueprintEditor.ViewModels
@@ -26,8 +25,9 @@ namespace Hoi4BlueprintEditor.ViewModels
         private void SetLanguage(string cultureCode)
         {
             var newCulture = new CultureInfo(cultureCode);
-            LocalizeDictionary.Instance.Culture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
+            CultureInfo.CurrentUICulture = newCulture;
+            CultureInfo.CurrentCulture = newCulture;
         }
 
         private void SetLanguageToEnglish() => SetLanguage("en-US");

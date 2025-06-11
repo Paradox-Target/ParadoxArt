@@ -2,7 +2,6 @@
 using System.Data;
 using System.Globalization;
 using System.Windows;
-using WPFLocalizeExtension.Engine;
 
 namespace Hoi4BlueprintEditor
 {
@@ -14,11 +13,6 @@ namespace Hoi4BlueprintEditor
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            LocalizeDictionary.Instance.SetCurrentThreadCulture = true;
-            LocalizeDictionary.Instance.Culture = Thread.CurrentThread.CurrentUICulture;
-
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(LocalizeDictionary.Instance.Culture.Name);
         }
     }
 }
