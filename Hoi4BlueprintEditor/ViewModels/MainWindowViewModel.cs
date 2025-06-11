@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Hoi4BlueprintEditor.ViewModels;
 
-public partial class MainViewModel : ObservableObject
+public partial class MainWindowViewModel : ObservableObject
 {
     private void SetLanguage(string cultureCode)
     {

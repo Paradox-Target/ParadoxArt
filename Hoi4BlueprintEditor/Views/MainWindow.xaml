@@ -3,7 +3,7 @@
     Title="{x:Static language:Strings.AppTitle}"
     Width="1024"
     WindowStartupLocation="CenterScreen"
-    d:DataContext="{d:DesignInstance vms:MainViewModel}"
+    d:DataContext="{d:DesignInstance vms:MainWindowViewModel}"
     mc:Ignorable="d"
     x:Class="Hoi4BlueprintEditor.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
