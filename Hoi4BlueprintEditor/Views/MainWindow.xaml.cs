@@ -11,14 +11,13 @@ using System.Windows.Shapes;
 
 using Hoi4BlueprintEditor.ViewModels;
 
-namespace Hoi4BlueprintEditor.Views
+namespace Hoi4BlueprintEditor.Views;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            DataContext = new MainViewModel();
-        }
+        InitializeComponent();
+        DataContext = new MainViewModel();
     }
 }
