@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Extensions;
@@ -45,6 +45,15 @@ public partial class EditorCanvasViewModel : ObservableObject
             }
         );
     }
+
+    [ObservableProperty]
+    private double _scale = 1.0;
+
+    [ObservableProperty]
+    private double _translateX = 0;
+
+    [ObservableProperty]
+    private double _translateY = 0;
 
     private static FocusNodeViewModel CreateFocusNodeFromAstNode(Node focusNode)
     {
