@@ -28,8 +28,8 @@ public partial class MainWindowViewModel : ObservableObject
     {
         var targetCulture = new CultureInfo(cultureCode);
 
-        var message = _localizationService.GetString("LanguageRestartMessage", targetCulture);
-        var title = _localizationService.GetString("RestartRequiredTitle", targetCulture);
+        string message = _localizationService.GetString("LanguageRestartMessage", targetCulture);
+        string title = _localizationService.GetString("RestartRequiredTitle", targetCulture);
 
         _settingsService.Language = cultureCode;
         _settingsService.SaveSettings();

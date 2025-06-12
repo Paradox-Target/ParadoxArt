@@ -6,21 +6,14 @@ namespace Hoi4BlueprintEditor.Core;
 
 public sealed class SettingsService
 {
-    public string? Language { get; set; }
+    public string Language { get; set; } = string.Empty;
 
     private const string SettingsFileName = "settings.json";
+    private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
     private static readonly string SettingsFilePath = Path.Combine(
         App.ConfigFolder,
         SettingsFileName
     );
-
-    public SettingsService()
-    {
-        string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string appFolderPath = Path.Combine(appDataPath, "Hoi4BlueprintEditor");
-
-        Directory.CreateDirectory(appFolderPath);
-    }
 
     public static SettingsService LoadSettings()
     {
@@ -41,8 +34,6 @@ public sealed class SettingsService
             return new SettingsService();
         }
     }
-
-    private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
 
     public void SaveSettings()
     {

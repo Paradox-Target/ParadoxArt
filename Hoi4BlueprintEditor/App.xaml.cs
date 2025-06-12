@@ -8,19 +8,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
     public static new App Current => (App)Application.Current;
     public IServiceProvider Services { get; } = ConfigureServices();
 
-    public static string ConfigFolder { get; } =
+    public static string AppFolder { get; } =
         Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Hoi4BlueprintEditor"
         );
+
+    public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
 
     private MainWindow _main = null!;
 
@@ -42,6 +41,11 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        if (!Directory.Exists(AppFolder))
+        {
+            Directory.CreateDirectory(AppFolder);
+        }
 
         var settingsService = Services.GetRequiredService<SettingsService>();
         if (!string.IsNullOrEmpty(settingsService.Language))
