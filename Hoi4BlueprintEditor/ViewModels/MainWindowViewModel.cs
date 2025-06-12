@@ -18,8 +18,6 @@ public partial class MainWindowViewModel : ObservableObject
         ILocalizationService localizationService
     )
     {
-        var serviceProvider = App.Current.Services;
-
         _settingsService = settingsService;
         _localizationService = localizationService;
 

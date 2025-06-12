@@ -13,7 +13,7 @@ namespace Hoi4BlueprintEditor;
 /// </summary>
 public partial class App : Application
 {
-    public static new App Current => (App)Application.Current;
+    public new static App Current => (App)Application.Current;
     public IServiceProvider Services { get; } = ConfigureServices();
 
     private MainWindow _main = null!;
@@ -26,12 +26,7 @@ public partial class App : Application
         services.AddSingleton<Core.ISettingsService, Core.SettingsService>();
 
         services.AddSingleton<MainWindow>();
-        services.AddSingleton(provider =>
-        {
-            var settings = provider.GetRequiredService<Core.ISettingsService>();
-            var localizationService = provider.GetRequiredService<Core.ILocalizationService>();
-            return new MainWindowViewModel(settings, localizationService);
-        });
+        services.AddSingleton<MainWindowViewModel>();
 
         services.AddTransient<EditorCanvasViewModel>();
 
