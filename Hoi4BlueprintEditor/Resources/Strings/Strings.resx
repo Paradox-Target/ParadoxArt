@@ -144,11 +144,14 @@
   <data name="RedoMenuItem" xml:space="preserve">
     <value>_Redo(R)</value>
   </data>
+  <data name="LanguageRestartMessage" xml:space="preserve">
+    <value>Language setting has been saved. Please restart the application for the changes to take effect.</value>
+  </data>
+  <data name="RestartRequiredTitle" xml:space="preserve">
+    <value>Restart Required</value>
+  </data>
   <data name="SaveMenuItem" xml:space="preserve">
     <value>_Save(S)</value>
-  </data>
-  <data name="StatusReady" xml:space="preserve">
-    <value>Ready</value>
   </data>
   <data name="UndoMenuItem" xml:space="preserve">
     <value>_Undo(U)</value>

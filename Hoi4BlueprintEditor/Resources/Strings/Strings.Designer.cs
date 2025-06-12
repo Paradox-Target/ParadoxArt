@@ -115,6 +115,15 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language setting has been saved. Please restart the application for the changes to take effect..
+        /// </summary>
+        public static string LanguageRestartMessage {
+            get {
+                return ResourceManager.GetString("LanguageRestartMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _New(N).
         /// </summary>
         public static string NewMenuItem {
@@ -142,20 +151,20 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restart Required.
+        /// </summary>
+        public static string RestartRequiredTitle {
+            get {
+                return ResourceManager.GetString("RestartRequiredTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Save(S).
         /// </summary>
         public static string SaveMenuItem {
             get {
                 return ResourceManager.GetString("SaveMenuItem", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ready.
-        /// </summary>
-        public static string StatusReady {
-            get {
-                return ResourceManager.GetString("StatusReady", resourceCulture);
             }
         }
         

@@ -47,14 +47,8 @@
             </StatusBarItem>
         </StatusBar>
 
-        <Grid Background="#333333">
-            <TextBlock
-                FontSize="24"
-                Foreground="White"
-                HorizontalAlignment="Center"
-                Text="这里是国策树编辑区"
-                VerticalAlignment="Center" />
-        </Grid>
+        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" 
+                        DataContext="{Binding EditorCanvas}"/>
 
     </DockPanel>
 </Window>
