@@ -19,7 +19,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{x:Static language:Strings.FileMenu}">
                 <MenuItem Header="{x:Static language:Strings.NewMenuItem}" />
-                <MenuItem Header="{x:Static language:Strings.OpenMenuItem}" />
+                <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
                 <MenuItem Header="{x:Static language:Strings.SaveMenuItem}" />
                 <Separator />
                 <MenuItem Header="{x:Static language:Strings.ExitMenuItem}" />
@@ -47,8 +47,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" 
-                        DataContext="{Binding EditorCanvas}"/>
+        <views:EditorCanvasView DataContext="{Binding EditorCanvas}" xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" />
 
     </DockPanel>
 </Window>
