@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Text.Json;
-using Hoi4BlueprintEditor.Models;
 
 namespace Hoi4BlueprintEditor.Core;
 
