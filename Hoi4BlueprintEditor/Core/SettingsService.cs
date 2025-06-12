@@ -1,59 +1,61 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using Hoi4BlueprintEditor.Models;
 
 namespace Hoi4BlueprintEditor.Core;
 
-public class SettingsService : ISettingsService
+public sealed class SettingsService
 {
-    private readonly string _settingsFilePath;
-    public SettingsModel CurrentSettings { get; private set; } = new();
+    public string? Language { get; set; }
+
+    private const string SettingsFileName = "settings.json";
+    private static readonly string SettingsFilePath = Path.Combine(
+        App.ConfigFolder,
+        SettingsFileName
+    );
 
     public SettingsService()
     {
-        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        var appFolderPath = Path.Combine(appDataPath, "Hoi4BlueprintEditor");
+        string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string appFolderPath = Path.Combine(appDataPath, "Hoi4BlueprintEditor");
 
         Directory.CreateDirectory(appFolderPath);
-        _settingsFilePath = Path.Combine(appFolderPath, "settings.json");
     }
 
-    public void LoadSettings()
+    public static SettingsService LoadSettings()
     {
-        if (!File.Exists(_settingsFilePath))
+        if (!File.Exists(SettingsFilePath))
         {
             // 默认设置
-            CurrentSettings = new SettingsModel();
-            return;
+            return new SettingsService();
         }
 
         try
         {
-            var json = File.ReadAllText(_settingsFilePath);
-            CurrentSettings =
-                JsonSerializer.Deserialize<SettingsModel>(json) ?? new SettingsModel();
+            string json = File.ReadAllText(SettingsFilePath);
+            return JsonSerializer.Deserialize<SettingsService>(json) ?? new SettingsService();
         }
         catch (Exception)
         {
             // 默认设置
-            CurrentSettings = new SettingsModel();
+            return new SettingsService();
         }
     }
+
+    private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
 
     public void SaveSettings()
     {
         try
         {
-            var json = JsonSerializer.Serialize(
-                CurrentSettings,
-                new JsonSerializerOptions { WriteIndented = true }
-            );
-            File.WriteAllText(_settingsFilePath, json);
+            string json = JsonSerializer.Serialize(this, Options);
+            File.WriteAllText(SettingsFilePath, json, Encoding.UTF8);
         }
         catch (Exception)
         {
-            //
+            // ignored
         }
     }
 }

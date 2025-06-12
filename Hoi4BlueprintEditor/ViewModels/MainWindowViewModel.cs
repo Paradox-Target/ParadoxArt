@@ -8,14 +8,14 @@ namespace Hoi4BlueprintEditor.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject
 {
-    private readonly ISettingsService _settingsService;
-    private readonly ILocalizationService _localizationService;
+    private readonly SettingsService _settingsService;
+    private readonly LocalizationService _localizationService;
 
     public EditorCanvasViewModel EditorCanvas { get; }
 
     public MainWindowViewModel(
-        ISettingsService settingsService,
-        ILocalizationService localizationService
+        SettingsService settingsService,
+        LocalizationService localizationService
     )
     {
         _settingsService = settingsService;
@@ -31,7 +31,7 @@ public partial class MainWindowViewModel : ObservableObject
         var message = _localizationService.GetString("LanguageRestartMessage", targetCulture);
         var title = _localizationService.GetString("RestartRequiredTitle", targetCulture);
 
-        _settingsService.CurrentSettings.Language = cultureCode;
+        _settingsService.Language = cultureCode;
         _settingsService.SaveSettings();
 
         MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);

@@ -4,7 +4,7 @@ using Hoi4BlueprintEditor.Resources.Strings;
 
 namespace Hoi4BlueprintEditor.Core;
 
-public class LocalizationService : ILocalizationService
+public sealed class LocalizationService
 {
     private readonly ResourceManager _resourceManager;
 
