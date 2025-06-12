@@ -46,6 +46,10 @@ public partial class App : Application
         {
             Directory.CreateDirectory(AppFolder);
         }
+        if (!Directory.Exists(ConfigFolder))
+        {
+            Directory.CreateDirectory(ConfigFolder);
+        }
 
         var settingsService = Services.GetRequiredService<SettingsService>();
         if (!string.IsNullOrEmpty(settingsService.Language))

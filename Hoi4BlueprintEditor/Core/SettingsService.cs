@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using System.Text.Json;
+using NLog;
 
 namespace Hoi4BlueprintEditor.Core;
 
@@ -10,16 +11,14 @@ public sealed class SettingsService
 
     private const string SettingsFileName = "settings.json";
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
-    private static readonly string SettingsFilePath = Path.Combine(
-        App.ConfigFolder,
-        SettingsFileName
-    );
+    private static readonly string SettingsFilePath = Path.Combine(App.ConfigFolder, SettingsFileName);
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public static SettingsService LoadSettings()
     {
+        Log.Info("尝试加载配置文件: {SettingsFilePath}", SettingsFilePath);
         if (!File.Exists(SettingsFilePath))
         {
-            // 默认设置
             return new SettingsService();
         }
 
@@ -28,9 +27,9 @@ public sealed class SettingsService
             string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
             return JsonSerializer.Deserialize<SettingsService>(json) ?? new SettingsService();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // 默认设置
+            Log.Error(ex, "加载配置文件失败，使用默认设置");
             return new SettingsService();
         }
     }
@@ -42,9 +41,9 @@ public sealed class SettingsService
             string json = JsonSerializer.Serialize(this, Options);
             File.WriteAllText(SettingsFilePath, json, Encoding.UTF8);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // ignored
+            Log.Error(ex, "保存配置文件失败");
         }
     }
 }
