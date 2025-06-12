@@ -34,7 +34,7 @@ public sealed class SettingsService
 
         try
         {
-            string json = File.ReadAllText(SettingsFilePath);
+            string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
             return JsonSerializer.Deserialize<SettingsService>(json) ?? new SettingsService();
         }
         catch (Exception)
