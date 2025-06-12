@@ -45,5 +45,6 @@ public sealed class SettingsService
         {
             Log.Error(ex, "保存配置文件失败");
         }
+        Log.Info("已成功保存配置文件: {SettingsFilePath}", SettingsFilePath);
     }
 }
