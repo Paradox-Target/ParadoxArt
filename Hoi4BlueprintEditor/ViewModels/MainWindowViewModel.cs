@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,12 +16,16 @@ public partial class MainWindowViewModel : ObservableObject
 
     public EditorCanvasViewModel EditorCanvas { get; }
 
-    public MainWindowViewModel(SettingsService settingsService, LocalizationService localizationService)
+    public MainWindowViewModel(
+        SettingsService settingsService,
+        LocalizationService localizationService,
+        EditorCanvasViewModel editorCanvasViewModel
+    )
     {
         _settingsService = settingsService;
         _localizationService = localizationService;
 
-        EditorCanvas = new EditorCanvasViewModel();
+        EditorCanvas = editorCanvasViewModel;
     }
 
     private void SetLanguage(string cultureCode)
@@ -50,7 +54,7 @@ public partial class MainWindowViewModel : ObservableObject
         {
             Filter = "Focus Files (*.txt)|*.txt|All Files (*.*)|*.*",
             Title = "选择国策树文件",
-            Multiselect = false
+            Multiselect = false,
         };
 
         if (openFileDialog.ShowDialog() != true)
