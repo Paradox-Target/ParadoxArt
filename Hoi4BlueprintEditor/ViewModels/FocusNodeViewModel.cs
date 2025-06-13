@@ -10,8 +10,8 @@ public sealed partial class FocusNodeViewModel : ObservableObject
     public string Id => Model.Id;
     public string Icon => Model.Icon;
 
-    public int X => Model.Position.X;
-    public int Y => Model.Position.Y;
+    public int X => Model.RawPosition.X;
+    public int Y => Model.RawPosition.Y;
 
     public FocusNodeViewModel(FocusNode model)
     {

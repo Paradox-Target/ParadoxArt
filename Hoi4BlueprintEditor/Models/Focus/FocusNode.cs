@@ -8,7 +8,12 @@ public sealed class FocusNode
 
     // TODO: 多选一/多个必选
     public List<FocusNode> Prerequisite { get; } = [];
-    public Point Position { get; set; }
+    /// <summary>
+    /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
+    /// </summary>
+    public Point RawPosition { get; set; }
+    public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
+    public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
     public string Icon { get; set; } = string.Empty;
     public int Cost { get; set; }
 }
