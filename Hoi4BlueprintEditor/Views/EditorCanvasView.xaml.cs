@@ -5,7 +5,7 @@ using Hoi4BlueprintEditor.ViewModels;
 
 namespace Hoi4BlueprintEditor.Views;
 
-public partial class EditorCanvasView : UserControl
+public sealed partial class EditorCanvasView : UserControl
 {
     private Point? _lastMousePositionOnCanvas;
 
@@ -34,7 +34,8 @@ public partial class EditorCanvasView : UserControl
                 canvasVm.TranslateX += delta.X;
                 canvasVm.TranslateY += delta.Y;
 
-                Cursor = Cursors.Hand; // 鼠标图案改变
+                // 鼠标图案改变
+                Cursor = Cursors.Hand;
             }
 
             _lastMousePositionOnCanvas = e.GetPosition(this);

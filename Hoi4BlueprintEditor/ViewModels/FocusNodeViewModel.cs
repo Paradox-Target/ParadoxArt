@@ -3,7 +3,7 @@ using Hoi4BlueprintEditor.Models.Focus;
 
 namespace Hoi4BlueprintEditor.ViewModels;
 
-public partial class FocusNodeViewModel : ObservableObject
+public sealed partial class FocusNodeViewModel : ObservableObject
 {
     public FocusNode Model { get; }
 

@@ -11,7 +11,7 @@ using ParadoxPower.Process;
 
 namespace Hoi4BlueprintEditor.ViewModels;
 
-public partial class EditorCanvasViewModel : ObservableObject
+public sealed partial class EditorCanvasViewModel : ObservableObject
 {
     public ObservableCollection<FocusNodeViewModel> Nodes { get; } = new();
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
