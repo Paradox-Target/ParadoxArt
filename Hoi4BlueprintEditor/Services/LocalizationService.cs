@@ -2,7 +2,7 @@
 using System.Resources;
 using Hoi4BlueprintEditor.Resources.Strings;
 
-namespace Hoi4BlueprintEditor.Core;
+namespace Hoi4BlueprintEditor.Services;
 
 public sealed class LocalizationService
 {

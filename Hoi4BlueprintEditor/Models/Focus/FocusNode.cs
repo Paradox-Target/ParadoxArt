@@ -1,8 +1,5 @@
-﻿using System.Drawing;
+﻿namespace Hoi4BlueprintEditor.Models.Focus;
 
-namespace Hoi4BlueprintEditor.Models.Focus;
-
-// 存储数据
 public sealed class FocusNode
 {
     public string Id { get; set; } = string.Empty;
