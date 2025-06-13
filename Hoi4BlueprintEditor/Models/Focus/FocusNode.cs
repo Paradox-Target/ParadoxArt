@@ -15,5 +15,5 @@ public sealed class FocusNode
     public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
     public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
     public string Icon { get; set; } = string.Empty;
-    public int Cost { get; set; }
+    public decimal Cost { get; set; }
 }

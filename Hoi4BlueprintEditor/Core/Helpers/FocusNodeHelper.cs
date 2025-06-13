@@ -66,7 +66,7 @@ public static class FocusNodeHelper
                 }
                 else if (leaf.Key.EqualsIgnoreCase("cost"))
                 {
-                    model.Cost = leaf.Value.TryGetInt(out int cost) ? cost : 0;
+                    model.Cost = leaf.Value.TryGetDecimal(out decimal cost) ? cost : 0;
                 }
                 else if (leaf.Key.EqualsIgnoreCase("relative_position_id"))
                 {
