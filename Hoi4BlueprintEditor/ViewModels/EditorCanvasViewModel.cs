@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Core.Helpers;
 using Hoi4BlueprintEditor.Messages;
@@ -37,6 +37,15 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             }
         );
     }
+
+    [ObservableProperty]
+    private double _scale = 1.0;
+
+    [ObservableProperty]
+    private double _translateX = 0;
+
+    [ObservableProperty]
+    private double _translateY = 0;
 
     private void LoadTestData()
     {
