@@ -1,9 +1,9 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows.Data;
 
 namespace Hoi4BlueprintEditor.Core.Converters;
 
-public class CoordinateToPixelConverter : IValueConverter
+public sealed class CoordinateToPixelConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
