@@ -7,8 +7,7 @@ namespace Hoi4BlueprintEditor.Views;
 
 public partial class EditorCanvasView : UserControl
 {
-    private bool _isPanning;
-    private Point _panStartPoint;
+    private Point? _lastMousePositionOnCanvas;
 
     public EditorCanvasView()
     {
@@ -16,62 +15,41 @@ public partial class EditorCanvasView : UserControl
 
         // 鼠标事件
         MouseWheel += OnMouseWheel;
-        PreviewMouseDown += OnPreviewMouseDown;
-        PreviewMouseUp += OnPreviewMouseUp;
         MouseMove += OnMouseMove;
-        MouseLeave += (_, _) =>
-        {
-            _isPanning = false;
-        };
+        MouseLeave += OnMouseLeave;
     }
 
-    private void OnPreviewMouseDown(object sender, MouseButtonEventArgs e) //中键平移
+    private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        // 画布事件
-        if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed)
+        var canvasVm = DataContext as EditorCanvasViewModel;
+        if (canvasVm == null) return;
+
+        if (e.RightButton == MouseButtonState.Pressed)
         {
-            var sourceElement = e.Source as DependencyObject;
-            bool isNode = false;
-            while (sourceElement != null)
+            if (_lastMousePositionOnCanvas.HasValue)
             {
-                if (sourceElement is FocusNodeView)
-                {
-                    isNode = true;
-                    break;
-                }
-                sourceElement = System.Windows.Media.VisualTreeHelper.GetParent(sourceElement);
+                var currentMousePosition = e.GetPosition(this);
+                var delta = currentMousePosition - _lastMousePositionOnCanvas.Value;
+
+                canvasVm.TranslateX += delta.X;
+                canvasVm.TranslateY += delta.Y;
+
+                Cursor = Cursors.Hand; // 鼠标图案改变
             }
-            if (isNode) return;
 
-            e.Handled = true;
-            _isPanning = true;
-            _panStartPoint = e.GetPosition(this); // 起始点
-            Cursor = Cursors.Hand; // 鼠标图案改变
+            _lastMousePositionOnCanvas = e.GetPosition(this);
         }
-    }
-
-    private void OnPreviewMouseUp(object sender, MouseButtonEventArgs e) // 结束平移
-    {
-        if (e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Released)
+        else
         {
-            _isPanning = false;
-            Cursor = Cursors.Arrow; // 恢复鼠标图案
+            _lastMousePositionOnCanvas = null;
+            Cursor = Cursors.Arrow;
         }
     }
 
-    private void OnMouseMove(object sender, MouseEventArgs e) // 移动平移
+    private void OnMouseLeave(object sender, MouseEventArgs e)
     {
-        if (_isPanning) return;
-
-        var canvasVm = (EditorCanvasViewModel)DataContext;
-        var currentPoint = e.GetPosition(this);
-
-        var delta = currentPoint - _panStartPoint; // 计算向量
-
-        canvasVm.TranslateX += delta.X;
-        canvasVm.TranslateY += delta.Y;
-
-        _panStartPoint = currentPoint; // 更新起始点
+        _lastMousePositionOnCanvas = null;
+        Cursor = Cursors.Arrow;
     }
 
     private void OnMouseWheel(object sender, MouseWheelEventArgs e) // 缩放

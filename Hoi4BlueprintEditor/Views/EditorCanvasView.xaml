@@ -25,7 +25,7 @@
 
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <Canvas>
+                <Canvas Background="#333333">
                     <Canvas.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
@@ -38,8 +38,8 @@
 
         <ItemsControl.ItemContainerStyle>
             <Style TargetType="ContentPresenter">
-                <Setter Property="Canvas.Left" Value="{Binding Model.Position.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=96}" />
-                <Setter Property="Canvas.Top" Value="{Binding Model.Position.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=130}" />
+                <Setter Property="Canvas.Left" Value="{Binding Model.Position.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=96}" />
+                <Setter Property="Canvas.Top" Value="{Binding Model.Position.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=130}" />
             </Style>
         </ItemsControl.ItemContainerStyle>
     </ItemsControl>
