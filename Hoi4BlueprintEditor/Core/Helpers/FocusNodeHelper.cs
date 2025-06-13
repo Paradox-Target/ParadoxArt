@@ -1,6 +1,7 @@
 ﻿using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Models.Focus;
 using MethodTimer;
+using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 using ZLinq;
@@ -9,6 +10,8 @@ namespace Hoi4BlueprintEditor.Core.Helpers;
 
 public static class FocusNodeHelper
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     [Time]
     public static IEnumerable<FocusNode> GetAllNodesFromAst(Node rootNode)
     {
@@ -27,13 +30,23 @@ public static class FocusNodeHelper
 
         foreach (var focusNode in focusMap.Values)
         {
-            if (focusNode.RelativePosition is null)
+            if (focusNode.RelativePosition is not null)
             {
-                continue;
+                // 如果找不到相对位置的节点，则设置为 null
+                focusNode.RelativePosition = focusMap.GetValueOrDefault(focusNode.RelativePosition.Id);
             }
 
-            // 如果找不到相对位置的节点，则设置为 null
-            focusNode.RelativePosition = focusMap.GetValueOrDefault(focusNode.RelativePosition.Id);
+            if (focusNode.MutuallyExclusive.Count != 0)
+            {
+                foreach (var focusNodeMutuallyExclusive in focusNode.MutuallyExclusive.ToArray())
+                {
+                    focusNode.MutuallyExclusive.Remove(focusNodeMutuallyExclusive);
+                    if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
+                    {
+                        focusNode.MutuallyExclusive.Add(node);
+                    }
+                }
+            }
         }
 
         return focusMap.Values;
@@ -71,6 +84,16 @@ public static class FocusNodeHelper
                 else if (leaf.Key.EqualsIgnoreCase("relative_position_id"))
                 {
                     model.RelativePosition = new FocusNode { Id = leaf.ValueText };
+                }
+            }
+            else if (child.TryGetNode(out var node))
+            {
+                if (node.Key.EqualsIgnoreCase("mutually_exclusive"))
+                {
+                    foreach (var focusLeaf in node.Leaves)
+                    {
+                        model.MutuallyExclusive.Add(new FocusNode { Id = focusLeaf.ValueText });
+                    }
                 }
             }
         }
