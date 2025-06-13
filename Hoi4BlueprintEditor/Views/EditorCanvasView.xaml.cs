@@ -22,7 +22,10 @@ public sealed partial class EditorCanvasView : UserControl
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
         var canvasVm = DataContext as EditorCanvasViewModel;
-        if (canvasVm == null) return;
+        if (canvasVm == null)
+        {
+            return;
+        }
 
         if (e.RightButton == MouseButtonState.Pressed)
         {
@@ -56,7 +59,10 @@ public sealed partial class EditorCanvasView : UserControl
     private void OnMouseWheel(object sender, MouseWheelEventArgs e) // 缩放
     {
         var canvasVm = (EditorCanvasViewModel)DataContext;
-        if (canvasVm == null) return;
+        if (canvasVm == null)
+        {
+            return;
+        }
 
         const double scaleRate = 1.1;
         var mousePoint = e.GetPosition(this);
@@ -71,8 +77,14 @@ public sealed partial class EditorCanvasView : UserControl
             newScale = canvasVm.Scale / scaleRate;
         }
 
-        if (newScale < 0.1) newScale = 0.1;
-        if (newScale > 5.0) newScale = 5.0;
+        if (newScale < 0.1)
+        {
+            newScale = 0.1;
+        }
+        if (newScale > 5.0)
+        {
+            newScale = 5.0;
+        }
 
         var oldScale = canvasVm.Scale;
         canvasVm.TranslateX = mousePoint.X - (mousePoint.X - canvasVm.TranslateX) * (newScale / oldScale);
