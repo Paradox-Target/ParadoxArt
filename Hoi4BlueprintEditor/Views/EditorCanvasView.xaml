@@ -25,7 +25,14 @@
 
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <Canvas />
+                <Canvas Background="#333333">
+                    <Canvas.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                            <TranslateTransform X="{Binding TranslateX}" Y="{Binding TranslateY}" />
+                        </TransformGroup>
+                    </Canvas.RenderTransform>
+                </Canvas>
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
 
