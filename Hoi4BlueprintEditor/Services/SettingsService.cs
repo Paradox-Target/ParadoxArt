@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using NLog;
 
-namespace Hoi4BlueprintEditor.Core;
+namespace Hoi4BlueprintEditor.Services;
 
 public sealed class SettingsService
 {

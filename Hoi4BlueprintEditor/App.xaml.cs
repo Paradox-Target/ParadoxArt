@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows;
-using Hoi4BlueprintEditor.Core;
+using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.ViewModels;
 using Hoi4BlueprintEditor.Views;
 using Microsoft.Extensions.DependencyInjection;
