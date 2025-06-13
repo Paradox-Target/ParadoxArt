@@ -9,7 +9,7 @@ using Microsoft.Win32;
 
 namespace Hoi4BlueprintEditor.ViewModels;
 
-public partial class MainWindowViewModel : ObservableObject
+public sealed partial class MainWindowViewModel : ObservableObject
 {
     private readonly SettingsService _settingsService;
     private readonly LocalizationService _localizationService;

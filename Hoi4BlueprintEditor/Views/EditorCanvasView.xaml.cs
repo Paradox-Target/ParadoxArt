@@ -1,15 +1,12 @@
 ﻿using System.Windows.Controls;
 
-namespace Hoi4BlueprintEditor.Views
+namespace Hoi4BlueprintEditor.Views;
+
+
+public sealed partial class EditorCanvasView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for EditorCanvasView.xaml
-    /// </summary>
-    public partial class EditorCanvasView : UserControl
+    public EditorCanvasView()
     {
-        public EditorCanvasView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
