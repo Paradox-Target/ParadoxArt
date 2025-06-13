@@ -68,7 +68,7 @@ public static class FocusNodeHelper
                 {
                     model.Cost = leaf.Value.TryGetInt(out int cost) ? cost : 0;
                 }
-                else if (leaf.Key.EqualsIgnoreCase("relative_position"))
+                else if (leaf.Key.EqualsIgnoreCase("relative_position_id"))
                 {
                     model.RelativePosition = new FocusNode { Id = leaf.ValueText };
                 }
