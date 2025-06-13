@@ -38,8 +38,8 @@
 
         <ItemsControl.ItemContainerStyle>
             <Style TargetType="ContentPresenter">
-                <Setter Property="Canvas.Left" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=96}" />
-                <Setter Property="Canvas.Top" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=130}" />
+                <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=96}" />
+                <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter=130}" />
             </Style>
         </ItemsControl.ItemContainerStyle>
     </ItemsControl>
