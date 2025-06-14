@@ -6,8 +6,11 @@ public sealed class FocusNode
     public List<FocusNode> MutuallyExclusive { get; } = [];
     public FocusNode? RelativePosition { get; set; }
 
-    // TODO: 多选一/多个必选
-    public List<FocusNode> Prerequisite { get; } = [];
+    /// <summary>
+    /// 每个项目中的集合代表一个 prerequisite 节点内容
+    /// </summary>
+    public List<List<FocusNode>> Prerequisite { get; } = [];
+
     /// <summary>
     /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
     /// </summary>

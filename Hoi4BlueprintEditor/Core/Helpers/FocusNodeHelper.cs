@@ -47,6 +47,21 @@ public static class FocusNodeHelper
                     }
                 }
             }
+
+            if (focusNode.Prerequisite.Count != 0)
+            {
+                foreach (var prerequisiteList in focusNode.Prerequisite)
+                {
+                    for (int i = 0; i < prerequisiteList.Count; i++)
+                    {
+                        var prerequisiteNode = prerequisiteList[i];
+                        if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
+                        {
+                            prerequisiteList[i] = node;
+                        }
+                    }
+                }
+            }
         }
 
         return focusMap.Values;
@@ -94,6 +109,14 @@ public static class FocusNodeHelper
                     {
                         model.MutuallyExclusive.Add(new FocusNode { Id = focusLeaf.ValueText });
                     }
+                }
+                else if (node.Key.EqualsIgnoreCase("prerequisite"))
+                {
+                    var prerequisite = node
+                        .Leaves.AsValueEnumerable()
+                        .Select(nodeLeaf => new FocusNode { Id = nodeLeaf.ValueText })
+                        .ToList();
+                    model.Prerequisite.Add(prerequisite);
                 }
             }
         }
