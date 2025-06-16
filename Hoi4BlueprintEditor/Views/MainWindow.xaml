@@ -1,18 +1,17 @@
 ﻿<Window
-    x:Class="Hoi4BlueprintEditor.Views.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
-    xmlns:local="clr-namespace:Hoi4BlueprintEditor"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewModels"
+    Height="768"
     Title="{x:Static language:Strings.AppTitle}"
     Width="1024"
-    Height="768"
-    d:DataContext="{d:DesignInstance vms:MainWindowViewModel}"
     WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d">
+    d:DataContext="{d:DesignInstance vms:MainWindowViewModel}"
+    mc:Ignorable="d"
+    x:Class="Hoi4BlueprintEditor.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <DockPanel LastChildFill="True">
 
@@ -47,7 +46,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" DataContext="{Binding EditorCanvas}" />
+        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" />
 
     </DockPanel>
 </Window>

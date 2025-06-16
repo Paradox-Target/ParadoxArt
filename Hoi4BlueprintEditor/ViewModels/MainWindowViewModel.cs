@@ -14,18 +14,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly SettingsService _settingsService;
     private readonly LocalizationService _localizationService;
 
-    public EditorCanvasViewModel EditorCanvas { get; }
-
-    public MainWindowViewModel(
-        SettingsService settingsService,
-        LocalizationService localizationService,
-        EditorCanvasViewModel editorCanvasViewModel
-    )
+    public MainWindowViewModel(SettingsService settingsService, LocalizationService localizationService)
     {
         _settingsService = settingsService;
         _localizationService = localizationService;
-
-        EditorCanvas = editorCanvasViewModel;
     }
 
     private void SetLanguage(string cultureCode)

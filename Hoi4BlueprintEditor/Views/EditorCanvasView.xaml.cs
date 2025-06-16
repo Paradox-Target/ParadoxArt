@@ -2,12 +2,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Hoi4BlueprintEditor.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor.Views;
 
 public sealed partial class EditorCanvasView : UserControl
 {
     private Point? _lastMousePositionOnCanvas;
+    private readonly EditorCanvasViewModel _viewModel;
 
     public EditorCanvasView()
     {
@@ -17,16 +19,12 @@ public sealed partial class EditorCanvasView : UserControl
         MouseWheel += OnMouseWheel;
         MouseMove += OnMouseMove;
         MouseLeave += OnMouseLeave;
+        _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
+        DataContext = _viewModel;
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        var canvasVm = DataContext as EditorCanvasViewModel;
-        if (canvasVm == null)
-        {
-            return;
-        }
-
         if (e.RightButton == MouseButtonState.Pressed)
         {
             if (_lastMousePositionOnCanvas.HasValue)
@@ -34,8 +32,8 @@ public sealed partial class EditorCanvasView : UserControl
                 var currentMousePosition = e.GetPosition(this);
                 var delta = currentMousePosition - _lastMousePositionOnCanvas.Value;
 
-                canvasVm.TranslateX += delta.X;
-                canvasVm.TranslateY += delta.Y;
+                _viewModel.TranslateX += delta.X;
+                _viewModel.TranslateY += delta.Y;
 
                 // 鼠标图案改变
                 Cursor = Cursors.Hand;
@@ -59,12 +57,6 @@ public sealed partial class EditorCanvasView : UserControl
     private void OnMouseWheel(object sender, MouseWheelEventArgs e)
     {
         // 缩放
-        var canvasVm = (EditorCanvasViewModel)DataContext;
-        if (canvasVm == null)
-        {
-            return;
-        }
-
         const double scaleRate = 1.1;
         var mousePoint = e.GetPosition(this);
 
@@ -73,12 +65,12 @@ public sealed partial class EditorCanvasView : UserControl
         if (e.Delta > 0)
         {
             // 放大
-            newScale = canvasVm.Scale * scaleRate;
+            newScale = _viewModel.Scale * scaleRate;
         }
         else
         {
             // 缩小
-            newScale = canvasVm.Scale / scaleRate;
+            newScale = _viewModel.Scale / scaleRate;
         }
 
         if (newScale < 0.1)
@@ -90,10 +82,10 @@ public sealed partial class EditorCanvasView : UserControl
             newScale = 5.0;
         }
 
-        double oldScale = canvasVm.Scale;
-        canvasVm.TranslateX = mousePoint.X - (mousePoint.X - canvasVm.TranslateX) * (newScale / oldScale);
-        canvasVm.TranslateY = mousePoint.Y - (mousePoint.Y - canvasVm.TranslateY) * (newScale / oldScale);
+        double oldScale = _viewModel.Scale;
+        _viewModel.TranslateX = mousePoint.X - (mousePoint.X - _viewModel.TranslateX) * (newScale / oldScale);
+        _viewModel.TranslateY = mousePoint.Y - (mousePoint.Y - _viewModel.TranslateY) * (newScale / oldScale);
 
-        canvasVm.Scale = newScale;
+        _viewModel.Scale = newScale;
     }
 }
