@@ -11,6 +11,7 @@ namespace Hoi4BlueprintEditor.Core.Helpers;
 public static class FocusNodeHelper
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly string[] FocusKeywords = ["focus", "shared_focus"];
 
     [Time]
     public static IEnumerable<FocusNode> GetAllNodesFromAst(Node rootNode)
@@ -20,14 +21,30 @@ public static class FocusNodeHelper
             .Nodes.AsValueEnumerable()
             .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
 
+        if (focusTreeNode is null)
+        {
+            return [];
+        }
+
         foreach (
-            var focusNode in focusTreeNode?.Nodes.Where(node => node.Key.EqualsIgnoreCase("focus")) ?? []
+            var focusNode in focusTreeNode
+                .Nodes.AsValueEnumerable()
+                .Where(node =>
+                    FocusKeywords.AsValueEnumerable().Any(keyword => keyword.EqualsIgnoreCase(node.Key))
+                )
         )
         {
             var focusNodeModel = CreateFocusNodeFromAstNode(focusNode);
             focusMap.Add(focusNodeModel.Id, focusNodeModel);
         }
 
+        ProcessFocusNodes(focusMap);
+
+        return focusMap.Values;
+    }
+
+    private static void ProcessFocusNodes(Dictionary<string, FocusNode> focusMap)
+    {
         foreach (var focusNode in focusMap.Values)
         {
             if (focusNode.RelativePosition is not null)
@@ -46,8 +63,6 @@ public static class FocusNodeHelper
                 ProcessPrerequisite(focusNode, focusMap);
             }
         }
-
-        return focusMap.Values;
     }
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
