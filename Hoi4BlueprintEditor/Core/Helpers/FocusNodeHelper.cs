@@ -67,12 +67,16 @@ public static class FocusNodeHelper
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
-        foreach (var focusNodeMutuallyExclusive in focusNode.MutuallyExclusive.ToArray())
+        for (int index = 0; index < focusNode.MutuallyExclusive.Count; index++)
         {
-            focusNode.MutuallyExclusive.Remove(focusNodeMutuallyExclusive);
+            var focusNodeMutuallyExclusive = focusNode.MutuallyExclusive[index];
             if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
             {
-                focusNode.MutuallyExclusive.Add(node);
+                focusNode.MutuallyExclusive[index] = node;
+            }
+            else
+            {
+                focusNode.MutuallyExclusive.RemoveAt(index);
             }
         }
     }
