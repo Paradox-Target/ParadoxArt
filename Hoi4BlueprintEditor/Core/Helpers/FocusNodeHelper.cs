@@ -38,33 +38,43 @@ public static class FocusNodeHelper
 
             if (focusNode.MutuallyExclusive.Count != 0)
             {
-                foreach (var focusNodeMutuallyExclusive in focusNode.MutuallyExclusive.ToArray())
-                {
-                    focusNode.MutuallyExclusive.Remove(focusNodeMutuallyExclusive);
-                    if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
-                    {
-                        focusNode.MutuallyExclusive.Add(node);
-                    }
-                }
+                ProcessMutuallyExclusive(focusNode, focusMap);
             }
 
             if (focusNode.Prerequisite.Count != 0)
             {
-                foreach (var prerequisiteList in focusNode.Prerequisite)
-                {
-                    for (int i = 0; i < prerequisiteList.Count; i++)
-                    {
-                        var prerequisiteNode = prerequisiteList[i];
-                        if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
-                        {
-                            prerequisiteList[i] = node;
-                        }
-                    }
-                }
+                ProcessPrerequisite(focusNode, focusMap);
             }
         }
 
         return focusMap.Values;
+    }
+
+    private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
+    {
+        foreach (var focusNodeMutuallyExclusive in focusNode.MutuallyExclusive.ToArray())
+        {
+            focusNode.MutuallyExclusive.Remove(focusNodeMutuallyExclusive);
+            if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
+            {
+                focusNode.MutuallyExclusive.Add(node);
+            }
+        }
+    }
+
+    private static void ProcessPrerequisite(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
+    {
+        foreach (var prerequisiteList in focusNode.Prerequisite)
+        {
+            for (int i = 0; i < prerequisiteList.Count; i++)
+            {
+                var prerequisiteNode = prerequisiteList[i];
+                if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
+                {
+                    prerequisiteList[i] = node;
+                }
+            }
+        }
     }
 
     private static FocusNode CreateFocusNodeFromAstNode(Node focusNode)
