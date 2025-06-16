@@ -92,6 +92,10 @@ public static class FocusNodeHelper
                 {
                     prerequisiteList[i] = node;
                 }
+                else
+                {
+                    prerequisiteList.RemoveAt(i);
+                }
             }
         }
     }
