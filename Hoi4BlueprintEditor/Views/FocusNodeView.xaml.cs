@@ -1,15 +1,11 @@
 ﻿using System.Windows.Controls;
 
-namespace Hoi4BlueprintEditor.Views
+namespace Hoi4BlueprintEditor.Views;
+
+public sealed partial class FocusNodeView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for FocusNodeView.xaml
-    /// </summary>
-    public partial class FocusNodeView : UserControl
+    public FocusNodeView()
     {
-        public FocusNodeView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

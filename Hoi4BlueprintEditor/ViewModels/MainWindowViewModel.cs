@@ -1,27 +1,23 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Hoi4BlueprintEditor.Core;
+using CommunityToolkit.Mvvm.Messaging;
+using Hoi4BlueprintEditor.Messages;
+using Hoi4BlueprintEditor.Services;
+using Microsoft.Win32;
 
 namespace Hoi4BlueprintEditor.ViewModels;
 
-public partial class MainWindowViewModel : ObservableObject
+public sealed partial class MainWindowViewModel : ObservableObject
 {
     private readonly SettingsService _settingsService;
     private readonly LocalizationService _localizationService;
 
-    public EditorCanvasViewModel EditorCanvas { get; }
-
-    public MainWindowViewModel(
-        SettingsService settingsService,
-        LocalizationService localizationService
-    )
+    public MainWindowViewModel(SettingsService settingsService, LocalizationService localizationService)
     {
         _settingsService = settingsService;
         _localizationService = localizationService;
-
-        EditorCanvas = new EditorCanvasViewModel();
     }
 
     private void SetLanguage(string cultureCode)
@@ -42,4 +38,23 @@ public partial class MainWindowViewModel : ObservableObject
 
     [RelayCommand]
     private void SetLanguageToChinese() => SetLanguage("zh-CN");
+
+    [RelayCommand]
+    private void OpenFocusFile()
+    {
+        var openFileDialog = new OpenFileDialog
+        {
+            Filter = "Focus Files (*.txt)|*.txt|All Files (*.*)|*.*",
+            Title = "选择国策树文件",
+            Multiselect = false,
+        };
+
+        if (openFileDialog.ShowDialog() != true)
+        {
+            return;
+        }
+
+        string filePath = openFileDialog.FileName;
+        WeakReferenceMessenger.Default.Send(new OpenFileMessage(filePath));
+    }
 }

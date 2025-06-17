@@ -9,7 +9,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
-    xmlns:local="clr-namespace:Hoi4BlueprintEditor"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -19,7 +18,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{x:Static language:Strings.FileMenu}">
                 <MenuItem Header="{x:Static language:Strings.NewMenuItem}" />
-                <MenuItem Header="{x:Static language:Strings.OpenMenuItem}" />
+                <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
                 <MenuItem Header="{x:Static language:Strings.SaveMenuItem}" />
                 <Separator />
                 <MenuItem Header="{x:Static language:Strings.ExitMenuItem}" />
@@ -47,8 +46,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" 
-                        DataContext="{Binding EditorCanvas}"/>
+        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" />
 
     </DockPanel>
 </Window>

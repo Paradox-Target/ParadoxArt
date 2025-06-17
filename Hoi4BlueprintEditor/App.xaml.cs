@@ -1,14 +1,14 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.IO;
 using System.Windows;
-using Hoi4BlueprintEditor.Core;
+using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.ViewModels;
 using Hoi4BlueprintEditor.Views;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor;
 
-public partial class App : Application
+public sealed partial class App : Application
 {
     public static new App Current => (App)Application.Current;
     public IServiceProvider Services { get; } = ConfigureServices();
