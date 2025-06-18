@@ -35,7 +35,7 @@ public static class FocusNodeHelper
         )
         {
             var focusNodeModel = CreateFocusNodeFromAstNode(focusNode);
-            focusMap.Add(focusNodeModel.Id, focusNodeModel);
+            focusMap[focusNodeModel.Id] = focusNodeModel;
         }
 
         ProcessFocusNodes(focusMap);
