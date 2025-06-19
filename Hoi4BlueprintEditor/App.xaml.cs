@@ -23,7 +23,7 @@ public sealed partial class App : Application
 
     private MainWindow _main = null!;
 
-    private static IServiceProvider ConfigureServices()
+    private static ServiceProvider ConfigureServices()
     {
         var services = new ServiceCollection();
 
