@@ -67,7 +67,7 @@ public static class FocusNodeHelper
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
-        for (int index = 0; index < focusNode.MutuallyExclusive.Count; index++)
+        for (int index = focusNode.MutuallyExclusive.Count - 1; index >= 0; index--)
         {
             var focusNodeMutuallyExclusive = focusNode.MutuallyExclusive[index];
             if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
@@ -85,7 +85,7 @@ public static class FocusNodeHelper
     {
         foreach (var prerequisiteList in focusNode.Prerequisite)
         {
-            for (int i = 0; i < prerequisiteList.Count; i++)
+            for (int i = prerequisiteList.Count - 1; i >= 0; i--)
             {
                 var prerequisiteNode = prerequisiteList[i];
                 if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
