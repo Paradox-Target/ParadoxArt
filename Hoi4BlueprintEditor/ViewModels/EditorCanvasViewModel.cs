@@ -117,7 +117,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     {
         foreach (var leaf in focusNode.Leaves)
         {
-            if (leaf.Key.EqualsIgnoreCase("cost"))
+            if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
             {
                 leaf.Value = Types.Value.NewFloat(editorModel.Cost);
             }
@@ -129,7 +129,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             {
                 leaf.Value = Types.Value.NewInt(editorModel.RawPosition.Y);
             }
-            else if (leaf.Key.EqualsIgnoreCase("icon"))
+            else if (leaf.Key.EqualsIgnoreCase(Keywords.Icon))
             {
                 leaf.Value = Types.Value.NewString(editorModel.Icon);
             }
@@ -141,8 +141,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 if (
                     child.TryGetNode(out var node)
                     && (
-                        node.Key.EqualsIgnoreCase("mutually_exclusive")
-                        || node.Key.EqualsIgnoreCase("prerequisite")
+                        node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive)
+                        || node.Key.EqualsIgnoreCase(Keywords.Prerequisite)
                     )
                 )
                 {
@@ -181,9 +181,9 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         var mutuallyExclusive = editorModel
             .MutuallyExclusive.AsValueEnumerable()
-            .Select(focus => ChildHelper.LeafString("focus", focus.Id))
+            .Select(focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
             .ToArray();
-        var mutuallyExclusiveChild = ChildHelper.Node("mutually_exclusive", mutuallyExclusive);
+        var mutuallyExclusiveChild = ChildHelper.Node(Keywords.MutuallyExclusive, mutuallyExclusive);
         children.Add(mutuallyExclusiveChild);
     }
 
@@ -198,9 +198,9 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             var prerequisiteChildren = prerequisite
                 .AsValueEnumerable()
-                .Select(focus => ChildHelper.LeafString("focus", focus.Id))
+                .Select(focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
                 .ToArray();
-            children.Add(ChildHelper.Node("prerequisite", prerequisiteChildren));
+            children.Add(ChildHelper.Node(Keywords.Prerequisite, prerequisiteChildren));
         }
     }
 

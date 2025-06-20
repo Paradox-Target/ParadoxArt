@@ -11,7 +11,7 @@ namespace Hoi4BlueprintEditor.Core.Helpers;
 public static class FocusNodeHelper
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-    private static readonly string[] FocusKeywords = ["focus", "shared_focus"];
+    private static readonly string[] FocusKeywords = [Keywords.Focus, "shared_focus"];
 
     [Time]
     public static Dictionary<string, FocusNode> GetAllNodesFromAst(Node rootNode)
@@ -123,29 +123,29 @@ public static class FocusNodeHelper
                 {
                     model.Id = leaf.ValueText;
                 }
-                else if (leaf.Key.EqualsIgnoreCase("icon"))
+                else if (leaf.Key.EqualsIgnoreCase(Keywords.Icon))
                 {
                     model.Icon = leaf.ValueText;
                 }
-                else if (leaf.Key.EqualsIgnoreCase("cost"))
+                else if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
                 {
                     model.Cost = leaf.Value.TryGetDecimal(out decimal cost) ? cost : 0;
                 }
-                else if (leaf.Key.EqualsIgnoreCase("relative_position_id"))
+                else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
                 {
                     model.RelativePosition = new FocusNode { Id = leaf.ValueText };
                 }
             }
             else if (child.TryGetNode(out var node))
             {
-                if (node.Key.EqualsIgnoreCase("mutually_exclusive"))
+                if (node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive))
                 {
                     foreach (var focusLeaf in node.Leaves)
                     {
                         model.MutuallyExclusive.Add(new FocusNode { Id = focusLeaf.ValueText });
                     }
                 }
-                else if (node.Key.EqualsIgnoreCase("prerequisite"))
+                else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
                 {
                     var prerequisite = node
                         .Leaves.AsValueEnumerable()
@@ -166,27 +166,31 @@ public static class FocusNodeHelper
         {
             ChildHelper.Leaf("x", editorModel.RawPosition.X),
             ChildHelper.Leaf("y", editorModel.RawPosition.Y),
-            ChildHelper.LeafString("icon", editorModel.Icon),
-            ChildHelper.Leaf("cost", editorModel.Cost)
+            ChildHelper.LeafString(Keywords.Icon, editorModel.Icon),
+            ChildHelper.Leaf(Keywords.Cost, editorModel.Cost)
         };
 
         if (editorModel.RelativePosition is not null)
         {
-            children.Add(ChildHelper.LeafString("relative_position_id", editorModel.RelativePosition.Id));
+            children.Add(
+                ChildHelper.LeafString(Keywords.RelativePositionId, editorModel.RelativePosition.Id)
+            );
         }
 
         children.Add(
             ChildHelper.Node(
-                "mutually_exclusive",
-                editorModel.MutuallyExclusive.Select(focus => ChildHelper.LeafString("focus", focus.Id))
+                Keywords.MutuallyExclusive,
+                editorModel.MutuallyExclusive.Select(focus =>
+                    ChildHelper.LeafString(Keywords.Focus, focus.Id)
+                )
             )
         );
 
         foreach (var prerequisite in editorModel.Prerequisite)
         {
             var prerequisiteNode = ChildHelper.Node(
-                "prerequisite",
-                prerequisite.Select(focus => ChildHelper.LeafString("focus", focus.Id))
+                Keywords.Prerequisite,
+                prerequisite.Select(focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
             );
             children.Add(prerequisiteNode);
         }
