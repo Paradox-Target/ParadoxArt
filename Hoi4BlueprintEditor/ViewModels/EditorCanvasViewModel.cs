@@ -113,8 +113,29 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         focusTreeNode.AllArray = children.ToArray();
     }
 
-    private void SyncContent(Node focusNode, FocusNode editorModel)
+    private static void SyncContent(Node focusNode, FocusNode editorModel)
     {
+        SyncLeafContent(focusNode, editorModel);
+
+        var children = GetFilteredChildren(focusNode);
+
+        AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
+
+        AddPrerequisiteToChildrenIfExist(children, editorModel);
+
+        if (editorModel.RelativePosition is not null)
+        {
+            children.Add(
+                ChildHelper.LeafString(Keywords.RelativePositionId, editorModel.RelativePosition.Id)
+            );
+        }
+
+        focusNode.AllArray = children.ToArray();
+    }
+
+    private static void SyncLeafContent(Node focusNode, FocusNode editorModel)
+    {
+        // TODO: 不遍历直接写入到 Children 中性能是不是会更好?
         foreach (var leaf in focusNode.Leaves)
         {
             if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
@@ -134,10 +155,16 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 leaf.Value = Types.Value.NewString(editorModel.Icon);
             }
         }
-        var children = focusNode
+    }
+
+    private static List<Child> GetFilteredChildren(Node focusNode)
+    {
+        return focusNode
             .AllArray.AsValueEnumerable()
             .Where(child =>
             {
+                // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId
+                // 这些内容完全按照编辑器模型保存
                 if (
                     child.TryGetNode(out var node)
                     && (
@@ -157,19 +184,6 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 return true;
             })
             .ToList();
-
-        AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
-
-        AddPrerequisiteToChildrenIfExist(children, editorModel);
-
-        if (editorModel.RelativePosition is not null)
-        {
-            children.Add(
-                ChildHelper.LeafString(Keywords.RelativePositionId, editorModel.RelativePosition.Id)
-            );
-        }
-
-        focusNode.AllArray = children.ToArray();
     }
 
     private static void AddMutuallyExclusiveToChildrenIfExist(List<Child> children, FocusNode editorModel)
