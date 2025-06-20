@@ -57,4 +57,10 @@ public sealed partial class MainWindowViewModel : ObservableObject
         string filePath = openFileDialog.FileName;
         WeakReferenceMessenger.Default.Send(new OpenFileMessage(filePath));
     }
+
+    [RelayCommand]
+    private void SaveFocusFile()
+    {
+        WeakReferenceMessenger.Default.Send(new SaveFocusTreeMessage(""));
+    }
 }

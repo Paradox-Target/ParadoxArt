@@ -11,12 +11,13 @@ namespace Hoi4BlueprintEditor.Core.Helpers;
 public static class FocusNodeHelper
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-    private static readonly string[] FocusKeywords = ["focus", "shared_focus"];
+    private static readonly string[] FocusKeywords = [Keywords.Focus, "shared_focus"];
 
     [Time]
-    public static IEnumerable<FocusNode> GetAllNodesFromAst(Node rootNode)
+    public static Dictionary<string, FocusNode> GetAllNodesFromAst(Node rootNode)
     {
         var focusMap = new Dictionary<string, FocusNode>();
+
         var focusTreeNode = rootNode
             .Nodes.AsValueEnumerable()
             .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
@@ -26,21 +27,22 @@ public static class FocusNodeHelper
             return [];
         }
 
-        foreach (
-            var focusNode in focusTreeNode
-                .Nodes.AsValueEnumerable()
-                .Where(node =>
-                    FocusKeywords.AsValueEnumerable().Any(keyword => keyword.EqualsIgnoreCase(node.Key))
-                )
-        )
+        foreach (var focusNode in GetFocusNodesFromAstRootNode(focusTreeNode))
         {
             var focusNodeModel = CreateFocusNodeFromAstNode(focusNode);
-            focusMap.Add(focusNodeModel.Id, focusNodeModel);
+            focusMap[focusNodeModel.Id] = focusNodeModel;
         }
 
         ProcessFocusNodes(focusMap);
 
-        return focusMap.Values;
+        return focusMap;
+    }
+
+    public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node focusTreeNode)
+    {
+        return focusTreeNode.Nodes.Where(node =>
+            FocusKeywords.AsValueEnumerable().Any(keyword => keyword.EqualsIgnoreCase(node.Key))
+        );
     }
 
     private static void ProcessFocusNodes(Dictionary<string, FocusNode> focusMap)
@@ -67,7 +69,7 @@ public static class FocusNodeHelper
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
-        for (int index = 0; index < focusNode.MutuallyExclusive.Count; index++)
+        for (int index = focusNode.MutuallyExclusive.Count - 1; index >= 0; index--)
         {
             var focusNodeMutuallyExclusive = focusNode.MutuallyExclusive[index];
             if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
@@ -85,7 +87,7 @@ public static class FocusNodeHelper
     {
         foreach (var prerequisiteList in focusNode.Prerequisite)
         {
-            for (int i = 0; i < prerequisiteList.Count; i++)
+            for (int i = prerequisiteList.Count - 1; i >= 0; i--)
             {
                 var prerequisiteNode = prerequisiteList[i];
                 if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
@@ -121,29 +123,29 @@ public static class FocusNodeHelper
                 {
                     model.Id = leaf.ValueText;
                 }
-                else if (leaf.Key.EqualsIgnoreCase("icon"))
+                else if (leaf.Key.EqualsIgnoreCase(Keywords.Icon))
                 {
                     model.Icon = leaf.ValueText;
                 }
-                else if (leaf.Key.EqualsIgnoreCase("cost"))
+                else if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
                 {
                     model.Cost = leaf.Value.TryGetDecimal(out decimal cost) ? cost : 0;
                 }
-                else if (leaf.Key.EqualsIgnoreCase("relative_position_id"))
+                else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
                 {
                     model.RelativePosition = new FocusNode { Id = leaf.ValueText };
                 }
             }
             else if (child.TryGetNode(out var node))
             {
-                if (node.Key.EqualsIgnoreCase("mutually_exclusive"))
+                if (node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive))
                 {
                     foreach (var focusLeaf in node.Leaves)
                     {
                         model.MutuallyExclusive.Add(new FocusNode { Id = focusLeaf.ValueText });
                     }
                 }
-                else if (node.Key.EqualsIgnoreCase("prerequisite"))
+                else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
                 {
                     var prerequisite = node
                         .Leaves.AsValueEnumerable()
@@ -156,5 +158,44 @@ public static class FocusNodeHelper
 
         model.RawPosition = point;
         return model;
+    }
+
+    public static Node CreateAstNodeFromEditorModel(FocusNode editorModel)
+    {
+        var children = new List<Child>(16)
+        {
+            ChildHelper.Leaf("x", editorModel.RawPosition.X),
+            ChildHelper.Leaf("y", editorModel.RawPosition.Y),
+            ChildHelper.LeafString(Keywords.Icon, editorModel.Icon),
+            ChildHelper.Leaf(Keywords.Cost, editorModel.Cost)
+        };
+
+        if (editorModel.RelativePosition is not null)
+        {
+            children.Add(
+                ChildHelper.LeafString(Keywords.RelativePositionId, editorModel.RelativePosition.Id)
+            );
+        }
+
+        children.Add(
+            ChildHelper.Node(
+                Keywords.MutuallyExclusive,
+                editorModel.MutuallyExclusive.Select(focus =>
+                    ChildHelper.LeafString(Keywords.Focus, focus.Id)
+                )
+            )
+        );
+
+        foreach (var prerequisite in editorModel.Prerequisite)
+        {
+            var prerequisiteNode = ChildHelper.Node(
+                Keywords.Prerequisite,
+                prerequisite.Select(focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
+            );
+            children.Add(prerequisiteNode);
+        }
+
+        var focusNode = new Node(editorModel.Id) { AllArray = children.ToArray() };
+        return focusNode;
     }
 }

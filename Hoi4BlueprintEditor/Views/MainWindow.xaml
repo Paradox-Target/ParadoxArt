@@ -19,7 +19,7 @@
             <MenuItem Header="{x:Static language:Strings.FileMenu}">
                 <MenuItem Header="{x:Static language:Strings.NewMenuItem}" />
                 <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
-                <MenuItem Header="{x:Static language:Strings.SaveMenuItem}" />
+                <MenuItem Command="{Binding SaveFocusFileCommand}" Header="{x:Static language:Strings.SaveMenuItem}" />
                 <Separator />
                 <MenuItem Header="{x:Static language:Strings.ExitMenuItem}" />
             </MenuItem>
