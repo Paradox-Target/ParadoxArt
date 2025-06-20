@@ -19,8 +19,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes =>
         _nodes.ToNotifyCollectionChanged();
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
-    private Dictionary<string, FocusNode> _nodesMap = [];
-    private string _filePath = string.Empty;
+    private Dictionary<string, FocusNode> _editorNodesMap = [];
+    private string _currentFilePath = string.Empty;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public EditorCanvasViewModel()
@@ -37,10 +37,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                     return;
                 }
 
-                _filePath = message.FilePath;
+                _currentFilePath = message.FilePath;
                 _nodes.Clear();
-                _nodesMap = FocusNodeHelper.GetAllNodesFromAst(rootNode);
-                _nodes.AddRange(_nodesMap.Select(pair => new FocusNodeViewModel(pair.Value)));
+                _editorNodesMap = FocusNodeHelper.GetAllNodesFromAst(rootNode);
+                _nodes.AddRange(_editorNodesMap.Select(pair => new FocusNodeViewModel(pair.Value)));
                 Log.Info("已加载国策树文件: {FilePath}", message.FilePath);
                 Log.Info("共添加: {Amount}", _nodes.Count);
             }
@@ -52,13 +52,13 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     [Time]
     private void SaveFocusTree(object recipient, SaveFocusTreeMessage message)
     {
-        if (_nodesMap.Count == 0)
+        if (_editorNodesMap.Count == 0)
         {
             Log.Info("没有国策树数据可供保存");
             return;
         }
 
-        if (!TextParser.TryParse(_filePath, out var rootNode, out _))
+        if (!TextParser.TryParse(_currentFilePath, out var rootNode, out _))
         {
             return;
         }
@@ -77,11 +77,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(focusTreeNode))
         {
-            if (_nodesMap.TryGetValue(node.Key, out var editorModel))
+            if (_editorNodesMap.TryGetValue(node.Key, out var editorModel))
             {
                 // 更新 AST 节点
                 SyncContent(node, editorModel);
-                _nodesMap.Remove(node.Key);
+                _editorNodesMap.Remove(node.Key);
             }
             else
             {
@@ -105,7 +105,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         }
 
         // 添加新增的节点
-        foreach (var editorModel in _nodesMap.Values)
+        foreach (var editorModel in _editorNodesMap.Values)
         {
             var focusNode = FocusNodeHelper.CreateAstNodeFromEditorModel(editorModel);
             children.Add(Child.Create(focusNode));
