@@ -2,6 +2,8 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using Hoi4BlueprintEditor.Services;
+using Hoi4BlueprintEditor.Services.GameResources.Base;
+using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Hoi4BlueprintEditor.ViewModels;
 using Hoi4BlueprintEditor.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +29,12 @@ public sealed partial class App : Application
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<LocalizationService>();
+        services.AddSingleton<AppLocalizationService>();
         services.AddSingleton(_ => SettingsService.LoadSettings());
+        services.AddScoped<LocalizationService>();
+        services.AddSingleton<GameResourcesPathService>();
+        services.AddSingleton<GameModDescriptorService>();
+        services.AddSingleton<GameResourcesWatcherService>();
 
         services.AddSingleton<MainWindow>();
         services.AddSingleton<MainWindowViewModel>();

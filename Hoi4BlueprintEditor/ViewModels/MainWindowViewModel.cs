@@ -12,20 +12,20 @@ namespace Hoi4BlueprintEditor.ViewModels;
 public sealed partial class MainWindowViewModel : ObservableObject
 {
     private readonly SettingsService _settingsService;
-    private readonly LocalizationService _localizationService;
+    private readonly AppLocalizationService _appLocalizationService;
 
-    public MainWindowViewModel(SettingsService settingsService, LocalizationService localizationService)
+    public MainWindowViewModel(SettingsService settingsService, AppLocalizationService appLocalizationService)
     {
         _settingsService = settingsService;
-        _localizationService = localizationService;
+        _appLocalizationService = appLocalizationService;
     }
 
     private void SetLanguage(string cultureCode)
     {
         var targetCulture = new CultureInfo(cultureCode);
 
-        string message = _localizationService.GetString("LanguageRestartMessage", targetCulture);
-        string title = _localizationService.GetString("RestartRequiredTitle", targetCulture);
+        string message = _appLocalizationService.GetString("LanguageRestartMessage", targetCulture);
+        string title = _appLocalizationService.GetString("RestartRequiredTitle", targetCulture);
 
         _settingsService.Language = cultureCode;
         _settingsService.SaveSettings();
