@@ -7,13 +7,14 @@ using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Hoi4BlueprintEditor.ViewModels;
 using Hoi4BlueprintEditor.Views;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
 
 namespace Hoi4BlueprintEditor;
 
 public sealed partial class App : Application
 {
     public static new App Current => (App)Application.Current;
-    public IServiceProvider Services { get; } = ConfigureServices();
+    public ServiceProvider Services { get; } = ConfigureServices();
 
     public static string AppFolder { get; } =
         Path.Combine(
@@ -67,5 +68,13 @@ public sealed partial class App : Application
 
         _main = Services.GetRequiredService<MainWindow>();
         _main.ShowDialog();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        base.OnExit(e);
+        
+        Services.Dispose();
+        LogManager.Flush();
     }
 }
