@@ -32,7 +32,9 @@ public sealed partial class App : Application
 
         services.AddSingleton<AppLocalizationService>();
         services.AddSingleton(_ => SettingsService.LoadSettings());
-        services.AddScoped<LocalizationService>();
+        services.AddSingleton<LocalizationService>();
+        services.AddSingleton<LocalizationFormatService>();
+        services.AddSingleton<LocalizationTextColorsService>();
         services.AddSingleton<GameResourcesPathService>();
         services.AddSingleton<GameModDescriptorService>();
         services.AddSingleton<GameResourcesWatcherService>();

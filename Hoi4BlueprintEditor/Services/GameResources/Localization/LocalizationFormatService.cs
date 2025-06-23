@@ -87,7 +87,10 @@ public sealed class LocalizationFormatService(
                 string text = localizationService.GetValue(format.Text);
                 ParseFormat(text, result);
             }
-            else if (format.Type == LocalizationFormatType.Icon) { }
+            else if (format.Type == LocalizationFormatType.Icon)
+            {
+                // 暂时不处理 Icon 格式
+            }
             else
             {
                 result.AddRange(GetColorText(format));
