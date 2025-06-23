@@ -8,6 +8,8 @@ namespace Hoi4BlueprintEditor.Services;
 public sealed class SettingsService
 {
     public string Language { get; set; } = string.Empty;
+    public string GameRootFolderPath { get; set; } = string.Empty;
+    public string ModRootFolderPath { get; set; } = string.Empty;
 
     private const string SettingsFileName = "settings.json";
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };

@@ -2,16 +2,19 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using Hoi4BlueprintEditor.Services;
+using Hoi4BlueprintEditor.Services.GameResources.Base;
+using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Hoi4BlueprintEditor.ViewModels;
 using Hoi4BlueprintEditor.Views;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
 
 namespace Hoi4BlueprintEditor;
 
 public sealed partial class App : Application
 {
     public static new App Current => (App)Application.Current;
-    public IServiceProvider Services { get; } = ConfigureServices();
+    public ServiceProvider Services { get; } = ConfigureServices();
 
     public static string AppFolder { get; } =
         Path.Combine(
@@ -27,8 +30,14 @@ public sealed partial class App : Application
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<LocalizationService>();
+        services.AddSingleton<AppLocalizationService>();
         services.AddSingleton(_ => SettingsService.LoadSettings());
+        services.AddSingleton<LocalizationService>();
+        services.AddSingleton<LocalizationFormatService>();
+        services.AddSingleton<LocalizationTextColorsService>();
+        services.AddSingleton<GameResourcesPathService>();
+        services.AddSingleton<GameModDescriptorService>();
+        services.AddSingleton<GameResourcesWatcherService>();
 
         services.AddSingleton<MainWindow>();
         services.AddSingleton<MainWindowViewModel>();
@@ -61,5 +70,13 @@ public sealed partial class App : Application
 
         _main = Services.GetRequiredService<MainWindow>();
         _main.ShowDialog();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        base.OnExit(e);
+        
+        Services.Dispose();
+        LogManager.Flush();
     }
 }

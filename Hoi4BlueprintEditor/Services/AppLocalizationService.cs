@@ -4,11 +4,11 @@ using Hoi4BlueprintEditor.Resources.Strings;
 
 namespace Hoi4BlueprintEditor.Services;
 
-public sealed class LocalizationService
+public sealed class AppLocalizationService
 {
     private readonly ResourceManager _resourceManager;
 
-    public LocalizationService()
+    public AppLocalizationService()
     {
         _resourceManager = new ResourceManager(typeof(Strings));
     }

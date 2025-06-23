@@ -13,7 +13,7 @@
         Background="#555"
         Height="68"
         ToolTip="{Binding Model.Id}"
-        Width="48">
+        Width="58">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
@@ -39,7 +39,7 @@
             Grid.Row="1"
             HorizontalAlignment="Center"
             Margin="2,0"
-            Text="{Binding Model.Id}"
+            Text="{Binding LocalizedName}"
             TextTrimming="CharacterEllipsis"
             VerticalAlignment="Center" />
     </Grid>

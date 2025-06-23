@@ -6,7 +6,7 @@ using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 using ZLinq;
 
-namespace Hoi4BlueprintEditor.Core.Helpers;
+namespace Hoi4BlueprintEditor.Helpers;
 
 public static class FocusNodeHelper
 {
