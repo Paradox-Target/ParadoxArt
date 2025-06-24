@@ -1,6 +1,8 @@
 ﻿using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services;
 using MethodTimer;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
@@ -11,6 +13,8 @@ namespace Hoi4BlueprintEditor.Helpers;
 public static class FocusNodeHelper
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    // TODO: 看需不需要删
     private static readonly string[] FocusKeywords = [Keywords.Focus, "shared_focus"];
 
     [Time]
@@ -18,16 +22,29 @@ public static class FocusNodeHelper
     {
         var focusMap = new Dictionary<string, FocusNode>();
 
-        var focusTreeNode = rootNode
-            .Nodes.AsValueEnumerable()
-            .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
-
-        if (focusTreeNode is null)
+        //TODO: 遵守shared_focus的规则(?)
+        var pathService = App.Current.Services.GetRequiredService<GameResourcesPathService>();
+        var configs = GetConfigs(rootNode);
+        foreach (var config in configs.AsValueEnumerable().Where(config => config.Key == "shared_focus"))
         {
-            return [];
+            string? sharedFocusPath = pathService.GetFilePathPriorModByRelativePath(config.Value);
+            if (sharedFocusPath is null)
+            {
+                Log.Warn("无效配置项, 共享国策文件路径未找到: {Path}", config.Value);
+                continue;
+            }
+
+            if (TextParser.TryParse(sharedFocusPath, out var node, out _))
+            {
+                var map = GetAllNodesFromAst(node);
+                foreach (var focusNode in map)
+                {
+                    focusMap[focusNode.Key] = focusNode.Value;
+                }
+            }
         }
 
-        foreach (var focusNode in GetFocusNodesFromAstRootNode(focusTreeNode))
+        foreach (var focusNode in GetFocusNodesFromAstRootNode(rootNode))
         {
             var focusNodeModel = CreateFocusNodeFromAstNode(focusNode);
             focusMap[focusNodeModel.Id] = focusNodeModel;
@@ -38,11 +55,24 @@ public static class FocusNodeHelper
         return focusMap;
     }
 
-    public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node focusTreeNode)
+    public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node rootNode)
     {
-        return focusTreeNode.Nodes.Where(node =>
-            FocusKeywords.AsValueEnumerable().Any(keyword => keyword.EqualsIgnoreCase(node.Key))
-        );
+        var focusTreeNode = rootNode
+            .Nodes.AsValueEnumerable()
+            .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
+
+        IEnumerable<Node>? nodes = null;
+        if (focusTreeNode is not null)
+        {
+            nodes = focusTreeNode.Nodes.Where(node =>
+                FocusKeywords.AsValueEnumerable().Any(keyword => keyword.EqualsIgnoreCase(node.Key))
+            );
+        }
+
+        var sharedFocusNode = rootNode.Nodes.Where(node => node.Key.EqualsIgnoreCase("shared_focus"));
+        nodes = nodes is null ? sharedFocusNode : nodes.Concat(sharedFocusNode);
+
+        return nodes;
     }
 
     private static void ProcessFocusNodes(Dictionary<string, FocusNode> focusMap)
@@ -65,6 +95,33 @@ public static class FocusNodeHelper
                 ProcessPrerequisite(focusNode, focusMap);
             }
         }
+    }
+
+    private static Dictionary<string, string> GetConfigs(Node rootNode)
+    {
+        var configs = new Dictionary<string, string>();
+
+        bool start = false;
+        foreach (var comment in rootNode.Comments)
+        {
+            if (comment.Comment == "config:start")
+            {
+                start = true;
+                continue;
+            }
+            if (comment.Comment == "config:end")
+            {
+                start = false;
+                break;
+            }
+            if (start)
+            {
+                string[] parts = comment.Comment.Split(':', 2, StringSplitOptions.TrimEntries);
+                configs[parts[0]] = parts[1];
+            }
+        }
+
+        return configs;
     }
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)

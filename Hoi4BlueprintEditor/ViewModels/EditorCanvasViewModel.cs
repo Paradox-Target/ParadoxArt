@@ -75,7 +75,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         var removedFocus = new List<Node>();
 
-        foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(focusTreeNode))
+        foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(rootNode))
         {
             if (_editorNodesMap.TryGetValue(node.Key, out var editorModel))
             {
