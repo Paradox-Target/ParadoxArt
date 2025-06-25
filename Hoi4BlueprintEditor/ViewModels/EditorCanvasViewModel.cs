@@ -16,15 +16,17 @@ namespace Hoi4BlueprintEditor.ViewModels;
 
 public sealed partial class EditorCanvasViewModel : ObservableObject
 {
-    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes =>
-        _nodes.ToNotifyCollectionChanged();
+    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
+
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
     private Dictionary<string, FocusNode> _editorNodesMap = [];
     private string _currentFilePath = string.Empty;
+
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public EditorCanvasViewModel()
     {
+        Nodes = _nodes.ToNotifyCollectionChanged();
         // 假数据测试
         LoadTestData();
 
