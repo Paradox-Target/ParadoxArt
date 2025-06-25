@@ -14,9 +14,6 @@ public static class FocusNodeHelper
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    // TODO: 看需不需要删
-    private static readonly string[] FocusKeywords = [Keywords.Focus, "shared_focus"];
-
     [Time]
     public static Dictionary<string, FocusNode> GetAllNodesFromAst(Node rootNode)
     {
@@ -64,9 +61,7 @@ public static class FocusNodeHelper
         IEnumerable<Node>? nodes = null;
         if (focusTreeNode is not null)
         {
-            nodes = focusTreeNode.Nodes.Where(node =>
-                FocusKeywords.AsValueEnumerable().Any(keyword => keyword.EqualsIgnoreCase(node.Key))
-            );
+            nodes = focusTreeNode.Nodes.Where(node => node.Key.EqualsIgnoreCase(Keywords.Focus));
         }
 
         var sharedFocusNode = rootNode.Nodes.Where(node => node.Key.EqualsIgnoreCase("shared_focus"));
