@@ -13,18 +13,35 @@ namespace Hoi4BlueprintEditor.Helpers;
 public static class FocusNodeHelper
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly GameResourcesPathService PathService =
+        App.Current.Services.GetRequiredService<GameResourcesPathService>();
 
     [Time]
-    public static Dictionary<string, FocusNode> GetAllNodesFromAst(Node rootNode)
+    public static (Dictionary<string, FocusNode> Nodes, IEnumerable<string> FilePaths) GetAllNodesFromAst(
+        string filePath,
+        Node rootNode
+    )
     {
         var focusMap = new Dictionary<string, FocusNode>();
+        HashSet<string> filePaths = [filePath];
 
+        GetAllNodesFromAstCore(filePath, rootNode, filePaths, focusMap);
+
+        return (focusMap, filePaths);
+    }
+
+    private static void GetAllNodesFromAstCore(
+        string filePath,
+        Node rootNode,
+        HashSet<string> filePaths,
+        Dictionary<string, FocusNode> focusMap
+    )
+    {
         //TODO: 遵守shared_focus的规则(?)
-        var pathService = App.Current.Services.GetRequiredService<GameResourcesPathService>();
         var configs = GetConfigs(rootNode);
         foreach (var config in configs.AsValueEnumerable().Where(config => config.Key == "shared_focus"))
         {
-            string? sharedFocusPath = pathService.GetFilePathPriorModByRelativePath(config.Value);
+            string? sharedFocusPath = PathService.GetFilePathPriorModByRelativePath(config.Value);
             if (sharedFocusPath is null)
             {
                 Log.Warn("无效配置项, 共享国策文件路径未找到: {Path}", config.Value);
@@ -33,25 +50,25 @@ public static class FocusNodeHelper
 
             if (TextParser.TryParse(sharedFocusPath, out var node, out _))
             {
-                var map = GetAllNodesFromAst(node);
-                foreach (var focusNode in map)
-                {
-                    focusMap[focusNode.Key] = focusNode.Value;
-                }
+                filePaths.Add(sharedFocusPath);
+                GetAllNodesFromAstCore(sharedFocusPath, node, filePaths, focusMap);
             }
         }
 
         foreach (var focusNode in GetFocusNodesFromAstRootNode(rootNode))
         {
-            var focusNodeModel = CreateFocusNodeFromAstNode(focusNode);
+            var focusNodeModel = CreateFocusNodeFromAstNode(filePath, focusNode);
             focusMap[focusNodeModel.Id] = focusNodeModel;
         }
 
         ProcessFocusNodes(focusMap);
-
-        return focusMap;
     }
 
+    /// <summary>
+    /// 获取所有国策 <see cref="Node"/>, 包括普通国策和共享国策。
+    /// </summary>
+    /// <param name="rootNode">根节点</param>
+    /// <returns></returns>
     public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node rootNode)
     {
         var focusTreeNode = rootNode
@@ -154,9 +171,9 @@ public static class FocusNodeHelper
         }
     }
 
-    private static FocusNode CreateFocusNodeFromAstNode(Node focusNode)
+    private static FocusNode CreateFocusNodeFromAstNode(string filePath, Node focusNode)
     {
-        var model = new FocusNode();
+        var model = new FocusNode(filePath);
         var point = new Point();
 
         foreach (var child in focusNode.AllArray)
@@ -185,7 +202,7 @@ public static class FocusNodeHelper
                 }
                 else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
                 {
-                    model.RelativePosition = new FocusNode { Id = leaf.ValueText };
+                    model.RelativePosition = new FocusNode(string.Empty) { Id = leaf.ValueText };
                 }
             }
             else if (child.TryGetNode(out var node))
@@ -194,14 +211,14 @@ public static class FocusNodeHelper
                 {
                     foreach (var focusLeaf in node.Leaves)
                     {
-                        model.MutuallyExclusive.Add(new FocusNode { Id = focusLeaf.ValueText });
+                        model.MutuallyExclusive.Add(new FocusNode(string.Empty) { Id = focusLeaf.ValueText });
                     }
                 }
                 else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
                 {
                     var prerequisite = node
                         .Leaves.AsValueEnumerable()
-                        .Select(nodeLeaf => new FocusNode { Id = nodeLeaf.ValueText })
+                        .Select(nodeLeaf => new FocusNode(string.Empty) { Id = nodeLeaf.ValueText })
                         .ToList();
                     model.Prerequisite.Add(prerequisite);
                 }

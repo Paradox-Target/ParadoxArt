@@ -1,8 +1,13 @@
 ﻿namespace Hoi4BlueprintEditor.Models.Focus;
 
-public sealed class FocusNode
+public sealed class FocusNode(string path)
 {
     public string Id { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 国策来源文件绝对路径
+    /// </summary>
+    public string Path { get; } = path;
     public List<FocusNode> MutuallyExclusive { get; } = [];
     public FocusNode? RelativePosition { get; set; }
 

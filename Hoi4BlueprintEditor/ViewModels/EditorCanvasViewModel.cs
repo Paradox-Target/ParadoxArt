@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Extensions;
@@ -19,8 +20,12 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
 
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
+
+    /// <summary>
+    /// Key: FocusNode.Id, Value: FocusNode
+    /// </summary>
     private Dictionary<string, FocusNode> _editorNodesMap = [];
-    private string _currentFilePath = string.Empty;
+    private readonly List<string> _focusTreeFiles = [];
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -39,12 +44,17 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                     return;
                 }
 
-                _currentFilePath = message.FilePath;
                 _nodes.Clear();
-                _editorNodesMap = FocusNodeHelper.GetAllNodesFromAst(rootNode);
-                _nodes.AddRange(_editorNodesMap.Select(pair => new FocusNodeViewModel(pair.Value)));
+                _focusTreeFiles.Clear();
+
+                var (focusNodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(message.FilePath, rootNode);
+                _editorNodesMap = focusNodes;
+                _focusTreeFiles.AddRange(filePaths);
+                _nodes.AddRange(
+                    _editorNodesMap.Values.Select(focusNode => new FocusNodeViewModel(focusNode))
+                );
                 Log.Info("已加载国策树文件: {FilePath}", message.FilePath);
-                Log.Info("共添加: {Amount}", _nodes.Count);
+                Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
             }
         );
 
@@ -60,7 +70,26 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             return;
         }
 
-        if (!TextParser.TryParse(_currentFilePath, out var rootNode, out _))
+        var maps = _editorNodesMap
+            .AsValueEnumerable()
+            .GroupBy(pair => pair.Value.Path)
+            .ToDictionary(
+                item => item.Key,
+                item => item.AsValueEnumerable().ToDictionary(pair => pair.Key, pair => pair.Value)
+            );
+
+        foreach (string filePath in _focusTreeFiles)
+        {
+            Debug.Assert(maps.ContainsKey(filePath));
+
+            Save(filePath, maps[filePath]);
+            Log.Debug("已保存国策树文件: {FilePath}", filePath);
+        }
+    }
+
+    private static void Save(string filePath, Dictionary<string, FocusNode> editorNodesMap)
+    {
+        if (!TextParser.TryParse(filePath, out var rootNode, out _))
         {
             return;
         }
@@ -69,21 +98,15 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             .Nodes.AsValueEnumerable()
             .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
 
-        if (focusTreeNode is null)
-        {
-            Log.Warn("无法找到 focus_tree 节点，无法保存国策树");
-            return;
-        }
-
         var removedFocus = new List<Node>();
 
         foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(rootNode))
         {
-            if (_editorNodesMap.TryGetValue(node.Key, out var editorModel))
+            if (editorNodesMap.TryGetValue(node.Key, out var editorModel))
             {
                 // 更新 AST 节点
-                SyncContent(node, editorModel);
-                _editorNodesMap.Remove(node.Key);
+                SyncNodeContent(node, editorModel);
+                editorNodesMap.Remove(node.Key);
             }
             else
             {
@@ -91,6 +114,23 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             }
         }
 
+        if (focusTreeNode is not null)
+        {
+            SyncNode(focusTreeNode, removedFocus, editorNodesMap);
+        }
+        // 同步 shared_focus
+        SyncNode(rootNode, removedFocus, editorNodesMap);
+
+        //TODO: 缺少实际写入
+        // 防呆设计, 如果写入位置是游戏本体, 创建备份文件
+    }
+
+    private static void SyncNode(
+        Node focusTreeNode,
+        List<Node> removedFocus,
+        Dictionary<string, FocusNode> editorNodesMap
+    )
+    {
         var children = focusTreeNode.AllArray.ToList();
         // 删除编辑器中不存在的节点
         foreach (var node in removedFocus)
@@ -107,7 +147,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         }
 
         // 添加新增的节点
-        foreach (var editorModel in _editorNodesMap.Values)
+        foreach (var editorModel in editorNodesMap.Values)
         {
             var focusNode = FocusNodeHelper.CreateAstNodeFromEditorModel(editorModel);
             children.Add(Child.Create(focusNode));
@@ -115,7 +155,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         focusTreeNode.AllArray = children.ToArray();
     }
 
-    private static void SyncContent(Node focusNode, FocusNode editorModel)
+    private static void SyncNodeContent(Node focusNode, FocusNode editorModel)
     {
         SyncLeafContent(focusNode, editorModel);
 
@@ -233,7 +273,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     {
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode
+                new FocusNode("")
                 {
                     Id = "GER_Test1",
                     RawPosition = new Point(0, 0),
@@ -243,7 +283,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode
+                new FocusNode("")
                 {
                     Id = "GER_Test2",
                     RawPosition = new Point(1, 0),
@@ -253,7 +293,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode
+                new FocusNode("")
                 {
                     Id = "GER_Test3",
                     RawPosition = new Point(2, 1),
@@ -263,7 +303,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode
+                new FocusNode("")
                 {
                     Id = "GER_Test4",
                     RawPosition = new Point(3, 1),
