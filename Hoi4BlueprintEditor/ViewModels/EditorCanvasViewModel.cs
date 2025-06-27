@@ -1,10 +1,12 @@
 using System.Diagnostics;
+using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services;
 using MethodTimer;
 using NLog;
 using ObservableCollections;
@@ -26,11 +28,15 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     /// </summary>
     private Dictionary<string, FocusNode> _editorNodesMap = [];
     private readonly List<string> _focusTreeFiles = [];
+    private readonly GameResourcesPathService _pathService;
+    private readonly SettingsService _settingsService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public EditorCanvasViewModel()
+    public EditorCanvasViewModel(GameResourcesPathService pathService, SettingsService settingsService)
     {
+        _pathService = pathService;
+        _settingsService = settingsService;
         Nodes = _nodes.ToNotifyCollectionChanged();
         // 假数据测试
         LoadTestData();
@@ -70,6 +76,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             return;
         }
 
+        // 将编辑器中的 FocusNode 按照文件路径分组
         var maps = _editorNodesMap
             .AsValueEnumerable()
             .GroupBy(pair => pair.Value.Path)
@@ -87,7 +94,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         }
     }
 
-    private static void Save(string filePath, Dictionary<string, FocusNode> editorNodesMap)
+    private void Save(string filePath, Dictionary<string, FocusNode> editorNodesMap)
     {
         if (!TextParser.TryParse(filePath, out var rootNode, out _))
         {
@@ -99,7 +106,6 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
 
         var removedFocus = new List<Node>();
-
         foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(rootNode))
         {
             if (editorNodesMap.TryGetValue(node.Key, out var editorModel))
@@ -121,8 +127,21 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         // 同步 shared_focus
         SyncNode(rootNode, removedFocus, editorNodesMap);
 
-        //TODO: 缺少实际写入
-        // 防呆设计, 如果写入位置是游戏本体, 创建备份文件
+        var fileOrigin = _pathService.GetFileOrigin(filePath);
+        if (fileOrigin == FileOrigin.Mod)
+        {
+            File.WriteAllText(filePath, rootNode.ToScript(), App.Utf8Encoding);
+        }
+        else if (fileOrigin == FileOrigin.Game)
+        {
+            string relativePath = Path.GetRelativePath(_settingsService.GameRootFolderPath, filePath);
+            string modFilePath = Path.Combine(_settingsService.ModRootFolderPath, relativePath);
+            File.WriteAllText(modFilePath, rootNode.ToScript(), App.Utf8Encoding);
+        }
+        else
+        {
+            Log.Error("保存文件中遇到无法识别的文件来源: {FilePath}", filePath);
+        }
     }
 
     private static void SyncNode(

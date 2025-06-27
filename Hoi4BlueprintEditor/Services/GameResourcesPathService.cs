@@ -99,4 +99,17 @@ public sealed class GameResourcesPathService(
 
         return null;
     }
+    public FileOrigin GetFileOrigin(string filePath)
+    {
+        if (filePath.Contains(settingService.ModRootFolderPath))
+        {
+            return FileOrigin.Mod;
+        }
+
+        if (filePath.Contains(settingService.GameRootFolderPath))
+        {
+            return FileOrigin.Game;
+        }
+        return FileOrigin.Unknown;
+    }
 }
