@@ -3,7 +3,7 @@
 public sealed class FocusNode(string path, FocusType type)
 {
     public string Id { get; set; } = string.Empty;
-    public FocusType Type { get; set; } = type;
+    public FocusType Type { get; } = type;
 
     /// <summary>
     /// 国策来源文件绝对路径
