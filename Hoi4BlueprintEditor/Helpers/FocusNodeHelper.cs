@@ -174,6 +174,7 @@ public static class FocusNodeHelper
     private static FocusNode CreateFocusNodeFromAstNode(string filePath, Node focusNode)
     {
         var model = new FocusNode(filePath);
+        model.Key = focusNode.Key;
         var point = new Point();
 
         foreach (var child in focusNode.AllArray)
@@ -198,7 +199,11 @@ public static class FocusNodeHelper
                 }
                 else if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
                 {
-                    model.Cost = leaf.Value.TryGetDecimal(out decimal cost) ? cost : 0;
+                    if (!leaf.Value.TryGetDecimal(out decimal cost) && leaf.Value.TryGetInt(out int costInt))
+                    {
+                        cost = costInt;
+                    }
+                    model.Cost = cost;
                 }
                 else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
                 {
@@ -233,6 +238,7 @@ public static class FocusNodeHelper
     {
         var children = new List<Child>(16)
         {
+            ChildHelper.LeafString("id", editorModel.Id),
             ChildHelper.Leaf("x", editorModel.RawPosition.X),
             ChildHelper.Leaf("y", editorModel.RawPosition.Y),
             ChildHelper.LeafString(Keywords.Icon, editorModel.Icon),
@@ -246,14 +252,17 @@ public static class FocusNodeHelper
             );
         }
 
-        children.Add(
-            ChildHelper.Node(
-                Keywords.MutuallyExclusive,
-                editorModel.MutuallyExclusive.Select(focus =>
-                    ChildHelper.LeafString(Keywords.Focus, focus.Id)
+        if (editorModel.MutuallyExclusive.Count != 0)
+        {
+            children.Add(
+                ChildHelper.Node(
+                    Keywords.MutuallyExclusive,
+                    editorModel.MutuallyExclusive.Select(focus =>
+                        ChildHelper.LeafString(Keywords.Focus, focus.Id)
+                    )
                 )
-            )
-        );
+            );
+        }
 
         foreach (var prerequisite in editorModel.Prerequisite)
         {
@@ -264,7 +273,7 @@ public static class FocusNodeHelper
             children.Add(prerequisiteNode);
         }
 
-        var focusNode = new Node(editorModel.Id) { AllArray = children.ToArray() };
+        var focusNode = new Node(editorModel.Key) { AllArray = children.ToArray() };
         return focusNode;
     }
 }

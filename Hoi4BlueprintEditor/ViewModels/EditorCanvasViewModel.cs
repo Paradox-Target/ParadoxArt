@@ -108,11 +108,20 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         var removedFocus = new List<Node>();
         foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(rootNode))
         {
-            if (editorNodesMap.TryGetValue(node.Key, out var editorModel))
+            var idLeaf = node
+                .Leaves.AsValueEnumerable()
+                .FirstOrDefault(leaf => leaf.Key.EqualsIgnoreCase("id"));
+            string? id = idLeaf?.ValueText;
+            if (id is null)
+            {
+                continue;
+            }
+
+            if (editorNodesMap.TryGetValue(id, out var editorModel))
             {
                 // 更新 AST 节点
                 SyncNodeContent(node, editorModel);
-                editorNodesMap.Remove(node.Key);
+                editorNodesMap.Remove(id);
             }
             else
             {
@@ -170,6 +179,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             var focusNode = FocusNodeHelper.CreateAstNodeFromEditorModel(editorModel);
             children.Add(Child.Create(focusNode));
+            editorNodesMap.Remove(editorModel.Id);
         }
         focusTreeNode.AllArray = children.ToArray();
     }

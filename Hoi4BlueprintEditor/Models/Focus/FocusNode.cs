@@ -3,6 +3,7 @@
 public sealed class FocusNode(string path)
 {
     public string Id { get; set; } = string.Empty;
+    public string Key { get; set; } = string.Empty;
 
     /// <summary>
     /// 国策来源文件绝对路径

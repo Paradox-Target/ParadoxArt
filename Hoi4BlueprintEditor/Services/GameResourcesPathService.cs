@@ -99,6 +99,7 @@ public sealed class GameResourcesPathService(
 
         return null;
     }
+
     public FileOrigin GetFileOrigin(string filePath)
     {
         if (filePath.Contains(settingService.ModRootFolderPath))
