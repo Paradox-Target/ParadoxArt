@@ -302,7 +302,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     {
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode("")
+                new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test1",
                     RawPosition = new Point(0, 0),
@@ -312,7 +312,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode("")
+                new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test2",
                     RawPosition = new Point(1, 0),
@@ -322,7 +322,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode("")
+                new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test3",
                     RawPosition = new Point(2, 1),
@@ -332,7 +332,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
         _nodes.Add(
             new FocusNodeViewModel(
-                new FocusNode("")
+                new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test4",
                     RawPosition = new Point(3, 1),

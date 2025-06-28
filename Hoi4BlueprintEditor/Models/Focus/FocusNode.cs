@@ -1,9 +1,9 @@
 ﻿namespace Hoi4BlueprintEditor.Models.Focus;
 
-public sealed class FocusNode(string path)
+public sealed class FocusNode(string path, FocusType type)
 {
     public string Id { get; set; } = string.Empty;
-    public string Key { get; set; } = string.Empty;
+    public FocusType Type { get; set; } = type;
 
     /// <summary>
     /// 国策来源文件绝对路径

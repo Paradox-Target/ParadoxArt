@@ -39,7 +39,9 @@ public static class FocusNodeHelper
     {
         //TODO: 遵守shared_focus的规则(?)
         var configs = GetConfigs(rootNode);
-        foreach (var config in configs.AsValueEnumerable().Where(config => config.Key == "shared_focus"))
+        foreach (
+            var config in configs.AsValueEnumerable().Where(config => config.Key == Keywords.SharedFocus)
+        )
         {
             string? sharedFocusPath = PathService.GetFilePathPriorModByRelativePath(config.Value);
             if (sharedFocusPath is null)
@@ -81,7 +83,7 @@ public static class FocusNodeHelper
             nodes = focusTreeNode.Nodes.Where(node => node.Key.EqualsIgnoreCase(Keywords.Focus));
         }
 
-        var sharedFocusNode = rootNode.Nodes.Where(node => node.Key.EqualsIgnoreCase("shared_focus"));
+        var sharedFocusNode = rootNode.Nodes.Where(node => node.Key.EqualsIgnoreCase(Keywords.SharedFocus));
         nodes = nodes is null ? sharedFocusNode : nodes.Concat(sharedFocusNode);
 
         return nodes;
@@ -173,8 +175,8 @@ public static class FocusNodeHelper
 
     private static FocusNode CreateFocusNodeFromAstNode(string filePath, Node focusNode)
     {
-        var model = new FocusNode(filePath);
-        model.Key = focusNode.Key;
+        var model = new FocusNode(filePath, GetFocusType(focusNode));
+
         var point = new Point();
 
         foreach (var child in focusNode.AllArray)
@@ -207,7 +209,10 @@ public static class FocusNodeHelper
                 }
                 else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
                 {
-                    model.RelativePosition = new FocusNode(string.Empty) { Id = leaf.ValueText };
+                    model.RelativePosition = new FocusNode(string.Empty, FocusType.Normal)
+                    {
+                        Id = leaf.ValueText
+                    };
                 }
             }
             else if (child.TryGetNode(out var node))
@@ -216,14 +221,19 @@ public static class FocusNodeHelper
                 {
                     foreach (var focusLeaf in node.Leaves)
                     {
-                        model.MutuallyExclusive.Add(new FocusNode(string.Empty) { Id = focusLeaf.ValueText });
+                        model.MutuallyExclusive.Add(
+                            new FocusNode(string.Empty, FocusType.Normal) { Id = focusLeaf.ValueText }
+                        );
                     }
                 }
                 else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
                 {
                     var prerequisite = node
                         .Leaves.AsValueEnumerable()
-                        .Select(nodeLeaf => new FocusNode(string.Empty) { Id = nodeLeaf.ValueText })
+                        .Select(nodeLeaf => new FocusNode(string.Empty, FocusType.Normal)
+                        {
+                            Id = nodeLeaf.ValueText
+                        })
                         .ToList();
                     model.Prerequisite.Add(prerequisite);
                 }
@@ -232,6 +242,16 @@ public static class FocusNodeHelper
 
         model.RawPosition = point;
         return model;
+    }
+
+    private static FocusType GetFocusType(Node focusNode)
+    {
+        return focusNode.Key switch
+        {
+            Keywords.Focus => FocusType.Normal,
+            Keywords.SharedFocus => FocusType.Shared,
+            _ => FocusType.Unknown
+        };
     }
 
     public static Node CreateAstNodeFromEditorModel(FocusNode editorModel)
@@ -273,7 +293,10 @@ public static class FocusNodeHelper
             children.Add(prerequisiteNode);
         }
 
-        var focusNode = new Node(editorModel.Key) { AllArray = children.ToArray() };
+        var focusNode = new Node(editorModel.Type == FocusType.Shared ? Keywords.SharedFocus : Keywords.Focus)
+        {
+            AllArray = children.ToArray()
+        };
         return focusNode;
     }
 }
