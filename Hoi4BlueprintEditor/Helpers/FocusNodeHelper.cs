@@ -1,6 +1,8 @@
 ﻿using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services;
 using MethodTimer;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
@@ -11,38 +13,80 @@ namespace Hoi4BlueprintEditor.Helpers;
 public static class FocusNodeHelper
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-    private static readonly string[] FocusKeywords = [Keywords.Focus, "shared_focus"];
+    private static readonly GameResourcesPathService PathService =
+        App.Current.Services.GetRequiredService<GameResourcesPathService>();
 
     [Time]
-    public static Dictionary<string, FocusNode> GetAllNodesFromAst(Node rootNode)
+    public static (Dictionary<string, FocusNode> Nodes, IEnumerable<string> FilePaths) GetAllNodesFromAst(
+        string filePath,
+        Node rootNode
+    )
     {
         var focusMap = new Dictionary<string, FocusNode>();
+        HashSet<string> filePaths = [filePath];
 
-        var focusTreeNode = rootNode
-            .Nodes.AsValueEnumerable()
-            .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
+        GetAllNodesFromAstCore(filePath, rootNode, filePaths, focusMap);
 
-        if (focusTreeNode is null)
+        return (focusMap, filePaths);
+    }
+
+    private static void GetAllNodesFromAstCore(
+        string filePath,
+        Node rootNode,
+        HashSet<string> filePaths,
+        Dictionary<string, FocusNode> focusMap
+    )
+    {
+        //TODO: 遵守shared_focus的规则(?)
+        var configs = GetConfigs(rootNode);
+        foreach (
+            var config in configs.AsValueEnumerable().Where(config => config.Key == Keywords.SharedFocus)
+        )
         {
-            return [];
+            string? sharedFocusPath = PathService.GetFilePathPriorModByRelativePath(config.Value);
+            if (sharedFocusPath is null)
+            {
+                Log.Warn("无效配置项, 共享国策文件路径未找到: {Path}", config.Value);
+                continue;
+            }
+
+            if (TextParser.TryParse(sharedFocusPath, out var node, out _))
+            {
+                filePaths.Add(sharedFocusPath);
+                GetAllNodesFromAstCore(sharedFocusPath, node, filePaths, focusMap);
+            }
         }
 
-        foreach (var focusNode in GetFocusNodesFromAstRootNode(focusTreeNode))
+        foreach (var focusNode in GetFocusNodesFromAstRootNode(rootNode))
         {
-            var focusNodeModel = CreateFocusNodeFromAstNode(focusNode);
+            var focusNodeModel = CreateFocusNodeFromAstNode(filePath, focusNode);
             focusMap[focusNodeModel.Id] = focusNodeModel;
         }
 
         ProcessFocusNodes(focusMap);
-
-        return focusMap;
     }
 
-    public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node focusTreeNode)
+    /// <summary>
+    /// 获取所有国策 <see cref="Node"/>, 包括普通国策和共享国策。
+    /// </summary>
+    /// <param name="rootNode">根节点</param>
+    /// <returns></returns>
+    public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node rootNode)
     {
-        return focusTreeNode.Nodes.Where(node =>
-            FocusKeywords.AsValueEnumerable().Any(keyword => keyword.EqualsIgnoreCase(node.Key))
-        );
+        var focusTreeNode = rootNode
+            .Nodes.AsValueEnumerable()
+            .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
+
+        IEnumerable<Node>? nodes = null;
+        if (focusTreeNode is not null)
+        {
+            nodes = focusTreeNode.Nodes.Where(node => node.Key.EqualsIgnoreCase(Keywords.Focus));
+        }
+
+        var sharedFocusNode = rootNode.Nodes.Where(node => node.Key.EqualsIgnoreCase(Keywords.SharedFocus));
+        nodes = nodes is null ? sharedFocusNode : nodes.Concat(sharedFocusNode);
+
+        return nodes;
     }
 
     private static void ProcessFocusNodes(Dictionary<string, FocusNode> focusMap)
@@ -65,6 +109,33 @@ public static class FocusNodeHelper
                 ProcessPrerequisite(focusNode, focusMap);
             }
         }
+    }
+
+    private static Dictionary<string, string> GetConfigs(Node rootNode)
+    {
+        var configs = new Dictionary<string, string>();
+
+        bool start = false;
+        foreach (var comment in rootNode.Comments)
+        {
+            if (comment.Comment == "config:start")
+            {
+                start = true;
+                continue;
+            }
+            if (comment.Comment == "config:end")
+            {
+                start = false;
+                break;
+            }
+            if (start)
+            {
+                string[] parts = comment.Comment.Split(':', 2, StringSplitOptions.TrimEntries);
+                configs[parts[0]] = parts[1];
+            }
+        }
+
+        return configs;
     }
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
@@ -102,9 +173,10 @@ public static class FocusNodeHelper
         }
     }
 
-    private static FocusNode CreateFocusNodeFromAstNode(Node focusNode)
+    private static FocusNode CreateFocusNodeFromAstNode(string filePath, Node focusNode)
     {
-        var model = new FocusNode();
+        var model = new FocusNode(filePath, GetFocusType(focusNode));
+
         var point = new Point();
 
         foreach (var child in focusNode.AllArray)
@@ -129,11 +201,18 @@ public static class FocusNodeHelper
                 }
                 else if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
                 {
-                    model.Cost = leaf.Value.TryGetDecimal(out decimal cost) ? cost : 0;
+                    if (!leaf.Value.TryGetDecimal(out decimal cost) && leaf.Value.TryGetInt(out int costInt))
+                    {
+                        cost = costInt;
+                    }
+                    model.Cost = cost;
                 }
                 else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
                 {
-                    model.RelativePosition = new FocusNode { Id = leaf.ValueText };
+                    model.RelativePosition = new FocusNode(string.Empty, FocusType.Normal)
+                    {
+                        Id = leaf.ValueText
+                    };
                 }
             }
             else if (child.TryGetNode(out var node))
@@ -142,14 +221,19 @@ public static class FocusNodeHelper
                 {
                     foreach (var focusLeaf in node.Leaves)
                     {
-                        model.MutuallyExclusive.Add(new FocusNode { Id = focusLeaf.ValueText });
+                        model.MutuallyExclusive.Add(
+                            new FocusNode(string.Empty, FocusType.Normal) { Id = focusLeaf.ValueText }
+                        );
                     }
                 }
                 else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
                 {
                     var prerequisite = node
                         .Leaves.AsValueEnumerable()
-                        .Select(nodeLeaf => new FocusNode { Id = nodeLeaf.ValueText })
+                        .Select(nodeLeaf => new FocusNode(string.Empty, FocusType.Normal)
+                        {
+                            Id = nodeLeaf.ValueText
+                        })
                         .ToList();
                     model.Prerequisite.Add(prerequisite);
                 }
@@ -160,10 +244,21 @@ public static class FocusNodeHelper
         return model;
     }
 
+    private static FocusType GetFocusType(Node focusNode)
+    {
+        return focusNode.Key switch
+        {
+            Keywords.Focus => FocusType.Normal,
+            Keywords.SharedFocus => FocusType.Shared,
+            _ => FocusType.Unknown
+        };
+    }
+
     public static Node CreateAstNodeFromEditorModel(FocusNode editorModel)
     {
         var children = new List<Child>(16)
         {
+            ChildHelper.LeafString("id", editorModel.Id),
             ChildHelper.Leaf("x", editorModel.RawPosition.X),
             ChildHelper.Leaf("y", editorModel.RawPosition.Y),
             ChildHelper.LeafString(Keywords.Icon, editorModel.Icon),
@@ -177,14 +272,17 @@ public static class FocusNodeHelper
             );
         }
 
-        children.Add(
-            ChildHelper.Node(
-                Keywords.MutuallyExclusive,
-                editorModel.MutuallyExclusive.Select(focus =>
-                    ChildHelper.LeafString(Keywords.Focus, focus.Id)
+        if (editorModel.MutuallyExclusive.Count != 0)
+        {
+            children.Add(
+                ChildHelper.Node(
+                    Keywords.MutuallyExclusive,
+                    editorModel.MutuallyExclusive.Select(focus =>
+                        ChildHelper.LeafString(Keywords.Focus, focus.Id)
+                    )
                 )
-            )
-        );
+            );
+        }
 
         foreach (var prerequisite in editorModel.Prerequisite)
         {
@@ -195,7 +293,10 @@ public static class FocusNodeHelper
             children.Add(prerequisiteNode);
         }
 
-        var focusNode = new Node(editorModel.Id) { AllArray = children.ToArray() };
+        var focusNode = new Node(editorModel.Type == FocusType.Shared ? Keywords.SharedFocus : Keywords.Focus)
+        {
+            AllArray = children.ToArray()
+        };
         return focusNode;
     }
 }

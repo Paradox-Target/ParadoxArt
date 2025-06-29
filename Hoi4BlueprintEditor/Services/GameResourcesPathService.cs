@@ -82,9 +82,8 @@ public sealed class GameResourcesPathService(
     /// 注意: 此方法会忽略mod描述文件中的 replace_path 指令
     /// </remarks>
     /// <param name="fileRelativePath">根目录下的相对路径</param>
-    /// <exception cref="FileNotFoundException">游戏和mod中均不存在</exception>
-    /// <returns>文件绝对路径</returns>
-    public string GetFilePathPriorModByRelativePath(string fileRelativePath)
+    /// <returns>文件绝对路径, 未找到时返回<c>null</c></returns>
+    public string? GetFilePathPriorModByRelativePath(string fileRelativePath)
     {
         string modFilePath = Path.Combine(settingService.ModRootFolderPath, fileRelativePath);
         if (File.Exists(modFilePath))
@@ -98,6 +97,20 @@ public sealed class GameResourcesPathService(
             return gameFilePath;
         }
 
-        throw new FileNotFoundException($"在Mod和游戏中均找不到目标文件 '{fileRelativePath}'");
+        return null;
+    }
+
+    public FileOrigin GetFileOrigin(string filePath)
+    {
+        if (filePath.Contains(settingService.ModRootFolderPath))
+        {
+            return FileOrigin.Mod;
+        }
+
+        if (filePath.Contains(settingService.GameRootFolderPath))
+        {
+            return FileOrigin.Game;
+        }
+        return FileOrigin.Unknown;
     }
 }

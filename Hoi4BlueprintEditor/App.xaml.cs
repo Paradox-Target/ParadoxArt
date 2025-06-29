@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Windows;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
@@ -23,6 +24,11 @@ public sealed partial class App : Application
         );
 
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
+
+    /// <summary>
+    /// 不带 BOM 的 UTF-8
+    /// </summary>
+    public static readonly Encoding Utf8Encoding = new UTF8Encoding(false);
 
     private MainWindow _main = null!;
 
@@ -75,7 +81,7 @@ public sealed partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         base.OnExit(e);
-        
+
         Services.Dispose();
         LogManager.Flush();
     }

@@ -45,15 +45,31 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         var watcherService = App.Current.Services.GetRequiredService<GameResourcesWatcherService>();
 
         bool isFolderPath = pathType == PathType.Folder;
-        string[] filePaths = isFolderPath
-            ? gameResourcesPathService
+        string[] filePaths;
+        if (isFolderPath)
+        {
+            filePaths = gameResourcesPathService
                 .GetAllFilePriorModByRelativePathForFolder(
                     _folderOrFileRelativePath,
                     filter.Name,
                     searchOption
                 )
-                .ToArray()
-            : [gameResourcesPathService.GetFilePathPriorModByRelativePath(folderOrFileRelativePath)];
+                .ToArray();
+        }
+        else
+        {
+            string? path = gameResourcesPathService.GetFilePathPriorModByRelativePath(
+                folderOrFileRelativePath
+            );
+            if (path is null)
+            {
+                filePaths = [];
+            }
+            else
+            {
+                filePaths = [path];
+            }
+        }
 
         // Resources 必须在使用 ParseFileAndAddToResources 之前初始化
         if (isAsyncLoading)
