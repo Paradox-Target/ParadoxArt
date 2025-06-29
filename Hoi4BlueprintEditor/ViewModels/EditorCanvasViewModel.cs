@@ -131,10 +131,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         if (focusTreeNode is not null)
         {
-            SyncNode(focusTreeNode, removedFocus, editorNodesMap);
+            SyncNode(focusTreeNode, removedFocus, editorNodesMap, FocusType.Normal);
         }
         // 同步 shared_focus
-        SyncNode(rootNode, removedFocus, editorNodesMap);
+        SyncNode(rootNode, removedFocus, editorNodesMap, FocusType.Shared);
 
         var fileOrigin = _pathService.GetFileOrigin(filePath);
         if (fileOrigin == FileOrigin.Mod)
@@ -156,7 +156,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     private static void SyncNode(
         Node focusTreeNode,
         List<Node> removedFocus,
-        Dictionary<string, FocusNode> editorNodesMap
+        Dictionary<string, FocusNode> editorNodesMap,
+        FocusType syncFocusType
     )
     {
         var children = focusTreeNode.AllArray.ToList();
@@ -175,7 +176,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         }
 
         // 添加新增的节点
-        foreach (var editorModel in editorNodesMap.Values)
+        foreach (
+            var editorModel in editorNodesMap
+                .Values.AsValueEnumerable()
+                .Where(focus => focus.Type == syncFocusType)
+        )
         {
             var focusNode = FocusNodeHelper.CreateAstNodeFromEditorModel(editorModel);
             children.Add(Child.Create(focusNode));
