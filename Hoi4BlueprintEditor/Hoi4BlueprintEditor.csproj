@@ -29,7 +29,7 @@
     <PackageReference Include="ParadoxPower" Version="0.12.0-beta" />
     <PackageReference Include="ParadoxPower.CSharpExtensions" Version="0.8.0-beta" />
     <PackageReference Include="Pidgin" Version="3.5.0" />
-    <PackageReference Include="ZLinq" Version="1.5.1" />
+    <PackageReference Include="ZLinq" Version="1.5.2" />
   </ItemGroup>
 
   <ItemGroup>
