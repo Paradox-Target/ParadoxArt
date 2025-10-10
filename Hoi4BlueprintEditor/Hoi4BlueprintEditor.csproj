@@ -24,7 +24,7 @@
     </PackageReference>
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
-    <PackageReference Include="NLog" Version="6.0.4" />
+    <PackageReference Include="NLog" Version="6.0.5" />
     <PackageReference Include="ObservableCollections" Version="3.3.4" />
     <PackageReference Include="ParadoxPower" Version="0.12.0-beta" />
     <PackageReference Include="ParadoxPower.CSharpExtensions" Version="0.8.0-beta" />
