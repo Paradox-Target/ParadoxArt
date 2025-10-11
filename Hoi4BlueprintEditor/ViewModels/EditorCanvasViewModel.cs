@@ -183,7 +183,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         )
         {
             var focusNode = FocusNodeHelper.CreateAstNodeFromEditorModel(editorModel);
-            children.Add(Child.Create(focusNode));
+            children.Add(focusNode);
             editorNodesMap.Remove(editorModel.Id);
         }
         focusTreeNode.AllArray = children.ToArray();
