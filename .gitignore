@@ -40,3 +40,5 @@ _ReSharper.*/
 # Windows
 Thumbs.db
 ehthumbs.db
+
+.idea/
