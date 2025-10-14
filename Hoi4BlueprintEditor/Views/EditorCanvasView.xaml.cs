@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Hoi4BlueprintEditor.ViewModels;
+using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor.Views;

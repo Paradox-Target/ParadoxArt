@@ -3,7 +3,7 @@ using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Hoi4BlueprintEditor.ViewModels;
+namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class FocusNodeViewModel : ObservableObject
 {

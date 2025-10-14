@@ -15,7 +15,7 @@ using ParadoxPower.Parser;
 using ParadoxPower.Process;
 using ZLinq;
 
-namespace Hoi4BlueprintEditor.ViewModels;
+namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class EditorCanvasViewModel : ObservableObject
 {

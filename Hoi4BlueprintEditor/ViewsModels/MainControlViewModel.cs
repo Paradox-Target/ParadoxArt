@@ -7,7 +7,7 @@ using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
 using Microsoft.Win32;
 
-namespace Hoi4BlueprintEditor.ViewModels;
+namespace Hoi4BlueprintEditor.ViewsModels;
 
 [RegisterSingleton<MainControlViewModel>]
 public sealed partial class MainControlViewModel : ObservableObject 

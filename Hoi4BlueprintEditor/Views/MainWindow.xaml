@@ -10,7 +10,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewModels"
+    xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ContentControl Content="{Binding CurrentView}" />
 </Window>
