@@ -50,6 +50,8 @@ public sealed partial class App : Application
 
         services.AddTransient<EditorCanvasViewModel>();
 
+        services.AddHoi4BlueprintEditor();
+
         return services.BuildServiceProvider();
     }
 

@@ -12,41 +12,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <DockPanel LastChildFill="True">
-
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="{x:Static language:Strings.FileMenu}">
-                <MenuItem Header="{x:Static language:Strings.NewMenuItem}" />
-                <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
-                <MenuItem Command="{Binding SaveFocusFileCommand}" Header="{x:Static language:Strings.SaveMenuItem}" />
-                <Separator />
-                <MenuItem Header="{x:Static language:Strings.ExitMenuItem}" />
-            </MenuItem>
-            <MenuItem Header="{x:Static language:Strings.EditMenuItem}">
-                <MenuItem Header="{x:Static language:Strings.UndoMenuItem}" />
-                <MenuItem Header="{x:Static language:Strings.RedoMenuItem}" />
-            </MenuItem>
-            <MenuItem Header="{x:Static language:Strings.ViewMenuItem}">
-                <MenuItem Header="{x:Static language:Strings.ZInMenuItem}" />
-                <MenuItem Header="{x:Static language:Strings.ZOutMenuItem}" />
-            </MenuItem>
-            <MenuItem Header="{x:Static language:Strings.HelpMenuItem}">
-                <MenuItem Header="{x:Static language:Strings.AboutMenuItem}" />
-            </MenuItem>
-            <MenuItem Header="语言(Language)">
-                <MenuItem Command="{Binding SetLanguageToChineseCommand}" Header="中文" />
-                <MenuItem Command="{Binding SetLanguageToEnglishCommand}" Header="English" />
-            </MenuItem>
-        </Menu>
-
-        <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem>
-                <TextBlock Text="准备就绪" />
-            </StatusBarItem>
-        </StatusBar>
-
-        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" />
-
-    </DockPanel>
+    <ContentControl Content="{Binding CurrentView}" />
 </Window>
