@@ -5,7 +5,7 @@ using System.Windows;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
-using Hoi4BlueprintEditor.ViewModels;
+using Hoi4BlueprintEditor.ViewsModels;
 using Hoi4BlueprintEditor.Views;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;

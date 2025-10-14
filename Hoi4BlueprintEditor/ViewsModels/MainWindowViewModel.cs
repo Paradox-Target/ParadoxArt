@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views;
 
-namespace Hoi4BlueprintEditor.ViewModels;
+namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class MainWindowViewModel : ObservableObject
 {
