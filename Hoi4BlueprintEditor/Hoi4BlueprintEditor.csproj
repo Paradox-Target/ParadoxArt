@@ -24,7 +24,7 @@
     </PackageReference>
     <PackageReference Include="Injectio" Version="5.1.0" />
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
     <PackageReference Include="NLog" Version="6.0.5" />
     <PackageReference Include="ObservableCollections" Version="3.3.4" />
     <PackageReference Include="ParadoxPower" Version="0.12.1-beta" />
