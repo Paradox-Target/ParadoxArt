@@ -1,15 +1,15 @@
 ﻿<UserControl
-    d:DataContext="{d:DesignInstance vms:MainControlViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="1024"
-    mc:Ignorable="d"
     x:Class="Hoi4BlueprintEditor.Views.MainControlView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    d:DataContext="{d:DesignInstance vms:MainControlViewModel}"
+    d:DesignHeight="{StaticResource MainWindowHeight}"
+    d:DesignWidth="{StaticResource MainWindowWidth}"
+    mc:Ignorable="d">
     <DockPanel LastChildFill="True">
 
         <Menu DockPanel.Dock="Top">

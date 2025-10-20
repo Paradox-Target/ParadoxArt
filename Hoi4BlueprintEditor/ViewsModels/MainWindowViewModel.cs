@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views;
+using Hoi4BlueprintEditor.Views.Initialization;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
@@ -11,7 +12,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private object? _currentView;
 
-    public MainWindowViewModel(NavigationService navigationService)
+    public MainWindowViewModel(NavigationService navigationService, SettingsService settingsService)
     {
         _navigationService = navigationService;
         
@@ -19,7 +20,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             CurrentView = _navigationService.CurrentView;
         };
-        
-        navigationService.NavigateTo<MainControlView>();
+
+        if (settingsService.IsFirstRun)
+        {
+            navigationService.NavigateTo<MainWelcomeView>();
+        }
+        else
+        {
+            navigationService.NavigateTo<MainControlView>();
+        }
     }
 }
