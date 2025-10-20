@@ -1,4 +1,4 @@
-﻿using Hoi4BlueprintEditor.Extensions;
+using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services;
 using MethodTimer;
@@ -16,6 +16,12 @@ public static class FocusNodeHelper
     private static readonly GameResourcesPathService PathService =
         App.Current.Services.GetRequiredService<GameResourcesPathService>();
 
+    /// <summary>
+    /// 获取所有国策内容, 包含被链接的其他文件的内容
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <param name="rootNode"></param>
+    /// <returns>FilePaths是所有被加载的文件路径</returns>
     [Time]
     public static (Dictionary<string, FocusNode> Nodes, IEnumerable<string> FilePaths) GetAllNodesFromAst(
         string filePath,
@@ -111,6 +117,11 @@ public static class FocusNodeHelper
         }
     }
 
+    /// <summary>
+    /// 获取配置信息
+    /// </summary>
+    /// <param name="rootNode">文档根节点</param>
+    /// <returns>返回键值对，键为配置项，值为配置项的值</returns>
     private static Dictionary<string, string> GetConfigs(Node rootNode)
     {
         var configs = new Dictionary<string, string>();

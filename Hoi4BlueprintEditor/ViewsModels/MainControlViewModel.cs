@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,14 +7,15 @@ using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
 using Microsoft.Win32;
 
-namespace Hoi4BlueprintEditor.ViewModels;
+namespace Hoi4BlueprintEditor.ViewsModels;
 
-public sealed partial class MainWindowViewModel : ObservableObject
+[RegisterSingleton<MainControlViewModel>]
+public sealed partial class MainControlViewModel : ObservableObject 
 {
     private readonly SettingsService _settingsService;
     private readonly AppLocalizationService _appLocalizationService;
 
-    public MainWindowViewModel(SettingsService settingsService, AppLocalizationService appLocalizationService)
+    public MainControlViewModel(SettingsService settingsService, AppLocalizationService appLocalizationService)
     {
         _settingsService = settingsService;
         _appLocalizationService = appLocalizationService;

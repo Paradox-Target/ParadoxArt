@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Hoi4BlueprintEditor.ViewModels;
+using Hoi4BlueprintEditor.ViewsModels;
 
 namespace Hoi4BlueprintEditor.Views;
 

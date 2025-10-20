@@ -8,5 +8,8 @@
     <Compile Update="Views\FocusNodeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Initialization\AppSettingsPageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

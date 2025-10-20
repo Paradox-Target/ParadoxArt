@@ -15,7 +15,7 @@ using ParadoxPower.Parser;
 using ParadoxPower.Process;
 using ZLinq;
 
-namespace Hoi4BlueprintEditor.ViewModels;
+namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class EditorCanvasViewModel : ObservableObject
 {
@@ -183,7 +183,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         )
         {
             var focusNode = FocusNodeHelper.CreateAstNodeFromEditorModel(editorModel);
-            children.Add(Child.Create(focusNode));
+            children.Add(focusNode);
             editorNodesMap.Remove(editorModel.Id);
         }
         focusTreeNode.AllArray = children.ToArray();
@@ -330,7 +330,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test3",
-                    RawPosition = new Point(2, 1),
+                    RawPosition = new Point(0, 1),
                     Icon = "GFX_GER_Test3",
                 }
             )
@@ -340,7 +340,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test4",
-                    RawPosition = new Point(3, 1),
+                    RawPosition = new Point(2, 1),
                     Icon = "GFX_GER_Test4",
                 }
             )
