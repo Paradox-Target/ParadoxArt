@@ -1,7 +1,7 @@
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
+using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
@@ -69,12 +69,7 @@ public sealed partial class App : Application
         }
 
         var settingsService = Services.GetRequiredService<SettingsService>();
-        if (!string.IsNullOrEmpty(settingsService.Language))
-        {
-            var culture = new CultureInfo(settingsService.Language);
-            Thread.CurrentThread.CurrentUICulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
-        }
+        LanguageHelper.SetLanguage(settingsService.Language);
 
         _main = Services.GetRequiredService<MainWindow>();
         _main.ShowDialog();
