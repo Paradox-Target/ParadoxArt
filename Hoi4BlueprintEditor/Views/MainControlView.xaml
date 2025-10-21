@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
     d:DataContext="{d:DesignInstance vms:MainControlViewModel}"
     d:DesignHeight="{StaticResource MainWindowHeight}"
@@ -43,7 +44,7 @@
             </StatusBarItem>
         </StatusBar>
 
-        <views:EditorCanvasView xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views" />
+        <views:EditorCanvasView />
 
     </DockPanel>
 </UserControl>
