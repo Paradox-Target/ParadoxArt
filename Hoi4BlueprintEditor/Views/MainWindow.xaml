@@ -5,11 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
     Title="{x:Static language:Strings.AppTitle}"
     Width="{StaticResource MainWindowWidth}"
     Height="{StaticResource MainWindowHeight}"
     d:DataContext="{d:DesignInstance vms:MainWindowViewModel}"
+    ui:TitleBar.Height="36"
+    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.UseModernWindowStyle="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <ContentControl Content="{Binding CurrentView}" />
