@@ -1,4 +1,4 @@
-﻿namespace Hoi4BlueprintEditor.Models.Focus;
+namespace Hoi4BlueprintEditor.Models.Focus;
 
 public sealed class FocusNode(string path, FocusType type)
 {
