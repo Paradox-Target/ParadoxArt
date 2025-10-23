@@ -15,6 +15,9 @@ public sealed partial class EditorCanvasView : UserControl
 {
     private Point? _lastMousePositionOnCanvas;
     private readonly EditorCanvasViewModel _viewModel;
+
+    private const double FocusInfoViewWidthRatio = 0.35;
+    private const double FocusInfoViewHeightRatio = 0.9;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public EditorCanvasView()
@@ -69,14 +72,12 @@ public sealed partial class EditorCanvasView : UserControl
     {
         var position = e.GetPosition(this);
         var result = VisualTreeHelper.HitTest(this, position);
-        if (
-            result.VisualHit is FrameworkElement element
-            && element.DataContext is FocusNodeViewModel viewModel
-        )
+        if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
-            FocusInfoView.Width = ActualWidth * 0.35;
-            FocusInfoView.Height = ActualHeight * 0.9;
+            FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
+            FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
 
+            FocusInfoView.DataContext = new FocusInfoViewModel(viewModel.Model);
             FocusInfoView.IsOpen = true;
         }
         else
