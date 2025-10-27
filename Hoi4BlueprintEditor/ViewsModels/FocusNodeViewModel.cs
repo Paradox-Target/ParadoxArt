@@ -14,8 +14,8 @@ public sealed class FocusNodeViewModel : ObservableObject
     {
         Model = model;
         BitmapSource = GetBitmapSource();
-        Width = BitmapSource?.Width ?? 64;
-        Height = BitmapSource?.Height ?? 64;
+        Width = BitmapSource?.PixelWidth ?? 0;
+        Height = BitmapSource?.PixelHeight ?? 0;
     }
 
     public FocusNode Model { get; }
