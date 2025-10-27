@@ -1,11 +1,16 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services.GameResources;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class FocusInfoViewModel(FocusNode focusNode) : ObservableObject
 {
     private readonly FocusNode _focusNode = focusNode;
+
+    private static readonly SpriteService SpriteService =
+        App.Current.Services.GetRequiredService<SpriteService>();
 
     public string Id
     {
@@ -26,4 +31,16 @@ public sealed partial class FocusInfoViewModel(FocusNode focusNode) : Observable
             OnPropertyChanged();
         }
     }
+
+    public string Icon
+    {
+        get => _focusNode.Icon;
+        set
+        {
+            _focusNode.Icon = value;
+            OnPropertyChanged();
+        }
+    }
+    public string IconPath => SpriteService.TryGetSpriteFilePath(Icon, out var path) ? path : string.Empty;
+
 }

@@ -1,46 +1,38 @@
 ﻿<UserControl
-    d:DataContext="{d:DesignInstance vms:FocusNodeViewModel}"
-    d:DesignHeight="70"
-    d:DesignWidth="50"
-    mc:Ignorable="d"
     x:Class="Hoi4BlueprintEditor.Views.FocusNodeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    d:DataContext="{d:DesignInstance vms:FocusNodeViewModel}"
+    d:DesignHeight="70"
+    d:DesignWidth="50"
+    mc:Ignorable="d">
     <Grid
+        Width="100"
+        Height="110"
         Background="#555"
-        Height="68"
-        ToolTip="{Binding Model.Id}"
-        Width="58">
+        ToolTip="{Binding Model.Id}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Border
-            Background="#333"
-            BorderBrush="Gray"
-            BorderThickness="1"
+        <Image
             Grid.Row="0"
-            Margin="2">
-            <TextBlock
-                FontSize="10"
-                Foreground="White"
-                HorizontalAlignment="Center"
-                Text="ICON"
-                VerticalAlignment="Center" />
-        </Border>
+            Width="{Binding Width}"
+            Height="{Binding Height}"
+            Source="{Binding BitmapSource}" />
 
         <TextBlock
-            FontSize="9"
-            Foreground="White"
             Grid.Row="1"
-            HorizontalAlignment="Center"
             Margin="2,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="12"
+            Foreground="White"
             Text="{Binding LocalizedName}"
-            TextTrimming="CharacterEllipsis"
-            VerticalAlignment="Center" />
+            TextTrimming="CharacterEllipsis" />
     </Grid>
 </UserControl>

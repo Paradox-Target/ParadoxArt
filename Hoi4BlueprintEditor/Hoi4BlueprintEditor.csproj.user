@@ -5,6 +5,9 @@
     <Compile Update="Views\EditorCanvasView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\FocusInfoView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\FocusNodeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
