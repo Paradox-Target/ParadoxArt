@@ -42,5 +42,4 @@ public sealed partial class FocusInfoViewModel(FocusNode focusNode) : Observable
         }
     }
     public string IconPath => SpriteService.TryGetSpriteFilePath(Icon, out var path) ? path : string.Empty;
-
 }

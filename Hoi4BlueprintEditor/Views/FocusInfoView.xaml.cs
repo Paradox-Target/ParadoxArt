@@ -1,17 +1,11 @@
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
-using Hoi4BlueprintEditor.Services.GameResources;
 using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
-using Pfim;
 
 namespace Hoi4BlueprintEditor.Views;
 
@@ -59,17 +53,10 @@ public sealed partial class FocusInfoView : UserControl
             return;
         }
 
-        string filePath = viewModel.IconPath;
-        if (!Path.GetExtension(filePath.AsSpan()).Equals(".dds", StringComparison.OrdinalIgnoreCase))
-        {
-            // TODO
-            return;
-        }
-
-        var bitmapSource = ImageService.GetImageSource(filePath);
+        var bitmapSource = ImageService.GetImageSource(viewModel.IconPath);
         FocusIcon.Source = bitmapSource;
-        FocusIcon.Width = bitmapSource.Width;
-        FocusIcon.Height = bitmapSource.Height;
+        FocusIcon.Width = bitmapSource?.PixelWidth ?? 0;
+        FocusIcon.Height = bitmapSource?.PixelHeight ?? 0;
     }
 
     private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

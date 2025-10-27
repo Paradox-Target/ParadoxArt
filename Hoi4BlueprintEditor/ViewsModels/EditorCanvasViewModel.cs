@@ -311,7 +311,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 {
                     Id = "GER_Test1",
                     RawPosition = new Point(0, 0),
-                    Icon = "GFX_GER_Test1",
+                    Icon = "GFX_goal_test",
                 }
             )
         );
@@ -320,7 +320,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test2",
-                    RawPosition = new Point(1, 0),
+                    RawPosition = new Point(2, 0),
                     Icon = "GFX_GER_Test2",
                 }
             )

@@ -1,3 +1,4 @@
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -11,10 +12,34 @@ public sealed class ImageService
     // TODO: 使用 WeakReference 缓存 ImageMeta?
     private readonly Dictionary<string, ImageMeta> _handles = [];
 
-    public BitmapSource GetImageSource(string filePath)
+    /// <summary>
+    /// 从指定路径加载图像并返回对应的 BitmapSource.
+    /// </summary>
+    /// <remarks>仅支持 Png 和 Dds 格式</remarks>
+    /// <param name="filePath">图像文件路径</param>
+    /// <returns>如果是不支持的图像格式, 返回 <c>null</c></returns>
+    public BitmapSource? GetImageSource(string filePath)
     {
-        // TODO: 支持 Png, 导入 png时转为dds
+        // TODO: 导入png时转为dds
         // TODO: 文件变更监控，变更时释放缓存
+        var extension = Path.GetExtension(filePath.AsSpan());
+        BitmapSource? bitmapImage = null;
+        if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
+        {
+            bitmapImage = new BitmapImage(new Uri(filePath, UriKind.Absolute));
+        }
+
+        if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))
+        {
+            bitmapImage = GetImageSourceFromDds(filePath);
+        }
+
+        bitmapImage?.Freeze();
+        return bitmapImage;
+    }
+
+    private BitmapSource GetImageSourceFromDds(string filePath)
+    {
         if (!_handles.TryGetValue(filePath, out var meta))
         {
             using var image = Pfimage.FromFile(filePath);
