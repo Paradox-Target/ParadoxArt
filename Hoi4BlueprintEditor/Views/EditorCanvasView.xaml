@@ -6,14 +6,12 @@
     xmlns:converters="clr-namespace:Hoi4BlueprintEditor.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
     d:DataContext="{d:DesignInstance vms:EditorCanvasViewModel}"
     d:DesignHeight="600"
     d:DesignWidth="1000"
     Background="#333333"
-    Unloaded="EditorCanvasView_OnUnloaded"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -56,33 +54,6 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <Popup
-            x:Name="FocusInfoView"
-            d:DataContext="{d:DesignInstance vms:FocusInfoViewModel}"
-            AllowsTransparency="True"
-            MouseLeftButtonDown="FocusInfoView_OnMouseLeftButtonDown"
-            Placement="Custom"
-            StaysOpen="True">
-            <Border
-                MinWidth="200"
-                Padding="10"
-                Background="AliceBlue"
-                BorderBrush="Gray"
-                BorderThickness="1"
-                CornerRadius="4">
-                <StackPanel>
-                    <TextBox ui:ControlHelper.Header="ID" Text="{Binding Id, Mode=TwoWay}" />
-
-                    <ui:NumberBox
-                        Header="Cost"
-                        Minimum="0"
-                        SpinButtonPlacementMode="Inline"
-                        ValidationMode="InvalidInputOverwritten"
-                        Value="{Binding Cost, Mode=TwoWay}" />
-
-
-                </StackPanel>
-            </Border>
-        </Popup>
+        <views:FocusInfoView x:Name="FocusInfoView" MouseLeftButtonDown="FocusInfoView_OnMouseLeftButtonDown"/>
     </Grid>
 </UserControl>

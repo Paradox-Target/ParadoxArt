@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using NLog;
 
 namespace Hoi4BlueprintEditor.Services;
@@ -79,7 +79,7 @@ public sealed class GameResourcesPathService(
     /// 根据相对路径获得游戏或者Mod文件的绝对路径, 优先Mod
     /// </summary>
     /// <remarks>
-    /// 注意: 此方法会忽略mod描述文件中的 replace_path 指令
+    /// 注意: 此方法会忽略mod描述文件中的 <c>replace_path</c> 指令
     /// </remarks>
     /// <param name="fileRelativePath">根目录下的相对路径</param>
     /// <returns>文件绝对路径, 未找到时返回<c>null</c></returns>
