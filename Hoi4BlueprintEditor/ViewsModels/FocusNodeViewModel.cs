@@ -29,6 +29,13 @@ public sealed class FocusNodeViewModel : ObservableObject
         BitmapSource = GetBitmapSource();
         Width = BitmapSource?.PixelWidth ?? 0;
         Height = BitmapSource?.PixelHeight ?? 0;
+        Model.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(Model.Id))
+            {
+                OnPropertyChanged(nameof(LocalizedName));
+            }
+        };
     }
 
     private BitmapSource? GetBitmapSource()

@@ -31,14 +31,14 @@
                         Margin="0,0,0,8"
                         ToolTip="{Binding IconPath}" />
                 </StackPanel>
-                <TextBox ui:ControlHelper.Header="ID" Text="{Binding Id, Mode=TwoWay}" />
+                <TextBox ui:ControlHelper.Header="ID" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <ui:NumberBox
                     Header="Cost"
                     Minimum="0"
                     SpinButtonPlacementMode="Inline"
                     ValidationMode="InvalidInputOverwritten"
-                    Value="{Binding Cost, Mode=TwoWay}" />
+                    Value="{Binding FocusNode.Cost, Mode=TwoWay}" />
 
             </StackPanel>
         </Border>
