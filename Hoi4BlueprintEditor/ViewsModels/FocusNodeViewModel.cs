@@ -10,17 +10,8 @@ namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed class FocusNodeViewModel : ObservableObject
 {
-    public FocusNodeViewModel(FocusNode model)
-    {
-        Model = model;
-        BitmapSource = GetBitmapSource();
-        Width = BitmapSource?.PixelWidth ?? 0;
-        Height = BitmapSource?.PixelHeight ?? 0;
-    }
-
     public FocusNode Model { get; }
     public string LocalizedName => LocalizationService.GetFormatText(Model.Id);
-
     public BitmapSource? BitmapSource { get; }
     public double Width { get; }
     public double Height { get; }
@@ -31,6 +22,14 @@ public sealed class FocusNodeViewModel : ObservableObject
         App.Current.Services.GetRequiredService<ImageService>();
     private static readonly SpriteService SpriteService =
         App.Current.Services.GetRequiredService<SpriteService>();
+
+    public FocusNodeViewModel(FocusNode model)
+    {
+        Model = model;
+        BitmapSource = GetBitmapSource();
+        Width = BitmapSource?.PixelWidth ?? 0;
+        Height = BitmapSource?.PixelHeight ?? 0;
+    }
 
     private BitmapSource? GetBitmapSource()
     {
