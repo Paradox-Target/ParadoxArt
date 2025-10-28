@@ -86,12 +86,14 @@ public sealed class GameResourcesPathService(
     public string? GetFilePathPriorModByRelativePath(string fileRelativePath)
     {
         string modFilePath = Path.Combine(settingService.ModRootFolderPath, fileRelativePath);
+        modFilePath = Path.GetFullPath(modFilePath);
         if (File.Exists(modFilePath))
         {
             return modFilePath;
         }
 
         string gameFilePath = Path.Combine(settingService.GameRootFolderPath, fileRelativePath);
+        gameFilePath = Path.GetFullPath(gameFilePath);
         if (File.Exists(gameFilePath))
         {
             return gameFilePath;

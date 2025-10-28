@@ -9,7 +9,6 @@ namespace Hoi4BlueprintEditor.Services;
 [RegisterSingleton<ImageService>]
 public sealed class ImageService
 {
-    // TODO: 使用 WeakReference 缓存 ImageMeta?
     private readonly Dictionary<string, ImageMeta> _handles = [];
 
     /// <summary>
@@ -23,19 +22,18 @@ public sealed class ImageService
         // TODO: 导入png时转为dds
         // TODO: 文件变更监控，变更时释放缓存
         var extension = Path.GetExtension(filePath.AsSpan());
-        BitmapSource? bitmapImage = null;
+        BitmapSource? bitmapSource = null;
         if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
         {
-            bitmapImage = new BitmapImage(new Uri(filePath, UriKind.Absolute));
+            bitmapSource = new BitmapImage(new Uri(filePath, UriKind.Absolute));
         }
 
         if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))
         {
-            bitmapImage = GetImageSourceFromDds(filePath);
+            bitmapSource = GetImageSourceFromDds(filePath);
         }
-
-        bitmapImage?.Freeze();
-        return bitmapImage;
+        bitmapSource?.Freeze();
+        return bitmapSource;
     }
 
     private BitmapSource GetImageSourceFromDds(string filePath)
