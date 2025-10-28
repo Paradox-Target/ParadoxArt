@@ -9,6 +9,8 @@ namespace Hoi4BlueprintEditor.Services;
 [RegisterSingleton<ImageService>]
 public sealed class ImageService
 {
+    // TODO: 导入png时转为dds
+    // TODO: 文件变更监控，变更时释放缓存
     private readonly Dictionary<string, ImageMeta> _handles = [];
 
     /// <summary>
@@ -19,8 +21,6 @@ public sealed class ImageService
     /// <returns>如果是不支持的图像格式, 返回 <c>null</c></returns>
     public BitmapSource? GetImageSource(string filePath)
     {
-        // TODO: 导入png时转为dds
-        // TODO: 文件变更监控，变更时释放缓存
         var extension = Path.GetExtension(filePath.AsSpan());
         BitmapSource? bitmapSource = null;
         if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
