@@ -1,8 +1,11 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace Hoi4BlueprintEditor.Models.Focus;
 
-public sealed class FocusNode(string path, FocusType type)
+public sealed partial class FocusNode(string path, FocusType type) : ObservableObject
 {
-    public string Id { get; set; } = string.Empty;
+    [ObservableProperty]
+    private string _id = string.Empty;
     public FocusType Type { get; } = type;
 
     /// <summary>
