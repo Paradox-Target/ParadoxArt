@@ -7,10 +7,33 @@ namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed class FocusInfoViewModel(FocusNode focusNode) : ObservableObject
 {
+    public decimal Cost
+    {
+        get => FocusNode.Cost;
+        set
+        {
+            FocusNode.Cost = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(FocusDaysTip));
+        }
+    }
     public FocusNode FocusNode { get; } = focusNode;
+
+    public string IconPath =>
+        SpriteService.TryGetSpriteFilePath(FocusNode.Icon, out string? path) ? path : string.Empty;
+
+    public string FocusDaysTip => GetFocusDaysTip();
+
+    private string GetFocusDaysTip()
+    {
+        int focusCost = DefinesService.Get<int>(DefineName);
+        int totalDays = (int)FocusNode.Cost * focusCost;
+        return $" x {focusCost} = {totalDays} 天";
+    }
 
     private static readonly SpriteService SpriteService =
         App.Current.Services.GetRequiredService<SpriteService>();
-
-    public string IconPath => SpriteService.TryGetSpriteFilePath(FocusNode.Icon, out string? path) ? path : string.Empty;
+    private static readonly DefinesService DefinesService =
+        App.Current.Services.GetRequiredService<DefinesService>();
+    private static readonly string[] DefineName = "NDefines.NFocus.FOCUS_POINT_DAYS".Split('.');
 }

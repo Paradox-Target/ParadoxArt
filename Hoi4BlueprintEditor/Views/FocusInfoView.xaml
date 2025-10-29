@@ -33,12 +33,18 @@
                 </StackPanel>
                 <TextBox ui:ControlHelper.Header="ID" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <ui:NumberBox
-                    Header="Cost"
-                    Minimum="0"
-                    SpinButtonPlacementMode="Inline"
-                    ValidationMode="InvalidInputOverwritten"
-                    Value="{Binding FocusNode.Cost, Mode=TwoWay}" />
+                <StackPanel Orientation="Horizontal">
+                    <ui:NumberBox
+                        Header="Cost"
+                        Minimum="0"
+                        SpinButtonPlacementMode="Inline"
+                        ValidationMode="InvalidInputOverwritten"
+                        Value="{Binding Cost, Mode=TwoWay}" />
+                    <TextBlock
+                        VerticalAlignment="Bottom"
+                        FontSize="20"
+                        Text="{Binding FocusDaysTip}" />
+                </StackPanel>
 
             </StackPanel>
         </Border>
