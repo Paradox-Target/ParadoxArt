@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using Hoi4BlueprintEditor.Services;
+using System.Windows.Controls;
 
 namespace Hoi4BlueprintEditor.Views.Initialization;
 

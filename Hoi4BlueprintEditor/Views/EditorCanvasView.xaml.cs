@@ -36,8 +36,8 @@ public sealed partial class EditorCanvasView : UserControl
         var result = VisualTreeHelper.HitTest(this, position);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
-            FocusInfoView.FocusInfoPopup.Width = ActualWidth * FocusInfoViewWidthRatio;
-            FocusInfoView.FocusInfoPopup.Height = ActualHeight * FocusInfoViewHeightRatio;
+            FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
+            FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
 
             FocusInfoView.DataContext = new FocusInfoViewModel(viewModel.Model);
             FocusInfoView.IsOpen = true;
