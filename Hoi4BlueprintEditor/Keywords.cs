@@ -1,4 +1,4 @@
-﻿namespace Hoi4BlueprintEditor;
+namespace Hoi4BlueprintEditor;
 
 public static class Keywords
 {
@@ -9,4 +9,5 @@ public static class Keywords
     public const string Prerequisite = "prerequisite";
     public const string Icon = "icon";
     public const string Cost = "cost";
+    public const string Common = "common";
 }
