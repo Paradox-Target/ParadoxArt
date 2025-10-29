@@ -48,12 +48,12 @@ public sealed partial class FocusInfoView : UserControl
             return;
         }
 
-        if (string.IsNullOrEmpty(viewModel.IconPath))
+        if (string.IsNullOrEmpty(viewModel.FocusNode.Icon))
         {
             return;
         }
 
-        var bitmapSource = ImageService.GetImageSource(viewModel.IconPath);
+        var bitmapSource = ImageService.GetFocusIconByName(viewModel.FocusNode.Icon);
         FocusIcon.Source = bitmapSource;
         FocusIcon.Width = bitmapSource?.PixelWidth ?? 0;
         FocusIcon.Height = bitmapSource?.PixelHeight ?? 0;

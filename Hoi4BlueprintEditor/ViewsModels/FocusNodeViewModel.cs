@@ -2,7 +2,6 @@ using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services;
-using Hoi4BlueprintEditor.Services.GameResources;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +19,6 @@ public sealed class FocusNodeViewModel : ObservableObject
         App.Current.Services.GetRequiredService<LocalizationFormatService>();
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
-    private static readonly SpriteService SpriteService =
-        App.Current.Services.GetRequiredService<SpriteService>();
 
     public FocusNodeViewModel(FocusNode model)
     {
@@ -40,11 +37,6 @@ public sealed class FocusNodeViewModel : ObservableObject
 
     private BitmapSource? GetBitmapSource()
     {
-        if (!SpriteService.TryGetSpriteFilePath(Model.Icon, out string? filePath))
-        {
-            return null;
-        }
-
-        return ImageService.GetImageSource(filePath);
+        return ImageService.GetFocusIconByName(Model.Icon);
     }
 }
