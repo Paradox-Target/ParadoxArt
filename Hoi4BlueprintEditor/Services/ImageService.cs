@@ -2,16 +2,34 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Hoi4BlueprintEditor.Services.GameResources;
 using Pfim;
 
 namespace Hoi4BlueprintEditor.Services;
 
 [RegisterSingleton<ImageService>]
-public sealed class ImageService
+public sealed class ImageService(SpriteService spriteService)
 {
     // TODO: 导入png时转为dds
     // TODO: 文件变更监控，变更时释放缓存
     private readonly Dictionary<string, ImageMeta> _handles = [];
+
+    private const string Unknown = "GFX_goal_unknown";
+
+    public BitmapSource? GetFocusIconByName(string spriteName)
+    {
+        if (!spriteService.TryGetSpriteFilePath(spriteName, out string? filePath))
+        {
+            _ = spriteService.TryGetSpriteFilePath(Unknown, out filePath);
+        }
+
+        if (filePath is null)
+        {
+            return null;
+        }
+
+        return GetImageSource(filePath);
+    }
 
     /// <summary>
     /// 从指定路径加载图像并返回对应的 BitmapSource.
@@ -32,6 +50,7 @@ public sealed class ImageService
         {
             bitmapSource = GetImageSourceFromDds(filePath);
         }
+
         bitmapSource?.Freeze();
         return bitmapSource;
     }
