@@ -35,7 +35,7 @@ public sealed partial class FocusInfoView : UserControl
         WeakReferenceMessenger.Default.Register<MainWindowStateChangeMessage>(this, MainWindowStateChanged);
         WeakReferenceMessenger.Default.Register<MainWindowDeactivatedMessage>(
             this,
-            (_, _) => FocusInfoPopup.IsOpen = false
+            (_, _) => IsOpen = false
         );
         FocusInfoPopup.CustomPopupPlacementCallback = CustomPopupPlacement;
         DataContextChanged += FocusInfoView_DataContextChanged;
@@ -86,7 +86,7 @@ public sealed partial class FocusInfoView : UserControl
 
         if (window.WindowState == WindowState.Minimized)
         {
-            FocusInfoPopup.IsOpen = false;
+            IsOpen = false;
         }
     }
 }
