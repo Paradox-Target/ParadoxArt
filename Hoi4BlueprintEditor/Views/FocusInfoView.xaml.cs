@@ -1,8 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using CommunityToolkit.Mvvm.Messaging;
-using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,13 +28,6 @@ public sealed partial class FocusInfoView : UserControl
     {
         InitializeComponent();
 
-        // 主窗口改变时关闭信息面板
-        WeakReferenceMessenger.Default.Register<MainWindowStateChangeMessage>(this, MainWindowStateChanged);
-        WeakReferenceMessenger.Default.Register<MainWindowDeactivatedMessage>(
-            this,
-            (_, _) => IsOpen = false
-        );
-        FocusInfoPopup.CustomPopupPlacementCallback = CustomPopupPlacement;
         DataContextChanged += FocusInfoView_DataContextChanged;
     }
 
@@ -63,30 +53,10 @@ public sealed partial class FocusInfoView : UserControl
     {
         if (d is FocusInfoView view)
         {
-            view.FocusInfoPopup.IsOpen = (bool)e.NewValue;
+            view.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
         }
-    }
-
-    private static CustomPopupPlacement[] CustomPopupPlacement(Size popupSize, Size targetSize, Point offset)
-    {
-        var customPopupPlacement = new CustomPopupPlacement(
-            new Point(targetSize.Width - popupSize.Width, (targetSize.Height - popupSize.Height) / 2),
-            PopupPrimaryAxis.Vertical
-        );
-        return [customPopupPlacement];
     }
 
     // TODO: 改变窗口大小或者移动窗口时关闭信息面板? (避免位置错乱)
-    private void MainWindowStateChanged(object _, MainWindowStateChangeMessage message)
-    {
-        if (message.Sender is not Window window)
-        {
-            return;
-        }
 
-        if (window.WindowState == WindowState.Minimized)
-        {
-            IsOpen = false;
-        }
-    }
 }
