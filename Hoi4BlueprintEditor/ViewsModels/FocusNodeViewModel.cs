@@ -23,7 +23,7 @@ public sealed class FocusNodeViewModel : ObservableObject
     public FocusNodeViewModel(FocusNode model)
     {
         Model = model;
-        BitmapSource = GetBitmapSource();
+        BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
         Width = BitmapSource?.PixelWidth ?? 0;
         Height = BitmapSource?.PixelHeight ?? 0;
         Model.PropertyChanged += (sender, args) =>
@@ -33,10 +33,5 @@ public sealed class FocusNodeViewModel : ObservableObject
                 OnPropertyChanged(nameof(LocalizedName));
             }
         };
-    }
-
-    private BitmapSource? GetBitmapSource()
-    {
-        return ImageService.GetFocusIconByName(Model.Icon);
     }
 }
