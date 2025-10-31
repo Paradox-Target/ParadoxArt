@@ -1,4 +1,4 @@
-﻿// License: Apache-2.0 License
+// License: Apache-2.0 License
 // https://github.com/melenaos/FileSystemSafeWatcher
 
 using System.Collections;
@@ -342,10 +342,9 @@ public sealed class FileSystemSafeWatcher : IDisposable
                             )
                             {
                                 //check if the file has been completely copied (can be opened for read)
-                                FileStream? stream = null;
                                 try
                                 {
-                                    stream = File.Open(
+                                    using var stream = File.Open(
                                         current.Args.FullPath,
                                         FileMode.Open,
                                         FileAccess.Read,
@@ -356,10 +355,6 @@ public sealed class FileSystemSafeWatcher : IDisposable
                                 catch (IOException)
                                 {
                                     raiseEvent = false;
-                                }
-                                finally
-                                {
-                                    stream?.Close();
                                 }
                             }
 
