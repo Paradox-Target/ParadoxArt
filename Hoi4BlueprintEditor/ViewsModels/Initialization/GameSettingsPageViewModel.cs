@@ -13,11 +13,15 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings) 
 {
     public Frame? Frame { get; set; }
 
-    private bool IsCompleted => !string.IsNullOrEmpty(GamePath);
+    private bool IsCompleted => !string.IsNullOrEmpty(GamePath) && !string.IsNullOrEmpty(ModPath);
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
     private string _gamePath = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
+    private string _modPath = string.Empty;
 
     [RelayCommand]
     private void PickGamePath()
@@ -28,6 +32,18 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings) 
         {
             GamePath = dialog.FolderName;
             settings.GameRootFolderPath = dialog.FolderName;
+        }
+    }
+
+    [RelayCommand]
+    private void PickModPath()
+    {
+        var dialog = new OpenFolderDialog { Multiselect = false };
+
+        if (dialog.ShowDialog() == true)
+        {
+            ModPath = dialog.FolderName;
+            settings.ModRootFolderPath = dialog.FolderName;
         }
     }
 

@@ -17,20 +17,39 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0">
-            <TextBlock
-                Margin="8,4"
-                DockPanel.Dock="Left"
-                Text="游戏根目录: " />
-            <TextBox VerticalAlignment="Top" Text="{Binding GamePath, Mode=OneWay}" />
-            <Button
-                Margin="8,4"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Command="{Binding PickGamePathCommand}"
-                Content="选择文件夹"
-                DockPanel.Dock="Right" />
-        </DockPanel>
+        <StackPanel Grid.Row="0">
+            <DockPanel>
+                <TextBlock
+                    Margin="8,4"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left"
+                    Text="游戏根目录: " />
+                <TextBox VerticalAlignment="Top" Text="{Binding GamePath, Mode=OneWay}" />
+                <Button
+                    Margin="8,4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Command="{Binding PickGamePathCommand}"
+                    Content="选择文件夹"
+                    DockPanel.Dock="Right" />
+            </DockPanel>
+
+            <DockPanel>
+                <TextBlock
+                    Margin="8,4"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Left"
+                    Text="Mod 根目录: " />
+                <TextBox Text="{Binding ModPath, Mode=TwoWay}" />
+                <Button
+                    Margin="8,4"
+                    HorizontalAlignment="Right"
+                    Command="{Binding PickModPathCommand}"
+                    Content="选择文件夹"
+                    DockPanel.Dock="Right" />
+            </DockPanel>
+        </StackPanel>
+
 
         <StackPanel Grid.Row="1">
             <Button
