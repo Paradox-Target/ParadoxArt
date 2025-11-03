@@ -50,8 +50,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                     return;
                 }
 
-                _nodes.Clear();
-                _focusTreeFiles.Clear();
+                ClearResources();
 
                 var (focusNodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(message.FilePath, rootNode);
                 _editorNodesMap = focusNodes;
@@ -65,6 +64,16 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
 
         WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
+    }
+
+    private void ClearResources()
+    {
+        foreach (var node in _nodes)
+        {
+            node.Dispose();
+        }
+        _nodes.Clear();
+        _focusTreeFiles.Clear();
     }
 
     [Time]

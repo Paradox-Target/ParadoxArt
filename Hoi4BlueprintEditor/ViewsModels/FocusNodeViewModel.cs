@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Models.Focus;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
-public sealed partial class FocusNodeViewModel : ObservableObject
+public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 {
     public FocusNode Model { get; }
     public string LocalizedName => LocalizationService.GetFormatText(Model.Id);
@@ -33,18 +34,25 @@ public sealed partial class FocusNodeViewModel : ObservableObject
         Width = BitmapSource?.PixelWidth ?? 0;
         Height = BitmapSource?.PixelHeight ?? 0;
 
-        Model.PropertyChanged += (_, args) =>
+        Model.PropertyChanged += OnModelPropertyChanged;
+    }
+
+    private void OnModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName == nameof(Model.Id))
         {
-            if (args.PropertyName == nameof(Model.Id))
-            {
-                OnPropertyChanged(nameof(LocalizedName));
-            }
-            else if (args.PropertyName == nameof(Model.Icon))
-            {
-                BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
-                Width = BitmapSource?.PixelWidth ?? 0;
-                Height = BitmapSource?.PixelHeight ?? 0;
-            }
-        };
+            OnPropertyChanged(nameof(LocalizedName));
+        }
+        else if (args.PropertyName == nameof(Model.Icon))
+        {
+            BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
+            Width = BitmapSource?.PixelWidth ?? 0;
+            Height = BitmapSource?.PixelHeight ?? 0;
+        }
+    }
+
+    public void Dispose()
+    {
+        Model.PropertyChanged -= OnModelPropertyChanged;
     }
 }
