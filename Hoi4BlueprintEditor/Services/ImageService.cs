@@ -113,13 +113,4 @@ public sealed class ImageService(SpriteService spriteService)
         int DataLength,
         int Stride
     );
-
-    public void Clear()
-    {
-        foreach (var meta in _handles.Values)
-        {
-            meta.Handle.Free();
-        }
-        _handles.Clear();
-    }
 }
