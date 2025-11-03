@@ -26,6 +26,8 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     public Point RawPosition { get; set; }
     public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
     public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
-    public string Icon { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    private string _icon = string.Empty;
     public decimal Cost { get; set; }
 }

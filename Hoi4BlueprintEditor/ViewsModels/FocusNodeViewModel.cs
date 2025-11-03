@@ -7,13 +7,19 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
-public sealed class FocusNodeViewModel : ObservableObject
+public sealed partial class FocusNodeViewModel : ObservableObject
 {
     public FocusNode Model { get; }
     public string LocalizedName => LocalizationService.GetFormatText(Model.Id);
-    public BitmapSource? BitmapSource { get; }
-    public double Width { get; }
-    public double Height { get; }
+
+    [ObservableProperty]
+    private BitmapSource? _bitmapSource;
+
+    [ObservableProperty]
+    private double _width;
+
+    [ObservableProperty]
+    private double _height;
 
     private static readonly LocalizationFormatService LocalizationService =
         App.Current.Services.GetRequiredService<LocalizationFormatService>();
@@ -26,11 +32,18 @@ public sealed class FocusNodeViewModel : ObservableObject
         BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
         Width = BitmapSource?.PixelWidth ?? 0;
         Height = BitmapSource?.PixelHeight ?? 0;
-        Model.PropertyChanged += (sender, args) =>
+
+        Model.PropertyChanged += (_, args) =>
         {
             if (args.PropertyName == nameof(Model.Id))
             {
                 OnPropertyChanged(nameof(LocalizedName));
+            }
+            else if (args.PropertyName == nameof(Model.Icon))
+            {
+                BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
+                Width = BitmapSource?.PixelWidth ?? 0;
+                Height = BitmapSource?.PixelHeight ?? 0;
             }
         };
     }
