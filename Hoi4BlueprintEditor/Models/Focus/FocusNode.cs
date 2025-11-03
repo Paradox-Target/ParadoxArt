@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Hoi4BlueprintEditor.Models.Focus;
 
-public sealed partial class FocusNode(string path, FocusType type) : ObservableObject
+public sealed partial class FocusNode(string path, FocusType type) : ObservableObject, IEquatable<FocusNode>
 {
     [ObservableProperty]
     private string _id = string.Empty;
@@ -30,4 +30,46 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     [ObservableProperty]
     private string _icon = string.Empty;
     public decimal Cost { get; set; }
+
+    public bool Equals(FocusNode? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return Id == other.Id && Type == other.Type && Path == other.Path && RawPosition.Equals(other.RawPosition);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj) || obj is FocusNode other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            int hashCode = Id.GetHashCode();
+            hashCode = (hashCode * 397) ^ (int)Type;
+            hashCode = (hashCode * 397) ^ Path.GetHashCode();
+            hashCode = (hashCode * 397) ^ RawPosition.GetHashCode();
+            return hashCode;
+        }
+    }
+
+    public static bool operator ==(FocusNode? left, FocusNode? right)
+    {
+        return Equals(left, right);
+    }
+
+    public static bool operator !=(FocusNode? left, FocusNode? right)
+    {
+        return !Equals(left, right);
+    }
 }

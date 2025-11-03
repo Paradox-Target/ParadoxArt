@@ -29,18 +29,28 @@ public sealed partial class EditorCanvasView : UserControl
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
         DataContext = _viewModel;
     }
-    
+
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         var position = e.GetPosition(this);
         var result = VisualTreeHelper.HitTest(this, position);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
+            if (
+                FocusInfoView.DataContext is FocusInfoViewModel oldViewModel
+                && oldViewModel.FocusNode == viewModel.Model
+            )
+            {
+                Log.Debug("相同国策, 跳过切换");
+                return;
+            }
+
             FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
             FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
 
             FocusInfoView.DataContext = new FocusInfoViewModel(viewModel.Model);
             FocusInfoView.IsOpen = true;
+            Log.Debug("切换国策: {Name}", viewModel.Model.Id);
         }
         else
         {
