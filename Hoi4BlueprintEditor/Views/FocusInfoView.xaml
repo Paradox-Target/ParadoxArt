@@ -6,13 +6,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:viewsModels="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
+    HorizontalAlignment="Right"
+    VerticalAlignment="Center"
     d:DataContext="{d:DesignInstance viewsModels:FocusInfoViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    mc:Ignorable="d"
-    HorizontalAlignment="Right"
-    VerticalAlignment="Center"
-    Visibility="Collapsed">
+    Visibility="Collapsed"
+    mc:Ignorable="d">
 
     <Border
         MinWidth="200"
@@ -22,7 +22,7 @@
         BorderThickness="1"
         CornerRadius="4">
         <StackPanel>
-            <StackPanel>
+            <StackPanel AllowDrop="True" Drop="FocusIcon_OnDrop">
                 <TextBlock Text="Icon" />
                 <Image
                     x:Name="FocusIcon"

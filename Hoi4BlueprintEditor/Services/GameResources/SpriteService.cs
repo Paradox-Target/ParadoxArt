@@ -6,6 +6,7 @@ using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using MethodTimer;
+using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 
@@ -17,7 +18,7 @@ public sealed class SpriteService
 {
     [Time("加载所有 Sprite 文件")]
     public SpriteService(GameResourcesPathService pathService)
-        : base("interface", WatcherFilter.GfxFiles, PathType.Folder, SearchOption.TopDirectoryOnly, true)
+        : base("interface", WatcherFilter.GfxFiles, PathType.Folder, SearchOption.AllDirectories, true)
     {
         _pathService = pathService;
     }
@@ -56,20 +57,13 @@ public sealed class SpriteService
 
         foreach (var child in rootNode.AllArray)
         {
-            if (
-                !(
-                    child.TryGetNode(out var spriteTypes)
-                    && spriteTypes.Key.Equals("spriteTypes", StringComparison.OrdinalIgnoreCase)
-                )
-            )
+            if (!(child.TryGetNode(out var spriteTypes) && spriteTypes.Key.EqualsIgnoreCase("spriteTypes")))
             {
                 continue;
             }
 
             foreach (
-                var spriteType in spriteTypes.Nodes.Where(node =>
-                    node.Key.Equals("spriteType", StringComparison.OrdinalIgnoreCase)
-                )
+                var spriteType in spriteTypes.Nodes.Where(node => node.Key.EqualsIgnoreCase("spriteType"))
             )
             {
                 ParseSpriteTypeNodeToDictionary(spriteType, sprites);

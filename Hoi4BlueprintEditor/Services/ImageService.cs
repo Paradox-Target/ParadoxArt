@@ -10,7 +10,6 @@ namespace Hoi4BlueprintEditor.Services;
 [RegisterSingleton<ImageService>]
 public sealed class ImageService(SpriteService spriteService)
 {
-    // TODO: 导入png时转为dds
     // TODO: 文件变更监控，变更时释放缓存
     private readonly Dictionary<string, ImageMeta> _handles = [];
 
@@ -43,7 +42,12 @@ public sealed class ImageService(SpriteService spriteService)
         BitmapSource? bitmapSource = null;
         if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
         {
-            bitmapSource = new BitmapImage(new Uri(filePath, UriKind.Absolute));
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.CacheOption = BitmapCacheOption.OnLoad;
+            image.UriSource = new Uri(filePath, UriKind.Absolute);
+            image.EndInit();
+            bitmapSource = image;
         }
 
         if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))

@@ -54,6 +54,6 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <views:FocusInfoView x:Name="FocusInfoView" MouseLeftButtonDown="FocusInfoView_OnMouseLeftButtonDown"/>
+        <views:FocusInfoView x:Name="FocusInfoView" MouseLeftButtonDown="FocusInfoView_OnMouseLeftButtonDown" />
     </Grid>
 </UserControl>

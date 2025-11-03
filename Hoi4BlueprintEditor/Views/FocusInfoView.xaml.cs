@@ -1,13 +1,17 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
 
 namespace Hoi4BlueprintEditor.Views;
 
 public sealed partial class FocusInfoView : UserControl
 {
+    // TODO: 改变窗口大小或者移动窗口时关闭信息面板? (避免位置错乱)
     public static readonly DependencyProperty IsOpenProperty = DependencyProperty.Register(
         nameof(IsOpen),
         typeof(bool),
@@ -23,6 +27,11 @@ public sealed partial class FocusInfoView : UserControl
 
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
+    private static readonly FileResourceService FileResourceService =
+        App.Current.Services.GetRequiredService<FileResourceService>();
+    private static readonly NotificationService NotificationService =
+        App.Current.Services.GetRequiredService<NotificationService>();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public FocusInfoView()
     {
@@ -43,10 +52,7 @@ public sealed partial class FocusInfoView : UserControl
             return;
         }
 
-        var bitmapSource = ImageService.GetFocusIconByName(viewModel.FocusNode.Icon);
-        FocusIcon.Source = bitmapSource;
-        FocusIcon.Width = bitmapSource?.PixelWidth ?? 0;
-        FocusIcon.Height = bitmapSource?.PixelHeight ?? 0;
+        SetImage(ImageService.GetFocusIconByName(viewModel.FocusNode.Icon));
     }
 
     private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -57,6 +63,39 @@ public sealed partial class FocusInfoView : UserControl
         }
     }
 
-    // TODO: 改变窗口大小或者移动窗口时关闭信息面板? (避免位置错乱)
+    private void FocusIcon_OnDrop(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetData(DataFormats.FileDrop) is not string[] files)
+        {
+            return;
+        }
 
+        // 当有多个文件时, 只使用第一个文件
+        string filePath = files[0];
+
+        if (ImageHelper.IsValidFocusImageFormat(filePath))
+        {
+            // TODO: 导入png时转为dds
+            var result = FileResourceService.RegisterFocusIcon(filePath);
+            if (string.IsNullOrEmpty(result.Name) || string.IsNullOrEmpty(result.DestFilePath))
+            {
+                return;
+            }
+
+            //TODO: 修改 .gfx 文件后 SpriteService 能否及时获取到图标?
+            SetImage(ImageService.GetImageSource(result.DestFilePath));
+            var viewModel = (FocusInfoViewModel)DataContext;
+            viewModel.FocusNode.Icon = result.Name;
+
+            Log.Info("添加图标成功: {Name}", result.Name);
+            NotificationService.Show("添加图标成功");
+        }
+    }
+
+    private void SetImage(BitmapSource? bitmapSource)
+    {
+        FocusIcon.Source = bitmapSource;
+        FocusIcon.Width = bitmapSource?.PixelWidth ?? 0;
+        FocusIcon.Height = bitmapSource?.PixelHeight ?? 0;
+    }
 }
