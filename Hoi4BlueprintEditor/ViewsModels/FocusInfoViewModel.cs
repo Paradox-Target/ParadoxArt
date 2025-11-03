@@ -27,7 +27,7 @@ public sealed class FocusInfoViewModel(FocusNode focusNode) : ObservableObject
     private string GetFocusDaysTip()
     {
         int focusCost = DefinesService.Get<int>(DefineName);
-        int totalDays = (int)FocusNode.Cost * focusCost;
+        int totalDays = (int)(FocusNode.Cost * focusCost);
         return $" x {focusCost} = {totalDays} 天";
     }
 
