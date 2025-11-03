@@ -4,6 +4,7 @@ using System.IO;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using MethodTimer;
+using Microsoft.Extensions.DependencyInjection;
 using ParadoxPower.CSharp;
 using ParadoxPower.Localisation;
 
@@ -17,8 +18,11 @@ public sealed class LocalizationService
     [Time("加载本地化文件")]
     public LocalizationService()
         : base(
-            // TODO: 按项目设置
-            Path.Combine("localisation", "simp_chinese"),
+            Path.Combine(
+                "localisation",
+                App.Current.Services.GetRequiredService<SettingsService>()
+                    .GameLanguage.ToGameLocalizationLanguage()
+            ),
             WatcherFilter.LocalizationFiles,
             PathType.Folder,
             SearchOption.AllDirectories,
