@@ -1,7 +1,9 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Hoi4BlueprintEditor.Helpers;
+using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +39,8 @@ public sealed partial class FocusInfoView : UserControl
     {
         InitializeComponent();
 
+        // 设置 DataContext 防止运行时提示绑定错误
+        DataContext = new FocusInfoViewModel(new FocusNode(string.Empty, FocusType.Unknown));
         DataContextChanged += FocusInfoView_DataContextChanged;
     }
 
@@ -47,12 +51,28 @@ public sealed partial class FocusInfoView : UserControl
             return;
         }
 
+        if (e.OldValue is FocusInfoViewModel oldViewModel)
+        {
+            oldViewModel.FocusNode.PropertyChanged -= FocusNodeOnPropertyChanged;
+        }
+
+        viewModel.FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
+
         if (string.IsNullOrEmpty(viewModel.FocusNode.Icon))
         {
             return;
         }
 
         SetImage(ImageService.GetFocusIconByName(viewModel.FocusNode.Icon));
+    }
+
+    private void FocusNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(FocusNode.Icon))
+        {
+            var focusNode = (FocusNode?)sender;
+            SetImage(ImageService.GetFocusIconByName(focusNode!.Icon));
+        }
     }
 
     private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
