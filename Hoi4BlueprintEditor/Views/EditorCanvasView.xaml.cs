@@ -41,6 +41,7 @@ public sealed partial class EditorCanvasView : UserControl
                 && oldViewModel.FocusNode == viewModel.Model
             )
             {
+                FocusInfoView.IsOpen = true;
                 Log.Debug("相同国策, 跳过切换");
                 return;
             }
