@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO;
+using DirectXTexNet;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Helpers;
 using ParadoxPower.CSharpExtensions;
@@ -15,6 +16,12 @@ public sealed class FileResourceService(SettingsService settingsService)
     private const string SpriteTypeKey = "SpriteType";
     private const string SpriteTypesKey = "spriteTypes";
 
+    /// <summary>
+    /// 注册 Focus 图标, 并返回图标名称和图标文件路径
+    /// </summary>
+    /// <param name="filePath">文件路径</param>
+    /// <remarks>仅支持 Png 格式和 Dds 格式, Png 会被转变为Dds格式(如果启用自动转码设置的话)</remarks>
+    /// <returns>图标名称和图标文件路径</returns>
     public (string Name, string DestFilePath) RegisterFocusIcon(string filePath)
     {
         Debug.Assert(ImageHelper.IsValidFocusImageFormat(filePath));
@@ -37,7 +44,14 @@ public sealed class FileResourceService(SettingsService settingsService)
         // 复制图片到 mod 文件夹中
         string destPath = Path.Combine(settingsService.ModRootFolderPath, relativePath);
         _ = Directory.CreateDirectory(Path.GetDirectoryName(destPath) ?? string.Empty);
-        File.Copy(filePath, destPath, true);
+        if (Path.GetExtension(destPath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase))
+        {
+            PngToDds(filePath, Path.ChangeExtension(destPath, ".dds"));
+        }
+        else
+        {
+            File.Copy(filePath, destPath, true);
+        }
 
         return (iconName, destPath);
     }
@@ -145,5 +159,13 @@ public sealed class FileResourceService(SettingsService settingsService)
         spriteTypeNode.AllArray = children.ToArray();
 
         return spriteTypeNode;
+    }
+
+    private static void PngToDds(string pngFilePath, string outputFilePath)
+    {
+        Debug.Assert(Path.GetExtension(pngFilePath).EqualsIgnoreCase(".png"));
+
+        using var png = TexHelper.Instance.LoadFromWICFile(pngFilePath, WIC_FLAGS.NONE);
+        png.SaveToDDSFile(DDS_FLAGS.NONE, outputFilePath);
     }
 }
