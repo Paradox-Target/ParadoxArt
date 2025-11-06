@@ -165,4 +165,22 @@
   <data name="ZOutMenuItem" xml:space="preserve">
     <value>_Zoom Out</value>
   </data>
+  <data name="Menu.Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Menu.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Menu.GameSettings" xml:space="preserve">
+    <value>Game Settings</value>
+  </data>
+  <data name="GameSettings.Overview" xml:space="preserve">
+    <value>. . .</value>
+  </data>
+  <data name="GameSettings.GameRoot" xml:space="preserve">
+    <value>Game Root Directory</value>
+  </data>
+  <data name="GameSettings.ModRoot" xml:space="preserve">
+    <value>Mod Root Directory</value>
+  </data>
 </root>

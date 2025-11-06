@@ -165,4 +165,22 @@
   <data name="ZOutMenuItem" xml:space="preserve">
     <value>_缩小</value>
   </data>
+  <data name="Menu.Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="Menu.Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Menu.GameSettings" xml:space="preserve">
+    <value>游戏设置</value>
+  </data>
+  <data name="GameSettings.Overview" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="GameSettings.GameRoot" xml:space="preserve">
+    <value>游戏根目录</value>
+  </data>
+  <data name="GameSettings.ModRoot" xml:space="preserve">
+    <value>模组根目录</value>
+  </data>
 </root>
