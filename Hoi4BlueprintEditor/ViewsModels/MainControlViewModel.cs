@@ -5,17 +5,22 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
+using Hoi4BlueprintEditor.Views.Initialization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
 [RegisterSingleton<MainControlViewModel>]
-public sealed partial class MainControlViewModel : ObservableObject 
+public sealed partial class MainControlViewModel : ObservableObject
 {
     private readonly SettingsService _settingsService;
     private readonly AppLocalizationService _appLocalizationService;
 
-    public MainControlViewModel(SettingsService settingsService, AppLocalizationService appLocalizationService)
+    public MainControlViewModel(
+        SettingsService settingsService,
+        AppLocalizationService appLocalizationService
+    )
     {
         _settingsService = settingsService;
         _appLocalizationService = appLocalizationService;
@@ -63,5 +68,14 @@ public sealed partial class MainControlViewModel : ObservableObject
     private void SaveFocusFile()
     {
         WeakReferenceMessenger.Default.Send(new SaveFocusTreeMessage(""));
+    }
+
+    [RelayCommand]
+    private void GameSettings()
+    {
+        // TODO: 暂时仅供界面测试
+        // TODO: 如果已编辑提示是否保存
+        // TODO: 使用弹窗而不是欢迎界面
+        App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainWelcomeView>();
     }
 }
