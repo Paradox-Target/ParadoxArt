@@ -8,10 +8,12 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/ConstantDictionary.xaml" />
-                <ResourceDictionary Source="Resources/Fonts/FontsDictionary.xaml" />
+                <ResourceDictionary Source="Resources/Icons/IconsDictionary.xaml" />
 
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
+
+                <ResourceDictionary Source="Resources/Styles/SettingsStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

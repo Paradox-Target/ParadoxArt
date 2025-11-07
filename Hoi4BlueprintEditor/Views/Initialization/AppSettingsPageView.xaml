@@ -1,51 +1,81 @@
 ﻿<Page
-    x:Class="Hoi4BlueprintEditor.Views.Initialization.AppSettingsPageView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Hoi4BlueprintEditor.Views.Initialization"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels.Initialization"
     Title="AppSettingsPageView"
     d:DataContext="{d:DesignInstance vms:AppSettingsPageViewModel}"
     d:DesignHeight="{StaticResource MainWindowHeight}"
     d:DesignWidth="{StaticResource MainWindowWidth}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    x:Class="Hoi4BlueprintEditor.Views.Initialization.AppSettingsPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Hoi4BlueprintEditor.Views.Initialization"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels.Initialization"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-    <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <StackPanel>
-                <TextBlock Margin="0,0,0,4" Text="语言(Language)" />
-                <ComboBox ItemsSource="{Binding Languages, Mode=OneTime}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" />
+        <StackPanel
+            Grid.RowSpan="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Image Source="{StaticResource AppSettingsMainIcon}" Style="{StaticResource Settings.IconImageStyle}" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Margin="20">
+            <StackPanel Margin="0,15">
+                <TextBlock Style="{StaticResource Settings.TitleTextBlockStyle}" Text="语言(Language)" />
+                <ComboBox
+                    ItemsSource="{Binding Languages, Mode=OneTime}"
+                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                    Style="{StaticResource Settings.PickComboboxStyle}" />
             </StackPanel>
 
-            <StackPanel Margin="8,0">
-                <TextBlock Margin="0,0,0,4" Text="游戏语言(Game Language)" />
-                <ComboBox ItemsSource="{Binding GameLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedGameLanguageIndex, Mode=TwoWay}" />
+            <StackPanel Margin="0,15">
+                <TextBlock Style="{StaticResource Settings.TitleTextBlockStyle}" Text="游戏语言(Game Language)" />
+                <ComboBox
+                    ItemsSource="{Binding GameLanguages, Mode=OneTime}"
+                    SelectedIndex="{Binding SelectedGameLanguageIndex, Mode=TwoWay}"
+                    Style="{StaticResource Settings.PickComboboxStyle}" />
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <StackPanel>
-                <TextBlock Margin="0,0,0,4" Text="语言(Language)" />
-                <ComboBox ItemsSource="{Binding Languages, Mode=OneTime}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}" />
-            </StackPanel>
-        </StackPanel>
-
-        <DockPanel Grid.Row="1" Margin="4,0,4,8">
-            <Button
-                Click="Next_OnClick"
-                Content="下一步"
-                DockPanel.Dock="Right" />
+        <StackPanel
+            Grid.Column="1"
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            Margin="0,30">
             <Button
                 Click="Previous_OnClick"
                 Content="上一步"
-                DockPanel.Dock="Left" />
-        </DockPanel>
+                HorizontalAlignment="Right"
+                Style="{StaticResource Settings.StepButtonStyle}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Column="2"
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            Margin="0,30">
+            <Button
+                Click="Next_OnClick"
+                Content="下一步"
+                HorizontalAlignment="Right"
+                Style="{StaticResource Settings.StepButtonStyle}" />
+        </StackPanel>
     </Grid>
 </Page>
