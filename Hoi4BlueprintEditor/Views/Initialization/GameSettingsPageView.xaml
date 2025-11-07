@@ -1,13 +1,12 @@
 ﻿<Page
     Title="GameSettingsPageView"
     d:DataContext="{d:DesignInstance vms:GameSettingsPageViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="500"
+    d:DesignHeight="{StaticResource MainWindowHeight}"
+    d:DesignWidth="{StaticResource MainWindowWidth}"
     mc:Ignorable="d"
     x:Class="Hoi4BlueprintEditor.Views.Initialization.GameSettingsPageView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
     xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
     xmlns:local="clr-namespace:Hoi4BlueprintEditor.Views.Initialization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -17,65 +16,72 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.RowSpan="2">
-            <emoji:TextBlock
-                FontFamily="{StaticResource Icon}"
-                FontSize="200"
-                HorizontalAlignment="Center"
-                Text="&#x1f4c2;"
-                VerticalAlignment="Center" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel
+            Grid.RowSpan="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Image Source="{StaticResource GameSettingsMainIcon}" Style="{StaticResource Settings.IconImageStyle}" />
         </StackPanel>
 
         <StackPanel
             Grid.Column="1"
+            Grid.ColumnSpan="2"
             Grid.Row="0"
+            Grid.RowSpan="3"
             Margin="20">
             <StackPanel Margin="0,15">
-                <TextBlock
-                    FontSize="{StaticResource TitleFontSize}"
-                    Margin="8,4"
-                    Text="{x:Static language:Strings.GameSettings_GameRoot}"
-                    VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource Settings.TitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_GameRoot}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Margin="0,0,10,0" Text="{Binding GamePath, Mode=OneWay}" />
+                    <TextBox Style="{StaticResource Settings.PathTextBoxStyle}" Text="{Binding GamePath, Mode=OneWay}" />
                     <Button
                         Command="{Binding PickGamePathCommand}"
                         Content="{x:Static language:Strings.GameSettings_Overview}"
-                        Grid.Column="1" />
+                        Grid.Column="1"
+                        Style="{StaticResource Settings.PickButtonStyle}" />
                 </Grid>
             </StackPanel>
 
             <StackPanel Margin="0,15">
-                <TextBlock
-                    FontSize="{StaticResource TitleFontSize}"
-                    Margin="8,4"
-                    Text="{x:Static language:Strings.GameSettings_ModRoot}"
-                    VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource Settings.TitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_ModRoot}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Margin="0,0,10,0" Text="{Binding ModPath, Mode=TwoWay}" />
+                    <TextBox Style="{StaticResource Settings.PathTextBoxStyle}" Text="{Binding ModPath, Mode=TwoWay}" />
                     <Button
                         Command="{Binding PickModPathCommand}"
                         Content="{x:Static language:Strings.GameSettings_Overview}"
-                        Grid.Column="1" />
+                        Grid.Column="1"
+                        Style="{StaticResource Settings.PickButtonStyle}" />
                 </Grid>
             </StackPanel>
+        </StackPanel>
 
-            <DockPanel Margin="15,30">
-                <Button
-                    Command="{Binding GoToNextPageCommand, Mode=Default}"
-                    Content="下一步"
-                    HorizontalAlignment="Right" />
-            </DockPanel>
+        <StackPanel
+            Grid.Column="2"
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            Margin="0,30">
+            <Button
+                Command="{Binding GoToNextPageCommand, Mode=Default}"
+                Content="下一步"
+                HorizontalAlignment="Right"
+                Style="{StaticResource Settings.StepButtonStyle}" />
         </StackPanel>
     </Grid>
 </Page>
