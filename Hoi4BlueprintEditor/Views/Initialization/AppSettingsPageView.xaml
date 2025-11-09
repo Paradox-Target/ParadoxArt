@@ -29,7 +29,7 @@
             Grid.RowSpan="4"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
-            <Image Source="{StaticResource AppSettingsMainIcon}" Style="{StaticResource Settings.IconImageStyle}" />
+            <Image Source="{StaticResource AppSettingsMainIcon}" Style="{StaticResource SettingsIconImageStyle}" />
         </StackPanel>
 
         <StackPanel
@@ -39,19 +39,19 @@
             Grid.RowSpan="3"
             Margin="20">
             <StackPanel Margin="0,15">
-                <TextBlock Style="{StaticResource Settings.TitleTextBlockStyle}" Text="语言(Language)" />
+                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="语言(Language)" />
                 <ComboBox
                     ItemsSource="{Binding Languages, Mode=OneTime}"
                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
-                    Style="{StaticResource Settings.PickComboboxStyle}" />
+                    Style="{StaticResource SettingsPickComboboxStyle}" />
             </StackPanel>
 
             <StackPanel Margin="0,15">
-                <TextBlock Style="{StaticResource Settings.TitleTextBlockStyle}" Text="游戏语言(Game Language)" />
+                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="游戏语言(Game Language)" />
                 <ComboBox
                     ItemsSource="{Binding GameLanguages, Mode=OneTime}"
                     SelectedIndex="{Binding SelectedGameLanguageIndex, Mode=TwoWay}"
-                    Style="{StaticResource Settings.PickComboboxStyle}" />
+                    Style="{StaticResource SettingsPickComboboxStyle}" />
             </StackPanel>
         </StackPanel>
 
@@ -64,7 +64,7 @@
                 Click="Previous_OnClick"
                 Content="上一步"
                 HorizontalAlignment="Right"
-                Style="{StaticResource Settings.StepButtonStyle}" />
+                Style="{StaticResource SettingsStepButtonStyle}" />
         </StackPanel>
         <StackPanel
             Grid.Column="2"
@@ -75,7 +75,7 @@
                 Click="Next_OnClick"
                 Content="下一步"
                 HorizontalAlignment="Right"
-                Style="{StaticResource Settings.StepButtonStyle}" />
+                Style="{StaticResource SettingsStepButtonStyle}" />
         </StackPanel>
     </Grid>
 </Page>
