@@ -8,8 +8,8 @@ namespace Hoi4BlueprintEditor.Controls;
 
 public sealed class GridRulerControl : Control
 {
-    private const double CellWidth = 96.0;
-    private const double CellHeight = 130.0;
+    public const double CellWidth = 96.0;
+    public const double CellHeight = 130.0;
 
     // 标尺大小
     private const double RulerSize = 30.0;

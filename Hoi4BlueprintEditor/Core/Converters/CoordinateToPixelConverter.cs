@@ -7,11 +7,7 @@ public sealed class CoordinateToPixelConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (
-            value is int coordinate
-            && parameter is string multiplierStr
-            && double.TryParse(multiplierStr, out double multiplier)
-        )
+        if (value is int coordinate && parameter is double multiplier)
         {
             return coordinate * multiplier;
         }
