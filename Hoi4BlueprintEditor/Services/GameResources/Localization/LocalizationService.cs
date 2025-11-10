@@ -1,4 +1,5 @@
 using System.Collections.Frozen;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
@@ -20,8 +21,10 @@ public sealed class LocalizationService
     private ICollection<FrozenDictionary<string, string>> Localisations => Resources.Values;
 
     /// Key: 国策文件路径, Value: 国策文件的本地化内容, 键值对
-    private readonly Dictionary<string, Dictionary<string, string>> _filesLocalisations =
-        new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<
+        (string FilePath, GameLanguage),
+        Dictionary<string, string>
+    > _filesLocalisations = new();
 
     [Time("加载本地化文件")]
     public LocalizationService(SettingsService settingsService)
@@ -41,14 +44,15 @@ public sealed class LocalizationService
             this,
             (_, _) =>
             {
-                foreach ((string focusFilePath, var localisation) in _filesLocalisations)
+                foreach (
+                    ((string focusFilePath, var gameLanguage), var userLocalisation) in _filesLocalisations
+                )
                 {
-                    // Key: 本地化键, Value: 本地化文本
+                    // localisation => Key: 本地化键, Value: 本地化文本
                     string filePath = Path.Combine(
                         settingsService.ModRootFolderPath,
                         "localisation",
-                        // TODO: 语言
-                        "english",
+                        gameLanguage.ToGameLocalizationLanguage(),
                         $"{Path.GetFileNameWithoutExtension(focusFilePath)}.yml"
                     );
                     Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
@@ -61,7 +65,7 @@ public sealed class LocalizationService
                             static entry => entry.Desc,
                             StringComparer.OrdinalIgnoreCase
                         );
-                        foreach (var content in localisation)
+                        foreach (var content in userLocalisation)
                         {
                             currentLocalisation[content.Key] = content.Value;
                         }
@@ -70,7 +74,7 @@ public sealed class LocalizationService
                     else
                     {
                         string key = GameLanguageToGameLocalizationKey(settingsService.GameLanguage);
-                        WriteLocalisationToFile(filePath, key, localisation);
+                        WriteLocalisationToFile(filePath, key, userLocalisation);
                     }
 
                     Log.Info("成功保存本地化文件: {FilePath}", filePath);
@@ -88,6 +92,8 @@ public sealed class LocalizationService
         Dictionary<string, string> localisation
     )
     {
+        Debug.Assert(languageKey.StartsWith("l_") && languageKey.EndsWith(':'), "languageKey");
+
         using var localisationFile = new StreamWriter(filePath, append: false, Encoding.UTF8);
         localisationFile.WriteLine(languageKey);
         foreach (var content in localisation)
@@ -150,14 +156,16 @@ public sealed class LocalizationService
     /// 添加本地化, 如果本地化已存在, 则覆盖
     /// </summary>
     /// <param name="filePath">国策文件路径</param>
+    /// <param name="gameLanguage">传入的本地化的语言</param>
     /// <param name="key">键</param>
     /// <param name="value">本地化值</param>
-    public void AddLocalisation(string filePath, string key, string value)
+    public void AddLocalisation(string filePath, GameLanguage gameLanguage, string key, string value)
     {
-        if (!_filesLocalisations.TryGetValue(filePath, out var localisation))
+        var mapKey = (filePath, gameLanguage);
+        if (!_filesLocalisations.TryGetValue(mapKey, out var localisation))
         {
             localisation = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            _filesLocalisations.Add(filePath, localisation);
+            _filesLocalisations.Add(mapKey, localisation);
         }
         localisation[key] = value;
     }
