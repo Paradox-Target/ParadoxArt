@@ -13,7 +13,11 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     /// </summary>
     public string Path { get; } = path;
     public List<FocusNode> MutuallyExclusive { get; } = [];
-    public FocusNode? RelativePosition { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(X))]
+    [NotifyPropertyChangedFor(nameof(Y))]
+    private FocusNode? _relativePosition;
 
     /// <summary>
     /// 每个项目中的集合代表一个 prerequisite 节点内容
@@ -23,7 +27,11 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     /// <summary>
     /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
     /// </summary>
-    public Point RawPosition { get; set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(X))]
+    [NotifyPropertyChangedFor(nameof(Y))]
+    private Point _rawPosition;
+
     public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
     public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
 
