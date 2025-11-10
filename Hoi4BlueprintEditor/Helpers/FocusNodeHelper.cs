@@ -22,7 +22,7 @@ public static class FocusNodeHelper
     /// <param name="filePath"></param>
     /// <param name="rootNode"></param>
     /// <returns>FilePaths是所有被加载的文件路径</returns>
-    [Time]
+    [Time("解析国策树")]
     public static (Dictionary<string, FocusNode> Nodes, IEnumerable<string> FilePaths) GetAllNodesFromAst(
         string filePath,
         Node rootNode
@@ -192,19 +192,19 @@ public static class FocusNodeHelper
     {
         var model = new FocusNode(filePath, GetFocusType(focusNode));
 
-        var point = new Point();
-
+        int x = 0;
+        int y = 0;
         foreach (var child in focusNode.AllArray)
         {
             if (child.TryGetLeaf(out var leaf))
             {
                 if (leaf.Key.EqualsIgnoreCase("x"))
                 {
-                    point.X = leaf.Value.TryGetInt(out int x) ? x : 0;
+                    x = leaf.Value.TryGetInt(out int result) ? result : 0;
                 }
                 else if (leaf.Key.EqualsIgnoreCase("y"))
                 {
-                    point.Y = leaf.Value.TryGetInt(out int y) ? y : 0;
+                    y = leaf.Value.TryGetInt(out int result) ? result : 0;
                 }
                 else if (leaf.Key.EqualsIgnoreCase("id"))
                 {
@@ -255,7 +255,7 @@ public static class FocusNodeHelper
             }
         }
 
-        model.RawPosition = point;
+        model.RawPosition = new Point(x, y);
         return model;
     }
 
