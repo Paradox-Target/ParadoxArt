@@ -1,17 +1,17 @@
-﻿using System.Globalization;
-using Hoi4BlueprintEditor.Models;
+﻿using Hoi4BlueprintEditor.Models;
 
 namespace Hoi4BlueprintEditor.Extensions;
 
 public static class EnumExtensions
 {
+    /// <summary>
+    /// 将 <see cref="GameLanguage"/> 转换为游戏本地化语言文件夹名称
+    /// </summary>
+    /// <param name="language"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public static string ToGameLocalizationLanguage(this GameLanguage language)
     {
-        if (language == GameLanguage.Default)
-        {
-            language = GetSystemLanguage();
-        }
-
         return language switch
         {
             GameLanguage.Chinese => "simp_chinese",
@@ -23,49 +23,7 @@ public static class EnumExtensions
             GameLanguage.Japanese => "japanese",
             GameLanguage.Portuguese => "braz_por",
             GameLanguage.Polish => "polish",
-            GameLanguage.Default => throw new ArgumentException($"{nameof(GameLanguage.Default)} 未转换为系统本地语言"),
             _ => throw new ArgumentOutOfRangeException(nameof(language), language, null)
         };
-    }
-
-    private static GameLanguage GetSystemLanguage()
-    {
-        var cultureInfo = CultureInfo.CurrentUICulture;
-        string name = cultureInfo.Name;
-
-        if (name.StartsWith("zh"))
-        {
-            return GameLanguage.Chinese;
-        }
-        if (name.StartsWith("es"))
-        {
-            return GameLanguage.Spanish;
-        }
-        if (name.StartsWith("de"))
-        {
-            return GameLanguage.German;
-        }
-        if (name.StartsWith("ja"))
-        {
-            return GameLanguage.Japanese;
-        }
-        if (name.StartsWith("fr"))
-        {
-            return GameLanguage.French;
-        }
-        if (name.StartsWith("ru"))
-        {
-            return GameLanguage.Russian;
-        }
-        if (name.Contains("pt-BR"))
-        {
-            return GameLanguage.Portuguese;
-        }
-        if (name.StartsWith("pl"))
-        {
-            return GameLanguage.Polish;
-        }
-
-        return GameLanguage.English;
     }
 }

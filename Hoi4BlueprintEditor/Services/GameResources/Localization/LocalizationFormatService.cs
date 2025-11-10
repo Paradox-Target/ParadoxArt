@@ -47,7 +47,7 @@ public sealed class LocalizationFormatService(
     {
         return GetFormatTextInfo(text)
             .AsValueEnumerable()
-            .Select(info => info.DisplayText)
+            .Select(static info => info.DisplayText)
             .JoinToString(string.Empty);
     }
 
@@ -137,7 +137,7 @@ public sealed class LocalizationFormatService(
                 LocalizationFormatParser.TryParse(text, out var formatInfos)
                 && formatInfos
                     .AsValueEnumerable()
-                    .Any(info => info.Type == LocalizationFormatType.Placeholder)
+                    .Any(static info => info.Type == LocalizationFormatType.Placeholder)
             )
             {
                 var list = new List<TextFormatInfo>();

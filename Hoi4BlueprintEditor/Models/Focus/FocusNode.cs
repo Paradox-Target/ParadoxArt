@@ -9,7 +9,7 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     public FocusType Type { get; } = type;
 
     /// <summary>
-    /// 国策来源文件绝对路径
+    /// 国策来源文件的绝对路径
     /// </summary>
     public string Path { get; } = path;
     public List<FocusNode> MutuallyExclusive { get; } = [];
@@ -43,7 +43,10 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
             return true;
         }
 
-        return Id == other.Id && Type == other.Type && Path == other.Path && RawPosition.Equals(other.RawPosition);
+        return Id == other.Id
+            && Type == other.Type
+            && Path == other.Path
+            && RawPosition.Equals(other.RawPosition);
     }
 
     public override bool Equals(object? obj)

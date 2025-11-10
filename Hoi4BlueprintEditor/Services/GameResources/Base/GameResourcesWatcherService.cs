@@ -120,7 +120,7 @@ public sealed class GameResourcesWatcherService : IDisposable
         Log.Debug("尝试停止监听资源文件夹: {FolderPath}", folderRelativePath);
         if (_watchedPaths.TryGetValue(folderRelativePath, out var watcherList))
         {
-            watcherList.ForEach(watcher => watcher.Dispose());
+            watcherList.ForEach(static watcher => watcher.Dispose());
             _watchedPaths.Remove(folderRelativePath);
             bool isRemoved =
                 _waitingWatchFolders.RemoveAll(tuple => tuple.folderRelativePath == folderRelativePath) != 0;
@@ -135,7 +135,7 @@ public sealed class GameResourcesWatcherService : IDisposable
     public void Dispose()
     {
         _modFolderWatcher.Dispose();
-        foreach (var watcher in _watchedPaths.Values.SelectMany(watcherList => watcherList))
+        foreach (var watcher in _watchedPaths.Values.SelectMany(static watcherList => watcherList))
         {
             watcher.Dispose();
         }

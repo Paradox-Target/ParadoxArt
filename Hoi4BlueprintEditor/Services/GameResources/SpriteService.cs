@@ -6,7 +6,6 @@ using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using MethodTimer;
-using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 
@@ -63,7 +62,9 @@ public sealed class SpriteService
             }
 
             foreach (
-                var spriteType in spriteTypes.Nodes.Where(node => node.Key.EqualsIgnoreCase("spriteType"))
+                var spriteType in spriteTypes.Nodes.Where(static node =>
+                    node.Key.EqualsIgnoreCase("spriteType")
+                )
             )
             {
                 ParseSpriteTypeNodeToDictionary(spriteType, sprites);

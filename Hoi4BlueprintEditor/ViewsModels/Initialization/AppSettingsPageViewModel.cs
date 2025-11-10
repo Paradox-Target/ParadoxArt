@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using EnumsNET;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Services;
 
@@ -14,7 +15,7 @@ public sealed partial class AppSettingsPageViewModel(SettingsService settings) :
     private int _selectedGameLanguageIndex;
 
     public string[] Languages { get; } = ["简体中文 | zh-CN", "English | en-US"];
-    public GameLanguage[] GameLanguages { get; } = Enum.GetValues<GameLanguage>();
+    public IReadOnlyList<GameLanguage> GameLanguages { get; } = Enums.GetValues<GameLanguage>();
 
     partial void OnSelectedIndexChanged(int value)
     {

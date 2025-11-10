@@ -137,8 +137,8 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         {
             Log.Debug(
                 "已加载的资源数量: {Count}, Path: '{Path}'",
-                _folderOrFileRelativePath,
-                Resources.Values.Cast<IReadOnlyCollection<object>>().Sum(content => content.Count)
+                Resources.Values.Cast<IReadOnlyCollection<object>>().Sum(static content => content.Count),
+                _folderOrFileRelativePath
             );
         }
     }

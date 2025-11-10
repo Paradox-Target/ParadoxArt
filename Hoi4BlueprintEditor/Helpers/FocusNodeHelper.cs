@@ -46,7 +46,9 @@ public static class FocusNodeHelper
         //TODO: 遵守shared_focus的规则(?)
         var configs = GetConfigs(rootNode);
         foreach (
-            var config in configs.AsValueEnumerable().Where(config => config.Key == Keywords.SharedFocus)
+            var config in configs
+                .AsValueEnumerable()
+                .Where(static config => config.Key == Keywords.SharedFocus)
         )
         {
             string? sharedFocusPath = PathService.GetFilePathPriorModByRelativePath(config.Value);
@@ -81,15 +83,17 @@ public static class FocusNodeHelper
     {
         var focusTreeNode = rootNode
             .Nodes.AsValueEnumerable()
-            .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
+            .FirstOrDefault(static node => node.Key.EqualsIgnoreCase("focus_tree"));
 
         IEnumerable<Node>? nodes = null;
         if (focusTreeNode is not null)
         {
-            nodes = focusTreeNode.Nodes.Where(node => node.Key.EqualsIgnoreCase(Keywords.Focus));
+            nodes = focusTreeNode.Nodes.Where(static node => node.Key.EqualsIgnoreCase(Keywords.Focus));
         }
 
-        var sharedFocusNode = rootNode.Nodes.Where(node => node.Key.EqualsIgnoreCase(Keywords.SharedFocus));
+        var sharedFocusNode = rootNode.Nodes.Where(static node =>
+            node.Key.EqualsIgnoreCase(Keywords.SharedFocus)
+        );
         nodes = nodes is null ? sharedFocusNode : nodes.Concat(sharedFocusNode);
 
         return nodes;
@@ -241,7 +245,7 @@ public static class FocusNodeHelper
                 {
                     var prerequisite = node
                         .Leaves.AsValueEnumerable()
-                        .Select(nodeLeaf => new FocusNode(string.Empty, FocusType.Normal)
+                        .Select(static nodeLeaf => new FocusNode(string.Empty, FocusType.Normal)
                         {
                             Id = nodeLeaf.ValueText
                         })
@@ -288,7 +292,7 @@ public static class FocusNodeHelper
             children.Add(
                 ChildHelper.Node(
                     Keywords.MutuallyExclusive,
-                    editorModel.MutuallyExclusive.Select(focus =>
+                    editorModel.MutuallyExclusive.Select(static focus =>
                         ChildHelper.LeafString(Keywords.Focus, focus.Id)
                     )
                 )
@@ -299,7 +303,7 @@ public static class FocusNodeHelper
         {
             var prerequisiteNode = ChildHelper.Node(
                 Keywords.Prerequisite,
-                prerequisite.Select(focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
+                prerequisite.Select(static focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
             );
             children.Add(prerequisiteNode);
         }

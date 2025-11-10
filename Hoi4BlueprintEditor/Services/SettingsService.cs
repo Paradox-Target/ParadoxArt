@@ -2,6 +2,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Models;
 using NLog;
 
@@ -10,7 +11,7 @@ namespace Hoi4BlueprintEditor.Services;
 public sealed class SettingsService
 {
     public string Language { get; set; } = string.Empty;
-    public GameLanguage GameLanguage { get; set; } = GameLanguage.Default;
+    public GameLanguage GameLanguage { get; set; } = LanguageHelper.GetGameLanguageBySystemLanguage();
     public string GameRootFolderPath { get; set; } = string.Empty;
     public string ModRootFolderPath { get; set; } = string.Empty;
 
@@ -33,7 +34,8 @@ public sealed class SettingsService
         try
         {
             string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
-            return JsonSerializer.Deserialize<SettingsService>(json) ?? new SettingsService();
+            return JsonSerializer.Deserialize<SettingsService>(json)
+                ?? new SettingsService { IsFirstRun = true };
         }
         catch (Exception ex)
         {
