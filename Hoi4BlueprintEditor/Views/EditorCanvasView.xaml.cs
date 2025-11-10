@@ -2,15 +2,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Hoi4BlueprintEditor.Controls;
+using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using Point = System.Windows.Point;
 
 namespace Hoi4BlueprintEditor.Views;
 
 public sealed partial class EditorCanvasView : UserControl
 {
     private Point? _lastMousePositionOnCanvas;
+    private FocusNode? _movedFocusNode;
     private readonly EditorCanvasViewModel _viewModel;
 
     private const double FocusInfoViewWidthRatio = 0.35;
@@ -36,6 +40,14 @@ public sealed partial class EditorCanvasView : UserControl
         var result = VisualTreeHelper.HitTest(this, position);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
+            if (e.ClickCount <= 1)
+            {
+                _movedFocusNode = viewModel.Model;
+                FocusInfoView.IsOpen = false;
+                return;
+            }
+
+            _movedFocusNode = null;
             if (
                 FocusInfoView.DataContext is FocusInfoViewModel oldViewModel
                 && oldViewModel.FocusNode == viewModel.Model
@@ -81,6 +93,17 @@ public sealed partial class EditorCanvasView : UserControl
         {
             _lastMousePositionOnCanvas = null;
             Cursor = Cursors.Arrow;
+        }
+
+        if (e.LeftButton == MouseButtonState.Pressed && _movedFocusNode is not null)
+        {
+            var position = e.GetPosition(this);
+            double scale = _viewModel.Scale;
+
+            _movedFocusNode.RawPosition = new Models.Focus.Point(
+                (int)((position.X - _viewModel.TranslateX) / (GridRulerControl.CellWidth * scale)),
+                (int)((position.Y - _viewModel.TranslateY) / (GridRulerControl.CellHeight * scale))
+            );
         }
     }
 
