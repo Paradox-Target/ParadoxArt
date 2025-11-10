@@ -30,13 +30,19 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     private readonly List<string> _focusTreeFiles = [];
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
+    private readonly NotificationService _notificationService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public EditorCanvasViewModel(GameResourcesPathService pathService, SettingsService settingsService)
+    public EditorCanvasViewModel(
+        GameResourcesPathService pathService,
+        SettingsService settingsService,
+        NotificationService notificationService
+    )
     {
         _pathService = pathService;
         _settingsService = settingsService;
+        _notificationService = notificationService;
         Nodes = _nodes.ToNotifyCollectionChanged();
         // 假数据测试
         LoadTestData();
@@ -102,6 +108,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             Save(filePath, maps[filePath]);
             Log.Debug("已保存国策树文件: {FilePath}", filePath);
         }
+
+        _notificationService.Show("成功保存国策树");
     }
 
     private void Save(string filePath, Dictionary<string, FocusNode> editorNodesMap)
