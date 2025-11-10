@@ -37,11 +37,11 @@ public sealed class LocalizationTextColorsService
 
     protected override FrozenDictionary<char, LocalizationTextColor>? ParseFileToContent(Node rootNode)
     {
-        var bitmapFontsNode = rootNode.Nodes.FirstOrDefault(node =>
+        var bitmapFontsNode = rootNode.Nodes.FirstOrDefault(static node =>
             StringComparer.OrdinalIgnoreCase.Equals("bitmapfonts", node.Key)
         );
 
-        var textColorsNode = bitmapFontsNode?.Nodes.FirstOrDefault(node =>
+        var textColorsNode = bitmapFontsNode?.Nodes.FirstOrDefault(static node =>
             StringComparer.OrdinalIgnoreCase.Equals("textcolors", node.Key)
         );
 

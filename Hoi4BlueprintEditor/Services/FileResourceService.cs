@@ -67,7 +67,7 @@ public sealed class FileResourceService(SettingsService settingsService)
         {
             spriteTypesNode = rootNode
                 .Nodes.AsValueEnumerable()
-                .First(node => node.Key.EqualsIgnoreCase(SpriteTypesKey));
+                .First(static node => node.Key.EqualsIgnoreCase(SpriteTypesKey));
         }
         else
         {
@@ -96,7 +96,7 @@ public sealed class FileResourceService(SettingsService settingsService)
         {
             spriteTypesNode = rootNode
                 .Nodes.AsValueEnumerable()
-                .First(node => node.Key.EqualsIgnoreCase(SpriteTypesKey));
+                .First(static node => node.Key.EqualsIgnoreCase(SpriteTypesKey));
         }
         else
         {
@@ -143,7 +143,7 @@ public sealed class FileResourceService(SettingsService settingsService)
             )
         ];
         var animationEndNode = animationStartNode.Clone();
-        animationEndNode.Leaves.First(leaf => leaf.Key.EqualsIgnoreCase("animationrotation")).Value =
+        animationEndNode.Leaves.First(static leaf => leaf.Key.EqualsIgnoreCase("animationrotation")).Value =
             Types.Value.NewInt(90);
 
         var spriteTypeNode = Node.Create(SpriteTypeKey);

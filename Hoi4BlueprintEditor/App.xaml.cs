@@ -37,7 +37,7 @@ public sealed partial class App : Application
         var services = new ServiceCollection();
 
         services.AddSingleton<AppLocalizationService>();
-        services.AddSingleton(_ => SettingsService.LoadSettings());
+        services.AddSingleton(static _ => SettingsService.LoadSettings());
         services.AddSingleton<LocalizationService>();
         services.AddSingleton<LocalizationFormatService>();
         services.AddSingleton<LocalizationTextColorsService>();

@@ -56,7 +56,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 _editorNodesMap = focusNodes;
                 _focusTreeFiles.AddRange(filePaths);
                 _nodes.AddRange(
-                    _editorNodesMap.Values.Select(focusNode => new FocusNodeViewModel(focusNode))
+                    _editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode))
                 );
                 Log.Info("已加载国策树文件: {FilePath}", message.FilePath);
                 Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
@@ -88,10 +88,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         // 将编辑器中的 FocusNode 按照文件路径分组
         var maps = _editorNodesMap
             .AsValueEnumerable()
-            .GroupBy(pair => pair.Value.Path)
+            .GroupBy(static pair => pair.Value.Path)
             .ToDictionary(
-                item => item.Key,
-                item => item.AsValueEnumerable().ToDictionary(pair => pair.Key, pair => pair.Value)
+                static item => item.Key,
+                static item =>
+                    item.AsValueEnumerable().ToDictionary(static pair => pair.Key, static pair => pair.Value)
             );
 
         foreach (string filePath in _focusTreeFiles)
@@ -112,14 +113,14 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         var focusTreeNode = rootNode
             .Nodes.AsValueEnumerable()
-            .FirstOrDefault(node => node.Key.EqualsIgnoreCase("focus_tree"));
+            .FirstOrDefault(static node => node.Key.EqualsIgnoreCase("focus_tree"));
 
         var removedFocus = new List<Node>();
         foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(rootNode))
         {
             var idLeaf = node
                 .Leaves.AsValueEnumerable()
-                .FirstOrDefault(leaf => leaf.Key.EqualsIgnoreCase("id"));
+                .FirstOrDefault(static leaf => leaf.Key.EqualsIgnoreCase("id"));
             string? id = idLeaf?.ValueText;
             if (id is null)
             {
@@ -246,7 +247,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     {
         return focusNode
             .AllArray.AsValueEnumerable()
-            .Where(child =>
+            .Where(static child =>
             {
                 // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId
                 // 这些内容完全按照编辑器模型保存
@@ -280,7 +281,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         var mutuallyExclusive = editorModel
             .MutuallyExclusive.AsValueEnumerable()
-            .Select(focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
+            .Select(static focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
             .ToArray();
         var mutuallyExclusiveChild = ChildHelper.Node(Keywords.MutuallyExclusive, mutuallyExclusive);
         children.Add(mutuallyExclusiveChild);
@@ -297,7 +298,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             var prerequisiteChildren = prerequisite
                 .AsValueEnumerable()
-                .Select(focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
+                .Select(static focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
                 .ToArray();
             children.Add(ChildHelper.Node(Keywords.Prerequisite, prerequisiteChildren));
         }
@@ -307,10 +308,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     private double _scale = 1.0;
 
     [ObservableProperty]
-    private double _translateX = 0;
+    private double _translateX;
 
     [ObservableProperty]
-    private double _translateY = 0;
+    private double _translateY;
 
     private void LoadTestData()
     {

@@ -9,21 +9,24 @@ public static class LocalizationFormatParser
     private static readonly Parser<char, LocalizationFormatInfo> PlaceholderParser = Char('$')
         .Then(AnyCharExcept('$').AtLeastOnceString())
         .Before(Char('$'))
-        .Map(placeholder => new LocalizationFormatInfo(placeholder, LocalizationFormatType.Placeholder));
+        .Map(static placeholder => new LocalizationFormatInfo(
+            placeholder,
+            LocalizationFormatType.Placeholder
+        ));
 
     private static readonly Parser<char, LocalizationFormatInfo> TextWithColorParser = Parser<char>
-        .Token(c => c != '§')
+        .Token(static c => c != '§')
         .AtLeastOnceString()
         .Optional()
         .Between(Char('§'), String("§!"))
-        .Map(text => new LocalizationFormatInfo(
+        .Map(static text => new LocalizationFormatInfo(
             text.HasValue ? text.Value : string.Empty,
             LocalizationFormatType.TextWithColor
         ));
 
     private static readonly Parser<char, LocalizationFormatInfo> IconParser = Char('£')
         .Then(Parser<char>.Any.Until(OneOf(Char(' '), Char('!'), Char('£'))))
-        .Map(text => new LocalizationFormatInfo(string.Concat(text), LocalizationFormatType.Icon));
+        .Map(static text => new LocalizationFormatInfo(string.Concat(text), LocalizationFormatType.Icon));
 
     private static readonly Parser<char, LocalizationFormatInfo> TextParser =
         from text in Try(String("$$").WithResult('$'))
