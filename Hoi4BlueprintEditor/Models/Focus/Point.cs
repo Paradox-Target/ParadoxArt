@@ -1,10 +1,10 @@
 ﻿namespace Hoi4BlueprintEditor.Models.Focus;
 
-public struct Point(int x, int y) : IEquatable<Point>
+public readonly struct Point(int x, int y) : IEquatable<Point>
 {
-    public int X { get; set; } = x;
-    public int Y { get; set; } = y;
-    
+    public int X { get; } = x;
+    public int Y { get; } = y;
+
     public override string ToString()
     {
         return $"({X}, {Y})";
