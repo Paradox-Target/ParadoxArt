@@ -21,8 +21,17 @@
         BorderBrush="Gray"
         BorderThickness="1"
         CornerRadius="4">
-        <StackPanel>
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
             <StackPanel
+                Grid.Row="0"
                 Margin="0,0,0,8"
                 AllowDrop="True"
                 Drop="FocusIcon_OnDrop">
@@ -34,9 +43,15 @@
                 <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
             </StackPanel>
 
-            <TextBox ui:ControlHelper.Header="ID" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox
+                Grid.Row="1"
+                ui:ControlHelper.Header="ID"
+                Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel
+                Grid.Row="2"
+                Margin="0,8,0,0"
+                Orientation="Horizontal">
                 <ui:NumberBox
                     Header="Cost"
                     Minimum="0"
@@ -49,8 +64,17 @@
                     Text="{Binding FocusDaysTip}" />
             </StackPanel>
 
-            <StackPanel Margin="0,8,0,0">
-                <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+            <Grid Grid.Row="3" Margin="0,8,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel
+                    Grid.Row="0"
+                    Margin="0,0,0,4"
+                    Orientation="Horizontal">
                     <TextBlock
                         VerticalAlignment="Bottom"
                         Style="{StaticResource SubtitleTextBlockStyle}"
@@ -61,9 +85,20 @@
                         SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
                 </StackPanel>
 
-                <TextBox ui:ControlHelper.Header="ID Text" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                <TextBox ui:ControlHelper.Header="描述" Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-            </StackPanel>
-        </StackPanel>
+                <TextBox
+                    Grid.Row="1"
+                    ui:ControlHelper.Header="ID Text"
+                    Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                <TextBox
+                    Grid.Row="2"
+                    Margin="0,8,0,0"
+                    VerticalAlignment="Top"
+                    ui:ControlHelper.Header="描述"
+                    AcceptsReturn="True"
+                    Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                    TextWrapping="WrapWithOverflow"
+                    VerticalScrollBarVisibility="Auto" />
+            </Grid>
+        </Grid>
     </Border>
 </UserControl>
