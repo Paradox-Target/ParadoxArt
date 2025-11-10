@@ -22,11 +22,12 @@
     <Grid ClipToBounds="True">
 
         <controls:GridRulerControl
+            Grid.ZIndex="1"
             Scale="{Binding Scale}"
             TranslateX="{Binding TranslateX}"
             TranslateY="{Binding TranslateY}" />
 
-        <ItemsControl ItemsSource="{Binding Nodes}">
+        <ItemsControl Grid.ZIndex="0" ItemsSource="{Binding Nodes}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <views:FocusNodeView />
@@ -48,12 +49,15 @@
 
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static controls:GridRulerControl.CellWidth}}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static controls:GridRulerControl.CellHeight}}" />
+                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={StaticResource FocusNodeWidth}}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={StaticResource FocusNodeHeight}}" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <views:FocusInfoView MouseLeftButtonDown="FocusInfoView_OnMouseLeftButtonDown" x:Name="FocusInfoView" />
+        <views:FocusInfoView
+            Grid.ZIndex="2"
+            MouseLeftButtonDown="FocusInfoView_OnMouseLeftButtonDown"
+            x:Name="FocusInfoView" />
     </Grid>
 </UserControl>
