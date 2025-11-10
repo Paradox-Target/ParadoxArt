@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Extensions;
-using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
@@ -70,12 +69,7 @@ public sealed class LocalizationService
                     }
                     else
                     {
-                        var language = settingsService.GameLanguage;
-                        if (language == GameLanguage.Default)
-                        {
-                            language = LanguageHelper.GetGameLanguageBySystemLanguage();
-                        }
-                        string key = GameLanguageToGameLocalizationKey(language);
+                        string key = GameLanguageToGameLocalizationKey(settingsService.GameLanguage);
                         WriteLocalisationToFile(filePath, key, localisation);
                     }
 
@@ -116,7 +110,6 @@ public sealed class LocalizationService
             GameLanguage.Chinese => "l_chinese:",
             GameLanguage.Japanese => "l_japanese:",
             GameLanguage.Portuguese => "l_braz_por:",
-            GameLanguage.Default => "l_english:",
             GameLanguage.Polish => "l_polish:",
             _ => throw new ArgumentOutOfRangeException(nameof(language))
         };
