@@ -1,41 +1,42 @@
 ﻿<UserControl
-    HorizontalAlignment="Right"
-    VerticalAlignment="Center"
-    Visibility="Collapsed"
-    d:DataContext="{d:DesignInstance viewsModels:FocusInfoViewModel}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d"
     x:Class="Hoi4BlueprintEditor.Views.FocusInfoView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:viewsModels="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    HorizontalAlignment="Right"
+    VerticalAlignment="Center"
+    d:DataContext="{d:DesignInstance viewsModels:FocusInfoViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Visibility="Collapsed"
+    mc:Ignorable="d">
 
     <Border
+        MinWidth="200"
+        Padding="10"
         Background="AliceBlue"
         BorderBrush="Gray"
         BorderThickness="1"
-        CornerRadius="4"
-        MinWidth="200"
-        Padding="10">
+        CornerRadius="4">
         <StackPanel>
             <StackPanel
+                Margin="0,0,0,8"
                 AllowDrop="True"
-                Drop="FocusIcon_OnDrop"
-                Margin="0,0,0,8">
+                Drop="FocusIcon_OnDrop">
                 <TextBlock Text="Icon" />
                 <Image
+                    x:Name="FocusIcon"
                     Margin="0,0,0,8"
-                    ToolTip="{Binding IconPath}"
-                    x:Name="FocusIcon" />
+                    ToolTip="{Binding IconPath}" />
                 <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
             </StackPanel>
 
-            <TextBox Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ui:ControlHelper.Header="ID" />
-
+            <TextBox ui:ControlHelper.Header="ID" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBox ui:ControlHelper.Header="ID Text" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            <TextBox ui:ControlHelper.Header="描述" Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
             <StackPanel Orientation="Horizontal">
                 <ui:NumberBox
                     Header="Cost"
@@ -44,9 +45,9 @@
                     ValidationMode="InvalidInputOverwritten"
                     Value="{Binding Cost, Mode=TwoWay}" />
                 <TextBlock
+                    VerticalAlignment="Bottom"
                     FontSize="20"
-                    Text="{Binding FocusDaysTip}"
-                    VerticalAlignment="Bottom" />
+                    Text="{Binding FocusDaysTip}" />
             </StackPanel>
 
         </StackPanel>

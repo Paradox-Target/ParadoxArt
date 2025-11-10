@@ -95,7 +95,6 @@ public sealed partial class FocusInfoView : UserControl
 
         if (ImageHelper.IsValidFocusImageFormat(filePath))
         {
-            // TODO: 导入png时转为dds
             var result = FileResourceService.RegisterFocusIcon(filePath);
             if (string.IsNullOrEmpty(result.Name) || string.IsNullOrEmpty(result.DestFilePath))
             {
