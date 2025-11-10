@@ -25,6 +25,7 @@
     </PackageReference>
     <PackageReference Include="Injectio" Version="5.1.0" />
     <PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.10.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
     <PackageReference Include="MethodTimer.Fody" Version="3.2.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
