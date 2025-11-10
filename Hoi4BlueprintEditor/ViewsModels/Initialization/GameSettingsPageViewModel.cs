@@ -13,7 +13,8 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings) 
 {
     public Frame? Frame { get; set; }
 
-    private bool IsCompleted => !string.IsNullOrEmpty(GamePath) && !string.IsNullOrEmpty(ModPath);
+    private bool IsCompleted =>
+        !string.IsNullOrEmpty(GamePath) && !string.IsNullOrEmpty(ModPath) && GamePath != ModPath;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
