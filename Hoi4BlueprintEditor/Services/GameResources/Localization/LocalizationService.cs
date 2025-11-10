@@ -48,7 +48,7 @@ public sealed class LocalizationService
                     ((string focusFilePath, var gameLanguage), var userLocalisation) in _filesLocalisations
                 )
                 {
-                    // localisation => Key: 本地化键, Value: 本地化文本
+                    // userLocalisation => Key: 本地化键, Value: 本地化文本
                     string filePath = Path.Combine(
                         settingsService.ModRootFolderPath,
                         "localisation",
@@ -159,7 +159,7 @@ public sealed class LocalizationService
     /// <param name="gameLanguage">传入的本地化的语言</param>
     /// <param name="key">键</param>
     /// <param name="value">本地化值</param>
-    public void AddLocalisation(string filePath, GameLanguage gameLanguage, string key, string value)
+    public void AddOrUpdateLocalisation(string filePath, GameLanguage gameLanguage, string key, string value)
     {
         var mapKey = (filePath, gameLanguage);
         if (!_filesLocalisations.TryGetValue(mapKey, out var localisation))

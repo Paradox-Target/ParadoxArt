@@ -73,7 +73,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject
             return;
         }
 
-        LocalizationService.AddLocalisation(
+        LocalizationService.AddOrUpdateLocalisation(
             FocusNode.Path,
             Languages[SelectedLanguageIndex],
             FocusNode.Id,
@@ -88,7 +88,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject
             return;
         }
 
-        LocalizationService.AddLocalisation(
+        LocalizationService.AddOrUpdateLocalisation(
             FocusNode.Path,
             Languages[SelectedLanguageIndex],
             $"{FocusNode.Id}_desc",
