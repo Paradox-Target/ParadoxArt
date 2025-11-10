@@ -51,7 +51,7 @@ public sealed partial class EditorCanvasView : UserControl
 
             FocusInfoView.DataContext = new FocusInfoViewModel(viewModel.Model);
             FocusInfoView.IsOpen = true;
-            Log.Debug("切换国策: {Name}", viewModel.Model.Id);
+            Log.Debug("切换到国策: {Name}", viewModel.Model.Id);
         }
         else
         {

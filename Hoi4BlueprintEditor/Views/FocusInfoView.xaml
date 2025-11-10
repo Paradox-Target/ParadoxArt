@@ -35,8 +35,7 @@
             </StackPanel>
 
             <TextBox ui:ControlHelper.Header="ID" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBox ui:ControlHelper.Header="ID Text" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-            <TextBox ui:ControlHelper.Header="描述" Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
             <StackPanel Orientation="Horizontal">
                 <ui:NumberBox
                     Header="Cost"
@@ -50,6 +49,21 @@
                     Text="{Binding FocusDaysTip}" />
             </StackPanel>
 
+            <StackPanel Margin="0,8,0,0">
+                <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Bottom"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="本地化" />
+                    <ComboBox
+                        Margin="8,0,0,0"
+                        ItemsSource="{Binding Languages, Mode=OneTime}"
+                        SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
+                </StackPanel>
+
+                <TextBox ui:ControlHelper.Header="ID Text" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                <TextBox ui:ControlHelper.Header="描述" Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            </StackPanel>
         </StackPanel>
     </Border>
 </UserControl>

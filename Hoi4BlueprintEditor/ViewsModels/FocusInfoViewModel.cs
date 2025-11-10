@@ -1,5 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using EnumsNET;
+using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,11 +22,16 @@ public sealed partial class FocusInfoViewModel : ObservableObject
         }
     }
 
+    public IReadOnlyList<GameLanguage> Languages { get; } = Enums.GetValues<GameLanguage>();
+
     [ObservableProperty]
     private string _idText;
 
     [ObservableProperty]
     private string _descriptionText;
+
+    [ObservableProperty]
+    private int _selectedLanguageIndex;
 
     public FocusInfoViewModel(FocusNode focusNode)
     {
@@ -31,6 +39,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject
 
         _idText = LocalizationService.GetValue(FocusNode.Id);
         _descriptionText = LocalizationService.GetValue($"{FocusNode.Id}_desc");
+        _selectedLanguageIndex = _lastSelectedLanguageIndex;
     }
 
     public FocusNode FocusNode { get; }
@@ -47,11 +56,13 @@ public sealed partial class FocusInfoViewModel : ObservableObject
         return $" x {focusCost} = {totalDays} 天";
     }
 
+    private static int _lastSelectedLanguageIndex = (int)
+        App.Current.Services.GetRequiredService<SettingsService>().GameLanguage;
     private static readonly SpriteService SpriteService =
         App.Current.Services.GetRequiredService<SpriteService>();
     private static readonly DefinesService DefinesService =
         App.Current.Services.GetRequiredService<DefinesService>();
-    private static readonly string[] DefineName = "NDefines.NFocus.FOCUS_POINT_DAYS".Split('.');
+    private static readonly string[] DefineName = ["NDefines", "NFocus", "FOCUS_POINT_DAYS"];
     private static readonly LocalizationService LocalizationService =
         App.Current.Services.GetRequiredService<LocalizationService>();
 
@@ -62,7 +73,12 @@ public sealed partial class FocusInfoViewModel : ObservableObject
             return;
         }
 
-        LocalizationService.AddLocalisation(FocusNode.Path, FocusNode.Id, value);
+        LocalizationService.AddLocalisation(
+            FocusNode.Path,
+            Languages[SelectedLanguageIndex],
+            FocusNode.Id,
+            value
+        );
     }
 
     partial void OnDescriptionTextChanged(string value)
@@ -72,6 +88,16 @@ public sealed partial class FocusInfoViewModel : ObservableObject
             return;
         }
 
-        LocalizationService.AddLocalisation(FocusNode.Path, $"{FocusNode.Id}_desc", value);
+        LocalizationService.AddLocalisation(
+            FocusNode.Path,
+            Languages[SelectedLanguageIndex],
+            $"{FocusNode.Id}_desc",
+            value
+        );
+    }
+
+    partial void OnSelectedLanguageIndexChanged(int value)
+    {
+        _lastSelectedLanguageIndex = value;
     }
 }
