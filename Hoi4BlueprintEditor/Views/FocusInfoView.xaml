@@ -17,13 +17,12 @@
     <Border
         MinWidth="200"
         Padding="10"
-        Background="AliceBlue"
-        BorderBrush="Gray"
-        BorderThickness="1"
+        Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
         CornerRadius="4">
         <Grid>
 
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -52,6 +51,19 @@
                 Grid.Row="2"
                 Margin="0,8,0,0"
                 Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Bottom" Text="X: " />
+                <ui:NumberBox Value="{Binding X, Mode=TwoWay}" />
+                <TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Bottom"
+                    Text="Y: " />
+                <ui:NumberBox Value="{Binding Y, Mode=TwoWay}" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Row="3"
+                Margin="0,8,0,0"
+                Orientation="Horizontal">
                 <ui:NumberBox
                     Header="Cost"
                     Minimum="0"
@@ -64,7 +76,7 @@
                     Text="{Binding FocusDaysTip}" />
             </StackPanel>
 
-            <Grid Grid.Row="3" Margin="0,8,0,0">
+            <Grid Grid.Row="4" Margin="0,8,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
