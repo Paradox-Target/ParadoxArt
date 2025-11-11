@@ -3,6 +3,7 @@ using System.IO;
 using DirectXTexNet;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Helpers;
+using Hoi4BlueprintEditor.Models;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
 using ParadoxPower.Process;
@@ -21,8 +22,8 @@ public sealed class FileResourceService(SettingsService settingsService)
     /// </summary>
     /// <param name="filePath">文件路径</param>
     /// <remarks>仅支持 Png 格式和 Dds 格式, Png 会被转变为Dds格式(如果启用自动转码设置的话)</remarks>
-    /// <returns>图标名称和图标文件路径</returns>
-    public (string Name, string DestFilePath) RegisterFocusIcon(string filePath)
+    /// <returns>注册结果</returns>
+    public RegisterFocusIconResult RegisterFocusIcon(string filePath)
     {
         Debug.Assert(ImageHelper.IsValidFocusImageFormat(filePath));
 
@@ -41,11 +42,16 @@ public sealed class FileResourceService(SettingsService settingsService)
         WriteFocusIconRegistrationFile(editorResourceFolder, iconName, relativePath);
         WriteFocusIconShineFile(editorResourceFolder, iconName, relativePath);
 
+        bool isConvertToDds = false;
         // 复制图片到 mod 文件夹中
         string destPath = Path.Combine(settingsService.ModRootFolderPath, relativePath);
         _ = Directory.CreateDirectory(Path.GetDirectoryName(destPath) ?? string.Empty);
-        if (Path.GetExtension(destPath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase))
+        if (
+            settingsService.IsAutoFocusPngConvertToDds
+            && Path.GetExtension(destPath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase)
+        )
         {
+            isConvertToDds = true;
             PngToDds(filePath, Path.ChangeExtension(destPath, ".dds"));
         }
         else
@@ -53,7 +59,7 @@ public sealed class FileResourceService(SettingsService settingsService)
             File.Copy(filePath, destPath, true);
         }
 
-        return (iconName, destPath);
+        return new RegisterFocusIconResult(iconName, destPath, isConvertToDds);
     }
 
     private static void WriteFocusIconShineFile(string editorResourceFolder, string name, string relativePath)

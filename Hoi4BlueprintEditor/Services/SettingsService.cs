@@ -15,6 +15,11 @@ public sealed class SettingsService
     public string GameRootFolderPath { get; set; } = string.Empty;
     public string ModRootFolderPath { get; set; } = string.Empty;
 
+    /// <summary>
+    /// 导入国策图片时是否自动将 png 转换为 dds 格式
+    /// </summary>
+    public bool IsAutoFocusPngConvertToDds { get; set; } = true;
+
     [JsonIgnore]
     public bool IsFirstRun { get; private init; }
 

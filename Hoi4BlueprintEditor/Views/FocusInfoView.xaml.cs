@@ -96,18 +96,19 @@ public sealed partial class FocusInfoView : UserControl
         if (ImageHelper.IsValidFocusImageFormat(filePath))
         {
             var result = FileResourceService.RegisterFocusIcon(filePath);
-            if (string.IsNullOrEmpty(result.Name) || string.IsNullOrEmpty(result.DestFilePath))
+            if (string.IsNullOrEmpty(result.IconId) || string.IsNullOrEmpty(result.DestFilePath))
             {
+                NotificationService.Show("添加图标失败");
                 return;
             }
 
             //TODO: 修改 .gfx 文件后 SpriteService 能否及时获取到图标?
             SetImage(ImageService.GetImageSource(result.DestFilePath));
             var viewModel = (FocusInfoViewModel)DataContext;
-            viewModel.FocusNode.Icon = result.Name;
+            viewModel.FocusNode.Icon = result.IconId;
 
-            Log.Info("添加图标成功: {Name}", result.Name);
-            NotificationService.Show("添加图标成功");
+            Log.Info("添加图标成功: {Name}", result.IconId);
+            NotificationService.Show(result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功");
         }
     }
 
