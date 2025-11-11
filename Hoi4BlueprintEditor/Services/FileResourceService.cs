@@ -27,9 +27,6 @@ public sealed class FileResourceService(SettingsService settingsService)
     {
         Debug.Assert(ImageHelper.IsValidFocusImageFormat(filePath));
 
-        string editorResourceFolder = Path.Combine(settingsService.ModRootFolderPath, "interface", "editor");
-        _ = Directory.CreateDirectory(editorResourceFolder);
-
         // 注册文件中的Icon相对路径
         string relativePath = Path.Combine(
             "gfx",
@@ -38,28 +35,33 @@ public sealed class FileResourceService(SettingsService settingsService)
             "focusIcon",
             Path.GetFileName(filePath)
         );
-        string iconName = $"GFX_{Path.GetFileNameWithoutExtension(filePath)}";
-        WriteFocusIconRegistrationFile(editorResourceFolder, iconName, relativePath);
-        WriteFocusIconShineFile(editorResourceFolder, iconName, relativePath);
-
-        bool isConvertToDds = false;
-        // 复制图片到 mod 文件夹中
         string destPath = Path.Combine(settingsService.ModRootFolderPath, relativePath);
         _ = Directory.CreateDirectory(Path.GetDirectoryName(destPath) ?? string.Empty);
-        if (
+
+        bool isNeedConvertToDds =
             settingsService.IsAutoFocusPngConvertToDds
-            && Path.GetExtension(destPath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase)
-        )
+            && Path.GetExtension(filePath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase);
+
+        // 复制图片到 mod 文件夹中
+        if (isNeedConvertToDds)
         {
-            isConvertToDds = true;
-            PngToDds(filePath, Path.ChangeExtension(destPath, ".dds"));
+            destPath = Path.ChangeExtension(destPath, ".dds");
+            relativePath = Path.ChangeExtension(relativePath, ".dds");
+            PngToDds(filePath, destPath);
         }
         else
         {
             File.Copy(filePath, destPath, true);
         }
 
-        return new RegisterFocusIconResult(iconName, destPath, isConvertToDds);
+        string editorResourceFolder = Path.Combine(settingsService.ModRootFolderPath, "interface", "editor");
+        _ = Directory.CreateDirectory(editorResourceFolder);
+
+        string iconName = $"GFX_{Path.GetFileNameWithoutExtension(filePath)}";
+        WriteFocusIconRegistrationFile(editorResourceFolder, iconName, relativePath);
+        WriteFocusIconShineFile(editorResourceFolder, iconName, relativePath);
+
+        return new RegisterFocusIconResult(iconName, destPath, isNeedConvertToDds);
     }
 
     private static void WriteFocusIconShineFile(string editorResourceFolder, string name, string relativePath)
