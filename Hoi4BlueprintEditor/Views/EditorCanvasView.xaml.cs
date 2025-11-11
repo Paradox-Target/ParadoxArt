@@ -153,10 +153,4 @@ public sealed partial class EditorCanvasView : UserControl
 
         _viewModel.Scale = newScale;
     }
-
-    // 点击信息面板时阻止事件冒泡, 导致点击FocusInfoView时关闭面板
-    private void FocusInfoView_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        e.Handled = true;
-    }
 }

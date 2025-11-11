@@ -42,6 +42,11 @@ public sealed partial class FocusInfoView : UserControl
         // 设置 DataContext 防止运行时提示绑定错误
         DataContext = new FocusInfoViewModel(new FocusNode(string.Empty, FocusType.Unknown));
         DataContextChanged += FocusInfoView_DataContextChanged;
+        // 点击信息面板时阻止事件冒泡, 导致点击FocusInfoView时关闭面板
+        MouseLeftButtonDown += static (_, args) =>
+        {
+            args.Handled = true;
+        };
     }
 
     private void FocusInfoView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
