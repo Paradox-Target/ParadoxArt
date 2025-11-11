@@ -3,6 +3,7 @@ using System.IO;
 using DirectXTexNet;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Helpers;
+using Hoi4BlueprintEditor.Models;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
 using ParadoxPower.Process;
@@ -21,13 +22,10 @@ public sealed class FileResourceService(SettingsService settingsService)
     /// </summary>
     /// <param name="filePath">文件路径</param>
     /// <remarks>仅支持 Png 格式和 Dds 格式, Png 会被转变为Dds格式(如果启用自动转码设置的话)</remarks>
-    /// <returns>图标名称和图标文件路径</returns>
-    public (string Name, string DestFilePath) RegisterFocusIcon(string filePath)
+    /// <returns>注册结果</returns>
+    public RegisterFocusIconResult RegisterFocusIcon(string filePath)
     {
         Debug.Assert(ImageHelper.IsValidFocusImageFormat(filePath));
-
-        string editorResourceFolder = Path.Combine(settingsService.ModRootFolderPath, "interface", "editor");
-        _ = Directory.CreateDirectory(editorResourceFolder);
 
         // 注册文件中的Icon相对路径
         string relativePath = Path.Combine(
@@ -37,23 +35,33 @@ public sealed class FileResourceService(SettingsService settingsService)
             "focusIcon",
             Path.GetFileName(filePath)
         );
-        string iconName = $"GFX_{Path.GetFileNameWithoutExtension(filePath)}";
-        WriteFocusIconRegistrationFile(editorResourceFolder, iconName, relativePath);
-        WriteFocusIconShineFile(editorResourceFolder, iconName, relativePath);
-
-        // 复制图片到 mod 文件夹中
         string destPath = Path.Combine(settingsService.ModRootFolderPath, relativePath);
         _ = Directory.CreateDirectory(Path.GetDirectoryName(destPath) ?? string.Empty);
-        if (Path.GetExtension(destPath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase))
+
+        bool isNeedConvertToDds =
+            settingsService.IsAutoFocusPngConvertToDds
+            && Path.GetExtension(filePath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase);
+
+        // 复制图片到 mod 文件夹中
+        if (isNeedConvertToDds)
         {
-            PngToDds(filePath, Path.ChangeExtension(destPath, ".dds"));
+            destPath = Path.ChangeExtension(destPath, ".dds");
+            relativePath = Path.ChangeExtension(relativePath, ".dds");
+            PngToDds(filePath, destPath);
         }
         else
         {
             File.Copy(filePath, destPath, true);
         }
 
-        return (iconName, destPath);
+        string editorResourceFolder = Path.Combine(settingsService.ModRootFolderPath, "interface", "editor");
+        _ = Directory.CreateDirectory(editorResourceFolder);
+
+        string iconName = $"GFX_{Path.GetFileNameWithoutExtension(filePath)}";
+        WriteFocusIconRegistrationFile(editorResourceFolder, iconName, relativePath);
+        WriteFocusIconShineFile(editorResourceFolder, iconName, relativePath);
+
+        return new RegisterFocusIconResult(iconName, destPath, isNeedConvertToDds);
     }
 
     private static void WriteFocusIconShineFile(string editorResourceFolder, string name, string relativePath)
