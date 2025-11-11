@@ -54,6 +54,7 @@ public sealed partial class FocusInfoView : UserControl
         if (e.OldValue is FocusInfoViewModel oldViewModel)
         {
             oldViewModel.FocusNode.PropertyChanged -= FocusNodeOnPropertyChanged;
+            oldViewModel.Dispose();
         }
 
         viewModel.FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;

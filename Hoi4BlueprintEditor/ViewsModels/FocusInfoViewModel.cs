@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EnumsNET;
 using Hoi4BlueprintEditor.Models;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
-public sealed partial class FocusInfoViewModel : ObservableObject
+public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 {
     public decimal Cost
     {
@@ -19,6 +20,30 @@ public sealed partial class FocusInfoViewModel : ObservableObject
             FocusNode.Cost = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(FocusDaysTip));
+        }
+    }
+
+    public int X
+    {
+        get => FocusNode.X;
+        set
+        {
+            _isSkipNotify = true;
+            FocusNode.RawPosition = new Point(value, FocusNode.RawPosition.Y);
+            OnPropertyChanged();
+            _isSkipNotify = false;
+        }
+    }
+
+    public int Y
+    {
+        get => FocusNode.Y;
+        set
+        {
+            _isSkipNotify = true;
+            FocusNode.RawPosition = new Point(FocusNode.RawPosition.X, value);
+            OnPropertyChanged();
+            _isSkipNotify = false;
         }
     }
 
@@ -32,6 +57,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject
 
     [ObservableProperty]
     private int _selectedLanguageIndex;
+    private bool _isSkipNotify;
 
     public FocusInfoViewModel(FocusNode focusNode)
     {
@@ -40,6 +66,23 @@ public sealed partial class FocusInfoViewModel : ObservableObject
         _idText = LocalizationService.GetValue(FocusNode.Id);
         _descriptionText = LocalizationService.GetValue($"{FocusNode.Id}_desc");
         _selectedLanguageIndex = _lastSelectedLanguageIndex;
+
+        FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
+    }
+
+    private void FocusNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        // 避免重复通知
+        if (_isSkipNotify)
+        {
+            return;
+        }
+
+        if (e.PropertyName == nameof(FocusNode.RawPosition))
+        {
+            OnPropertyChanged(nameof(X));
+            OnPropertyChanged(nameof(Y));
+        }
     }
 
     public FocusNode FocusNode { get; }
@@ -99,5 +142,10 @@ public sealed partial class FocusInfoViewModel : ObservableObject
     partial void OnSelectedLanguageIndexChanged(int value)
     {
         _lastSelectedLanguageIndex = value;
+    }
+
+    public void Dispose()
+    {
+        FocusNode.PropertyChanged -= FocusNodeOnPropertyChanged;
     }
 }
