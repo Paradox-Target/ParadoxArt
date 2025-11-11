@@ -30,8 +30,14 @@ public sealed partial class EditorCanvasView : UserControl
         MouseMove += OnMouseMove;
         MouseLeave += OnMouseLeave;
         MouseLeftButtonDown += OnMouseLeftButtonDown;
+        MouseLeftButtonUp += OnMouseLeftButtonUp;
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
         DataContext = _viewModel;
+    }
+
+    private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        _movedFocusNode = null;
     }
 
     private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
