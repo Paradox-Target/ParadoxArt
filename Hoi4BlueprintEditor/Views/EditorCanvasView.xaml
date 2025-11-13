@@ -55,6 +55,6 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <views:FocusInfoView x:Name="FocusInfoView" Grid.ZIndex="2" />
+        <views:FocusInfoView x:Name="FocusInfoView"/>
     </Grid>
 </UserControl>
