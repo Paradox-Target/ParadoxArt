@@ -106,7 +106,7 @@ public sealed partial class EditorCanvasView : UserControl
             var position = e.GetPosition(this);
             double scale = _viewModel.Scale;
 
-            _movedFocusNode.RawPosition = new Models.Focus.Point(
+            _movedFocusNode.SetRawPosition(
                 (int)((position.X - _viewModel.TranslateX) / (GridRulerControl.CellWidth * scale)),
                 (int)((position.Y - _viewModel.TranslateY) / (GridRulerControl.CellHeight * scale))
             );

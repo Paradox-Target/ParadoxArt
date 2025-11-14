@@ -42,6 +42,38 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     private string _icon = string.Empty;
     public decimal Cost { get; set; }
 
+    /// <summary>
+    /// 将 <c>RawPosition.X</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
+    /// </summary>
+    /// <param name="x"></param>
+    public void SetRawX(int x)
+    {
+        int offsetX = RelativePosition?.X ?? 0;
+        RawPosition = new Point(x - offsetX, RawPosition.Y);
+    }
+
+    /// <summary>
+    /// 将 <c>RawPosition.Y</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
+    /// </summary>
+    /// <param name="y"></param>
+    public void SetRawY(int y)
+    {
+        int offsetY = RelativePosition?.Y ?? 0;
+        RawPosition = new Point(RawPosition.X, y - offsetY);
+    }
+    
+    /// <summary>
+    /// 将 <c>RawPosition.X</c> 和 <c>RawPosition.Y</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void SetRawPosition(int x, int y)
+    {
+        int offsetX = RelativePosition?.X ?? 0;
+        int offsetY = RelativePosition?.Y ?? 0;
+        RawPosition = new Point(x - offsetX, y - offsetY);
+    }
+
     public bool Equals(FocusNode? other)
     {
         if (other is null)

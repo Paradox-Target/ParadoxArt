@@ -29,7 +29,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         set
         {
             _isSkipNotify = true;
-            FocusNode.RawPosition = new Point(value, FocusNode.RawPosition.Y);
+            FocusNode.SetRawX(value);
             OnPropertyChanged();
             _isSkipNotify = false;
         }
@@ -41,7 +41,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         set
         {
             _isSkipNotify = true;
-            FocusNode.RawPosition = new Point(FocusNode.RawPosition.X, value);
+            FocusNode.SetRawY(value);
             OnPropertyChanged();
             _isSkipNotify = false;
         }
