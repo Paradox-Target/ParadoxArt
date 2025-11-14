@@ -250,7 +250,10 @@ public static class FocusNodeHelper
                             Id = nodeLeaf.ValueText
                         })
                         .ToList();
-                    model.Prerequisite.Add(prerequisite);
+                    if (prerequisite.Count != 0)
+                    {
+                        model.Prerequisite.Add(prerequisite);
+                    }
                 }
             }
         }

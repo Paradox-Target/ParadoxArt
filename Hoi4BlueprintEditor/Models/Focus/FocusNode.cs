@@ -20,8 +20,11 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     private FocusNode? _relativePosition;
 
     /// <summary>
-    /// 每个项目中的集合代表一个 prerequisite 节点内容
+    /// 前提条件
     /// </summary>
+    /// <remarks>
+    /// 每个项目中的集合代表一个 prerequisite 节点内容
+    /// </remarks>
     public List<List<FocusNode>> Prerequisite { get; } = [];
 
     /// <summary>
