@@ -20,7 +20,8 @@
             x:Name="CustomAcrylicShapeLumin"
             Margin="0"
             Amount="80"
-            CornerRadius="4"
+            Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
+            CornerRadius="5"
             Target="{Binding ElementName=InfmBorder}"
             TintColor="Snow"
             TintOpacity="0.6" />
@@ -29,10 +30,15 @@
             x:Name="InfmBorder"
             MinWidth="200"
             Padding="10"
+            BorderBrush="Gray"
+            BorderThickness="1"
             CornerRadius="4">
             <Grid>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -45,79 +51,112 @@
                     Margin="0,0,0,8"
                     AllowDrop="True"
                     Drop="FocusIcon_OnDrop">
-                    <TextBlock Text="Icon" />
+                    <TextBlock FontFamily="Sarasa UI SC" Text="Icon" />
                     <Image
                         x:Name="FocusIcon"
                         Margin="0,0,0,8"
                         ToolTip="{Binding IconPath}" />
-                    <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
+                    <TextBox FontFamily="Cascadia Code" Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
                 </StackPanel>
+
+                <TextBlock
+                    Grid.Row="1"
+                    Margin="0,8,0,0"
+                    FontFamily="Sarasa UI SC"
+                    Text="ID" />
 
                 <TextBox
-                    Grid.Row="1"
-                    ui:ControlHelper.Header="ID"
-                    Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                <StackPanel
                     Grid.Row="2"
-                    Margin="0,8,0,0"
-                    Orientation="Horizontal">
-                    <TextBlock VerticalAlignment="Bottom" Text="X: " />
-                    <ui:NumberBox Value="{Binding X, Mode=TwoWay}" />
-                    <TextBlock
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Bottom"
-                        Text="Y: " />
-                    <ui:NumberBox Value="{Binding Y, Mode=TwoWay}" />
-                </StackPanel>
+                    Margin="0,4,0,0"
+                    FontFamily="Cascadia Code"
+                    Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <StackPanel
                     Grid.Row="3"
                     Margin="0,8,0,0"
                     Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="Sarasa UI SC"
+                        Text="X: " />
+                    <ui:NumberBox FontFamily="Cascadia Code" Value="{Binding X, Mode=TwoWay}" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        FontFamily="Sarasa UI SC"
+                        Text="Y: " />
+                    <ui:NumberBox FontFamily="Cascadia Code" Value="{Binding Y, Mode=TwoWay}" />
+                </StackPanel>
+
+                <TextBlock
+                    Grid.Row="4"
+                    Margin="0,8,0,0"
+                    FontFamily="Sarasa UI SC"
+                    Text="Cost" />
+
+                <StackPanel
+                    Grid.Row="5"
+                    Margin="0,4,0,0"
+                    Orientation="Horizontal">
                     <ui:NumberBox
-                        Header="Cost"
+                        FontFamily="Cascadia Code"
                         Minimum="0"
                         SpinButtonPlacementMode="Inline"
                         ValidationMode="InvalidInputOverwritten"
                         Value="{Binding Cost, Mode=TwoWay}" />
                     <TextBlock
-                        VerticalAlignment="Bottom"
-                        FontSize="20"
+                        VerticalAlignment="Center"
+                        FontFamily="Sarasa UI SC"
+                        FontSize="18"
                         Text="{Binding FocusDaysTip}" />
                 </StackPanel>
 
-                <Grid Grid.Row="4" Margin="0,8,0,0">
+                <Grid Grid.Row="6" Margin="0,12,0,0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <StackPanel
-                        Grid.Row="0"
-                        Margin="0,0,0,4"
-                        Orientation="Horizontal">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <TextBlock
-                            VerticalAlignment="Bottom"
-                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            VerticalAlignment="Center"
+                            FontFamily="Sarasa UI SC"
+                            FontSize="22"
                             Text="本地化" />
                         <ComboBox
                             Margin="8,0,0,0"
+                            FontFamily="Cascadia Code"
                             ItemsSource="{Binding Languages, Mode=OneTime}"
                             SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
                     </StackPanel>
 
-                    <TextBox
+                    <TextBlock
                         Grid.Row="1"
-                        ui:ControlHelper.Header="ID Text"
-                        Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        Margin="0,4,0,0"
+                        FontFamily="Sarasa UI SC"
+                        Text="Text" />
+
                     <TextBox
                         Grid.Row="2"
+                        Margin="0,4,0,0"
+                        FontFamily="Cascadia Code"
+                        Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Margin="0,4,0,0"
+                        FontFamily="Sarasa UI SC"
+                        Text="描述" />
+
+                    <TextBox
+                        Grid.Row="4"
                         Margin="0,8,0,0"
                         VerticalAlignment="Top"
-                        ui:ControlHelper.Header="描述"
                         AcceptsReturn="True"
+                        FontFamily="Cascadia Code, Sarasa UI SC"
                         Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                         TextWrapping="WrapWithOverflow"
                         VerticalScrollBarVisibility="Auto" />
