@@ -361,7 +361,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         var focus = new FocusNode("", FocusType.Normal)
         {
             Id = "GER_Test1",
-            RawPosition = new Point(0, 0),
+            RawPosition = new FocusPoint(0, 0),
             Icon = "GFX_goal_test",
         };
         _nodes.Add(new FocusNodeViewModel(focus));
@@ -370,7 +370,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test2",
-                    RawPosition = new Point(2, 0),
+                    RawPosition = new FocusPoint(2, 0),
                     Icon = "GFX_GER_Test2",
                     RelativePosition = focus
                 }
@@ -381,7 +381,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test3",
-                    RawPosition = new Point(0, 1),
+                    RawPosition = new FocusPoint(0, 1),
                     Icon = "GFX_GER_Test3",
                 }
             )
@@ -391,7 +391,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test4",
-                    RawPosition = new Point(2, 1),
+                    RawPosition = new FocusPoint(2, 1),
                     Icon = "GFX_GER_Test4",
                 }
             )

@@ -10,7 +10,6 @@ using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
-using Point = System.Windows.Point;
 
 namespace Hoi4BlueprintEditor.Views;
 
@@ -178,7 +177,7 @@ public sealed partial class EditorCanvasView : UserControl
     {
         var position = GetMousePositionOnGrid(_rightClickPoint);
         var newFocusNode = await WeakReferenceMessenger.Default.Send(
-            new CreateNewFocusMessage(new Models.Focus.Point(position.X, position.Y))
+            new CreateNewFocusMessage(new Models.Focus.FocusPoint(position.X, position.Y))
         );
 
         FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
