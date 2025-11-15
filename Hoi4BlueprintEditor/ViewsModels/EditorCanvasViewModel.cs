@@ -70,6 +70,41 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
 
         WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
+        WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(
+            this,
+            (_, message) =>
+            {
+                message.Reply(
+                    Task.Run(() =>
+                    {
+                        var focus = new FocusNode("", FocusType.Normal)
+                        {
+                            RawPosition = message.Position,
+                            Id = GetNextFocusId()
+                        };
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            _nodes.Add(new FocusNodeViewModel(focus));
+                        });
+                        _editorNodesMap[focus.Id] = focus;
+                        return focus;
+                    })
+                );
+            }
+        );
+    }
+
+    private static int _focusId = 1;
+
+    private string GetNextFocusId()
+    {
+        string id;
+        do
+        {
+            id = $"new_focus_{_focusId++}";
+        } while (_editorNodesMap.ContainsKey(id));
+
+        return id;
     }
 
     private void ClearResources()
