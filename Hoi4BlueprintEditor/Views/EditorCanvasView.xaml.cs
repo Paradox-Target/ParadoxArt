@@ -79,7 +79,7 @@ public sealed partial class EditorCanvasView : UserControl
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        if (e.RightButton == MouseButtonState.Pressed)
+        if (e.MiddleButton == MouseButtonState.Pressed)
         {
             if (_lastMousePositionOnCanvas.HasValue)
             {
