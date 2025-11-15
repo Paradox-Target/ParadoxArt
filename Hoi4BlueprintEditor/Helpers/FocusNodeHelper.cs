@@ -258,7 +258,7 @@ public static class FocusNodeHelper
             }
         }
 
-        model.RawPosition = new Point(x, y);
+        model.RawPosition = new FocusPoint(x, y);
         return model;
     }
 
