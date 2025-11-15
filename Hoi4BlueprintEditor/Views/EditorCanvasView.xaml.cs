@@ -88,11 +88,7 @@ public sealed partial class EditorCanvasView : UserControl
                 return;
             }
 
-            FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
-            FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
-
-            FocusInfoView.DataContext = new FocusInfoViewModel(viewModel.Model);
-            FocusInfoView.IsOpen = true;
+            OpenFocusInfoView(viewModel.Model);
             Log.Debug("切换到国策: {Name}", viewModel.Model.Id);
         }
         else
@@ -177,14 +173,10 @@ public sealed partial class EditorCanvasView : UserControl
     {
         var position = GetMousePositionOnGrid(_rightClickPoint);
         var newFocusNode = await WeakReferenceMessenger.Default.Send(
-            new CreateNewFocusMessage(new Models.Focus.FocusPoint(position.X, position.Y))
+            new CreateNewFocusMessage(new FocusPoint(position.X, position.Y))
         );
 
-        FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
-        FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
-
-        FocusInfoView.DataContext = new FocusInfoViewModel(newFocusNode);
-        FocusInfoView.IsOpen = true;
+        OpenFocusInfoView(newFocusNode);
         Log.Debug("创建新国策: {Name}", newFocusNode.Id);
     }
 
@@ -204,5 +196,13 @@ public sealed partial class EditorCanvasView : UserControl
         int x = (int)((mousePoint.X - _viewModel.TranslateX) / (GridRulerControl.CellWidth * scale));
         int y = (int)((mousePoint.Y - _viewModel.TranslateY) / (GridRulerControl.CellHeight * scale));
         return (x, y);
+    }
+
+    private void OpenFocusInfoView(FocusNode focusNode)
+    {
+        FocusInfoView.DataContext = new FocusInfoViewModel(focusNode);
+        FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
+        FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
+        FocusInfoView.IsOpen = true;
     }
 }
