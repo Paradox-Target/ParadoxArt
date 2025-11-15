@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -19,7 +20,7 @@ namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class EditorCanvasViewModel : ObservableObject
 {
-    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
+    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; set; }
 
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
 
@@ -337,7 +338,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                     Id = "GER_Test2",
                     RawPosition = new Point(2, 0),
                     Icon = "GFX_GER_Test2",
-                    RelativePosition = focus
+                    RelativePosition = focus,
                 }
             )
         );
