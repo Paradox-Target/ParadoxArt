@@ -6,6 +6,7 @@
     xmlns:converters="clr-namespace:Hoi4BlueprintEditor.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
     d:DataContext="{d:DesignInstance vms:EditorCanvasViewModel}"
@@ -16,7 +17,6 @@
 
     <UserControl.Resources>
         <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
-
     </UserControl.Resources>
 
     <Grid ClipToBounds="True">
@@ -25,7 +25,20 @@
             Grid.ZIndex="1"
             Scale="{Binding Scale}"
             TranslateX="{Binding TranslateX}"
-            TranslateY="{Binding TranslateY}" />
+            TranslateY="{Binding TranslateY}">
+            <controls:GridRulerControl.ContextMenu>
+                <ContextMenu
+                    x:Name="ContextMenu"
+                    d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Opened="ContextMenu_OnOpened">
+                    <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
+                        <MenuItem.Icon>
+                            <ui:FontIcon Glyph="&#xE710;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </controls:GridRulerControl.ContextMenu>
+        </controls:GridRulerControl>
 
         <ItemsControl Grid.ZIndex="0" ItemsSource="{Binding Nodes}">
             <ItemsControl.ItemTemplate>
@@ -55,6 +68,6 @@
             </ItemsControl.ItemContainerStyle>
         </ItemsControl>
 
-        <views:FocusInfoView x:Name="FocusInfoView"/>
+        <views:FocusInfoView x:Name="FocusInfoView" />
     </Grid>
 </UserControl>
