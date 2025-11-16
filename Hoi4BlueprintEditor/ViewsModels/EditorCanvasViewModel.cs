@@ -28,6 +28,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     /// Key: FocusNode.Id, Value: FocusNode
     /// </summary>
     private Dictionary<string, FocusNode> _editorNodesMap = [];
+
+    /// <summary>
+    /// 国策来源文件路径
+    /// </summary>
     private readonly List<string> _focusTreeFiles = [];
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
@@ -71,6 +75,53 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
 
         WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
+        WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(
+            this,
+            (_, message) =>
+            {
+                message.Reply(
+                    Task.Run(() =>
+                    {
+                        var focus = new FocusNode(message.FocusFilePath, message.FocusType)
+                        {
+                            RawPosition = message.Position,
+                            Id = message.FocusId
+                        };
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            _nodes.Add(new FocusNodeViewModel(focus));
+                        });
+                        _editorNodesMap[focus.Id] = focus;
+                        return focus;
+                    })
+                );
+            }
+        );
+    }
+
+    // 从 2 开始, 但先检查 1 是否被使用
+    private static uint _focusId = 2;
+
+    /// <summary>
+    /// 获取下一个可用的国策 Id
+    /// </summary>
+    /// <remarks>线程不安全</remarks>
+    /// <returns></returns>
+    public string GetNextFocusId()
+    {
+        // 有可能 Id返回后并没有真的被使用，所以先减一, 检查是否真的被使用
+        string id = $"new_focus_{_focusId - 1}";
+        if (!_editorNodesMap.ContainsKey(id))
+        {
+            return id;
+        }
+
+        do
+        {
+            id = $"new_focus_{_focusId++}";
+        } while (_editorNodesMap.ContainsKey(id));
+
+        return id;
     }
 
     private void ClearResources()
@@ -80,6 +131,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             node.Dispose();
         }
         _nodes.Clear();
+        _editorNodesMap.Clear();
         _focusTreeFiles.Clear();
     }
 
@@ -362,5 +414,13 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 }
             )
         );
+
+        _focusTreeFiles.Add("TestFocusFile1.txt");
+        _focusTreeFiles.Add("TestFocusFile2.txt");
+    }
+
+    public IReadOnlyCollection<string> GetAllFocusFiles()
+    {
+        return _focusTreeFiles;
     }
 }
