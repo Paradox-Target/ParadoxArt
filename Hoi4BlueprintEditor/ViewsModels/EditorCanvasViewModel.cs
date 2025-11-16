@@ -27,6 +27,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     /// Key: FocusNode.Id, Value: FocusNode
     /// </summary>
     private Dictionary<string, FocusNode> _editorNodesMap = [];
+
+    /// <summary>
+    /// 国策来源文件路径
+    /// </summary>
     private readonly List<string> _focusTreeFiles = [];
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
@@ -70,6 +74,53 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
 
         WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
+        WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(
+            this,
+            (_, message) =>
+            {
+                message.Reply(
+                    Task.Run(() =>
+                    {
+                        var focus = new FocusNode(message.FocusFilePath, message.FocusType)
+                        {
+                            RawPosition = message.Position,
+                            Id = message.FocusId
+                        };
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            _nodes.Add(new FocusNodeViewModel(focus));
+                        });
+                        _editorNodesMap[focus.Id] = focus;
+                        return focus;
+                    })
+                );
+            }
+        );
+    }
+
+    // 从 2 开始, 但先检查 1 是否被使用
+    private static uint _focusId = 2;
+
+    /// <summary>
+    /// 获取下一个可用的国策 Id
+    /// </summary>
+    /// <remarks>线程不安全</remarks>
+    /// <returns></returns>
+    public string GetNextFocusId()
+    {
+        // 有可能 Id返回后并没有真的被使用，所以先减一, 检查是否真的被使用
+        string id = $"new_focus_{_focusId - 1}";
+        if (!_editorNodesMap.ContainsKey(id))
+        {
+            return id;
+        }
+
+        do
+        {
+            id = $"new_focus_{_focusId++}";
+        } while (_editorNodesMap.ContainsKey(id));
+
+        return id;
     }
 
     private void ClearResources()
@@ -79,6 +130,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             node.Dispose();
         }
         _nodes.Clear();
+        _editorNodesMap.Clear();
         _focusTreeFiles.Clear();
     }
 
@@ -326,7 +378,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         var focus = new FocusNode("", FocusType.Normal)
         {
             Id = "GER_Test1",
-            RawPosition = new Point(0, 0),
+            RawPosition = new FocusPoint(0, 0),
             Icon = "GFX_goal_test",
         };
         _nodes.Add(new FocusNodeViewModel(focus));
@@ -335,7 +387,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test2",
-                    RawPosition = new Point(2, 0),
+                    RawPosition = new FocusPoint(2, 0),
                     Icon = "GFX_GER_Test2",
                     RelativePosition = focus
                 }
@@ -346,7 +398,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test3",
-                    RawPosition = new Point(0, 1),
+                    RawPosition = new FocusPoint(0, 1),
                     Icon = "GFX_GER_Test3",
                 }
             )
@@ -356,10 +408,18 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 new FocusNode("", FocusType.Normal)
                 {
                     Id = "GER_Test4",
-                    RawPosition = new Point(2, 1),
+                    RawPosition = new FocusPoint(2, 1),
                     Icon = "GFX_GER_Test4",
                 }
             )
         );
+
+        _focusTreeFiles.Add("TestFocusFile1.txt");
+        _focusTreeFiles.Add("TestFocusFile2.txt");
+    }
+
+    public IReadOnlyCollection<string> GetAllFocusFiles()
+    {
+        return _focusTreeFiles;
     }
 }

@@ -29,7 +29,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         set
         {
             _isSkipNotify = true;
-            FocusNode.RawPosition = new Point(value, FocusNode.RawPosition.Y);
+            FocusNode.SetRawX(value);
             OnPropertyChanged();
             _isSkipNotify = false;
         }
@@ -41,7 +41,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         set
         {
             _isSkipNotify = true;
-            FocusNode.RawPosition = new Point(FocusNode.RawPosition.X, value);
+            FocusNode.SetRawY(value);
             OnPropertyChanged();
             _isSkipNotify = false;
         }
@@ -94,7 +94,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 
     private string GetFocusDaysTip()
     {
-        int focusCost = DefinesService.Get<int>(DefineName);
+        long focusCost = DefinesService.GetLong(DefineName);
         int totalDays = (int)(FocusNode.Cost * focusCost);
         return $" x {focusCost} = {totalDays} 天";
     }
@@ -105,7 +105,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         App.Current.Services.GetRequiredService<SpriteService>();
     private static readonly DefinesService DefinesService =
         App.Current.Services.GetRequiredService<DefinesService>();
-    private static readonly string[] DefineName = ["NDefines", "NFocus", "FOCUS_POINT_DAYS"];
+    private const string DefineName = "NDefines.NFocus.FOCUS_POINT_DAYS";
     private static readonly LocalizationService LocalizationService =
         App.Current.Services.GetRequiredService<LocalizationService>();
 

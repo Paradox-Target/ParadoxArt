@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Models.Focus;
@@ -25,12 +24,7 @@ public sealed partial class FocusInfoView : UserControl
     public bool IsOpen
     {
         get => (bool)GetValue(IsOpenProperty);
-        set
-        {
-            SetValue(IsOpenProperty, value);
-            var zIndex = value ? 2 : -1;
-            Panel.SetZIndex(this, zIndex);
-        }
+        set => SetValue(IsOpenProperty, value);
     }
 
     private static readonly ImageService ImageService =
@@ -91,7 +85,10 @@ public sealed partial class FocusInfoView : UserControl
     {
         if (d is FocusInfoView view)
         {
-            view.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Collapsed;
+            bool isOpen = (bool)e.NewValue;
+            view.Visibility = isOpen ? Visibility.Visible : Visibility.Collapsed;
+            int zIndex = isOpen ? 2 : -1;
+            Panel.SetZIndex(view, zIndex);
         }
     }
 

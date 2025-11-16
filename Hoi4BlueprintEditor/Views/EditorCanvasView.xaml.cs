@@ -2,20 +2,28 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Controls;
+using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
+using Hoi4BlueprintEditor.ViewsModels.Dialogs;
+using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
-using Point = System.Windows.Point;
 
 namespace Hoi4BlueprintEditor.Views;
 
 public sealed partial class EditorCanvasView : UserControl
 {
+    public AsyncRelayCommand CreateNewFocusCommand { get; }
+
     private Point? _lastMousePositionOnCanvas;
     private FocusNode? _movedFocusNode;
     private readonly EditorCanvasViewModel _viewModel;
+    private Point _rightClickPoint;
 
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
@@ -31,8 +39,28 @@ public sealed partial class EditorCanvasView : UserControl
         MouseLeave += OnMouseLeave;
         MouseLeftButtonDown += OnMouseLeftButtonDown;
         MouseLeftButtonUp += OnMouseLeftButtonUp;
+        MouseRightButtonDown += OnMouseRightButtonDown;
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
         DataContext = _viewModel;
+
+        CreateNewFocusCommand = new AsyncRelayCommand(
+            CreateNewFocus,
+            () =>
+            {
+                // 只能在空白处创建新国策
+                var result = VisualTreeHelper.HitTest(this, _rightClickPoint);
+                return result?.VisualHit is not FrameworkElement { DataContext: FocusNodeViewModel };
+            }
+        );
+
+        // 方便右键菜单在前端绑定 Command
+        ContextMenu.DataContext = this;
+    }
+
+    private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _rightClickPoint = e.GetPosition(this);
+        ContextMenu.IsOpen = true;
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -64,11 +92,7 @@ public sealed partial class EditorCanvasView : UserControl
                 return;
             }
 
-            FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
-            FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
-
-            FocusInfoView.DataContext = new FocusInfoViewModel(viewModel.Model);
-            FocusInfoView.IsOpen = true;
+            OpenFocusInfoView(viewModel.Model);
             Log.Debug("切换到国策: {Name}", viewModel.Model.Id);
         }
         else
@@ -79,7 +103,7 @@ public sealed partial class EditorCanvasView : UserControl
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        if (e.RightButton == MouseButtonState.Pressed)
+        if (e.MiddleButton == MouseButtonState.Pressed)
         {
             if (_lastMousePositionOnCanvas.HasValue)
             {
@@ -103,13 +127,8 @@ public sealed partial class EditorCanvasView : UserControl
 
         if (e.LeftButton == MouseButtonState.Pressed && _movedFocusNode is not null)
         {
-            var position = e.GetPosition(this);
-            double scale = _viewModel.Scale;
-
-            _movedFocusNode.RawPosition = new Models.Focus.Point(
-                (int)((position.X - _viewModel.TranslateX) / (GridRulerControl.CellWidth * scale)),
-                (int)((position.Y - _viewModel.TranslateY) / (GridRulerControl.CellHeight * scale))
-            );
+            var position = GetMousePositionOnGrid(e.GetPosition(this));
+            _movedFocusNode.SetRawPosition(position.X, position.Y);
         }
     }
 
@@ -152,5 +171,69 @@ public sealed partial class EditorCanvasView : UserControl
         _viewModel.TranslateY = mousePoint.Y - (mousePoint.Y - _viewModel.TranslateY) * (newScale / oldScale);
 
         _viewModel.Scale = newScale;
+    }
+
+    private async Task CreateNewFocus()
+    {
+        var viewModel = new CreateNewFocusViewModel(_viewModel.GetAllFocusFiles())
+        {
+            FocusId = _viewModel.GetNextFocusId()
+        };
+        var dialog = new ContentDialog
+        {
+            Title = "新建国策",
+            Content = new CreateNewFocusView { DataContext = viewModel },
+            CloseButtonText = "取消",
+            PrimaryButtonText = "创建",
+            DefaultButton = ContentDialogButton.Primary,
+            IsPrimaryButtonEnabled = false
+        };
+
+        Action<bool> onPrimaryEnableChanged = enable => dialog.IsPrimaryButtonEnabled = enable;
+        viewModel.PrimaryEnableChanged += onPrimaryEnableChanged;
+        var result = await dialog.ShowAsync(App.Current.MainWindow);
+
+        if (result == ContentDialogResult.Primary)
+        {
+            var position = GetMousePositionOnGrid(_rightClickPoint);
+            var newFocusNode = await WeakReferenceMessenger.Default.Send(
+                new CreateNewFocusMessage(
+                    new FocusPoint(position.X, position.Y),
+                    viewModel.FocusId,
+                    viewModel.SelectedFocusType,
+                    viewModel.SelectedFocusFilePath
+                )
+            );
+
+            OpenFocusInfoView(newFocusNode);
+            Log.Debug("创建新国策: {Name}", newFocusNode.Id);
+        }
+        viewModel.PrimaryEnableChanged -= onPrimaryEnableChanged;
+    }
+
+    private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
+    {
+        CreateNewFocusCommand.NotifyCanExecuteChanged();
+    }
+
+    /// <summary>
+    /// 获取鼠标在网格中的实际坐标
+    /// </summary>
+    /// <param name="mousePoint">原始坐标</param>
+    /// <returns></returns>
+    private (int X, int Y) GetMousePositionOnGrid(Point mousePoint)
+    {
+        double scale = _viewModel.Scale;
+        int x = (int)((mousePoint.X - _viewModel.TranslateX) / (GridRulerControl.CellWidth * scale));
+        int y = (int)((mousePoint.Y - _viewModel.TranslateY) / (GridRulerControl.CellHeight * scale));
+        return (x, y);
+    }
+
+    private void OpenFocusInfoView(FocusNode focusNode)
+    {
+        FocusInfoView.DataContext = new FocusInfoViewModel(focusNode);
+        FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
+        FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
+        FocusInfoView.IsOpen = true;
     }
 }

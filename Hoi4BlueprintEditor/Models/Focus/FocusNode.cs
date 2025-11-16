@@ -20,8 +20,11 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     private FocusNode? _relativePosition;
 
     /// <summary>
-    /// 每个项目中的集合代表一个 prerequisite 节点内容
+    /// 前提条件
     /// </summary>
+    /// <remarks>
+    /// 每个项目中的集合代表一个 prerequisite 节点内容
+    /// </remarks>
     public List<List<FocusNode>> Prerequisite { get; } = [];
 
     /// <summary>
@@ -30,7 +33,7 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]
     [NotifyPropertyChangedFor(nameof(Y))]
-    private Point _rawPosition = new(0, 0);
+    private FocusPoint _rawPosition = new(0, 0);
 
     public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
     public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
@@ -38,6 +41,38 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     [ObservableProperty]
     private string _icon = string.Empty;
     public decimal Cost { get; set; }
+
+    /// <summary>
+    /// 将 <c>RawPosition.X</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
+    /// </summary>
+    /// <param name="x"></param>
+    public void SetRawX(int x)
+    {
+        int offsetX = RelativePosition?.X ?? 0;
+        RawPosition = new FocusPoint(x - offsetX, RawPosition.Y);
+    }
+
+    /// <summary>
+    /// 将 <c>RawPosition.Y</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
+    /// </summary>
+    /// <param name="y"></param>
+    public void SetRawY(int y)
+    {
+        int offsetY = RelativePosition?.Y ?? 0;
+        RawPosition = new FocusPoint(RawPosition.X, y - offsetY);
+    }
+    
+    /// <summary>
+    /// 将 <c>RawPosition.X</c> 和 <c>RawPosition.Y</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    public void SetRawPosition(int x, int y)
+    {
+        int offsetX = RelativePosition?.X ?? 0;
+        int offsetY = RelativePosition?.Y ?? 0;
+        RawPosition = new FocusPoint(x - offsetX, y - offsetY);
+    }
 
     public bool Equals(FocusNode? other)
     {

@@ -1,7 +1,8 @@
 using System.IO;
+using System.Text;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using Microsoft.Extensions.DependencyInjection;
-using Neo.IronLua;
+using NLua;
 
 namespace Hoi4BlueprintEditor.Services.GameResources;
 
@@ -11,8 +12,7 @@ namespace Hoi4BlueprintEditor.Services.GameResources;
 [RegisterSingleton<DefinesService>]
 public sealed class DefinesService : ResourcesService<DefinesService, byte, byte>, IDisposable
 {
-    private static readonly Lua GlobalLua = new();
-    private static readonly LuaGlobal GlobalEnv = GlobalLua.CreateEnvironment();
+    private static readonly Lua GlobalLua = new() { State = { Encoding = Encoding.UTF8 } };
 
     public DefinesService()
         : base(Path.Combine(Keywords.Common, "defines"), WatcherFilter.Lua, PathType.Folder) { }
@@ -49,16 +49,9 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
         return 2;
     }
 
-    public T? Get<T>(string[] defineName)
+    public long GetLong(string defineName)
     {
-        // ReSharper disable once CoVariantArrayConversion
-        object? value = GlobalEnv.GetValue(defineName);
-        if (value is not null)
-        {
-            return (T)value;
-        }
-
-        return default;
+        return GlobalLua.GetLong(defineName);
     }
 
     protected override byte ParseFileToContent(byte result)
@@ -68,7 +61,7 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
 
     protected override byte GetParseResult(string filePath)
     {
-        GlobalEnv.DoChunk(filePath);
+        GlobalLua.DoFile(filePath);
 
         return 0;
     }
