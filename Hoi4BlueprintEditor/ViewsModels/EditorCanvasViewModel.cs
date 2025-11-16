@@ -98,11 +98,18 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
     }
 
-    private static int _focusId = 1;
+    // 从 2 开始, 但先检查 1 是否被使用
+    private static uint _focusId = 2;
 
     public string GetNextFocusId()
     {
-        string id;
+        // 有可能 Id返回后并没有真的被使用，所以先减一, 检查是否真的被使用
+        string id = $"new_focus_{_focusId - 1}";
+        if (!_editorNodesMap.ContainsKey(id))
+        {
+            return id;
+        }
+
         do
         {
             id = $"new_focus_{_focusId++}";
