@@ -27,6 +27,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     /// Key: FocusNode.Id, Value: FocusNode
     /// </summary>
     private Dictionary<string, FocusNode> _editorNodesMap = [];
+
+    /// <summary>
+    /// 国策来源文件路径
+    /// </summary>
     private readonly List<string> _focusTreeFiles = [];
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
@@ -77,10 +81,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 message.Reply(
                     Task.Run(() =>
                     {
-                        var focus = new FocusNode("", FocusType.Normal)
+                        var focus = new FocusNode(message.FocusFilePath, message.FocusType)
                         {
                             RawPosition = message.Position,
-                            Id = GetNextFocusId()
+                            Id = message.FocusId
                         };
                         App.Current.Dispatcher.Invoke(() =>
                         {
@@ -96,7 +100,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
     private static int _focusId = 1;
 
-    private string GetNextFocusId()
+    public string GetNextFocusId()
     {
         string id;
         do
@@ -114,6 +118,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             node.Dispose();
         }
         _nodes.Clear();
+        _editorNodesMap.Clear();
         _focusTreeFiles.Clear();
     }
 
@@ -396,5 +401,13 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 }
             )
         );
+
+        _focusTreeFiles.Add("TestFocusFile1.txt");
+        _focusTreeFiles.Add("TestFocusFile2.txt");
+    }
+
+    public IReadOnlyCollection<string> GetAllFocusFiles()
+    {
+        return _focusTreeFiles;
     }
 }

@@ -7,7 +7,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Controls;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
+using Hoi4BlueprintEditor.ViewsModels.Dialogs;
+using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
@@ -50,6 +53,7 @@ public sealed partial class EditorCanvasView : UserControl
             }
         );
 
+        // 方便右键菜单在前端绑定 Command
         ContextMenu.DataContext = this;
     }
 
@@ -171,13 +175,38 @@ public sealed partial class EditorCanvasView : UserControl
 
     private async Task CreateNewFocus()
     {
-        var position = GetMousePositionOnGrid(_rightClickPoint);
-        var newFocusNode = await WeakReferenceMessenger.Default.Send(
-            new CreateNewFocusMessage(new FocusPoint(position.X, position.Y))
-        );
+        var viewModel = new CreateNewFocusViewModel(_viewModel.GetAllFocusFiles())
+        {
+            FocusId = _viewModel.GetNextFocusId()
+        };
+        var dialog = new ContentDialog
+        {
+            Title = "新建国策",
+            Content = new CreateNewFocusView { DataContext = viewModel },
+            CloseButtonText = "取消",
+            PrimaryButtonText = "创建",
+            DefaultButton = ContentDialogButton.Primary,
+            IsPrimaryButtonEnabled = false
+        };
 
-        OpenFocusInfoView(newFocusNode);
-        Log.Debug("创建新国策: {Name}", newFocusNode.Id);
+        viewModel.PrimaryEnableChanged += enable => dialog.IsPrimaryButtonEnabled = enable;
+        var result = await dialog.ShowAsync(App.Current.MainWindow);
+
+        if (result == ContentDialogResult.Primary)
+        {
+            var position = GetMousePositionOnGrid(_rightClickPoint);
+            var newFocusNode = await WeakReferenceMessenger.Default.Send(
+                new CreateNewFocusMessage(
+                    new FocusPoint(position.X, position.Y),
+                    viewModel.FocusId,
+                    viewModel.SelectedFocusType,
+                    viewModel.SelectedFocusFilePath
+                )
+            );
+
+            OpenFocusInfoView(newFocusNode);
+            Log.Debug("创建新国策: {Name}", newFocusNode.Id);
+        }
     }
 
     private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
