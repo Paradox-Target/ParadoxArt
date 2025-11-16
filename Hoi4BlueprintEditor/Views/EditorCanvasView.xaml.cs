@@ -189,7 +189,8 @@ public sealed partial class EditorCanvasView : UserControl
             IsPrimaryButtonEnabled = false
         };
 
-        viewModel.PrimaryEnableChanged += enable => dialog.IsPrimaryButtonEnabled = enable;
+        Action<bool> onPrimaryEnableChanged = enable => dialog.IsPrimaryButtonEnabled = enable;
+        viewModel.PrimaryEnableChanged += onPrimaryEnableChanged;
         var result = await dialog.ShowAsync(App.Current.MainWindow);
 
         if (result == ContentDialogResult.Primary)
@@ -207,6 +208,7 @@ public sealed partial class EditorCanvasView : UserControl
             OpenFocusInfoView(newFocusNode);
             Log.Debug("创建新国策: {Name}", newFocusNode.Id);
         }
+        viewModel.PrimaryEnableChanged -= onPrimaryEnableChanged;
     }
 
     private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
