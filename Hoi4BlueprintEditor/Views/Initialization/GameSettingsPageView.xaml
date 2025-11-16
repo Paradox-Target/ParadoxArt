@@ -39,7 +39,7 @@
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Margin="20">
-            <StackPanel Margin="0,15">
+            <StackPanel Margin="0,16">
                 <TextBlock
                     FontFamily="Sarasa UI SC"
                     FontSize="32"
@@ -91,7 +91,7 @@
         <StackPanel
             Grid.Row="3"
             Grid.Column="2"
-            Margin="0,30"
+            Margin="0,28"
             HorizontalAlignment="Center">
             <Button
                 HorizontalAlignment="Right"
