@@ -17,7 +17,6 @@
     <Grid>
 
         <ui:AcrylicPanel
-            x:Name="CustomAcrylicShapeLumin"
             Margin="0"
             Amount="80"
             Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
@@ -60,17 +59,27 @@
                     <TextBox FontFamily="Cascadia Code" Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
                 </StackPanel>
 
-                <TextBlock
-                    Grid.Row="1"
-                    Margin="0,8,0,0"
-                    FontFamily="Sarasa UI SC"
-                    Text="ID" />
+                <StackPanel Grid.Row="1">
+                    <TextBlock
+                        Margin="0,8,0,0"
+                        FontFamily="Sarasa UI SC"
+                        Text="ID" />
 
-                <TextBox
+                    <TextBox
+                        Margin="0,4,0,0"
+                        FontFamily="Cascadia Code"
+                        Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <StackPanel
                     Grid.Row="2"
-                    Margin="0,4,0,0"
-                    FontFamily="Cascadia Code"
-                    Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    Margin="0,8,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="定位系统: " />
+                    <Border Background="#71afe5" CornerRadius="4">
+                        <TextBlock Margin="4" Text="{Binding LocationSystemText, Mode=OneWay}" />
+                    </Border>
+                </StackPanel>
 
                 <StackPanel
                     Grid.Row="3"
