@@ -101,6 +101,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     // 从 2 开始, 但先检查 1 是否被使用
     private static uint _focusId = 2;
 
+    /// <summary>
+    /// 获取下一个可用的国策 Id
+    /// </summary>
+    /// <remarks>线程不安全</remarks>
+    /// <returns></returns>
     public string GetNextFocusId()
     {
         // 有可能 Id返回后并没有真的被使用，所以先减一, 检查是否真的被使用
