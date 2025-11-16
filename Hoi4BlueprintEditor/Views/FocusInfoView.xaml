@@ -22,12 +22,12 @@
             Amount="80"
             Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
             CornerRadius="5"
-            Target="{Binding ElementName=InfmBorder}"
+            Target="{Binding ElementName=InfoBorder}"
             TintColor="Snow"
             TintOpacity="0.6" />
 
         <Border
-            x:Name="InfmBorder"
+            x:Name="InfoBorder"
             MinWidth="200"
             Padding="10"
             BorderBrush="Gray"
@@ -36,6 +36,7 @@
             <Grid>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -111,48 +112,41 @@
                         Text="{Binding FocusDaysTip}" />
                 </StackPanel>
 
-                <Grid Grid.Row="6" Margin="0,12,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <StackPanel Grid.Row="0" Orientation="Horizontal">
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontFamily="Sarasa UI SC"
-                            FontSize="22"
-                            Text="本地化" />
-                        <ComboBox
-                            Margin="8,0,0,0"
-                            FontFamily="Cascadia Code"
-                            ItemsSource="{Binding Languages, Mode=OneTime}"
-                            SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
-                    </StackPanel>
-
+                <StackPanel
+                    Grid.Row="6"
+                    Margin="0,8,0,0"
+                    Orientation="Horizontal">
                     <TextBlock
-                        Grid.Row="1"
+                        VerticalAlignment="Center"
+                        FontFamily="Sarasa UI SC"
+                        FontSize="22"
+                        Text="本地化" />
+                    <ComboBox
+                        Margin="8,0,0,0"
+                        FontFamily="Cascadia Code"
+                        ItemsSource="{Binding Languages, Mode=OneTime}"
+                        SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="7">
+                    <TextBlock
                         Margin="0,4,0,0"
                         FontFamily="Sarasa UI SC"
                         Text="Text" />
 
                     <TextBox
-                        Grid.Row="2"
                         Margin="0,4,0,0"
                         FontFamily="Cascadia Code"
                         Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                </StackPanel>
 
+                <StackPanel Grid.Row="8">
                     <TextBlock
-                        Grid.Row="3"
                         Margin="0,4,0,0"
                         FontFamily="Sarasa UI SC"
                         Text="描述" />
 
                     <TextBox
-                        Grid.Row="4"
                         Margin="0,8,0,0"
                         VerticalAlignment="Top"
                         AcceptsReturn="True"
@@ -160,10 +154,8 @@
                         Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                         TextWrapping="WrapWithOverflow"
                         VerticalScrollBarVisibility="Auto" />
-                </Grid>
+                </StackPanel>
             </Grid>
         </Border>
-
-
     </Grid>
 </UserControl>
