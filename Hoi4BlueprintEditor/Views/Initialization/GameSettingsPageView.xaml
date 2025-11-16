@@ -39,7 +39,7 @@
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Margin="20">
-            <StackPanel Margin="0,15">
+            <StackPanel Margin="0,16">
                 <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_GameRoot}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -55,7 +55,7 @@
                 </Grid>
             </StackPanel>
 
-            <StackPanel Margin="0,15">
+            <StackPanel Margin="0,16">
                 <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_ModRoot}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -75,7 +75,7 @@
         <StackPanel
             Grid.Row="3"
             Grid.Column="2"
-            Margin="0,30"
+            Margin="0,28"
             HorizontalAlignment="Center">
             <Button
                 HorizontalAlignment="Right"
