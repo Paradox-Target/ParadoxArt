@@ -14,16 +14,18 @@ public sealed partial class AppSettingsPageViewModel(SettingsService settings) :
     [ObservableProperty]
     private int _selectedGameLanguageIndex;
 
-    public string[] Languages { get; } = ["简体中文 | zh-CN", "English | en-US"];
+    public LanguageInfo[] Languages { get; } = [new("简体中文", "zh-CN"), new("English", "en-US")];
     public IReadOnlyList<GameLanguage> GameLanguages { get; } = Enums.GetValues<GameLanguage>();
 
     partial void OnSelectedIndexChanged(int value)
     {
-        settings.Language = Languages[value].Split('|', StringSplitOptions.TrimEntries)[1];
+        settings.Language = Languages[value].LanguageCode;
     }
 
     partial void OnSelectedGameLanguageIndexChanged(int value)
     {
         settings.GameLanguage = GameLanguages[value];
     }
+
+    public sealed record LanguageInfo(string DisplayName, string LanguageCode);
 }
