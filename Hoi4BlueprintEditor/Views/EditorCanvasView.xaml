@@ -9,6 +9,7 @@
     xmlns:controls="clr-namespace:Hoi4BlueprintEditor.Controls"
     xmlns:converters="clr-namespace:Hoi4BlueprintEditor.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="clr-namespace:Hoi4BlueprintEditor.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
@@ -30,20 +31,31 @@
         <controls:FocusMapControl
             Grid.ZIndex="0"
             ItemsSource="{Binding Nodes}"
-            ScaleX="{Binding Scale}"
-            ScaleY="{Binding Scale}"
-            TranslateX="{Binding TranslateX}"
-            TranslateY="{Binding TranslateY}">
+            RenderTransformOrigin="0,0">
+
+            <controls:FocusMapControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                    <TranslateTransform X="{Binding TranslateX}" Y="{Binding TranslateY}" />
+                </TransformGroup>
+            </controls:FocusMapControl.RenderTransform>
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <views:FocusNodeView />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={StaticResource FocusNodeWidth}}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={StaticResource FocusNodeHeight}}" />
+                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static helper:FocusMapMetrics.CellWidth}}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static helper:FocusMapMetrics.CellHeight}}" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </controls:FocusMapControl>

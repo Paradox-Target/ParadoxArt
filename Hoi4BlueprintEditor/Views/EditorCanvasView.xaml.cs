@@ -2,7 +2,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Controls;
+using Hoi4BlueprintEditor.Helpers;
+using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -107,9 +110,11 @@ public sealed partial class EditorCanvasView : UserControl
             double scale = _viewModel.Scale;
 
             _movedFocusNode.SetRawPosition(
-                (int)((position.X - _viewModel.TranslateX) / (GridRulerControl.CellWidth * scale)),
-                (int)((position.Y - _viewModel.TranslateY) / (GridRulerControl.CellHeight * scale))
+                (int)((position.X - _viewModel.TranslateX) / (FocusMapMetrics.CellWidth * scale)),
+                (int)((position.Y - _viewModel.TranslateY) / (FocusMapMetrics.CellHeight * scale))
             );
+
+            WeakReferenceMessenger.Default.Send(new MoveFocusMessage());
         }
     }
 

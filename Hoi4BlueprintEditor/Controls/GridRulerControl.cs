@@ -3,19 +3,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Hoi4BlueprintEditor.Extensions;
+using Hoi4BlueprintEditor.Helpers;
 
 namespace Hoi4BlueprintEditor.Controls;
 
 public sealed class GridRulerControl : Control
 {
-    public static readonly double CellWidth;
-    public static readonly double CellHeight;
-
-    static GridRulerControl()
-    {
-        CellWidth = (double)App.Current.FindResource("FocusNodeWidth");
-        CellHeight = (double)App.Current.FindResource("FocusNodeHeight");
-    }
+    private static double CellWidth => FocusMapMetrics.CellWidth;
+    private static double CellHeight => FocusMapMetrics.CellHeight;
 
     // 标尺大小
     private const double RulerSize = 30.0;
