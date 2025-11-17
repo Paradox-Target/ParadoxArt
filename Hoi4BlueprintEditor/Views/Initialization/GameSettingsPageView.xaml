@@ -79,8 +79,11 @@
                         FontSize="22"
                         Style="{StaticResource SettingsPathTextBoxStyle}"
                         Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    Content="{x:Static language:Strings.GameSettings_Overview}"
-                    Style="{StaticResource SettingsPickButtonStyle}" />
+                    <Button
+                        Grid.Column="1"
+                        Command="{Binding PickModPathCommand}"
+                        Content="{x:Static language:Strings.GameSettings_Overview}"
+                        Style="{StaticResource SettingsPickButtonStyle}" />
                 </Grid>
             </StackPanel>
         </StackPanel>
