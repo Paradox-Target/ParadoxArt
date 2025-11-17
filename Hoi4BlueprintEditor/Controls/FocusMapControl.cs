@@ -17,7 +17,8 @@ public sealed class FocusMapControl : ItemsControl
     private static double CellHeight => FocusMapMetrics.CellHeight;
 
     private static readonly double LinePenWidth = 3.0;
-    private static readonly Pen LinePen = new(Colors.Azure.ToBrush(), LinePenWidth);
+    private static readonly Pen PrerequisiteLinePen = new(Colors.Azure.ToBrush(), LinePenWidth);
+    private static readonly Pen ExclusiveLinePen = new(Colors.OrangeRed.ToBrush(), LinePenWidth);
 
     protected override void OnInitialized(EventArgs e)
     {
@@ -53,9 +54,35 @@ public sealed class FocusMapControl : ItemsControl
             {
                 foreach (var pre in preGroup)
                 {
+                    var offset = new Vector(0, FocusMapMetrics.FocusCenterOffsetVertical);
+
                     var nodeJoint = GetChildNodeLineJoint(node);
                     var preJoint = GetPrerequisiteNodeLineJoint(pre);
-                    dc.DrawLine(LinePen, nodeJoint, preJoint);
+                    var nodeCorner = Point.Subtract(nodeJoint, offset);
+                    var preCorner = Point.Add(preJoint, offset);
+
+                    var middleY = (nodeCorner.Y + preCorner.Y) / 2;
+                    nodeCorner.Y = preCorner.Y = middleY;
+
+                    dc.DrawLine(PrerequisiteLinePen, nodeJoint, nodeCorner);
+                    dc.DrawLine(PrerequisiteLinePen, preJoint, preCorner);
+                    dc.DrawLine(PrerequisiteLinePen, nodeCorner, preCorner);
+                }
+            }
+
+            foreach (var ex in node.MutuallyExclusive)
+            {
+                if (node.X < ex.X)
+                {
+                    var nodeJoint = GetLeftExclusiveLineJoint(node);
+                    var exJoint = GetRightExclusiveLineJoint(ex);
+                    dc.DrawLine(ExclusiveLinePen, nodeJoint, exJoint);
+                }
+                else if (node.X > ex.X)
+                {
+                    var nodeJoint = GetRightExclusiveLineJoint(node);
+                    var exJoint = GetLeftExclusiveLineJoint(ex);
+                    dc.DrawLine(ExclusiveLinePen, nodeJoint, exJoint);
                 }
             }
         }
@@ -77,6 +104,23 @@ public sealed class FocusMapControl : ItemsControl
         x += CellWidth / 2 - LinePenWidth / 2;
         y += CellHeight;
         y -= FocusMapMetrics.FocusCenterOffsetVertical;
+        return new Point(x, y);
+    }
+
+    private Point GetLeftExclusiveLineJoint(FocusNode node)
+    {
+        var x = node.X * CellWidth;
+        var y = node.Y * CellHeight;
+        x += CellWidth;
+        y += CellHeight / 2 - LinePenWidth / 2;
+        return new Point(x, y);
+    }
+
+    private Point GetRightExclusiveLineJoint(FocusNode node)
+    {
+        var x = node.X * CellWidth;
+        var y = node.Y * CellHeight;
+        y += CellHeight / 2 - LinePenWidth / 2;
         return new Point(x, y);
     }
 }

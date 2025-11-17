@@ -23,15 +23,15 @@
     <Grid ClipToBounds="True">
 
         <controls:GridRulerControl
-            Grid.ZIndex="1"
+            Grid.ZIndex="0"
             Scale="{Binding Scale}"
             TranslateX="{Binding TranslateX}"
             TranslateY="{Binding TranslateY}">
             <controls:GridRulerControl.ContextMenu>
                 <ContextMenu
-                    x:Name="ContextMenu"
+                    Opened="ContextMenu_OnOpened"
                     d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    Opened="ContextMenu_OnOpened">
+                    x:Name="ContextMenu">
                     <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
                         <MenuItem.Icon>
                             <ui:FontIcon Glyph="&#xE710;" />
@@ -42,7 +42,7 @@
         </controls:GridRulerControl>
 
         <controls:FocusMapControl
-            Grid.ZIndex="0"
+            Grid.ZIndex="1"
             ItemsSource="{Binding Nodes}"
             RenderTransformOrigin="0,0">
 
