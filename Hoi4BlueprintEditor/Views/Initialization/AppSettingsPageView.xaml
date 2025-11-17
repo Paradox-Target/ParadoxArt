@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel
-            Grid.RowSpan="4"
+            Grid.RowSpan="3"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
             <Image Source="{StaticResource AppSettingsMainIcon}" Style="{StaticResource SettingsIconImageStyle}" />
@@ -41,6 +41,7 @@
             <StackPanel Margin="0,16">
                 <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="语言(Language)" />
                 <ComboBox
+                    FontFamily="Cascadia Code, Sarasa UI SC"
                     ItemsSource="{Binding Languages, Mode=OneTime}"
                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
                     Style="{StaticResource SettingsPickComboboxStyle}">
@@ -52,7 +53,7 @@
                 </ComboBox>
             </StackPanel>
 
-            <StackPanel Margin="0,16">
+            <StackPanel>
                 <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="游戏语言(Game Language)" />
                 <ComboBox
                     ItemsSource="{Binding GameLanguages, Mode=OneTime}"
@@ -75,10 +76,11 @@
         <StackPanel
             Grid.Row="3"
             Grid.Column="2"
-            Margin="0,30"
+            Margin="0,28"
             HorizontalAlignment="Center">
             <Button
                 HorizontalAlignment="Right"
+                Background="#00B7C3"
                 Click="Next_OnClick"
                 Content="下一步"
                 Style="{StaticResource SettingsStepButtonStyle}" />

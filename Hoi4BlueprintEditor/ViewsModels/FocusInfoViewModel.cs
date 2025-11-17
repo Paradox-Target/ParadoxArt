@@ -6,12 +6,16 @@ using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 {
+    [LocalizationRequired]
+    public string LocationSystemText => FocusNode.RelativePosition is null ? "绝对位置" : "相对位置";
+
     public decimal Cost
     {
         get => FocusNode.Cost;
@@ -82,6 +86,10 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         {
             OnPropertyChanged(nameof(X));
             OnPropertyChanged(nameof(Y));
+        }
+        else if (e.PropertyName == nameof(FocusNode.RelativePosition))
+        {
+            OnPropertyChanged(nameof(LocationSystemText));
         }
     }
 
