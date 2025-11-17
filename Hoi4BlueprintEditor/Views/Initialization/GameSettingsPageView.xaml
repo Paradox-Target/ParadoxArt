@@ -40,21 +40,13 @@
             Grid.ColumnSpan="2"
             Margin="20">
             <StackPanel Margin="0,16">
-                <TextBlock
-                    FontFamily="Sarasa UI SC"
-                    FontSize="32"
-                    Style="{StaticResource SettingsTitleTextBlockStyle}"
-                    Text="{x:Static language:Strings.GameSettings_GameRoot}" />
+                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_GameRoot}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox
-                        FontFamily="Cascadia Code"
-                        FontSize="22"
-                        Style="{StaticResource SettingsPathTextBoxStyle}"
-                        Text="{Binding GamePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Style="{StaticResource SettingsPathTextBoxStyle}" Text="{Binding GamePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         Grid.Column="1"
                         Command="{Binding PickGamePathCommand}"
@@ -64,21 +56,13 @@
             </StackPanel>
 
             <StackPanel>
-                <TextBlock
-                    FontFamily="Sarasa UI SC"
-                    FontSize="32"
-                    Style="{StaticResource SettingsTitleTextBlockStyle}"
-                    Text="{x:Static language:Strings.GameSettings_ModRoot}" />
+                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_ModRoot}" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox
-                        FontFamily="Cascadia Code"
-                        FontSize="22"
-                        Style="{StaticResource SettingsPathTextBoxStyle}"
-                        Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Style="{StaticResource SettingsPathTextBoxStyle}" Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         Grid.Column="1"
                         Command="{Binding PickModPathCommand}"
@@ -97,8 +81,6 @@
                 HorizontalAlignment="Right"
                 Command="{Binding GoToNextPageCommand, Mode=Default}"
                 Content="下一步"
-                FontFamily="Noto Sans SC"
-                FontSize="18"
                 Style="{StaticResource SettingsStepButtonStyle}" />
         </StackPanel>
     </Grid>

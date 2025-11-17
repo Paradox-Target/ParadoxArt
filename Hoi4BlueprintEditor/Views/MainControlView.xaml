@@ -14,25 +14,25 @@
     <DockPanel LastChildFill="True">
 
         <Menu DockPanel.Dock="Top">
-            <MenuItem FontFamily="Sarasa UI SC" Header="{x:Static language:Strings.FileMenu}">
+            <MenuItem Header="{x:Static language:Strings.FileMenu}">
                 <MenuItem Header="{x:Static language:Strings.NewMenuItem}" />
                 <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
                 <MenuItem Command="{Binding SaveFocusFileCommand}" Header="{x:Static language:Strings.SaveMenuItem}" />
                 <Separator />
                 <MenuItem Header="{x:Static language:Strings.ExitMenuItem}" />
             </MenuItem>
-            <MenuItem FontFamily="Sarasa UI SC" Header="{x:Static language:Strings.EditMenuItem}">
+            <MenuItem Header="{x:Static language:Strings.EditMenuItem}">
                 <MenuItem Header="{x:Static language:Strings.UndoMenuItem}" />
                 <MenuItem Header="{x:Static language:Strings.RedoMenuItem}" />
             </MenuItem>
-            <MenuItem FontFamily="Sarasa UI SC" Header="{x:Static language:Strings.ViewMenuItem}">
+            <MenuItem Header="{x:Static language:Strings.ViewMenuItem}">
                 <MenuItem Header="{x:Static language:Strings.ZInMenuItem}" />
                 <MenuItem Header="{x:Static language:Strings.ZOutMenuItem}" />
             </MenuItem>
-            <MenuItem FontFamily="Sarasa UI SC" Header="{x:Static language:Strings.HelpMenuItem}">
+            <MenuItem Header="{x:Static language:Strings.HelpMenuItem}">
                 <MenuItem Header="{x:Static language:Strings.AboutMenuItem}" />
             </MenuItem>
-            <MenuItem FontFamily="Sarasa UI SC" Header="{x:Static language:Strings.Menu_Settings}">
+            <MenuItem Header="{x:Static language:Strings.Menu_Settings}">
                 <MenuItem Header="{x:Static language:Strings.Menu_Language}">
                     <MenuItem Command="{Binding SetLanguageToChineseCommand}" Header="中文" />
                     <MenuItem Command="{Binding SetLanguageToEnglishCommand}" Header="English" />

@@ -1,48 +1,45 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
-    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern">
 
-    <system:Double x:Key="SettingsTitleFontSize">35</system:Double>
-    <system:Double x:Key="SettingsContentFontSize">25</system:Double>
-
-    <Style TargetType="Image" x:Key="SettingsIconImageStyle">
+    <Style x:Key="SettingsIconImageStyle" TargetType="Image">
         <Setter Property="Height" Value="200" />
         <Setter Property="Width" Value="200" />
     </Style>
-    <Style TargetType="TextBlock" x:Key="SettingsTitleTextBlockStyle">
-        <Setter Property="FontSize" Value="{StaticResource SettingsTitleFontSize}" />
+    <Style x:Key="SettingsTitleTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="32" />
         <Setter Property="Margin" Value="8,4" />
     </Style>
     <Style
+        x:Key="SettingsPathTextBoxStyle"
         BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultTextBoxStyleKey}}"
-        TargetType="TextBox"
-        x:Key="SettingsPathTextBoxStyle">
-        <Setter Property="FontSize" Value="{StaticResource SettingsContentFontSize}" />
+        TargetType="TextBox">
+        <Setter Property="FontSize" Value="22" />
         <Setter Property="Margin" Value="8,0" />
     </Style>
     <Style
+        x:Key="SettingsPickButtonStyle"
         BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultButtonStyleKey}}"
-        TargetType="Button"
-        x:Key="SettingsPickButtonStyle">
-        <Setter Property="FontSize" Value="{StaticResource SettingsContentFontSize}" />
+        TargetType="Button">
+        <Setter Property="FontSize" Value="25" />
         <Setter Property="Margin" Value="8,0" />
         <Setter Property="Width" Value="50" />
     </Style>
     <Style
+        x:Key="SettingsStepButtonStyle"
         BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultButtonStyleKey}}"
-        TargetType="Button"
-        x:Key="SettingsStepButtonStyle">
-        <Setter Property="FontSize" Value="{StaticResource SettingsContentFontSize}" />
+        TargetType="Button">
+        <Setter Property="FontSize" Value="18" />
         <Setter Property="Margin" Value="8,0" />
         <Setter Property="Width" Value="150" />
     </Style>
     <Style
+        x:Key="SettingsPickComboboxStyle"
         BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultComboBoxStyleKey}}"
-        TargetType="ComboBox"
-        x:Key="SettingsPickComboboxStyle">
-        <Setter Property="FontSize" Value="{StaticResource SettingsContentFontSize}" />
+        TargetType="ComboBox">
+        <Setter Property="FontSize" Value="28" />
         <Setter Property="Margin" Value="8,0" />
     </Style>
 </ResourceDictionary>

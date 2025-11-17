@@ -51,24 +51,17 @@
                     Margin="0,0,0,8"
                     AllowDrop="True"
                     Drop="FocusIcon_OnDrop">
-                    <TextBlock FontFamily="Sarasa UI SC" Text="Icon" />
+                    <TextBlock Text="Icon" />
                     <Image
                         x:Name="FocusIcon"
                         Margin="0,0,0,8"
                         ToolTip="{Binding IconPath}" />
-                    <TextBox FontFamily="Cascadia Code" Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
+                    <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1">
-                    <TextBlock
-                        Margin="0,8,0,0"
-                        FontFamily="Sarasa UI SC"
-                        Text="ID" />
-
-                    <TextBox
-                        Margin="0,4,0,0"
-                        FontFamily="Cascadia Code"
-                        Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Margin="0,8,0,0" Text="ID" />
+                    <TextBox Margin="0,4,0,0" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
                 <StackPanel
@@ -85,23 +78,18 @@
                     Grid.Row="3"
                     Margin="0,8,0,0"
                     Orientation="Horizontal">
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontFamily="Sarasa UI SC"
-                        Text="X: " />
-                    <ui:NumberBox FontFamily="Cascadia Code" Value="{Binding X, Mode=TwoWay}" />
+                    <TextBlock VerticalAlignment="Center" Text="X: " />
+                    <ui:NumberBox Value="{Binding X, Mode=TwoWay}" />
                     <TextBlock
                         Margin="8,0,0,0"
                         VerticalAlignment="Center"
-                        FontFamily="Sarasa UI SC"
                         Text="Y: " />
-                    <ui:NumberBox FontFamily="Cascadia Code" Value="{Binding Y, Mode=TwoWay}" />
+                    <ui:NumberBox Value="{Binding Y, Mode=TwoWay}" />
                 </StackPanel>
 
                 <TextBlock
                     Grid.Row="4"
                     Margin="0,8,0,0"
-                    FontFamily="Sarasa UI SC"
                     Text="Cost" />
 
                 <StackPanel
@@ -109,14 +97,12 @@
                     Margin="0,4,0,0"
                     Orientation="Horizontal">
                     <ui:NumberBox
-                        FontFamily="Cascadia Code"
                         Minimum="0"
                         SpinButtonPlacementMode="Inline"
                         ValidationMode="InvalidInputOverwritten"
                         Value="{Binding Cost, Mode=TwoWay}" />
                     <TextBlock
                         VerticalAlignment="Center"
-                        FontFamily="Sarasa UI SC"
                         FontSize="18"
                         Text="{Binding FocusDaysTip}" />
                 </StackPanel>
@@ -127,33 +113,21 @@
                     Orientation="Horizontal">
                     <TextBlock
                         VerticalAlignment="Center"
-                        FontFamily="Sarasa UI SC"
                         FontSize="22"
                         Text="本地化" />
                     <ComboBox
                         Margin="8,0,0,0"
-                        FontFamily="Cascadia Code"
                         ItemsSource="{Binding Languages, Mode=OneTime}"
                         SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="7">
-                    <TextBlock
-                        Margin="0,4,0,0"
-                        FontFamily="Sarasa UI SC"
-                        Text="Text" />
-
-                    <TextBox
-                        Margin="0,4,0,0"
-                        FontFamily="Cascadia Code"
-                        Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                    <TextBlock Margin="0,4,0,0" Text="Text" />
+                    <TextBox Margin="0,4,0,0" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="8">
-                    <TextBlock
-                        Margin="0,4,0,0"
-                        FontFamily="Sarasa UI SC"
-                        Text="描述" />
+                    <TextBlock Margin="0,4,0,0" Text="描述" />
 
                     <TextBox
                         Margin="0,8,0,0"
