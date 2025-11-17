@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,7 +15,11 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings) 
     public Frame? Frame { get; set; }
 
     private bool IsCompleted =>
-        !string.IsNullOrEmpty(GamePath) && !string.IsNullOrEmpty(ModPath) && GamePath != ModPath;
+        !string.IsNullOrEmpty(GamePath)
+        && !string.IsNullOrEmpty(ModPath)
+        && GamePath != ModPath
+        && Directory.Exists(GamePath)
+        && Directory.Exists(ModPath);
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]

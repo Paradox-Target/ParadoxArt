@@ -48,13 +48,13 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox
                         FontFamily="Cascadia Code"
                         FontSize="22"
                         Style="{StaticResource SettingsPathTextBoxStyle}"
-                        Text="{Binding GamePath, Mode=OneWay}" />
+                        Text="{Binding GamePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         Grid.Column="1"
                         Command="{Binding PickGamePathCommand}"
@@ -78,7 +78,7 @@
                         FontFamily="Cascadia Code"
                         FontSize="22"
                         Style="{StaticResource SettingsPathTextBoxStyle}"
-                        Text="{Binding ModPath, Mode=TwoWay}" />
+                        Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
                         Grid.Column="1"
                         Command="{Binding PickModPathCommand}"
@@ -91,11 +91,10 @@
         <StackPanel
             Grid.Row="3"
             Grid.Column="2"
-            Margin="0,30"
+            Margin="0,28"
             HorizontalAlignment="Center">
             <Button
                 HorizontalAlignment="Right"
-                Background="#00B7C3"
                 Command="{Binding GoToNextPageCommand, Mode=Default}"
                 Content="下一步"
                 FontFamily="Noto Sans SC"
