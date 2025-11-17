@@ -39,7 +39,7 @@
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Margin="20">
-            <StackPanel Margin="0,15">
+            <StackPanel Margin="0,16">
                 <TextBlock
                     FontFamily="Sarasa UI SC"
                     FontSize="32"
@@ -79,11 +79,8 @@
                         FontSize="22"
                         Style="{StaticResource SettingsPathTextBoxStyle}"
                         Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <Button
-                        Grid.Column="1"
-                        Command="{Binding PickModPathCommand}"
-                        Content="{x:Static language:Strings.GameSettings_Overview}"
-                        Style="{StaticResource SettingsPickButtonStyle}" />
+                    Content="{x:Static language:Strings.GameSettings_Overview}"
+                    Style="{StaticResource SettingsPickButtonStyle}" />
                 </Grid>
             </StackPanel>
         </StackPanel>

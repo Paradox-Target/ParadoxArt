@@ -89,7 +89,7 @@
         <StackPanel
             Grid.Row="3"
             Grid.Column="2"
-            Margin="0,30"
+            Margin="0,28"
             HorizontalAlignment="Center">
             <Button
                 HorizontalAlignment="Right"
