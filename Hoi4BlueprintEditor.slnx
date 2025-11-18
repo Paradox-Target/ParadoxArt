@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".csharpierrc" />
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+    <File Path="README_EN.md" />
+  </Folder>
+  <Project Path="Hoi4BlueprintEditor/Hoi4BlueprintEditor.csproj" />
+</Solution>

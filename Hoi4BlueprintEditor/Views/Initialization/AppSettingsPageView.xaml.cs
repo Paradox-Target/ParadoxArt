@@ -27,7 +27,7 @@ public sealed partial class AppSettingsPageView : Page
     private void Next_OnClick(object sender, RoutedEventArgs e)
     {
         var settingsService = App.Current.Services.GetRequiredService<SettingsService>();
-        LanguageHelper.SetLanguage(settingsService.Language);
+        LanguageHelper.SetLanguage(settingsService.AppLanguage);
         settingsService.SaveSettings();
         App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainControlView>();
     }

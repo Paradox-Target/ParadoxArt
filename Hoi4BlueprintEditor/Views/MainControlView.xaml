@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
     d:DataContext="{d:DesignInstance vms:MainControlViewModel}"
@@ -33,6 +34,7 @@
                 <MenuItem Header="{x:Static language:Strings.AboutMenuItem}" />
             </MenuItem>
             <MenuItem Header="{x:Static language:Strings.Menu_Settings}">
+                <MenuItem Command="{Binding OpenSettingsViewCommand}" Header="配置项" />
                 <MenuItem Header="{x:Static language:Strings.Menu_Language}">
                     <MenuItem Command="{Binding SetLanguageToChineseCommand}" Header="中文" />
                     <MenuItem Command="{Binding SetLanguageToEnglishCommand}" Header="English" />

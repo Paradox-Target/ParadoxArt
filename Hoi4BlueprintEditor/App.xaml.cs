@@ -69,7 +69,7 @@ public sealed partial class App : Application
         }
 
         var settingsService = Services.GetRequiredService<SettingsService>();
-        LanguageHelper.SetLanguage(settingsService.Language);
+        LanguageHelper.SetLanguage(settingsService.AppLanguage);
 
         _main = Services.GetRequiredService<MainWindow>();
         _main.ShowDialog();

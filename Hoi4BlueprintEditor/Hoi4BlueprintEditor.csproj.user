@@ -14,6 +14,9 @@
     <Compile Update="Views\Initialization\AppSettingsPageView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\SettingsWindowView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\Strings\Strings.resx">
