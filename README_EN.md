@@ -1,4 +1,4 @@
-# Hearts of Iron IV: Blueprint Editor
+﻿# Hearts of Iron IV: Blueprint Editor
 
 The Blueprint Editor is designed to provide a powerful desktop application for the Iron Hearts IV player community, with the ultimate goal of a high-level visual scripting system that references proven solutions for game engines in the industry, abstracting complex in-game logic into draggable, connectable nodes that MOD developers can use to build and manage in-game content in a more intuitive, modular way.
 
@@ -50,7 +50,7 @@ This project began with a simple goal: to eliminate the tedious and error-prone 
 
 ### Technology Stack
 
-- **Platform**：.NET 9
+- **Platform**：.NET 10
 - **UI Framework**：Windows Presentation Foundation (WPF)
 - **Core Architecture**：Model-View-ViewModel (MVVM)
 - **Dependency**：
