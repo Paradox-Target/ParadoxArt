@@ -56,15 +56,19 @@ public sealed class FocusMapControl : ItemsControl
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
+
         foreach (FocusNodeViewModel viewModel in Items)
         {
             var node = viewModel.Model;
-            if (node.Prerequisite.Count == 0)
+            if (node.Prerequisite.Count > 0)
             {
-                continue;
+                DrawPrerequisite(dc, node);
             }
-            DrawPrerequisite(dc, node);
-            DrawMutuallyExclusive(dc, node);
+
+            if (node.MutuallyExclusive.Count > 0)
+            {
+                DrawMutuallyExclusive(dc, node);
+            }
         }
     }
 
