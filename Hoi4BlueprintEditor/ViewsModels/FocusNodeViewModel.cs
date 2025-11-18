@@ -54,5 +54,6 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     public void Dispose()
     {
         Model.PropertyChanged -= OnModelPropertyChanged;
+        Model.Dispose();
     }
 }

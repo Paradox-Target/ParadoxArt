@@ -4,7 +4,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Hoi4BlueprintEditor.Controls;
 using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models.Focus;
@@ -130,8 +129,6 @@ public sealed partial class EditorCanvasView : UserControl
         {
             var position = GetMousePositionOnGrid(e.GetPosition(this));
             _movedFocusNode.SetRawPosition(position.X, position.Y);
-
-            WeakReferenceMessenger.Default.Send(new MoveFocusMessage());
         }
     }
 

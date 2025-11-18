@@ -1,8 +1,14 @@
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Hoi4BlueprintEditor.Messages;
 
 namespace Hoi4BlueprintEditor.Models.Focus;
 
-public sealed partial class FocusNode(string path, FocusType type) : ObservableObject, IEquatable<FocusNode>
+public sealed partial class FocusNode(string path, FocusType type)
+    : ObservableObject,
+        IEquatable<FocusNode>,
+        IDisposable
 {
     [ObservableProperty]
     private string _id = string.Empty;
@@ -12,6 +18,7 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     /// 国策来源文件的绝对路径
     /// </summary>
     public string Path { get; } = path;
+
     public List<FocusNode> MutuallyExclusive { get; } = [];
 
     [ObservableProperty]
@@ -42,6 +49,7 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
 
     [ObservableProperty]
     private string _icon = string.Empty;
+
     public decimal Cost { get; set; }
 
     /// <summary>
@@ -51,7 +59,12 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     public void SetRawX(int x)
     {
         int offsetX = RelativePosition?.X ?? 0;
-        RawPosition = new FocusPoint(x - offsetX, RawPosition.Y);
+        var newPosition = new FocusPoint(x - offsetX, RawPosition.Y);
+        if (newPosition != RawPosition)
+        {
+            RawPosition = newPosition;
+            StrongReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+        }
     }
 
     /// <summary>
@@ -61,9 +74,14 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     public void SetRawY(int y)
     {
         int offsetY = RelativePosition?.Y ?? 0;
-        RawPosition = new FocusPoint(RawPosition.X, y - offsetY);
+        var newPosition = new FocusPoint(RawPosition.X, y - offsetY);
+        if (newPosition != RawPosition)
+        {
+            RawPosition = newPosition;
+            StrongReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+        }
     }
-    
+
     /// <summary>
     /// 将 <c>RawPosition.X</c> 和 <c>RawPosition.Y</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
     /// </summary>
@@ -73,7 +91,37 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     {
         int offsetX = RelativePosition?.X ?? 0;
         int offsetY = RelativePosition?.Y ?? 0;
-        RawPosition = new FocusPoint(x - offsetX, y - offsetY);
+        var newPosition = new FocusPoint(x - offsetX, y - offsetY);
+        if (newPosition != RawPosition)
+        {
+            RawPosition = newPosition;
+            StrongReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+        }
+    }
+
+    partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)
+    {
+        if (oldValue is not null)
+        {
+            oldValue.PropertyChanged -= OnPropertyChanged;
+        }
+
+        if (newValue is not null)
+        {
+            newValue.PropertyChanged += OnPropertyChanged;
+        }
+    }
+
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(X))
+        {
+            OnPropertyChanged(nameof(X));
+        }
+        else if (e.PropertyName == nameof(Y))
+        {
+            OnPropertyChanged(nameof(Y));
+        }
     }
 
     public bool Equals(FocusNode? other)
@@ -119,5 +167,11 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     public static bool operator !=(FocusNode? left, FocusNode? right)
     {
         return !Equals(left, right);
+    }
+
+    // TODO: 删除节点时调用
+    public void Dispose()
+    {
+        RelativePosition?.PropertyChanged -= OnPropertyChanged;
     }
 }

@@ -1,8 +1,6 @@
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using Hoi4BlueprintEditor.ViewsModels;
-using iNKORE.UI.WPF.Modern.Controls;
 
 namespace Hoi4BlueprintEditor.Views;
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Specialized;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -16,22 +16,23 @@ public sealed class FocusMapControl : ItemsControl
     private static double CellWidth => FocusMapMetrics.CellWidth;
     private static double CellHeight => FocusMapMetrics.CellHeight;
 
-    private static readonly double LinePenWidth = 3.0;
+    private const double LinePenWidth = 3.0;
     private static readonly Pen PrerequisiteLinePen = new(Colors.PaleGoldenrod.ToBrush(), LinePenWidth);
     private static readonly Pen ExclusiveLinePen = new(Colors.OrangeRed.ToBrush(), LinePenWidth);
-    private static readonly Pen PrerequisiteDashPen = new(Colors.LightGray.ToBrush(), LinePenWidth)
-    {
-        DashStyle = new DashStyle { Offset = 0, Dashes = [1, 2] },
-    };
+    private static readonly Pen PrerequisiteDashPen =
+        new(Colors.LightGray.ToBrush(), LinePenWidth)
+        {
+            DashStyle = new DashStyle { Offset = 0, Dashes = [1, 2] },
+        };
 
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
 
-        WeakReferenceMessenger.Default.Register<MoveFocusMessage>(this, OnMoveFocus);
+        StrongReferenceMessenger.Default.Register<RedrawFocusLinkLinesMessage>(this, OnMoveFocus);
     }
 
-    private void OnMoveFocus(object recipient, MoveFocusMessage message)
+    private void OnMoveFocus(object recipient, RedrawFocusLinkLinesMessage message)
     {
         InvalidateVisual();
     }
@@ -107,8 +108,8 @@ public sealed class FocusMapControl : ItemsControl
     {
         var x = node.X * CellWidth;
         var y = node.Y * CellHeight;
-        x += CellWidth / 2 - LinePenWidth / 2;
-        y += CellHeight / 2 - LinePenWidth / 2;
+        x += (CellWidth / 2) - (LinePenWidth / 2);
+        y += (CellHeight / 2) - (LinePenWidth / 2);
         return new Point(x, y);
     }
 }
