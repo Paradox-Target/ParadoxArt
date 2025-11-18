@@ -14,70 +14,33 @@
     Visibility="Collapsed"
     mc:Ignorable="d">
 
-    <Border
-        MinWidth="200"
-        Padding="10"
-        Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
-        CornerRadius="4">
-        <Grid>
+    <Grid>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <ui:AcrylicPanel
+            Margin="0"
+            Amount="80"
+            Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
+            CornerRadius="5"
+            Target="{Binding ElementName=InfoBorder}"
+            TintColor="Snow"
+            TintOpacity="0.6" />
 
-            <StackPanel
-                Grid.Row="0"
-                Margin="0,0,0,8"
-                AllowDrop="True"
-                Drop="FocusIcon_OnDrop">
-                <TextBlock Text="Icon" />
-                <Image
-                    x:Name="FocusIcon"
-                    Margin="0,0,0,8"
-                    ToolTip="{Binding IconPath}" />
-                <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
-            </StackPanel>
+        <Border
+            x:Name="InfoBorder"
+            MinWidth="200"
+            Padding="10"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            CornerRadius="4">
+            <Grid>
 
-            <TextBox
-                Grid.Row="1"
-                ui:ControlHelper.Header="ID"
-                Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-
-            <StackPanel
-                Grid.Row="2"
-                Margin="0,8,0,0"
-                Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Bottom" Text="X: " />
-                <ui:NumberBox Value="{Binding X, Mode=TwoWay}" />
-                <TextBlock
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Bottom"
-                    Text="Y: " />
-                <ui:NumberBox Value="{Binding Y, Mode=TwoWay}" />
-            </StackPanel>
-
-            <StackPanel
-                Grid.Row="3"
-                Margin="0,8,0,0"
-                Orientation="Horizontal">
-                <ui:NumberBox
-                    Header="Cost"
-                    Minimum="0"
-                    SpinButtonPlacementMode="Inline"
-                    ValidationMode="InvalidInputOverwritten"
-                    Value="{Binding Cost, Mode=TwoWay}" />
-                <TextBlock
-                    VerticalAlignment="Bottom"
-                    FontSize="20"
-                    Text="{Binding FocusDaysTip}" />
-            </StackPanel>
-
-            <Grid Grid.Row="4" Margin="0,8,0,0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -85,11 +48,72 @@
 
                 <StackPanel
                     Grid.Row="0"
-                    Margin="0,0,0,4"
+                    Margin="0,0,0,8"
+                    AllowDrop="True"
+                    Drop="FocusIcon_OnDrop">
+                    <TextBlock Text="Icon" />
+                    <Image
+                        x:Name="FocusIcon"
+                        Margin="0,0,0,8"
+                        ToolTip="{Binding IconPath}" />
+                    <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                    <TextBlock Margin="0,8,0,0" Text="ID" />
+                    <TextBox Margin="0,4,0,0" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="2"
+                    Margin="0,8,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="定位系统: " />
+                    <Border Background="#71afe5" CornerRadius="4">
+                        <TextBlock Margin="4" Text="{Binding LocationSystemText, Mode=OneWay}" />
+                    </Border>
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="3"
+                    Margin="0,8,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="X: " />
+                    <ui:NumberBox Value="{Binding X, Mode=TwoWay}" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Text="Y: " />
+                    <ui:NumberBox Value="{Binding Y, Mode=TwoWay}" />
+                </StackPanel>
+
+                <TextBlock
+                    Grid.Row="4"
+                    Margin="0,8,0,0"
+                    Text="Cost" />
+
+                <StackPanel
+                    Grid.Row="5"
+                    Margin="0,4,0,0"
+                    Orientation="Horizontal">
+                    <ui:NumberBox
+                        Minimum="0"
+                        SpinButtonPlacementMode="Inline"
+                        ValidationMode="InvalidInputOverwritten"
+                        Value="{Binding Cost, Mode=TwoWay}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        Text="{Binding FocusDaysTip}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="6"
+                    Margin="0,8,0,0"
                     Orientation="Horizontal">
                     <TextBlock
-                        VerticalAlignment="Bottom"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        VerticalAlignment="Center"
+                        FontSize="22"
                         Text="本地化" />
                     <ComboBox
                         Margin="8,0,0,0"
@@ -97,20 +121,24 @@
                         SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
                 </StackPanel>
 
-                <TextBox
-                    Grid.Row="1"
-                    ui:ControlHelper.Header="ID Text"
-                    Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                <TextBox
-                    Grid.Row="2"
-                    Margin="0,8,0,0"
-                    VerticalAlignment="Top"
-                    ui:ControlHelper.Header="描述"
-                    AcceptsReturn="True"
-                    Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                    TextWrapping="WrapWithOverflow"
-                    VerticalScrollBarVisibility="Auto" />
+                <StackPanel Grid.Row="7">
+                    <TextBlock Margin="0,4,0,0" Text="Text" />
+                    <TextBox Margin="0,4,0,0" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="8">
+                    <TextBlock Margin="0,4,0,0" Text="描述" />
+
+                    <TextBox
+                        Margin="0,8,0,0"
+                        VerticalAlignment="Top"
+                        AcceptsReturn="True"
+                        FontFamily="Cascadia Code, Sarasa UI SC"
+                        Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                        TextWrapping="WrapWithOverflow"
+                        VerticalScrollBarVisibility="Auto" />
+                </StackPanel>
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </UserControl>

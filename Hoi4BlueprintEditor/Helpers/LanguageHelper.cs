@@ -5,6 +5,8 @@ namespace Hoi4BlueprintEditor.Helpers;
 
 public static class LanguageHelper
 {
+    public static LanguageInfo[] AppLanguages => [new("简体中文", "zh-CN"), new("English", "en-US")];
+
     public static void SetLanguage(string language)
     {
         if (string.IsNullOrEmpty(language))

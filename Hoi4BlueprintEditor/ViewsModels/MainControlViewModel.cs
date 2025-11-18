@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
+using Hoi4BlueprintEditor.Views;
 using Hoi4BlueprintEditor.Views.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
@@ -33,7 +34,7 @@ public sealed partial class MainControlViewModel : ObservableObject
         string message = _appLocalizationService.GetString("LanguageRestartMessage", targetCulture);
         string title = _appLocalizationService.GetString("RestartRequiredTitle", targetCulture);
 
-        _settingsService.Language = cultureCode;
+        _settingsService.AppLanguage = cultureCode;
         _settingsService.SaveSettings();
 
         MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
@@ -74,8 +75,15 @@ public sealed partial class MainControlViewModel : ObservableObject
     private void GameSettings()
     {
         // TODO: 暂时仅供界面测试
-        // TODO: 如果已编辑提示是否保存
-        // TODO: 使用弹窗而不是欢迎界面
+        //  如果已编辑提示是否保存
+        //  使用弹窗而不是欢迎界面
         App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainWelcomeView>();
+    }
+
+    [RelayCommand]
+    private void OpenSettingsView()
+    {
+        var view = App.Current.Services.GetRequiredService<SettingsWindowView>();
+        view.ShowDialog();
     }
 }
