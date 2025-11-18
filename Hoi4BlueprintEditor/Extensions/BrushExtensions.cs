@@ -23,4 +23,9 @@ public static class BrushExtensions
             return null;
         }
     }
+
+    public static SolidColorBrush ToBrush(this Color color)
+    {
+        return new SolidColorBrush(color);
+    }
 }

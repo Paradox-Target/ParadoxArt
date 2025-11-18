@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Hoi4BlueprintEditor.Controls;
+using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Views.Dialogs;
@@ -224,8 +224,8 @@ public sealed partial class EditorCanvasView : UserControl
     private (int X, int Y) GetMousePositionOnGrid(Point mousePoint)
     {
         double scale = _viewModel.Scale;
-        int x = (int)((mousePoint.X - _viewModel.TranslateX) / (GridRulerControl.CellWidth * scale));
-        int y = (int)((mousePoint.Y - _viewModel.TranslateY) / (GridRulerControl.CellHeight * scale));
+        int x = (int)((mousePoint.X - _viewModel.TranslateX) / (FocusMapConstants.CellWidth * scale));
+        int y = (int)((mousePoint.Y - _viewModel.TranslateY) / (FocusMapConstants.CellHeight * scale));
         return (x, y);
     }
 

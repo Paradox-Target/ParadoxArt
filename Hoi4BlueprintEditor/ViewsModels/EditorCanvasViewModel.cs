@@ -389,30 +389,26 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                     Id = "GER_Test2",
                     RawPosition = new FocusPoint(2, 0),
                     Icon = "GFX_GER_Test2",
-                    RelativePosition = focus
+                    RelativePosition = focus,
                 }
             )
         );
-        _nodes.Add(
-            new FocusNodeViewModel(
-                new FocusNode("", FocusType.Normal)
-                {
-                    Id = "GER_Test3",
-                    RawPosition = new FocusPoint(0, 1),
-                    Icon = "GFX_GER_Test3",
-                }
-            )
-        );
-        _nodes.Add(
-            new FocusNodeViewModel(
-                new FocusNode("", FocusType.Normal)
-                {
-                    Id = "GER_Test4",
-                    RawPosition = new FocusPoint(2, 1),
-                    Icon = "GFX_GER_Test4",
-                }
-            )
-        );
+        var f3 = new FocusNode("", FocusType.Normal)
+        {
+            Id = "GER_Test3",
+            RawPosition = new FocusPoint(0, 1),
+            Icon = "GFX_GER_Test3",
+        };
+        f3.Prerequisite.Add([focus]);
+        _nodes.Add(new FocusNodeViewModel(f3));
+        var f4 = new FocusNode("", FocusType.Normal)
+        {
+            Id = "GER_Test4",
+            RawPosition = new FocusPoint(2, 1),
+            Icon = "GFX_GER_Test4",
+        };
+        f4.Prerequisite.Add([focus]);
+        _nodes.Add(new FocusNodeViewModel(f4));
 
         _focusTreeFiles.Add("TestFocusFile1.txt");
         _focusTreeFiles.Add("TestFocusFile2.txt");
