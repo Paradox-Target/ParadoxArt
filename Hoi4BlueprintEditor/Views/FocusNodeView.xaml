@@ -16,23 +16,23 @@
         ToolTip="{Binding Model.Id}"
         Width="{x:Static helper:FocusMapMetrics.CellWidth}">
 
-        <Rectangle Fill="#555">
-            <Rectangle.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleY="{x:Static helper:FocusMapMetrics.FocusFactor}" />
-                    <TranslateTransform Y="{x:Static helper:FocusMapMetrics.FocusCenterOffsetVertical}" />
-                </TransformGroup>
-            </Rectangle.RenderTransform>
-        </Rectangle>
+        <!-- <Rectangle Fill="#555"> -->
+        <!--     <Rectangle.RenderTransform> -->
+        <!--         <TransformGroup> -->
+        <!--             <ScaleTransform ScaleY="{x:Static helper:FocusMapMetrics.FocusFactor}" /> -->
+        <!--             <TranslateTransform Y="{x:Static helper:FocusMapMetrics.FocusCenterOffsetVertical}" /> -->
+        <!--         </TransformGroup> -->
+        <!--     </Rectangle.RenderTransform> -->
+        <!-- </Rectangle> -->
         <Image
             Height="{Binding Height}"
             Source="{Binding BitmapSource}"
             Width="{Binding Width}">
-            <Image.RenderTransform>
-                <TransformGroup>
-                    <TranslateTransform Y="{x:Static helper:FocusMapMetrics.FocusContentUpOffset}" />
-                </TransformGroup>
-            </Image.RenderTransform>
+            <!-- <Image.RenderTransform> -->
+            <!--     <TransformGroup> -->
+            <!--         <TranslateTransform Y="{x:Static helper:FocusMapMetrics.FocusContentUpOffset}" /> -->
+            <!--     </TransformGroup> -->
+            <!-- </Image.RenderTransform> -->
         </Image>
 
         <TextBlock

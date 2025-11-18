@@ -24,6 +24,8 @@ public sealed partial class FocusNode(string path, FocusType type) : ObservableO
     /// </summary>
     /// <remarks>
     /// 每个项目中的集合代表一个 prerequisite 节点内容
+    /// 内层 List 集合 OR 前置条件
+    /// 外层 List 集合 AND 前置条件
     /// </remarks>
     public List<List<FocusNode>> Prerequisite { get; } = [];
 

@@ -17,8 +17,12 @@ public sealed class FocusMapControl : ItemsControl
     private static double CellHeight => FocusMapMetrics.CellHeight;
 
     private static readonly double LinePenWidth = 3.0;
-    private static readonly Pen PrerequisiteLinePen = new(Colors.Azure.ToBrush(), LinePenWidth);
+    private static readonly Pen PrerequisiteLinePen = new(Colors.PaleGoldenrod.ToBrush(), LinePenWidth);
     private static readonly Pen ExclusiveLinePen = new(Colors.OrangeRed.ToBrush(), LinePenWidth);
+    private static readonly Pen PrerequisiteDashPen = new(Colors.LightGray.ToBrush(), LinePenWidth)
+    {
+        DashStyle = new DashStyle { Offset = 0, Dashes = [1, 2] },
+    };
 
     protected override void OnInitialized(EventArgs e)
     {
@@ -49,77 +53,61 @@ public sealed class FocusMapControl : ItemsControl
             {
                 continue;
             }
+            DrawPrerequisite(dc, node);
+            DrawMutuallyExclusive(dc, node);
+        }
+    }
 
-            foreach (var preGroup in node.Prerequisite)
+    private static void DrawPrerequisite(DrawingContext dc, FocusNode node)
+    {
+        foreach (var preGroup in node.Prerequisite)
+        {
+            if (preGroup.Count > 1)
             {
                 foreach (var pre in preGroup)
                 {
-                    var offset = new Vector(0, FocusMapMetrics.FocusCenterOffsetVertical);
-
-                    var nodeJoint = GetChildNodeLineJoint(node);
-                    var preJoint = GetPrerequisiteNodeLineJoint(pre);
-                    var nodeCorner = Point.Subtract(nodeJoint, offset);
-                    var preCorner = Point.Add(preJoint, offset);
-
-                    var middleY = (nodeCorner.Y + preCorner.Y) / 2;
-                    nodeCorner.Y = preCorner.Y = middleY;
-
-                    dc.DrawLine(PrerequisiteLinePen, nodeJoint, nodeCorner);
-                    dc.DrawLine(PrerequisiteLinePen, preJoint, preCorner);
-                    dc.DrawLine(PrerequisiteLinePen, nodeCorner, preCorner);
+                    DrawPrerequisite(dc, node, pre, PrerequisiteDashPen);
                 }
             }
-
-            foreach (var ex in node.MutuallyExclusive)
+            else if (preGroup.Count == 1)
             {
-                if (node.X < ex.X)
-                {
-                    var nodeJoint = GetLeftExclusiveLineJoint(node);
-                    var exJoint = GetRightExclusiveLineJoint(ex);
-                    dc.DrawLine(ExclusiveLinePen, nodeJoint, exJoint);
-                }
-                else if (node.X > ex.X)
-                {
-                    var nodeJoint = GetRightExclusiveLineJoint(node);
-                    var exJoint = GetLeftExclusiveLineJoint(ex);
-                    dc.DrawLine(ExclusiveLinePen, nodeJoint, exJoint);
-                }
+                DrawPrerequisite(dc, node, preGroup[0], PrerequisiteLinePen);
             }
         }
     }
 
-    private Point GetChildNodeLineJoint(FocusNode node)
+    private static void DrawPrerequisite(DrawingContext dc, FocusNode node, FocusNode pre, Pen pen)
+    {
+        var offset = new Vector(0, CellHeight / 2);
+
+        var nodeJoint = GetNodeCenter(node);
+        var preJoint = GetNodeCenter(pre);
+        var nodeCorner = Point.Subtract(nodeJoint, offset);
+        var preCorner = Point.Add(preJoint, offset);
+
+        var middleY = (nodeCorner.Y + preCorner.Y) / 2;
+        nodeCorner.Y = preCorner.Y = middleY;
+
+        dc.DrawLine(pen, nodeJoint, nodeCorner);
+        dc.DrawLine(pen, preJoint, preCorner);
+        dc.DrawLine(pen, nodeCorner, preCorner);
+    }
+
+    private static void DrawMutuallyExclusive(DrawingContext dc, FocusNode node)
+    {
+        foreach (var ex in node.MutuallyExclusive)
+        {
+            var nodeJoint = GetNodeCenter(node);
+            var exJoint = GetNodeCenter(ex);
+            dc.DrawLine(ExclusiveLinePen, nodeJoint, exJoint);
+        }
+    }
+
+    private static Point GetNodeCenter(FocusNode node)
     {
         var x = node.X * CellWidth;
         var y = node.Y * CellHeight;
         x += CellWidth / 2 - LinePenWidth / 2;
-        y += FocusMapMetrics.FocusCenterOffsetVertical;
-        return new Point(x, y);
-    }
-
-    private Point GetPrerequisiteNodeLineJoint(FocusNode node)
-    {
-        var x = node.X * CellWidth;
-        var y = node.Y * CellHeight;
-        x += CellWidth / 2 - LinePenWidth / 2;
-        y += CellHeight;
-        y -= FocusMapMetrics.FocusCenterOffsetVertical;
-        return new Point(x, y);
-    }
-
-    private Point GetLeftExclusiveLineJoint(FocusNode node)
-    {
-        var x = node.X * CellWidth;
-        var y = node.Y * CellHeight;
-        x += CellWidth;
-        y += CellHeight / 2 - LinePenWidth / 2;
-        return new Point(x, y);
-    }
-
-    private Point GetRightExclusiveLineJoint(FocusNode node)
-    {
-        var x = node.X * CellWidth;
-        var y = node.Y * CellHeight;
         y += CellHeight / 2 - LinePenWidth / 2;
         return new Point(x, y);
     }
