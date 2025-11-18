@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.Messaging;
+using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Extensions;
-using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.ViewsModels;
@@ -13,23 +13,32 @@ namespace Hoi4BlueprintEditor.Controls;
 
 public sealed class FocusMapControl : ItemsControl
 {
-    private static double CellWidth => FocusMapMetrics.CellWidth;
-    private static double CellHeight => FocusMapMetrics.CellHeight;
+    private static double CellWidth => FocusMapConstants.CellWidth;
+    private static double CellHeight => FocusMapConstants.CellHeight;
 
     private const double LinePenWidth = 3.0;
-    private static readonly Pen PrerequisiteLinePen = new(Colors.PaleGoldenrod.ToBrush(), LinePenWidth);
-    private static readonly Pen ExclusiveLinePen = new(Colors.OrangeRed.ToBrush(), LinePenWidth);
-    private static readonly Pen PrerequisiteDashPen =
-        new(Colors.LightGray.ToBrush(), LinePenWidth)
+    private static readonly Pen PrerequisiteLinePen;
+    private static readonly Pen ExclusiveLinePen;
+    private static readonly Pen PrerequisiteDashPen;
+
+    static FocusMapControl()
+    {
+        PrerequisiteDashPen = new Pen(Colors.LightGray.ToBrush(), LinePenWidth)
         {
             DashStyle = new DashStyle { Offset = 0, Dashes = [1, 2] },
         };
+        PrerequisiteDashPen.Freeze();
+        ExclusiveLinePen = new Pen(Colors.OrangeRed.ToBrush(), LinePenWidth);
+        ExclusiveLinePen.Freeze();
+        PrerequisiteLinePen = new Pen(Colors.PaleGoldenrod.ToBrush(), LinePenWidth);
+        PrerequisiteLinePen.Freeze();
+    }
 
     protected override void OnInitialized(EventArgs e)
     {
         base.OnInitialized(e);
 
-        StrongReferenceMessenger.Default.Register<RedrawFocusLinkLinesMessage>(this, OnMoveFocus);
+        WeakReferenceMessenger.Default.Register<RedrawFocusLinkLinesMessage>(this, OnMoveFocus);
     }
 
     private void OnMoveFocus(object recipient, RedrawFocusLinkLinesMessage message)

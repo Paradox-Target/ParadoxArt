@@ -1,20 +1,20 @@
 ﻿<UserControl
-    Background="#333333"
-    d:DataContext="{d:DesignInstance vms:EditorCanvasViewModel}"
-    d:DesignHeight="600"
-    d:DesignWidth="1000"
-    mc:Ignorable="d"
     x:Class="Hoi4BlueprintEditor.Views.EditorCanvasView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:const="clr-namespace:Hoi4BlueprintEditor.Constants"
     xmlns:controls="clr-namespace:Hoi4BlueprintEditor.Controls"
     xmlns:converters="clr-namespace:Hoi4BlueprintEditor.Core.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helper="clr-namespace:Hoi4BlueprintEditor.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    d:DataContext="{d:DesignInstance vms:EditorCanvasViewModel}"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    Background="#333333"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
@@ -29,9 +29,9 @@
             TranslateY="{Binding TranslateY}">
             <controls:GridRulerControl.ContextMenu>
                 <ContextMenu
-                    Opened="ContextMenu_OnOpened"
+                    x:Name="ContextMenu"
                     d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    x:Name="ContextMenu">
+                    Opened="ContextMenu_OnOpened">
                     <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
                         <MenuItem.Icon>
                             <ui:FontIcon Glyph="&#xE710;" />
@@ -67,8 +67,8 @@
 
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static helper:FocusMapMetrics.CellWidth}}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static helper:FocusMapMetrics.CellHeight}}" />
+                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellWidth}}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellHeight}}" />
                 </Style>
             </ItemsControl.ItemContainerStyle>
         </controls:FocusMapControl>

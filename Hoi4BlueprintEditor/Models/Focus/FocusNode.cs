@@ -63,7 +63,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (newPosition != RawPosition)
         {
             RawPosition = newPosition;
-            StrongReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+            WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (newPosition != RawPosition)
         {
             RawPosition = newPosition;
-            StrongReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+            WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
         }
     }
 
@@ -95,7 +95,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (newPosition != RawPosition)
         {
             RawPosition = newPosition;
-            StrongReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+            WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
         }
     }
 

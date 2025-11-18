@@ -1,6 +1,6 @@
-﻿namespace Hoi4BlueprintEditor.Helpers;
+namespace Hoi4BlueprintEditor.Constants;
 
-public static class FocusMapMetrics
+public static class FocusMapConstants
 {
     public const double CellWidth = 96;
     public const double CellHeight = 130;

@@ -19,7 +19,7 @@ namespace Hoi4BlueprintEditor.ViewsModels;
 
 public sealed partial class EditorCanvasViewModel : ObservableObject
 {
-    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; set; }
+    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
 
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
 
