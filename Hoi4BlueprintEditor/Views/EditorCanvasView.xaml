@@ -1,7 +1,11 @@
 ﻿<UserControl
+    Background="#333333"
+    d:DataContext="{d:DesignInstance vms:EditorCanvasViewModel}"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    mc:Ignorable="d"
     x:Class="Hoi4BlueprintEditor.Views.EditorCanvasView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:const="clr-namespace:Hoi4BlueprintEditor.Constants"
     xmlns:controls="clr-namespace:Hoi4BlueprintEditor.Controls"
     xmlns:converters="clr-namespace:Hoi4BlueprintEditor.Core.Converters"
@@ -10,11 +14,7 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:views="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
-    d:DataContext="{d:DesignInstance vms:EditorCanvasViewModel}"
-    d:DesignHeight="600"
-    d:DesignWidth="1000"
-    Background="#333333"
-    mc:Ignorable="d">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <UserControl.Resources>
         <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
@@ -23,15 +23,15 @@
     <Grid ClipToBounds="True">
 
         <controls:GridRulerControl
-            Grid.ZIndex="0"
+            Grid.ZIndex="{x:Static const:FocusMapConstants.GridRulerZIndex}"
             Scale="{Binding Scale}"
             TranslateX="{Binding TranslateX}"
             TranslateY="{Binding TranslateY}">
             <controls:GridRulerControl.ContextMenu>
                 <ContextMenu
-                    x:Name="ContextMenu"
+                    Opened="ContextMenu_OnOpened"
                     d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    Opened="ContextMenu_OnOpened">
+                    x:Name="ContextMenu">
                     <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
                         <MenuItem.Icon>
                             <ui:FontIcon Glyph="&#xE710;" />
@@ -41,10 +41,13 @@
             </controls:GridRulerControl.ContextMenu>
         </controls:GridRulerControl>
 
-        <controls:FocusMapControl
-            Grid.ZIndex="1"
-            ItemsSource="{Binding Nodes}"
-            RenderTransformOrigin="0,0">
+        <controls:GridBackgroundControl
+            Grid.ZIndex="{x:Static const:FocusMapConstants.GridBackgroundZIndex}"
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}" />
+
+        <controls:FocusMapControl Grid.ZIndex="{x:Static const:FocusMapConstants.FocusMapZIndex}" ItemsSource="{Binding Nodes}">
 
             <controls:FocusMapControl.RenderTransform>
                 <TransformGroup>

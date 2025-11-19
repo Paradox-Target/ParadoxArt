@@ -1,5 +1,4 @@
-using System.Globalization;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Hoi4BlueprintEditor.Extensions;
@@ -7,13 +6,13 @@ using Hoi4BlueprintEditor.Helpers;
 
 namespace Hoi4BlueprintEditor.Controls;
 
-public sealed class GridRulerControl : Control
+public sealed class GridBackgroundControl : Control
 {
     // 标尺大小
     private const double RulerSize = 30.0;
     private static readonly SolidColorBrush RulerBrush =
         "#4A4A4A".ToBrush() ?? new SolidColorBrush(Colors.Brown);
-    private static readonly Typeface RulerTypeface = new("Segoe UI");
+    private static readonly Pen GridPen = new("#444444".ToBrush(), 1.0);
 
     #region Dependency Proerties (依赖属性)
 
@@ -22,7 +21,7 @@ public sealed class GridRulerControl : Control
     public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register(
         nameof(Scale),
         typeof(double),
-        typeof(GridRulerControl),
+        typeof(GridBackgroundControl),
         new FrameworkPropertyMetadata(1.0, FrameworkPropertyMetadataOptions.AffectsRender)
     );
 
@@ -35,7 +34,7 @@ public sealed class GridRulerControl : Control
     public static readonly DependencyProperty TranslateXProperty = DependencyProperty.Register(
         nameof(TranslateX),
         typeof(double),
-        typeof(GridRulerControl),
+        typeof(GridBackgroundControl),
         new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender)
     );
 
@@ -48,7 +47,7 @@ public sealed class GridRulerControl : Control
     public static readonly DependencyProperty TranslateYProperty = DependencyProperty.Register(
         nameof(TranslateY),
         typeof(double),
-        typeof(GridRulerControl),
+        typeof(GridBackgroundControl),
         new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender)
     );
 
@@ -63,63 +62,21 @@ public sealed class GridRulerControl : Control
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
-
-        // 绘制标尺背景
-        dc.DrawRectangle(RulerBrush, null, new Rect(0, 0, RulerSize, ActualHeight));
-        dc.DrawRectangle(RulerBrush, null, new Rect(0, ActualHeight - RulerSize, ActualWidth, RulerSize));
-
-        bool canDrawText = Scale > 0.3;
-
-        #region 绘制垂直标尺
-
+        
+        // 绘制垂直网格线和X轴标尺
         GridDrawHelper.GetXRange(TranslateX, Scale, ActualWidth, out int startX, out int endX);
         for (int i = startX; i <= endX; i++)
         {
-            // X坐标
             double xPos = GridDrawHelper.GetX(TranslateX, Scale, i);
-            if (canDrawText)
-            {
-                // 画底部标尺数字
-                var text = new FormattedText(
-                    i.ToString(),
-                    CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    RulerTypeface,
-                    12,
-                    Brushes.WhiteSmoke,
-                    1.25
-                );
-                // 5内边距
-                dc.DrawText(text, new Point(xPos + 5, ActualHeight - RulerSize + 5));
-            }
+            dc.DrawLine(GridPen, new Point(xPos, 0), new Point(xPos, ActualHeight));
         }
 
-        #endregion
-
-        #region 绘制水平标尺
-
+        // 绘制水平网格线和Y轴标尺
         GridDrawHelper.GetXRange(TranslateY, Scale, ActualHeight, out int startY, out int endY);
         for (int i = startY; i <= endY; i++)
         {
-            // Y坐标
             double yPos = GridDrawHelper.GetY(TranslateY, Scale, i);
-            if (canDrawText)
-            {
-                // 画左侧标尺的数字
-                var text = new FormattedText(
-                    i.ToString(),
-                    CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    RulerTypeface,
-                    12,
-                    Brushes.WhiteSmoke,
-                    1.25
-                );
-                // 5内边距
-                dc.DrawText(text, new Point(5, yPos + 5));
-            }
+            dc.DrawLine(GridPen, new Point(0, yPos), new Point(ActualWidth, yPos));
         }
-
-        #endregion
     }
 }
