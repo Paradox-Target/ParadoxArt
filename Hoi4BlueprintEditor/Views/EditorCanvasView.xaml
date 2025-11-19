@@ -37,6 +37,8 @@
                             <ui:FontIcon Glyph="&#xE710;" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Header="设置互斥国策" />
+                    <MenuItem Command="{Binding SetPrerequisiteFocusCommand}" Header="设置前置国策" />
                 </ContextMenu>
             </controls:GridRulerControl.ContextMenu>
         </controls:GridRulerControl>

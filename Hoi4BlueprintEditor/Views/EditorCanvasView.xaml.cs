@@ -18,12 +18,14 @@ namespace Hoi4BlueprintEditor.Views;
 
 public sealed partial class EditorCanvasView : UserControl
 {
-    public AsyncRelayCommand CreateNewFocusCommand { get; }
-
     private Point? _lastMousePositionOnCanvas;
     private FocusNode? _movedFocusNode;
     private readonly EditorCanvasViewModel _viewModel;
+    private FocusNode? _lastRightClickFocus;
     private Point _rightClickPoint;
+    private SelectState _selectState = SelectState.None;
+    private bool CursorOverFocus => _lastRightClickFocus is not null;
+    private bool CursorNotOverFocus => !CursorOverFocus;
 
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
@@ -43,16 +45,6 @@ public sealed partial class EditorCanvasView : UserControl
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
         DataContext = _viewModel;
 
-        CreateNewFocusCommand = new AsyncRelayCommand(
-            CreateNewFocus,
-            () =>
-            {
-                // 只能在空白处创建新国策
-                var result = VisualTreeHelper.HitTest(this, _rightClickPoint);
-                return result?.VisualHit is not FrameworkElement { DataContext: FocusNodeViewModel };
-            }
-        );
-
         // 方便右键菜单在前端绑定 Command
         ContextMenu.DataContext = this;
     }
@@ -60,7 +52,38 @@ public sealed partial class EditorCanvasView : UserControl
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         _rightClickPoint = e.GetPosition(this);
+        var result = VisualTreeHelper.HitTest(this, _rightClickPoint);
+        if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
+        {
+            _lastRightClickFocus = viewModel.Model;
+        }
+        else
+        {
+            _lastRightClickFocus = null;
+        }
         ContextMenu.IsOpen = true;
+    }
+
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void SetMutuallyExclusiveFocus()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+
+        _selectState = SelectState.MutuallyExclusive;
+    }
+
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void SetPrerequisiteFocus()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+
+        _selectState = SelectState.Prerequisite;
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -74,6 +97,28 @@ public sealed partial class EditorCanvasView : UserControl
         var result = VisualTreeHelper.HitTest(this, position);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
+            if (_lastRightClickFocus is not null && _lastRightClickFocus != viewModel.Model)
+            {
+                if (_selectState == SelectState.MutuallyExclusive)
+                {
+                    viewModel.Model.MutuallyExclusive.Add(_lastRightClickFocus);
+                    _lastRightClickFocus.MutuallyExclusive.Add(viewModel.Model);
+                    _selectState = SelectState.None;
+                    _lastRightClickFocus = null;
+                    WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+                    return;
+                }
+
+                if (_selectState == SelectState.Prerequisite)
+                {
+                    _lastRightClickFocus.Prerequisite.Add([viewModel.Model]);
+                    _selectState = SelectState.None;
+                    _lastRightClickFocus = null;
+                    WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+                    return;
+                }
+            }
+
             if (e.ClickCount <= 1)
             {
                 _movedFocusNode = viewModel.Model;
@@ -93,7 +138,7 @@ public sealed partial class EditorCanvasView : UserControl
             }
 
             OpenFocusInfoView(viewModel.Model);
-            Log.Debug("切换到国策: {Name}", viewModel.Model.Id);
+            Log.Debug("信息卡切换到国策: {Name}", viewModel.Model.Id);
         }
         else
         {
@@ -173,6 +218,7 @@ public sealed partial class EditorCanvasView : UserControl
         _viewModel.Scale = newScale;
     }
 
+    [RelayCommand(CanExecute = nameof(CursorNotOverFocus))]
     private async Task CreateNewFocus()
     {
         var viewModel = new CreateNewFocusViewModel(_viewModel.GetAllFocusFiles())
@@ -214,6 +260,8 @@ public sealed partial class EditorCanvasView : UserControl
     private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
     {
         CreateNewFocusCommand.NotifyCanExecuteChanged();
+        SetPrerequisiteFocusCommand.NotifyCanExecuteChanged();
+        SetMutuallyExclusiveFocusCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>
@@ -235,5 +283,12 @@ public sealed partial class EditorCanvasView : UserControl
         FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
         FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
         FocusInfoView.IsOpen = true;
+    }
+
+    private enum SelectState : byte
+    {
+        None,
+        MutuallyExclusive,
+        Prerequisite
     }
 }
