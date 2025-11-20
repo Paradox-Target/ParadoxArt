@@ -424,23 +424,22 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     {
         bool changed = false;
 
-        if (type == ConnectionType.MutuallyExclusive)
+        // TODO: 需要检查后置条件中是否存在
+        if (type == ConnectionType.MutuallyExclusive && !source.MutuallyExclusive.Contains(target))
         {
-            if (!source.MutuallyExclusive.Contains(target))
-            {
-                source.MutuallyExclusive.Add(target);
-                target.MutuallyExclusive.Add(source);
-                changed = true;
-            }
+            source.MutuallyExclusive.Add(target);
+            target.MutuallyExclusive.Add(source);
+            changed = true;
         }
-        else if (type == ConnectionType.Prerequisite)
-        {
+        else if (
+            type == ConnectionType.Prerequisite
             // 检查是否已经存在于任何前置组中
-            if (!source.Prerequisite.Any(group => group.Contains(target)))
-            {
-                source.Prerequisite.Add([target]);
-                changed = true;
-            }
+            && !source.Prerequisite.Any(group => group.Contains(target))
+            && !source.MutuallyExclusive.Contains(target)
+        )
+        {
+            source.Prerequisite.Add([target]);
+            changed = true;
         }
 
         if (changed)

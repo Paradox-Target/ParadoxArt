@@ -118,7 +118,6 @@ public sealed partial class EditorCanvasView : UserControl
         var result = VisualTreeHelper.HitTest(this, position);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
-            var focus = viewModel.Model;
             if (
                 _lastRightClickFocus is not null
                 && _lastRightClickFocus != viewModel.Model
@@ -176,6 +175,7 @@ public sealed partial class EditorCanvasView : UserControl
             var result = VisualTreeHelper.HitTest(this, position);
             if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
             {
+                // TODO: 预览显示连接线之前检查合法性
                 ConnectionPreviewOverlay.To = viewModel.Model;
             }
             else
