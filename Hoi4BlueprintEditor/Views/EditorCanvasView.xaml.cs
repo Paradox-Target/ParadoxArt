@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,8 +23,17 @@ public sealed partial class EditorCanvasView : UserControl
     private FocusNode? _movedFocusNode;
     private readonly EditorCanvasViewModel _viewModel;
     private FocusNode? _lastRightClickFocus;
-    private Point _rightClickPoint;
-    private SelectState _selectState = SelectState.None;
+    private Point _lastRightClickPoint;
+
+    private ConnectionType FocusConnectionType
+    {
+        get;
+        set
+        {
+            field = value;
+            ConnectionPreviewOverlay.State = value;
+        }
+    } = ConnectionType.None;
     private bool CursorOverFocus => _lastRightClickFocus is not null;
     private bool CursorNotOverFocus => !CursorOverFocus;
 
@@ -51,8 +61,8 @@ public sealed partial class EditorCanvasView : UserControl
 
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        _rightClickPoint = e.GetPosition(this);
-        var result = VisualTreeHelper.HitTest(this, _rightClickPoint);
+        _lastRightClickPoint = e.GetPosition(this);
+        var result = VisualTreeHelper.HitTest(this, _lastRightClickPoint);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
             _lastRightClickFocus = viewModel.Model;
@@ -72,7 +82,8 @@ public sealed partial class EditorCanvasView : UserControl
             return;
         }
 
-        _selectState = SelectState.MutuallyExclusive;
+        FocusConnectionType = ConnectionType.MutuallyExclusive;
+        ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
@@ -83,7 +94,8 @@ public sealed partial class EditorCanvasView : UserControl
             return;
         }
 
-        _selectState = SelectState.Prerequisite;
+        FocusConnectionType = ConnectionType.Prerequisite;
+        ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -98,31 +110,14 @@ public sealed partial class EditorCanvasView : UserControl
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
             var focus = viewModel.Model;
-            if (_lastRightClickFocus is not null && _lastRightClickFocus != viewModel.Model)
+            if (
+                _lastRightClickFocus is not null
+                && _lastRightClickFocus != viewModel.Model
+                && FocusConnectionType != ConnectionType.None
+            )
             {
-                if (_selectState == SelectState.MutuallyExclusive)
+                if (TrySetFocusConnection(focus, viewModel))
                 {
-                    if (!focus.MutuallyExclusive.Contains(_lastRightClickFocus))
-                    {
-                        focus.MutuallyExclusive.Add(_lastRightClickFocus);
-                        _lastRightClickFocus.MutuallyExclusive.Add(viewModel.Model);
-                        _lastRightClickFocus = null;
-                        WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
-                    }
-                    _selectState = SelectState.None;
-                    _lastRightClickFocus = null;
-                    return;
-                }
-
-                if (_selectState == SelectState.Prerequisite)
-                {
-                    if (!focus.Prerequisite.Any(prerequisite => prerequisite.Contains(_lastRightClickFocus)))
-                    {
-                        _lastRightClickFocus.Prerequisite.Add([viewModel.Model]);
-                        WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
-                    }
-                    _selectState = SelectState.None;
-                    _lastRightClickFocus = null;
                     return;
                 }
             }
@@ -154,8 +149,62 @@ public sealed partial class EditorCanvasView : UserControl
         }
     }
 
+    private bool TrySetFocusConnection(FocusNode focus, FocusNodeViewModel viewModel)
+    {
+        Debug.Assert(_lastRightClickFocus is not null);
+
+        if (FocusConnectionType == ConnectionType.MutuallyExclusive)
+        {
+            if (!focus.MutuallyExclusive.Contains(_lastRightClickFocus))
+            {
+                focus.MutuallyExclusive.Add(_lastRightClickFocus);
+                _lastRightClickFocus.MutuallyExclusive.Add(viewModel.Model);
+                WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
+            }
+
+            Clear();
+            return true;
+        }
+
+        if (FocusConnectionType == ConnectionType.Prerequisite)
+        {
+            if (!focus.Prerequisite.Any(prerequisite => prerequisite.Contains(_lastRightClickFocus)))
+            {
+                _lastRightClickFocus.Prerequisite.Add([viewModel.Model]);
+                WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
+            }
+
+            Clear();
+            return true;
+        }
+
+        return false;
+
+        void Clear()
+        {
+            _lastRightClickFocus = null;
+            FocusConnectionType = ConnectionType.None;
+            ConnectionPreviewOverlay.ClearPreview();
+        }
+    }
+
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
+        if (FocusConnectionType != ConnectionType.None)
+        {
+            Cursor = Cursors.Cross;
+            var position = e.GetPosition(this);
+            var result = VisualTreeHelper.HitTest(this, position);
+            if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
+            {
+                ConnectionPreviewOverlay.To = viewModel.Model;
+            }
+            else
+            {
+                ConnectionPreviewOverlay.To = null;
+            }
+        }
+
         if (e.MiddleButton == MouseButtonState.Pressed)
         {
             if (_lastMousePositionOnCanvas.HasValue)
@@ -166,7 +215,6 @@ public sealed partial class EditorCanvasView : UserControl
                 _viewModel.TranslateX += delta.X;
                 _viewModel.TranslateY += delta.Y;
 
-                // 鼠标图案改变
                 Cursor = Cursors.Hand;
             }
 
@@ -175,10 +223,19 @@ public sealed partial class EditorCanvasView : UserControl
         else
         {
             _lastMousePositionOnCanvas = null;
-            Cursor = Cursors.Arrow;
+            // 在设置国策间条件时, 鼠标样式会被设置为 Cross, 为了防止被覆盖, 需要在这里检查
+            if (FocusConnectionType == ConnectionType.None)
+            {
+                Cursor = Cursors.Arrow;
+            }
         }
 
-        if (e.LeftButton == MouseButtonState.Pressed && _movedFocusNode is not null)
+        // 设置连接线时禁止移动国策
+        if (
+            FocusConnectionType == ConnectionType.None
+            && e.LeftButton == MouseButtonState.Pressed
+            && _movedFocusNode is not null
+        )
         {
             var position = GetMousePositionOnGrid(e.GetPosition(this));
             _movedFocusNode.SetRawPosition(position.X, position.Y);
@@ -249,7 +306,7 @@ public sealed partial class EditorCanvasView : UserControl
 
         if (result == ContentDialogResult.Primary)
         {
-            var position = GetMousePositionOnGrid(_rightClickPoint);
+            var position = GetMousePositionOnGrid(_lastRightClickPoint);
             var newFocusNode = await WeakReferenceMessenger.Default.Send(
                 new CreateNewFocusMessage(
                     new FocusPoint(position.X, position.Y),
@@ -293,7 +350,7 @@ public sealed partial class EditorCanvasView : UserControl
         FocusInfoView.IsOpen = true;
     }
 
-    private enum SelectState : byte
+    public enum ConnectionType : byte
     {
         None,
         MutuallyExclusive,

@@ -75,6 +75,13 @@
             </ItemsControl.ItemContainerStyle>
         </controls:FocusMapControl>
 
+        <controls:ConnectionPreviewOverlayControl
+            x:Name="ConnectionPreviewOverlay"
+            Grid.ZIndex="1"
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}" />
+
         <views:FocusInfoView x:Name="FocusInfoView" />
     </Grid>
 </UserControl>
