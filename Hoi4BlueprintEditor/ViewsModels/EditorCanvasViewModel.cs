@@ -445,7 +445,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         if (changed)
         {
-            WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
+            WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
         }
     }
 }
