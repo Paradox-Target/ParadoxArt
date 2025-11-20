@@ -46,7 +46,6 @@ public sealed partial class EditorCanvasView : UserControl
     {
         InitializeComponent();
 
-        // 鼠标事件
         MouseWheel += OnMouseWheel;
         MouseMove += OnMouseMove;
         MouseLeave += OnMouseLeave;
@@ -72,7 +71,16 @@ public sealed partial class EditorCanvasView : UserControl
         {
             _lastRightClickFocus = null;
         }
-        ContextMenu.IsOpen = true;
+
+        // 连接模式时右键取消连接模式
+        if (FocusConnectionType != ConnectionType.None)
+        {
+            FocusConnectionType = ConnectionType.None;
+        }
+        else
+        {
+            ContextMenu.IsOpen = true;
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
