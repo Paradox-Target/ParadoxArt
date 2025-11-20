@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Messages;
+using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
@@ -116,7 +117,7 @@ public sealed partial class EditorCanvasView : UserControl
                 && FocusConnectionType != ConnectionType.None
             )
             {
-                if (TrySetFocusConnection(focus, viewModel))
+                if (TrySetFocusConnection(viewModel))
                 {
                     return;
                 }
@@ -149,36 +150,19 @@ public sealed partial class EditorCanvasView : UserControl
         }
     }
 
-    private bool TrySetFocusConnection(FocusNode focus, FocusNodeViewModel viewModel)
+    private bool TrySetFocusConnection(FocusNodeViewModel viewModel)
     {
         Debug.Assert(_lastRightClickFocus is not null);
 
-        if (FocusConnectionType == ConnectionType.MutuallyExclusive)
+        if (FocusConnectionType == ConnectionType.None)
         {
-            if (!focus.MutuallyExclusive.Contains(_lastRightClickFocus))
-            {
-                focus.MutuallyExclusive.Add(_lastRightClickFocus);
-                _lastRightClickFocus.MutuallyExclusive.Add(viewModel.Model);
-                WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
-            }
-
-            Clear();
-            return true;
+            return false;
         }
 
-        if (FocusConnectionType == ConnectionType.Prerequisite)
-        {
-            if (!focus.Prerequisite.Any(prerequisite => prerequisite.Contains(_lastRightClickFocus)))
-            {
-                _lastRightClickFocus.Prerequisite.Add([viewModel.Model]);
-                WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
-            }
+        _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionType);
 
-            Clear();
-            return true;
-        }
-
-        return false;
+        Clear();
+        return true;
 
         void Clear()
         {
@@ -348,12 +332,5 @@ public sealed partial class EditorCanvasView : UserControl
         FocusInfoView.Width = ActualWidth * FocusInfoViewWidthRatio;
         FocusInfoView.Height = ActualHeight * FocusInfoViewHeightRatio;
         FocusInfoView.IsOpen = true;
-    }
-
-    public enum ConnectionType : byte
-    {
-        None,
-        MutuallyExclusive,
-        Prerequisite
     }
 }

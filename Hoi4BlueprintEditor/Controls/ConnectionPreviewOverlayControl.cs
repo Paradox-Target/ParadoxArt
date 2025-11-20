@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Media;
+using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Views;
 
@@ -66,12 +67,12 @@ public sealed class ConnectionPreviewOverlayControl : FrameworkElement
         set => SetValue(TranslateYProperty, value);
     }
 
-    public EditorCanvasView.ConnectionType State { get; set; }
+    public ConnectionType State { get; set; }
 
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
-        if (From is null || To is null || State == EditorCanvasView.ConnectionType.None)
+        if (From is null || To is null || State == ConnectionType.None)
         {
             return;
         }
@@ -81,12 +82,12 @@ public sealed class ConnectionPreviewOverlayControl : FrameworkElement
         matrix.Translate(TranslateX, TranslateY);
         dc.PushTransform(new MatrixTransform(matrix));
 
-        if (State == EditorCanvasView.ConnectionType.MutuallyExclusive)
+        if (State == ConnectionType.MutuallyExclusive)
         {
             FocusMapControl.DrawMutuallyExclusive(dc, From, To);
         }
 
-        if (State == EditorCanvasView.ConnectionType.Prerequisite)
+        if (State == ConnectionType.Prerequisite)
         {
             FocusMapControl.DrawPrerequisite(dc, From, To, FocusMapControl.PrerequisiteLinePen);
         }
@@ -97,6 +98,6 @@ public sealed class ConnectionPreviewOverlayControl : FrameworkElement
     {
         From = null;
         To = null;
-        State = EditorCanvasView.ConnectionType.None;
+        State = ConnectionType.None;
     }
 }
