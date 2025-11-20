@@ -107,7 +107,7 @@ public sealed partial class EditorCanvasView : UserControl
                         focus.MutuallyExclusive.Add(_lastRightClickFocus);
                         _lastRightClickFocus.MutuallyExclusive.Add(viewModel.Model);
                         _lastRightClickFocus = null;
-                        WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+                        WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
                     }
                     _selectState = SelectState.None;
                     _lastRightClickFocus = null;
@@ -119,7 +119,7 @@ public sealed partial class EditorCanvasView : UserControl
                     if (!focus.Prerequisite.Any(prerequisite => prerequisite.Contains(_lastRightClickFocus)))
                     {
                         _lastRightClickFocus.Prerequisite.Add([viewModel.Model]);
-                        WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+                        WeakReferenceMessenger.Default.Send(new RedrawFocusConnectionLinesMessage());
                     }
                     _selectState = SelectState.None;
                     _lastRightClickFocus = null;

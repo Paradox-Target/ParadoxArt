@@ -38,10 +38,10 @@ public sealed class FocusMapControl : ItemsControl
     {
         base.OnInitialized(e);
 
-        WeakReferenceMessenger.Default.Register<RedrawFocusLinkLinesMessage>(this, OnMoveFocus);
+        WeakReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(this, OnMoveFocus);
     }
 
-    private void OnMoveFocus(object recipient, RedrawFocusLinkLinesMessage message)
+    private void OnMoveFocus(object recipient, RedrawFocusConnectionLinesMessage message)
     {
         InvalidateVisual();
     }
