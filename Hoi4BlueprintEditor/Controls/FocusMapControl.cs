@@ -17,7 +17,7 @@ public sealed class FocusMapControl : ItemsControl
     private static double CellHeight => FocusMapConstants.CellHeight;
 
     private const double LinePenWidth = 3.0;
-    private static readonly Pen PrerequisiteLinePen;
+    public static readonly Pen PrerequisiteLinePen;
     private static readonly Pen ExclusiveLinePen;
     private static readonly Pen PrerequisiteDashPen;
 
@@ -38,10 +38,10 @@ public sealed class FocusMapControl : ItemsControl
     {
         base.OnInitialized(e);
 
-        WeakReferenceMessenger.Default.Register<RedrawFocusLinkLinesMessage>(this, OnMoveFocus);
+        WeakReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(this, OnMoveFocus);
     }
 
-    private void OnMoveFocus(object recipient, RedrawFocusLinkLinesMessage message)
+    private void OnMoveFocus(object recipient, RedrawFocusConnectionLinesMessage message)
     {
         InvalidateVisual();
     }
@@ -90,7 +90,7 @@ public sealed class FocusMapControl : ItemsControl
         }
     }
 
-    private static void DrawPrerequisite(DrawingContext dc, FocusNode node, FocusNode pre, Pen pen)
+    public static void DrawPrerequisite(DrawingContext dc, FocusNode node, FocusNode pre, Pen pen)
     {
         var offset = new Vector(0, CellHeight / 2);
 
@@ -111,10 +111,15 @@ public sealed class FocusMapControl : ItemsControl
     {
         foreach (var ex in node.MutuallyExclusive)
         {
-            var nodeJoint = GetNodeCenter(node);
-            var exJoint = GetNodeCenter(ex);
-            dc.DrawLine(ExclusiveLinePen, nodeJoint, exJoint);
+            DrawMutuallyExclusive(dc, node, ex);
         }
+    }
+
+    public static void DrawMutuallyExclusive(DrawingContext dc, FocusNode node, FocusNode secondNode)
+    {
+        var nodeJoint = GetNodeCenter(node);
+        var exJoint = GetNodeCenter(secondNode);
+        dc.DrawLine(ExclusiveLinePen, nodeJoint, exJoint);
     }
 
     private static Point GetNodeCenter(FocusNode node)

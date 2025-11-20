@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -6,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Messages;
+using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
@@ -18,12 +20,23 @@ namespace Hoi4BlueprintEditor.Views;
 
 public sealed partial class EditorCanvasView : UserControl
 {
-    public AsyncRelayCommand CreateNewFocusCommand { get; }
-
     private Point? _lastMousePositionOnCanvas;
     private FocusNode? _movedFocusNode;
     private readonly EditorCanvasViewModel _viewModel;
-    private Point _rightClickPoint;
+    private FocusNode? _lastRightClickFocus;
+    private Point _lastRightClickPoint;
+
+    private ConnectionType FocusConnectionType
+    {
+        get;
+        set
+        {
+            field = value;
+            ConnectionPreviewOverlay.State = value;
+        }
+    } = ConnectionType.None;
+    private bool CursorOverFocus => _lastRightClickFocus is not null;
+    private bool CursorNotOverFocus => !CursorOverFocus;
 
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
@@ -33,7 +46,6 @@ public sealed partial class EditorCanvasView : UserControl
     {
         InitializeComponent();
 
-        // 鼠标事件
         MouseWheel += OnMouseWheel;
         MouseMove += OnMouseMove;
         MouseLeave += OnMouseLeave;
@@ -43,24 +55,56 @@ public sealed partial class EditorCanvasView : UserControl
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
         DataContext = _viewModel;
 
-        CreateNewFocusCommand = new AsyncRelayCommand(
-            CreateNewFocus,
-            () =>
-            {
-                // 只能在空白处创建新国策
-                var result = VisualTreeHelper.HitTest(this, _rightClickPoint);
-                return result?.VisualHit is not FrameworkElement { DataContext: FocusNodeViewModel };
-            }
-        );
-
         // 方便右键菜单在前端绑定 Command
         ContextMenu.DataContext = this;
     }
 
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
-        _rightClickPoint = e.GetPosition(this);
-        ContextMenu.IsOpen = true;
+        _lastRightClickPoint = e.GetPosition(this);
+        var result = VisualTreeHelper.HitTest(this, _lastRightClickPoint);
+        if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
+        {
+            _lastRightClickFocus = viewModel.Model;
+        }
+        else
+        {
+            _lastRightClickFocus = null;
+        }
+
+        // 连接模式时右键取消连接模式
+        if (FocusConnectionType != ConnectionType.None)
+        {
+            FocusConnectionType = ConnectionType.None;
+        }
+        else
+        {
+            ContextMenu.IsOpen = true;
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void SetMutuallyExclusiveFocus()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+
+        FocusConnectionType = ConnectionType.MutuallyExclusive;
+        ConnectionPreviewOverlay.From = _lastRightClickFocus;
+    }
+
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void SetPrerequisiteFocus()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+
+        FocusConnectionType = ConnectionType.Prerequisite;
+        ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -74,6 +118,16 @@ public sealed partial class EditorCanvasView : UserControl
         var result = VisualTreeHelper.HitTest(this, position);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
+            if (
+                _lastRightClickFocus is not null
+                && _lastRightClickFocus != viewModel.Model
+                && FocusConnectionType != ConnectionType.None
+            )
+            {
+                SetFocusConnection(viewModel);
+                return;
+            }
+
             if (e.ClickCount <= 1)
             {
                 _movedFocusNode = viewModel.Model;
@@ -93,7 +147,7 @@ public sealed partial class EditorCanvasView : UserControl
             }
 
             OpenFocusInfoView(viewModel.Model);
-            Log.Debug("切换到国策: {Name}", viewModel.Model.Id);
+            Log.Debug("信息卡切换到国策: {Name}", viewModel.Model.Id);
         }
         else
         {
@@ -101,8 +155,35 @@ public sealed partial class EditorCanvasView : UserControl
         }
     }
 
+    private void SetFocusConnection(FocusNodeViewModel viewModel)
+    {
+        Debug.Assert(_lastRightClickFocus is not null);
+
+        _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionType);
+
+        _lastRightClickFocus = null;
+        FocusConnectionType = ConnectionType.None;
+        ConnectionPreviewOverlay.ClearPreview();
+    }
+
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
+        if (FocusConnectionType != ConnectionType.None)
+        {
+            Cursor = Cursors.Cross;
+            var position = e.GetPosition(this);
+            var result = VisualTreeHelper.HitTest(this, position);
+            if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
+            {
+                // TODO: 预览显示连接线之前检查合法性
+                ConnectionPreviewOverlay.To = viewModel.Model;
+            }
+            else
+            {
+                ConnectionPreviewOverlay.To = null;
+            }
+        }
+
         if (e.MiddleButton == MouseButtonState.Pressed)
         {
             if (_lastMousePositionOnCanvas.HasValue)
@@ -113,7 +194,6 @@ public sealed partial class EditorCanvasView : UserControl
                 _viewModel.TranslateX += delta.X;
                 _viewModel.TranslateY += delta.Y;
 
-                // 鼠标图案改变
                 Cursor = Cursors.Hand;
             }
 
@@ -122,10 +202,19 @@ public sealed partial class EditorCanvasView : UserControl
         else
         {
             _lastMousePositionOnCanvas = null;
-            Cursor = Cursors.Arrow;
+            // 在设置国策间条件时, 鼠标样式会被设置为 Cross, 为了防止被覆盖, 需要在这里检查
+            if (FocusConnectionType == ConnectionType.None)
+            {
+                Cursor = Cursors.Arrow;
+            }
         }
 
-        if (e.LeftButton == MouseButtonState.Pressed && _movedFocusNode is not null)
+        // 设置连接线时禁止移动国策
+        if (
+            FocusConnectionType == ConnectionType.None
+            && e.LeftButton == MouseButtonState.Pressed
+            && _movedFocusNode is not null
+        )
         {
             var position = GetMousePositionOnGrid(e.GetPosition(this));
             _movedFocusNode.SetRawPosition(position.X, position.Y);
@@ -173,6 +262,7 @@ public sealed partial class EditorCanvasView : UserControl
         _viewModel.Scale = newScale;
     }
 
+    [RelayCommand(CanExecute = nameof(CursorNotOverFocus))]
     private async Task CreateNewFocus()
     {
         var viewModel = new CreateNewFocusViewModel(_viewModel.GetAllFocusFiles())
@@ -195,7 +285,7 @@ public sealed partial class EditorCanvasView : UserControl
 
         if (result == ContentDialogResult.Primary)
         {
-            var position = GetMousePositionOnGrid(_rightClickPoint);
+            var position = GetMousePositionOnGrid(_lastRightClickPoint);
             var newFocusNode = await WeakReferenceMessenger.Default.Send(
                 new CreateNewFocusMessage(
                     new FocusPoint(position.X, position.Y),
@@ -214,6 +304,8 @@ public sealed partial class EditorCanvasView : UserControl
     private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
     {
         CreateNewFocusCommand.NotifyCanExecuteChanged();
+        SetPrerequisiteFocusCommand.NotifyCanExecuteChanged();
+        SetMutuallyExclusiveFocusCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>

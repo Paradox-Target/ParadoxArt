@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Messages;
+using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services;
 using MethodTimer;
@@ -417,5 +418,33 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     public IReadOnlyCollection<string> GetAllFocusFiles()
     {
         return _focusTreeFiles;
+    }
+
+    public void CreateConnection(FocusNode source, FocusNode target, ConnectionType type)
+    {
+        bool changed = false;
+
+        // TODO: 需要检查后置条件中是否存在
+        if (type == ConnectionType.MutuallyExclusive && !source.MutuallyExclusive.Contains(target))
+        {
+            source.MutuallyExclusive.Add(target);
+            target.MutuallyExclusive.Add(source);
+            changed = true;
+        }
+        else if (
+            type == ConnectionType.Prerequisite
+            // 检查是否已经存在于任何前置组中
+            && !source.Prerequisite.Any(group => group.Contains(target))
+            && !source.MutuallyExclusive.Contains(target)
+        )
+        {
+            source.Prerequisite.Add([target]);
+            changed = true;
+        }
+
+        if (changed)
+        {
+            WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+        }
     }
 }
