@@ -117,10 +117,8 @@ public sealed partial class EditorCanvasView : UserControl
                 && FocusConnectionType != ConnectionType.None
             )
             {
-                if (TrySetFocusConnection(viewModel))
-                {
-                    return;
-                }
+                SetFocusConnection(viewModel);
+                return;
             }
 
             if (e.ClickCount <= 1)
@@ -150,26 +148,15 @@ public sealed partial class EditorCanvasView : UserControl
         }
     }
 
-    private bool TrySetFocusConnection(FocusNodeViewModel viewModel)
+    private void SetFocusConnection(FocusNodeViewModel viewModel)
     {
         Debug.Assert(_lastRightClickFocus is not null);
 
-        if (FocusConnectionType == ConnectionType.None)
-        {
-            return false;
-        }
-
         _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionType);
 
-        Clear();
-        return true;
-
-        void Clear()
-        {
-            _lastRightClickFocus = null;
-            FocusConnectionType = ConnectionType.None;
-            ConnectionPreviewOverlay.ClearPreview();
-        }
+        _lastRightClickFocus = null;
+        FocusConnectionType = ConnectionType.None;
+        ConnectionPreviewOverlay.ClearPreview();
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
