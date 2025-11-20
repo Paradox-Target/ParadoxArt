@@ -97,24 +97,32 @@ public sealed partial class EditorCanvasView : UserControl
         var result = VisualTreeHelper.HitTest(this, position);
         if (result.VisualHit is FrameworkElement { DataContext: FocusNodeViewModel viewModel })
         {
+            var focus = viewModel.Model;
             if (_lastRightClickFocus is not null && _lastRightClickFocus != viewModel.Model)
             {
                 if (_selectState == SelectState.MutuallyExclusive)
                 {
-                    viewModel.Model.MutuallyExclusive.Add(_lastRightClickFocus);
-                    _lastRightClickFocus.MutuallyExclusive.Add(viewModel.Model);
+                    if (!focus.MutuallyExclusive.Contains(_lastRightClickFocus))
+                    {
+                        focus.MutuallyExclusive.Add(_lastRightClickFocus);
+                        _lastRightClickFocus.MutuallyExclusive.Add(viewModel.Model);
+                        _lastRightClickFocus = null;
+                        WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+                    }
                     _selectState = SelectState.None;
                     _lastRightClickFocus = null;
-                    WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
                     return;
                 }
 
                 if (_selectState == SelectState.Prerequisite)
                 {
-                    _lastRightClickFocus.Prerequisite.Add([viewModel.Model]);
+                    if (!focus.Prerequisite.Any(prerequisite => prerequisite.Contains(_lastRightClickFocus)))
+                    {
+                        _lastRightClickFocus.Prerequisite.Add([viewModel.Model]);
+                        WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
+                    }
                     _selectState = SelectState.None;
                     _lastRightClickFocus = null;
-                    WeakReferenceMessenger.Default.Send(new RedrawFocusLinkLinesMessage());
                     return;
                 }
             }
