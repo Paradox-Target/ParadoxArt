@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services;
@@ -87,7 +88,7 @@ public sealed partial class FocusInfoView : UserControl
         {
             bool isOpen = (bool)e.NewValue;
             view.Visibility = isOpen ? Visibility.Visible : Visibility.Collapsed;
-            int zIndex = isOpen ? 2 : -1;
+            int zIndex = isOpen ? FocusMapConstants.FocusInfoZIndex : -1;
             Panel.SetZIndex(view, zIndex);
         }
     }
@@ -117,7 +118,9 @@ public sealed partial class FocusInfoView : UserControl
             viewModel.FocusNode.Icon = result.IconId;
 
             Log.Info("添加图标成功: {Name}", result.IconId);
-            NotificationService.Show(result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功");
+            NotificationService.Show(
+                result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功"
+            );
         }
     }
 
