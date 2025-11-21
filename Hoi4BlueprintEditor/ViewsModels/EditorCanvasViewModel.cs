@@ -423,7 +423,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     public void CreateConnection(FocusNode source, FocusNode target, ConnectionType addType)
     {
         bool changed = false;
-        
+
         if (
             addType == ConnectionType.MutuallyExclusive
             && !source.MutuallyExclusive.Contains(target)
@@ -451,5 +451,40 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
         }
+    }
+
+    public void DeleteFocusNode(FocusNode deletedFocusNode)
+    {
+        if (!_editorNodesMap.Remove(deletedFocusNode.Id))
+        {
+            Log.Warn("删除Focus失败, 未在映射表中找到对应的 FocusNode: {FocusId}", deletedFocusNode.Id);
+            return;
+        }
+
+        var viewModel = _nodes.FirstOrDefault(node => node.Model == deletedFocusNode);
+        if (viewModel is not null)
+        {
+            _nodes.Remove(viewModel);
+            viewModel.Dispose();
+        }
+        else
+        {
+            Log.Warn("删除Focus失败, 未找到对应的 FocusNodeViewModel: {FocusId}", deletedFocusNode.Id);
+            return;
+        }
+
+        // 删除所有连接关系
+        foreach (var focusNode in deletedFocusNode.MutuallyExclusive)
+        {
+            focusNode.MutuallyExclusive.Remove(deletedFocusNode);
+        }
+        foreach (var focusNode in deletedFocusNode.Children)
+        {
+            foreach (var focus in focusNode.Prerequisite)
+            {
+                focus.Remove(deletedFocusNode);
+            }
+        }
+        WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
     }
 }

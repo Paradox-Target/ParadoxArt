@@ -15,6 +15,7 @@ using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Hoi4BlueprintEditor.Views;
 
@@ -105,6 +106,21 @@ public sealed partial class EditorCanvasView : UserControl
 
         FocusConnectionType = ConnectionType.Prerequisite;
         ConnectionPreviewOverlay.From = _lastRightClickFocus;
+    }
+
+    [RelayCommand]
+    private void DeleteFocusNode()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+        
+        // TODO: 如果有其他国策使用这个国策的相对位置, 则提示用户确认删除, 否则会导致假删除
+        
+        //TODO: 删除后App内弹出提示
+        
+        _viewModel.DeleteFocusNode(_lastRightClickFocus);
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -209,7 +225,7 @@ public sealed partial class EditorCanvasView : UserControl
             }
         }
 
-        // 设置连接线时禁止移动国策
+        // 设置连接线时禁止拖动国策
         if (
             FocusConnectionType == ConnectionType.None
             && e.LeftButton == MouseButtonState.Pressed

@@ -47,6 +47,11 @@
                             <ui:FontIcon Glyph="&#xE71B;" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Command="{Binding DeleteFocusNodeCommand}" Header="删除">
+                        <MenuItem.Icon>
+                            <ui:FontIcon Glyph="&#xE74D;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </controls:GridRulerControl.ContextMenu>
         </controls:GridRulerControl>
