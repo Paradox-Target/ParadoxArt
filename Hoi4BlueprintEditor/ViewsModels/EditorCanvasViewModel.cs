@@ -420,21 +420,26 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         return _focusTreeFiles;
     }
 
-    public void CreateConnection(FocusNode source, FocusNode target, ConnectionType type)
+    public void CreateConnection(FocusNode source, FocusNode target, ConnectionType addType)
     {
         bool changed = false;
-
-        // TODO: 需要检查后置条件中是否存在
-        if (type == ConnectionType.MutuallyExclusive && !source.MutuallyExclusive.Contains(target))
+        
+        if (
+            addType == ConnectionType.MutuallyExclusive
+            && !source.MutuallyExclusive.Contains(target)
+            && !source.Prerequisite.AsValueEnumerable().Any(group => group.Contains(target))
+            && !target.Prerequisite.AsValueEnumerable().Any(group => group.Contains(source))
+        )
         {
             source.MutuallyExclusive.Add(target);
             target.MutuallyExclusive.Add(source);
             changed = true;
         }
         else if (
-            type == ConnectionType.Prerequisite
+            addType == ConnectionType.Prerequisite
             // 检查是否已经存在于任何前置组中
             && !source.Prerequisite.Any(group => group.Contains(target))
+            // 互斥的时候不能作为前置条件
             && !source.MutuallyExclusive.Contains(target)
         )
         {
