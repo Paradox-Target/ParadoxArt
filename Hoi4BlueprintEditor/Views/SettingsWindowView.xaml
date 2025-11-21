@@ -11,8 +11,8 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
     Title="SettingsWindowView"
-    Width="800"
-    Height="450"
+    Width="850"
+    Height="550"
     d:DataContext="{d:DesignInstance vms:SettingsWindowViewModel}"
     ui:TitleBar.Height="36"
     ui:WindowHelper.SystemBackdropType="Mica"
@@ -21,56 +21,113 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
-    <ikw:SimpleStackPanel Margin="8,0" Spacing="4">
-        <ui:SettingsCard Description="{Binding GameRootFolderPath, Mode=OneWay}" Header="{x:Static lang:Strings.GameSettings_GameRoot}">
-            <ui:SettingsCard.HeaderIcon>
-                <ui:FontIcon Glyph="&#xED25;" />
-            </ui:SettingsCard.HeaderIcon>
-            <Button Command="{Binding PickGameRootPathCommand}" Content="重新选择" />
-        </ui:SettingsCard>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-        <ui:SettingsCard Description="使用 DDS 格式有助于加快游戏载入速度" Header="导入 PNG 时自动转换成 DDS 格式">
-            <ui:SettingsCard.HeaderIcon>
-                <ui:FontIcon Glyph="&#xE89E;" />
-            </ui:SettingsCard.HeaderIcon>
-            <ui:ToggleSwitch
-                IsOn="{Binding IsAutoFocusPngConvertToDds, Mode=TwoWay}"
-                OffContent=""
-                OnContent="" />
-        </ui:SettingsCard>
+        <ikw:SimpleStackPanel Margin="8,0" Spacing="4">
+            <ui:SettingsCard Description="{Binding GameRootFolderPath, Mode=OneWay}" Header="{x:Static lang:Strings.GameSettings_GameRoot}">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Glyph="&#xED25;" />
+                </ui:SettingsCard.HeaderIcon>
+                <Button Command="{Binding PickGameRootPathCommand}" Content="重新选择" />
+            </ui:SettingsCard>
 
-        <ui:SettingsCard Description="*重启App后生效" Header="App 语言">
-            <ui:SettingsCard.HeaderIcon>
-                <ui:FontIcon Glyph="&#xF2B7;" />
-            </ui:SettingsCard.HeaderIcon>
-            <ComboBox ItemsSource="{Binding AppLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedAppLanguagesIndex, Mode=TwoWay}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding DisplayName, Mode=OneTime}" />
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-        </ui:SettingsCard>
+            <ui:SettingsCard Description="使用 DDS 格式有助于加快游戏载入速度" Header="导入 PNG 时自动转换成 DDS 格式">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Glyph="&#xE89E;" />
+                </ui:SettingsCard.HeaderIcon>
+                <ui:ToggleSwitch
+                    IsOn="{Binding IsAutoFocusPngConvertToDds, Mode=TwoWay}"
+                    OffContent=""
+                    OnContent="" />
+            </ui:SettingsCard>
 
-        <ui:SettingsCard Description="*重启App后生效" Header="游戏本地化语言">
-            <ui:SettingsCard.HeaderIcon>
-                <ui:FontIcon Glyph="&#xF2B7;" />
-            </ui:SettingsCard.HeaderIcon>
-            <ComboBox ItemsSource="{Binding GameLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedGameLanguagesIndex, Mode=TwoWay}" />
-        </ui:SettingsCard>
+            <ui:SettingsCard Description="*重启App后生效" Header="App 语言">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Glyph="&#xF2B7;" />
+                </ui:SettingsCard.HeaderIcon>
+                <ComboBox ItemsSource="{Binding AppLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedAppLanguagesIndex, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayName, Mode=OneTime}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </ui:SettingsCard>
 
-        <ui:SettingsCard
-            Click="OpenSettingsFolder"
-            Description="{x:Static root:App.ConfigFolder}"
-            Header="打开配置文件夹"
-            IsClickEnabled="True">
-            <ui:SettingsCard.HeaderIcon>
-                <ui:FontIcon Glyph="&#xE8DA;" />
-            </ui:SettingsCard.HeaderIcon>
-            <ui:SettingsCard.ActionIcon>
-                <ui:FontIcon Glyph="&#xE8A7;" />
-            </ui:SettingsCard.ActionIcon>
-        </ui:SettingsCard>
-    </ikw:SimpleStackPanel>
+            <ui:SettingsCard Description="*重启App后生效" Header="游戏本地化语言">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Glyph="&#xF2B7;" />
+                </ui:SettingsCard.HeaderIcon>
+                <ComboBox ItemsSource="{Binding GameLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedGameLanguagesIndex, Mode=TwoWay}" />
+            </ui:SettingsCard>
+
+            <ui:SettingsCard
+                Click="OpenSettingsFolder"
+                Description="{x:Static root:App.ConfigFolder}"
+                Header="打开配置文件夹"
+                IsClickEnabled="True">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Glyph="&#xE8DA;" />
+                </ui:SettingsCard.HeaderIcon>
+                <ui:SettingsCard.ActionIcon>
+                    <ui:FontIcon Glyph="&#xE8A7;" />
+                </ui:SettingsCard.ActionIcon>
+            </ui:SettingsCard>
+
+            <TextBlock
+                Margin="4,4,0,4"
+                FontSize="18"
+                FontWeight="Bold"
+                Text="关于" />
+
+            <ui:SettingsExpander Description="© Editer Commitee 2025. All rights reserved." Header="Focus Editer">
+
+                <TextBlock Foreground="{DynamicResource {x:Static ui:ThemeKeys.TextFillColorSecondaryBrushKey}}" Text="0.0.1" />
+                <ui:SettingsExpander.Items>
+                    <ui:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                        <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
+                            <ui:HyperlinkButton Content="反馈问题" />
+                        </StackPanel>
+                    </ui:SettingsCard>
+                </ui:SettingsExpander.Items>
+            </ui:SettingsExpander>
+
+            <ui:SettingsExpander Margin="0,0,0,8" Header="开放源代码库">
+                <ui:SettingsExpander.HeaderIcon>
+                    <ui:FontIcon Glyph="&#xE943;" />
+                </ui:SettingsExpander.HeaderIcon>
+                <ui:SettingsExpander.Items>
+                    <ui:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                        <ui:GridView
+                            Margin="-12,0,0,0"
+                            IsItemClickEnabled="False"
+                            IsMultiSelectCheckBoxEnabled="False">
+                            <ui:HyperlinkButton Content="Sarasa-Gothic" NavigateUri="https://github.com/be5invis/Sarasa-Gothic" />
+                            <ui:HyperlinkButton Content="cascadia-code" NavigateUri="https://github.com/microsoft/cascadia-code" />
+                            <ui:HyperlinkButton Content="UI.WPF.Modern" NavigateUri="https://github.com/iNKORE-NET/UI.WPF.Modern" />
+                            <ui:HyperlinkButton Content="CommunityToolkit.Mvvm" NavigateUri="https://github.com/CommunityToolkit/dotnet" />
+                            <ui:HyperlinkButton Content="Fody" NavigateUri="https://github.com/Fody/Fody" />
+                            <ui:HyperlinkButton Content="MethodTimer" NavigateUri="https://github.com/Fody/MethodTimer" />
+                            <ui:HyperlinkButton Content="Microsoft.Extensions.DependencyInjection" NavigateUri="https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection" />
+                            <ui:HyperlinkButton Content="NLog" NavigateUri="https://nlog-project.org/" />
+                            <ui:HyperlinkButton Content="ObservableCollections" NavigateUri="https://github.com/Cysharp/ObservableCollections" />
+                            <ui:HyperlinkButton Content="ParadoxPower" NavigateUri="https://github.com/textGamex/ParadoxPower" />
+                            <ui:HyperlinkButton Content="ZLinq" NavigateUri="https://github.com/Cysharp/ZLinq" />
+                            <ui:HyperlinkButton Content="NLua" NavigateUri="https://github.com/nlua/NLua" />
+                            <ui:HyperlinkButton Content="Pfim" NavigateUri="https://nickbabcock.github.io/Pfim/" />
+                            <ui:HyperlinkButton Content="Pidgin" NavigateUri="https://github.com/benjamin-hodgson/Pidgin" />
+                            <ui:HyperlinkButton Content="Microsoft.Toolkit.Uwp.Notifications" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
+                            <ui:HyperlinkButton Content="Ardalis.SmartEnum" NavigateUri="https://github.com/ardalis/SmartEnum" />
+                            <ui:HyperlinkButton Content="DirectXTexNet" NavigateUri="https://github.com/deng0/DirectXTexNet" />
+                            <ui:HyperlinkButton Content="Enums.NET" NavigateUri="https://github.com/TylerBrinkley/Enums.NET" />
+                            <ui:HyperlinkButton Content="Injectio" NavigateUri="https://github.com/loresoft/Injectio" />
+                            <ui:HyperlinkButton Content="JetBrains.Annotations" NavigateUri="https://www.jetbrains.com/" />
+                        </ui:GridView>
+                    </ui:SettingsCard>
+                </ui:SettingsExpander.Items>
+            </ui:SettingsExpander>
+        </ikw:SimpleStackPanel>
+    </ScrollViewer>
+
 
 </Window>
