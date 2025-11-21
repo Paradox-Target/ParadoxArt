@@ -65,12 +65,8 @@
   <ItemGroup>
     <None Remove="Resources\Fonts\Noto-COLRv1.ttf" />
     <None Remove="Resources\Icons\emoji_u1f4c2.png" />
-    <None Remove="Resources\Icons\logo.png" />
     <Resource Include="Resources\Icons\emoji_u1f4c2.png" />
     <None Remove="Resources\Icons\emoji_u1f310.png" />
-    <Resource Include="Resources\Icons\logo.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\Icons\emoji_u1f310.png" />
   </ItemGroup>
 
