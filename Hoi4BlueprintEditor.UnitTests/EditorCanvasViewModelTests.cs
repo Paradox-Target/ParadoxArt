@@ -137,20 +137,20 @@ public sealed class EditorCanvasViewModelTests
     }
 
     [Test]
-    public void CreateConnection_Prerequisite_PreventsDirectCircularDependency()
+    public void CreateConnection_Prerequisite_OnlyPreventsDirectCircularDependency()
     {
         var viewModel = CreateViewModel();
         var nodeA = new FocusNode("test.txt", FocusType.Normal) { Id = "nodeA" };
         var nodeB = new FocusNode("test.txt", FocusType.Normal) { Id = "nodeB" };
         var nodeC = new FocusNode("test.txt", FocusType.Normal) { Id = "nodeC" };
 
-        // Create chain: C requires B, B requires A
+        // Create chain: B requires A, C requires B
         viewModel.CreateConnection(nodeB, nodeA, ConnectionType.Prerequisite);
         viewModel.CreateConnection(nodeC, nodeB, ConnectionType.Prerequisite);
 
-        // Try to make A require C (would create indirect circular dependency C->B->A->C)
-        // However, our check only prevents direct circular dependencies (target has source as prerequisite)
-        // This should succeed because we only check direct relationships
+        // Try to make A require C. This creates an indirect cycle (C->B->A->C),
+        // but the current implementation only prevents direct circular dependencies
+        // (where target directly has source as prerequisite), so this should succeed.
         viewModel.CreateConnection(nodeA, nodeC, ConnectionType.Prerequisite);
         Assert.That(nodeA.Prerequisite, Has.Count.EqualTo(1));
     }
