@@ -424,7 +424,6 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     {
         bool changed = false;
 
-        // TODO: 需要检查后置条件中是否存在
         if (type == ConnectionType.MutuallyExclusive && !source.MutuallyExclusive.Contains(target))
         {
             source.MutuallyExclusive.Add(target);
@@ -436,6 +435,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             // 检查是否已经存在于任何前置组中
             && !source.Prerequisite.Any(group => group.Contains(target))
             && !source.MutuallyExclusive.Contains(target)
+            // 检查后置条件: 确保目标节点的前置条件中不包含源节点，避免循环依赖
+            && !target.Prerequisite.Any(group => group.Contains(source))
         )
         {
             source.Prerequisite.Add([target]);
