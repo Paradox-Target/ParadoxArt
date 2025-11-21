@@ -37,6 +37,11 @@ public sealed partial class FocusNode(string path, FocusType type)
     public List<List<FocusNode>> Prerequisite { get; } = [];
 
     /// <summary>
+    /// 将本节点当作前提条件的 <see cref="FocusNode"/> 集合
+    /// </summary>
+    public List<FocusNode> Children { get; } = [];
+
+    /// <summary>
     /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
     /// </summary>
     [ObservableProperty]

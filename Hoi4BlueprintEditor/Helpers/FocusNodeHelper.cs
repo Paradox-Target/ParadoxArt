@@ -179,6 +179,7 @@ public static class FocusNodeHelper
                 if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
                 {
                     prerequisiteList[i] = node;
+                    node.Children.Add(focusNode);
                 }
                 else
                 {

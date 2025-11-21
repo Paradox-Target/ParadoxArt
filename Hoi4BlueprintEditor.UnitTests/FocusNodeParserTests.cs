@@ -1,7 +1,7 @@
 ﻿using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Models.Focus;
-using ParadoxPower.Process;
 using ParadoxPower.CSharpExtensions;
+using ParadoxPower.Process;
 
 namespace Hoi4BlueprintEditor.UnitTests;
 
@@ -18,7 +18,7 @@ public sealed class FocusNodeParserTests
         // 获取完整的测试数据路径
         _fullTestDataPath = Path.Combine(TestContext.CurrentContext.TestDirectory, TestDataPath);
         Assert.That(File.Exists(_fullTestDataPath), Is.True, $"测试数据文件不存在: {_fullTestDataPath}");
-        
+
         // 解析测试数据文件
         var parseResult = TextParser.TryParse(_fullTestDataPath, out _rootNode!, out var errorMessage);
         Assert.That(parseResult, Is.True, $"解析测试数据文件失败: {errorMessage}");
@@ -30,7 +30,7 @@ public sealed class FocusNodeParserTests
     {
         // 执行测试
         var focusNodes = FocusNodeHelper.GetFocusNodesFromAstRootNode(_rootNode);
-        
+
         // 验证结果
         Assert.That(focusNodes, Is.Not.Null, "返回的国策节点集合为空");
         Assert.That(focusNodes.Count(), Is.EqualTo(3), "返回的国策节点数量不正确");
@@ -41,20 +41,20 @@ public sealed class FocusNodeParserTests
     {
         // 执行测试
         var (nodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
-        
+
         // 验证结果
         Assert.That(nodes, Is.Not.Null, "返回的节点字典为空");
         Assert.That(nodes.Count, Is.EqualTo(3), "解析的节点数量不正确");
-        
+
         // 验证文件路径
         Assert.That(filePaths, Is.Not.Null, "返回的文件路径集合为空");
         Assert.That(filePaths, Contains.Item(_fullTestDataPath), "未包含测试数据文件路径");
-        
+
         // 验证节点属性
         Assert.That(nodes, Contains.Key("test_focus_1"), "未找到test_focus_1节点");
         Assert.That(nodes, Contains.Key("test_focus_2"), "未找到test_focus_2节点");
         Assert.That(nodes, Contains.Key("test_focus_3"), "未找到test_focus_3节点");
-        
+
         // 验证第一个节点的属性
         var focus1 = nodes["test_focus_1"];
         using (Assert.EnterMultipleScope())
@@ -76,23 +76,23 @@ public sealed class FocusNodeParserTests
     {
         // 执行测试
         var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
-        
+
         // 验证先决条件关系
         var focus2 = nodes["test_focus_2"];
         Assert.That(focus2.Prerequisite, Is.Not.Null, "先决条件集合为空");
         Assert.That(focus2.Prerequisite.Count, Is.EqualTo(1), "先决条件数量不正确");
         Assert.That(focus2.Prerequisite[0].Count, Is.EqualTo(1), "先决条件列表数量不正确");
         Assert.That(focus2.Prerequisite[0][0].Id, Is.EqualTo("test_focus_1"), "先决条件节点ID不正确");
-        
+
         // 验证相对位置关系
         Assert.That(focus2.RelativePosition, Is.Not.Null, "相对位置为空");
         Assert.That(focus2.RelativePosition.Id, Is.EqualTo("test_focus_1"), "相对位置节点ID不正确");
-        
+
         // 验证互斥关系
         Assert.That(focus2.MutuallyExclusive, Is.Not.Null, "互斥节点集合为空");
         Assert.That(focus2.MutuallyExclusive.Count, Is.EqualTo(1), "互斥节点数量不正确");
         Assert.That(focus2.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_3"), "互斥节点ID不正确");
-        
+
         // 验证focus3的互斥关系
         var focus3 = nodes["test_focus_3"];
         Assert.That(focus3.MutuallyExclusive, Is.Not.Null, "focus3互斥节点集合为空");
@@ -106,10 +106,10 @@ public sealed class FocusNodeParserTests
         // 首先获取解析后的节点
         var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
         var originalNode = nodes["test_focus_1"];
-        
+
         // 使用模型创建AST节点
         var generatedNode = FocusNodeHelper.CreateAstNodeFromEditorModel(originalNode);
-        
+
         // 验证生成的AST节点
         Assert.That(generatedNode, Is.Not.Null, "生成的AST节点为空");
         Assert.That(generatedNode.Key, Is.EqualTo("focus"), "AST节点键不正确");
@@ -121,10 +121,10 @@ public sealed class FocusNodeParserTests
         // 首先获取解析后的节点
         var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
         var originalNode = nodes["test_focus_2"];
-        
+
         // 使用模型创建AST节点
         var generatedNode = FocusNodeHelper.CreateAstNodeFromEditorModel(originalNode);
-        
+
         // 验证生成的AST节点
         Assert.That(generatedNode, Is.Not.Null, "生成的AST节点为空");
         Assert.That(generatedNode.Key, Is.EqualTo("focus"), "AST节点键不正确");
@@ -147,5 +147,21 @@ public sealed class FocusNodeParserTests
         var preFocusLeaf = prerequisiteNode.Leaves.FirstOrDefault(l => l.Key == "focus");
         Assert.That(preFocusLeaf, Is.Not.Null, "prerequisite中未找到focus属性");
         Assert.That(preFocusLeaf.ValueText, Is.EqualTo("test_focus_1"), "prerequisite focus值不正确");
+    }
+
+    [Test]
+    public void ChildrenTest()
+    {
+        // 首先获取解析后的节点
+        var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var focus1 = nodes["test_focus_1"];
+        var focus2 = nodes["test_focus_2"];
+        var focus3 = nodes["test_focus_3"];
+
+        // 验证Children关系
+        Assert.That(focus1.Children, Is.EquivalentTo([focus2, focus3]), "focus1的Children中未包含focus2, focus3");
+        Assert.That(focus1.Children.Count, Is.EqualTo(2), "focus1的Children数量不正确");
+        Assert.That(focus2.Children, Is.Empty, "focus2的Children不应包含任何节点");
+        Assert.That(focus3.Children, Is.Empty, "focus3的Children不应包含任何节点");
     }
 }
