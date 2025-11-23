@@ -44,6 +44,22 @@ public sealed partial class FocusNode(string path, FocusType type)
     public IReadOnlyList<FocusNode> Children => _children;
     private readonly List<FocusNode> _children = [];
 
+    /// <summary>
+    /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(X))]
+    [NotifyPropertyChangedFor(nameof(Y))]
+    private FocusPoint _rawPosition = new(0, 0);
+
+    public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
+    public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
+
+    [ObservableProperty]
+    private string _icon = string.Empty;
+
+    public decimal Cost { get; set; }
+
     public void AddPrerequisite(List<FocusNode> prerequisiteNodes)
     {
         _prerequisite.Add(prerequisiteNodes);
@@ -102,23 +118,6 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
         _prerequisite.Clear();
     }
-    
-
-    /// <summary>
-    /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
-    /// </summary>
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(X))]
-    [NotifyPropertyChangedFor(nameof(Y))]
-    private FocusPoint _rawPosition = new(0, 0);
-
-    public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
-    public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
-
-    [ObservableProperty]
-    private string _icon = string.Empty;
-
-    public decimal Cost { get; set; }
 
     /// <summary>
     /// 将 <c>RawPosition.X</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移

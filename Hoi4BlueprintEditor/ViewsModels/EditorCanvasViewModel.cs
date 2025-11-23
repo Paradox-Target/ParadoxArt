@@ -478,6 +478,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             focusNode.MutuallyExclusive.Remove(deletedFocusNode);
         }
+
+        // TODO: 加入到 Dispose 方法中?
         deletedFocusNode.MutuallyExclusive.Clear();
         deletedFocusNode.ClearChildren();
         deletedFocusNode.ClearPrerequisites();
