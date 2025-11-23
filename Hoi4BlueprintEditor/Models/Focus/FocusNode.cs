@@ -52,7 +52,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     private readonly List<FocusNode> _children = [];
 
     /// <summary>
-    /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
+    /// 原始的位置, 对应脚本中的 X 与 Y 值 ,不包含相对位置的偏移, 不能代表显示位置。
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]

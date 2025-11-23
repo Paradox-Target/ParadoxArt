@@ -8,10 +8,7 @@ public sealed class FocusNodeTests
     [Test]
     public void CalculatedPosition_WithoutRelative_IsRawPosition()
     {
-        var node = new FocusNode("path", default)
-        {
-            RawPosition = new FocusPoint(10, 20)
-        };
+        var node = new FocusNode("path", default) { RawPosition = new FocusPoint(10, 20) };
 
         Assert.That(node.X, Is.EqualTo(10));
         Assert.That(node.Y, Is.EqualTo(20));
@@ -189,5 +186,64 @@ public sealed class FocusNodeTests
         Assert.That(child1.Prerequisite, Is.Empty);
         Assert.That(child2.Prerequisite, Is.Not.Empty);
         Assert.That(child2.Prerequisite[0], Is.EquivalentTo([parent2]));
+    }
+
+    [Test]
+    public void RelativePosition_UpdatesRelativePositionChildren()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        var child = new FocusNode("path", default) { Id = "child" };
+        var child2 = new FocusNode("path", default) { Id = "child2" };
+
+        child.RelativePosition = parent;
+        child2.RelativePosition = parent;
+
+        Assert.That(parent.RelativePositionChildren, Contains.Item(child));
+        Assert.That(parent.RelativePositionChildren, Contains.Item(child2));
+
+        child.RelativePosition = null;
+
+        Assert.That(parent.RelativePositionChildren, Does.Not.Contain(child));
+        Assert.That(parent.RelativePositionChildren, Contains.Item(child2));
+    }
+
+    [Test]
+    public void ClearRelativePositionChildren_ResetsChildrenPosition()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        parent.RawPosition = new FocusPoint(10, 10);
+
+        var child1 = new FocusNode("path", default) { Id = "child1" };
+        child1.RawPosition = new FocusPoint(2, 3); // Relative offset
+        child1.RelativePosition = parent;
+
+        var child2 = new FocusNode("path", default) { Id = "child2" };
+        child2.RawPosition = new FocusPoint(-1, -2); // Relative offset
+        child2.RelativePosition = parent;
+
+        // Verify initial absolute positions
+        Assert.That(child1.X, Is.EqualTo(12));
+        Assert.That(child1.Y, Is.EqualTo(13));
+        Assert.That(child2.X, Is.EqualTo(9));
+        Assert.That(child2.Y, Is.EqualTo(8));
+
+        Assert.That(parent.RelativePositionChildren, Has.Count.EqualTo(2));
+
+        parent.ClearRelativePositionChildren();
+
+        Assert.That(parent.RelativePositionChildren, Is.Empty);
+        Assert.That(child1.RelativePosition, Is.Null);
+        Assert.That(child2.RelativePosition, Is.Null);
+
+        // Verify positions are preserved (converted to absolute)
+        Assert.That(child1.X, Is.EqualTo(12));
+        Assert.That(child1.Y, Is.EqualTo(13));
+        Assert.That(child1.RawPosition.X, Is.EqualTo(12));
+        Assert.That(child1.RawPosition.Y, Is.EqualTo(13));
+
+        Assert.That(child2.X, Is.EqualTo(9));
+        Assert.That(child2.Y, Is.EqualTo(8));
+        Assert.That(child2.RawPosition.X, Is.EqualTo(9));
+        Assert.That(child2.RawPosition.Y, Is.EqualTo(8));
     }
 }
