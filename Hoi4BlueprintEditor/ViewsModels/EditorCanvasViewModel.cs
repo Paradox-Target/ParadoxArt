@@ -493,6 +493,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         deletedFocusNode.MutuallyExclusive.Clear();
         deletedFocusNode.ClearChildren();
         deletedFocusNode.ClearPrerequisites();
+        deletedFocusNode.ClearRelativePositionChildren();
+        deletedFocusNode.RelativePosition = null;
         WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
     }
 }

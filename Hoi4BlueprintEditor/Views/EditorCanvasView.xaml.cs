@@ -36,7 +36,15 @@ public sealed partial class EditorCanvasView : UserControl
             ConnectionPreviewOverlay.State = value;
         }
     } = ConnectionType.None;
+
+    /// <summary>
+    /// 鼠标右键点击位置是否在某个国策节点上
+    /// </summary>
     private bool CursorOverFocus => _lastRightClickFocus is not null;
+
+    /// <summary>
+    /// 鼠标右键点击位置是否不在某个国策节点上
+    /// </summary>
     private bool CursorNotOverFocus => !CursorOverFocus;
 
     private const double FocusInfoViewWidthRatio = 0.35;
@@ -108,19 +116,34 @@ public sealed partial class EditorCanvasView : UserControl
         ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
     private void DeleteFocusNode()
     {
-        if (_lastRightClickFocus is null)
+        var focus = _lastRightClickFocus;
+        if (focus is null)
         {
             return;
         }
-        
-        // TODO: 如果有其他国策使用这个国策的相对位置, 则提示用户确认删除, 否则会导致假删除
-        
+
+        if (focus.RelativePositionChildren.Count > 0)
+        {
+            var result = MessageBox.Show(
+                "有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?",
+                "确认删除",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            );
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
         //TODO: 删除后App内弹出提示
-        
-        _viewModel.DeleteFocusNode(_lastRightClickFocus);
+        _viewModel.DeleteFocusNode(focus);
+        _lastRightClickFocus = null;
+
+        Debug.Assert(ConnectionPreviewOverlay.From != focus && ConnectionPreviewOverlay.To != focus);
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -322,6 +345,7 @@ public sealed partial class EditorCanvasView : UserControl
         CreateNewFocusCommand.NotifyCanExecuteChanged();
         SetPrerequisiteFocusCommand.NotifyCanExecuteChanged();
         SetMutuallyExclusiveFocusCommand.NotifyCanExecuteChanged();
+        DeleteFocusNodeCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>

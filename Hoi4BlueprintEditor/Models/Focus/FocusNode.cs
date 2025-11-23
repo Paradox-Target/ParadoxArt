@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Messages;
@@ -25,6 +26,12 @@ public sealed partial class FocusNode(string path, FocusType type)
     [NotifyPropertyChangedFor(nameof(X))]
     [NotifyPropertyChangedFor(nameof(Y))]
     private FocusNode? _relativePosition;
+
+    /// <summary>
+    /// 使用此节点作为相对位置源的节点的集合
+    /// </summary>
+    public IReadOnlyCollection<FocusNode> RelativePositionChildren => _relativePositionChildren;
+    private readonly List<FocusNode> _relativePositionChildren = [];
 
     /// <summary>
     /// 前提条件
@@ -120,6 +127,23 @@ public sealed partial class FocusNode(string path, FocusType type)
     }
 
     /// <summary>
+    /// 清除使用此节点作为相对位置的所有节点的相对位置设置
+    /// </summary>
+    public void ClearRelativePositionChildren()
+    {
+        foreach (var child in _relativePositionChildren.ToArray())
+        {
+            // 将使用相对位置的节点转换为使用绝对位置
+            // 注意这里不能直接使用 SetRawPosition，因为会发送多余的消息
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+            child._rawPosition = new FocusPoint(child.X, child.Y);
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+            child.RelativePosition = null;
+        }
+        _relativePositionChildren.Clear();
+    }
+
+    /// <summary>
     /// 将 <c>RawPosition.X</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
     /// </summary>
     /// <param name="x"></param>
@@ -171,11 +195,13 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (oldValue is not null)
         {
             oldValue.PropertyChanged -= OnPropertyChanged;
+            oldValue._relativePositionChildren.Remove(this);
         }
 
         if (newValue is not null)
         {
             newValue.PropertyChanged += OnPropertyChanged;
+            newValue._relativePositionChildren.Add(this);
         }
     }
 
@@ -244,5 +270,10 @@ public sealed partial class FocusNode(string path, FocusType type)
     public override string ToString()
     {
         return $"FocusNode [{Id} ({Path})]";
+    }
+
+    ~FocusNode()
+    {
+        Debug.WriteLine($"~FocusNode {Id}");
     }
 }
