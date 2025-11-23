@@ -34,12 +34,75 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// 内层 List 集合 OR 前置条件
     /// 外层 List 集合 AND 前置条件
     /// </remarks>
-    public List<List<FocusNode>> Prerequisite { get; } = [];
+    public IReadOnlyList<IReadOnlyList<FocusNode>> Prerequisite => _prerequisite;
+
+    private readonly List<List<FocusNode>> _prerequisite = [];
 
     /// <summary>
     /// 将本节点当作前提条件的 <see cref="FocusNode"/> 集合
     /// </summary>
-    public List<FocusNode> Children { get; } = [];
+    public IReadOnlyList<FocusNode> Children => _children;
+    private readonly List<FocusNode> _children = [];
+
+    public void AddPrerequisite(List<FocusNode> prerequisiteNodes)
+    {
+        _prerequisite.Add(prerequisiteNodes);
+        foreach (var node in prerequisiteNodes)
+        {
+            if (!node._children.Contains(this))
+            {
+                node._children.Add(this);
+            }
+        }
+    }
+
+    public void RemovePrerequisite(FocusNode focusNode)
+    {
+        InternalRemovePrerequisite(focusNode, true);
+    }
+
+    public void ClearChildren()
+    {
+        foreach (var child in _children)
+        {
+            child.InternalRemovePrerequisite(this, false);
+        }
+        _children.Clear();
+    }
+
+    private void InternalRemovePrerequisite(FocusNode focusNode, bool removeFromChildren)
+    {
+        foreach (var prerequisiteGroup in _prerequisite)
+        {
+            if (!prerequisiteGroup.Remove(focusNode))
+            {
+                continue;
+            }
+
+            if (removeFromChildren)
+            {
+                focusNode._children.Remove(this);
+            }
+            if (prerequisiteGroup.Count == 0)
+            {
+                _prerequisite.Remove(prerequisiteGroup);
+            }
+            break;
+        }
+    }
+
+    public void ClearPrerequisites()
+    {
+        foreach (var group in _prerequisite)
+        {
+            foreach (var node in group)
+            {
+                node._children.Remove(this);
+            }
+        }
+        _prerequisite.Clear();
+    }
+    
 
     /// <summary>
     /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
@@ -174,9 +237,13 @@ public sealed partial class FocusNode(string path, FocusType type)
         return !Equals(left, right);
     }
 
-    // TODO: 删除节点时调用
     public void Dispose()
     {
         RelativePosition?.PropertyChanged -= OnPropertyChanged;
+    }
+
+    public override string ToString()
+    {
+        return $"FocusNode [{Id} ({Path})]";
     }
 }

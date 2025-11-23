@@ -66,7 +66,6 @@ public sealed class FocusNodeTests
         b.RawPosition = new FocusPoint(1, 2);
 
         Assert.That(a, Is.EqualTo(b));
-        Assert.That(a, Is.EqualTo(b));
         Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
     }
 
@@ -98,5 +97,97 @@ public sealed class FocusNodeTests
         // Dispose 后，相对位置的变更不应再传播
         rel.SetRawX(20);
         Assert.That(count, Is.EqualTo(beforeDispose));
+    }
+
+    [Test]
+    public void AddPrerequisite_AddsToCollectionAndUpdatesChildren()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+        var pre2 = new FocusNode("path", default) { Id = "pre2" };
+
+        node.AddPrerequisite([pre1, pre2]);
+
+        Assert.That(node.Prerequisite, Has.Count.EqualTo(1));
+        Assert.That(node.Prerequisite[0], Contains.Item(pre1));
+        Assert.That(node.Prerequisite[0], Contains.Item(pre2));
+
+        Assert.That(pre1.Children, Contains.Item(node));
+        Assert.That(pre2.Children, Contains.Item(node));
+    }
+
+    [Test]
+    public void RemovePrerequisite_RemovesFromCollectionAndUpdatesChildren()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+        var pre2 = new FocusNode("path", default) { Id = "pre2" };
+
+        node.AddPrerequisite([pre1, pre2]);
+        node.RemovePrerequisite(pre1);
+
+        Assert.That(node.Prerequisite, Has.Count.EqualTo(1));
+        Assert.That(node.Prerequisite[0], Does.Not.Contain(pre1));
+        Assert.That(node.Prerequisite[0], Contains.Item(pre2));
+
+        Assert.That(pre1.Children, Does.Not.Contain(node));
+        Assert.That(pre2.Children, Contains.Item(node));
+    }
+
+    [Test]
+    public void RemovePrerequisite_RemovesGroupWhenEmpty()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+
+        node.AddPrerequisite([pre1]);
+        node.RemovePrerequisite(pre1);
+
+        Assert.That(node.Prerequisite, Is.Empty);
+        Assert.That(pre1.Children, Does.Not.Contain(node));
+    }
+
+    [Test]
+    public void ClearPrerequisites_RemovesAllAndUpdatesChildren()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+        var pre2 = new FocusNode("path", default) { Id = "pre2" };
+
+        node.AddPrerequisite([pre1]);
+        node.AddPrerequisite([pre2]);
+
+        node.ClearPrerequisites();
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.Prerequisite, Is.Empty);
+            Assert.That(pre1.Children, Does.Not.Contain(node));
+            Assert.That(pre2.Children, Does.Not.Contain(node));
+        }
+    }
+
+    [Test]
+    public void ClearChildren_RemovesFromChildrenAndUpdatesPrerequisites()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        var parent2 = new FocusNode("path", default) { Id = "parent2" };
+        var child1 = new FocusNode("path", default) { Id = "child1" };
+        var child2 = new FocusNode("path", default) { Id = "child2" };
+
+        child1.AddPrerequisite([parent]);
+        child2.AddPrerequisite([parent]);
+        child2.AddPrerequisite([parent2]);
+
+        Assert.That(parent.Children, Contains.Item(child1));
+        Assert.That(parent.Children, Contains.Item(child2));
+        Assert.That(parent2.Children, Contains.Item(child2));
+
+        parent.ClearChildren();
+
+        Assert.That(parent.Children, Is.Empty);
+        Assert.That(child1.Prerequisite, Is.Empty);
+        Assert.That(child2.Prerequisite, Is.Not.Empty);
+        Assert.That(child2.Prerequisite[0], Is.EquivalentTo([parent2]));
     }
 }

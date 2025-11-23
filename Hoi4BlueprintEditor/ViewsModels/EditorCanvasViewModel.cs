@@ -400,7 +400,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             RawPosition = new FocusPoint(0, 1),
             Icon = "GFX_GER_Test3",
         };
-        f3.Prerequisite.Add([focus]);
+        f3.AddPrerequisite([focus]);
         _nodes.Add(new FocusNodeViewModel(f3));
         var f4 = new FocusNode("", FocusType.Normal)
         {
@@ -408,7 +408,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             RawPosition = new FocusPoint(2, 1),
             Icon = "GFX_GER_Test4",
         };
-        f4.Prerequisite.Add([focus]);
+        f4.AddPrerequisite([focus]);
         _nodes.Add(new FocusNodeViewModel(f4));
 
         _focusTreeFiles.Add("TestFocusFile1.txt");
@@ -443,7 +443,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             && !source.MutuallyExclusive.Contains(target)
         )
         {
-            source.Prerequisite.Add([target]);
+            source.AddPrerequisite([target]);
             changed = true;
         }
 
@@ -478,13 +478,9 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             focusNode.MutuallyExclusive.Remove(deletedFocusNode);
         }
-        foreach (var focusNode in deletedFocusNode.Children)
-        {
-            foreach (var focus in focusNode.Prerequisite)
-            {
-                focus.Remove(deletedFocusNode);
-            }
-        }
+        deletedFocusNode.MutuallyExclusive.Clear();
+        deletedFocusNode.ClearChildren();
+        deletedFocusNode.ClearPrerequisites();
         WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
     }
 }

@@ -171,21 +171,29 @@ public static class FocusNodeHelper
 
     private static void ProcessPrerequisite(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
+        var newPrerequisites = new List<List<FocusNode>>();
+
         foreach (var prerequisiteList in focusNode.Prerequisite)
         {
-            for (int i = prerequisiteList.Count - 1; i >= 0; i--)
+            var newGroup = new List<FocusNode>(prerequisiteList.Count);
+            foreach (var prerequisiteNode in prerequisiteList)
             {
-                var prerequisiteNode = prerequisiteList[i];
                 if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
                 {
-                    prerequisiteList[i] = node;
-                    node.Children.Add(focusNode);
-                }
-                else
-                {
-                    prerequisiteList.RemoveAt(i);
+                    newGroup.Add(node);
                 }
             }
+
+            if (newGroup.Count > 0)
+            {
+                newPrerequisites.Add(newGroup);
+            }
+        }
+
+        focusNode.ClearPrerequisites();
+        foreach (var group in newPrerequisites)
+        {
+            focusNode.AddPrerequisite(group);
         }
     }
 
@@ -253,7 +261,7 @@ public static class FocusNodeHelper
                         .ToList();
                     if (prerequisite.Count != 0)
                     {
-                        model.Prerequisite.Add(prerequisite);
+                        model.AddPrerequisite(prerequisite);
                     }
                 }
             }
