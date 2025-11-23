@@ -461,10 +461,20 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             return;
         }
 
-        var viewModel = _nodes.FirstOrDefault(node => node.Model == deletedFocusNode);
+        FocusNodeViewModel? viewModel = null;
+        int index = 0;
+        for (; index < _nodes.Count; index++)
+        {
+            var current = _nodes[index];
+            if (current.Model == deletedFocusNode)
+            {
+                viewModel = current;
+                break;
+            }
+        }
         if (viewModel is not null)
         {
-            _nodes.Remove(viewModel);
+            _nodes.RemoveAt(index);
             viewModel.Dispose();
         }
         else
