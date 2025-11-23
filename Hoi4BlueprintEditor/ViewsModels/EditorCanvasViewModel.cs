@@ -427,8 +427,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         if (
             addType == ConnectionType.MutuallyExclusive
             && !source.MutuallyExclusive.Contains(target)
-            && !source.Prerequisite.AsValueEnumerable().Any(group => group.Contains(target))
-            && !target.Prerequisite.AsValueEnumerable().Any(group => group.Contains(source))
+            && !target.Children.Contains(source)
+            && !source.Children.Contains(target)
         )
         {
             source.MutuallyExclusive.Add(target);
@@ -438,7 +438,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         else if (
             addType == ConnectionType.Prerequisite
             // 检查是否已经存在于任何前置组中
-            && !source.Prerequisite.Any(group => group.Contains(target))
+            && !target.Children.Contains(source)
             // 互斥的时候不能作为前置条件
             && !source.MutuallyExclusive.Contains(target)
         )
