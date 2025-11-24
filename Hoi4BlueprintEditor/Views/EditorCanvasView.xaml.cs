@@ -9,12 +9,14 @@ using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
 using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using ZLinq;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Hoi4BlueprintEditor.Views;
@@ -50,6 +52,8 @@ public sealed partial class EditorCanvasView : UserControl
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly LocalizationService LocalizationService =
+        App.Current.Services.GetRequiredService<LocalizationService>();
 
     public EditorCanvasView()
     {
@@ -127,9 +131,12 @@ public sealed partial class EditorCanvasView : UserControl
 
         if (focus.RelativePositionChildren.Count > 0)
         {
-            // TODO: 显示出受影响的国策
+            var impactedFocusIds = focus
+                .RelativePositionChildren.AsValueEnumerable()
+                .Select(static f => LocalizationService.GetValue(f.Id))
+                .JoinToString('\n');
             var result = MessageBox.Show(
-                "有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?",
+                $"有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?\n\n受影响节点:\n\n{impactedFocusIds}",
                 "确认删除",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning
