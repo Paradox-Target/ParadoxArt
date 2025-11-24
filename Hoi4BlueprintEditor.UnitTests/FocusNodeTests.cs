@@ -10,8 +10,11 @@ public sealed class FocusNodeTests
     {
         var node = new FocusNode("path", default) { RawPosition = new FocusPoint(10, 20) };
 
-        Assert.That(node.X, Is.EqualTo(10));
-        Assert.That(node.Y, Is.EqualTo(20));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(10));
+            Assert.That(node.Y, Is.EqualTo(20));
+        }
     }
 
     [Test]
@@ -25,8 +28,11 @@ public sealed class FocusNodeTests
 
         node.RelativePosition = relative;
 
-        Assert.That(node.X, Is.EqualTo(8)); // 5 + 3
-        Assert.That(node.Y, Is.EqualTo(10)); // 6 + 4
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(8)); // 5 + 3
+            Assert.That(node.Y, Is.EqualTo(10)); // 6 + 4
+        }
     }
 
     [Test]
@@ -40,15 +46,21 @@ public sealed class FocusNodeTests
         node.RawPosition = new FocusPoint(0, 0);
 
         node.SetRawX(10);
-        Assert.That(node.RawPosition.X, Is.EqualTo(8)); // 10 - 2
-        Assert.That(node.RawPosition.Y, Is.Zero);
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.RawPosition.X, Is.EqualTo(8)); // 10 - 2
+            Assert.That(node.RawPosition.Y, Is.Zero);
+        }
 
         node.SetRawY(20);
         Assert.That(node.RawPosition.Y, Is.EqualTo(17)); // 20 - 3
 
         node.SetRawPosition(30, 40);
-        Assert.That(node.RawPosition.X, Is.EqualTo(28)); // 30 - 2
-        Assert.That(node.RawPosition.Y, Is.EqualTo(37)); // 40 - 3
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.RawPosition.X, Is.EqualTo(28)); // 30 - 2
+            Assert.That(node.RawPosition.Y, Is.EqualTo(37)); // 40 - 3
+        }
     }
 
     [Test]
@@ -245,5 +257,30 @@ public sealed class FocusNodeTests
         Assert.That(child2.Y, Is.EqualTo(8));
         Assert.That(child2.RawPosition.X, Is.EqualTo(9));
         Assert.That(child2.RawPosition.Y, Is.EqualTo(8));
+    }
+
+    [Test]
+    public void ClearMutuallyExclusive_RemovesBidirectionalLinks()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var other1 = new FocusNode("path", default) { Id = "other1" };
+        var other2 = new FocusNode("path", default) { Id = "other2" };
+
+        // Setup bidirectional links
+        node.MutuallyExclusive.Add(other1);
+        other1.MutuallyExclusive.Add(node);
+
+        node.MutuallyExclusive.Add(other2);
+        other2.MutuallyExclusive.Add(node);
+
+        Assert.That(node.MutuallyExclusive, Has.Count.EqualTo(2));
+        Assert.That(other1.MutuallyExclusive, Contains.Item(node));
+        Assert.That(other2.MutuallyExclusive, Contains.Item(node));
+
+        node.ClearMutuallyExclusive();
+
+        Assert.That(node.MutuallyExclusive, Is.Empty);
+        Assert.That(other1.MutuallyExclusive, Does.Not.Contain(node));
+        Assert.That(other2.MutuallyExclusive, Does.Not.Contain(node));
     }
 }

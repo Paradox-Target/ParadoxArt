@@ -127,6 +127,7 @@ public sealed partial class EditorCanvasView : UserControl
 
         if (focus.RelativePositionChildren.Count > 0)
         {
+            // TODO: 显示出受影响的国策
             var result = MessageBox.Show(
                 "有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?",
                 "确认删除",

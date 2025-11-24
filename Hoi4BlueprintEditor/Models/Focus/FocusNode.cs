@@ -134,13 +134,22 @@ public sealed partial class FocusNode(string path, FocusType type)
         foreach (var child in _relativePositionChildren.ToArray())
         {
             // 将使用相对位置的节点转换为使用绝对位置
-            // 注意这里不能直接使用 SetRawPosition，因为会发送多余的消息
+            // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
 #pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
             child._rawPosition = new FocusPoint(child.X, child.Y);
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
             child.RelativePosition = null;
         }
         _relativePositionChildren.Clear();
+    }
+
+    public void ClearMutuallyExclusive()
+    {
+        foreach (var node in MutuallyExclusive)
+        {
+            node.MutuallyExclusive.Remove(this);
+        }
+        MutuallyExclusive.Clear();
     }
 
     /// <summary>
@@ -265,15 +274,18 @@ public sealed partial class FocusNode(string path, FocusType type)
     public void Dispose()
     {
         RelativePosition?.PropertyChanged -= OnPropertyChanged;
+        // 越过属性，直接置空，避免触发 OnRelativePositionChanged
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+        _relativePosition = null;
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+        ClearChildren();
+        ClearPrerequisites();
+        ClearRelativePositionChildren();
+        ClearMutuallyExclusive();
     }
 
     public override string ToString()
     {
         return $"FocusNode [{Id} ({Path})]";
-    }
-
-    ~FocusNode()
-    {
-        Debug.WriteLine($"~FocusNode {Id}");
     }
 }

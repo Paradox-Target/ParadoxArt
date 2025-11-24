@@ -483,18 +483,6 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             return;
         }
 
-        // 删除所有连接关系
-        foreach (var focusNode in deletedFocusNode.MutuallyExclusive)
-        {
-            focusNode.MutuallyExclusive.Remove(deletedFocusNode);
-        }
-
-        // TODO: 加入到 Dispose 方法中?
-        deletedFocusNode.MutuallyExclusive.Clear();
-        deletedFocusNode.ClearChildren();
-        deletedFocusNode.ClearPrerequisites();
-        deletedFocusNode.ClearRelativePositionChildren();
-        deletedFocusNode.RelativePosition = null;
         WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
     }
 }
