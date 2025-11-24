@@ -155,17 +155,19 @@ public static class FocusNodeHelper
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
-        for (int index = focusNode.MutuallyExclusive.Count - 1; index >= 0; index--)
+        var newMutuallyExclusive = new List<FocusNode>(focusNode.MutuallyExclusive.Count);
+        foreach (var focusNodeMutuallyExclusive in focusNode.MutuallyExclusive)
         {
-            var focusNodeMutuallyExclusive = focusNode.MutuallyExclusive[index];
             if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
             {
-                focusNode.MutuallyExclusive[index] = node;
+                newMutuallyExclusive.Add(node);
             }
-            else
-            {
-                focusNode.MutuallyExclusive.RemoveAt(index);
-            }
+        }
+
+        focusNode.ClearMutuallyExclusive();
+        foreach (var node in newMutuallyExclusive)
+        {
+            focusNode.AddMutuallyExclusive(node);
         }
     }
 
@@ -245,7 +247,7 @@ public static class FocusNodeHelper
                 {
                     foreach (var focusLeaf in node.Leaves)
                     {
-                        model.MutuallyExclusive.Add(
+                        model.AddMutuallyExclusive(
                             new FocusNode(string.Empty, FocusType.Normal) { Id = focusLeaf.ValueText }
                         );
                     }

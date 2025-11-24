@@ -152,8 +152,11 @@ public sealed class FocusNodeTests
         node.AddPrerequisite([pre1]);
         node.RemovePrerequisite(pre1);
 
-        Assert.That(node.Prerequisite, Is.Empty);
-        Assert.That(pre1.Children, Does.Not.Contain(node));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.Prerequisite, Is.Empty);
+            Assert.That(pre1.Children, Does.Not.Contain(node));
+        }
     }
 
     [Test]
@@ -267,11 +270,8 @@ public sealed class FocusNodeTests
         var other2 = new FocusNode("path", default) { Id = "other2" };
 
         // Setup bidirectional links
-        node.MutuallyExclusive.Add(other1);
-        other1.MutuallyExclusive.Add(node);
-
-        node.MutuallyExclusive.Add(other2);
-        other2.MutuallyExclusive.Add(node);
+        node.AddMutuallyExclusive(other1);
+        node.AddMutuallyExclusive(other2);
 
         Assert.That(node.MutuallyExclusive, Has.Count.EqualTo(2));
         Assert.That(other1.MutuallyExclusive, Contains.Item(node));

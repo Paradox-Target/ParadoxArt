@@ -431,8 +431,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             && !source.Children.Contains(target)
         )
         {
-            source.MutuallyExclusive.Add(target);
-            target.MutuallyExclusive.Add(source);
+            source.AddMutuallyExclusive(target);
             changed = true;
         }
         else if (

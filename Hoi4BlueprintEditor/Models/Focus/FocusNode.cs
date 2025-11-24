@@ -20,7 +20,8 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// </summary>
     public string Path { get; } = path;
 
-    public List<FocusNode> MutuallyExclusive { get; } = [];
+    public IReadOnlyList<FocusNode> MutuallyExclusive => _mutuallyExclusive;
+    private readonly List<FocusNode> _mutuallyExclusive = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]
@@ -66,6 +67,22 @@ public sealed partial class FocusNode(string path, FocusType type)
     private string _icon = string.Empty;
 
     public decimal Cost { get; set; }
+
+    /// <summary>
+    /// 添加互斥节点关系, 双向添加
+    /// </summary>
+    /// <param name="focusNode">节点</param>
+    public void AddMutuallyExclusive(FocusNode focusNode)
+    {
+        if (!_mutuallyExclusive.Contains(focusNode))
+        {
+            _mutuallyExclusive.Add(focusNode);
+        }
+        if (!focusNode._mutuallyExclusive.Contains(this))
+        {
+            focusNode._mutuallyExclusive.Add(this);
+        }
+    }
 
     public void AddPrerequisite(List<FocusNode> prerequisiteNodes)
     {
@@ -145,11 +162,11 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public void ClearMutuallyExclusive()
     {
-        foreach (var node in MutuallyExclusive)
+        foreach (var node in _mutuallyExclusive)
         {
-            node.MutuallyExclusive.Remove(this);
+            node._mutuallyExclusive.Remove(this);
         }
-        MutuallyExclusive.Clear();
+        _mutuallyExclusive.Clear();
     }
 
     /// <summary>
