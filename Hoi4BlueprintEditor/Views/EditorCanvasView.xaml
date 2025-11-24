@@ -29,7 +29,7 @@
             TranslateY="{Binding TranslateY}">
             <controls:GridRulerControl.ContextMenu>
                 <ContextMenu
-                    x:Name="ContextMenu"
+                    x:Name="RightContextMenu"
                     d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
                     Opened="ContextMenu_OnOpened">
                     <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">

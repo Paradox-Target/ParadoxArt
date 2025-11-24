@@ -69,7 +69,7 @@ public sealed partial class EditorCanvasView : UserControl
         DataContext = _viewModel;
 
         // 方便右键菜单在前端绑定 Command
-        ContextMenu.DataContext = this;
+        RightContextMenu.DataContext = this;
     }
 
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -92,7 +92,7 @@ public sealed partial class EditorCanvasView : UserControl
         }
         else
         {
-            ContextMenu.IsOpen = true;
+            RightContextMenu.IsOpen = true;
         }
     }
 
