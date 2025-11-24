@@ -148,6 +148,15 @@ public sealed partial class EditorCanvasView : UserControl
         }
 
         //TODO: 删除后App内弹出提示
+
+        // 关闭信息卡, 并释放 ViewModel 资源, 防止内存泄漏
+        if (FocusInfoView.DataContext is FocusInfoViewModel infoViewModel && infoViewModel.FocusNode == focus)
+        {
+            FocusInfoView.IsOpen = false;
+            FocusInfoView.DataContext = null;
+            infoViewModel.Dispose();
+        }
+
         _viewModel.DeleteFocusNode(focus);
         _lastRightClickFocus = null;
 
