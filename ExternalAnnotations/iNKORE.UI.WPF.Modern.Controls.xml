@@ -1,0 +1,8 @@
+<assembly name="iNKORE.UI.WPF.Modern.Controls">
+    <member name="M:iNKORE.UI.WPF.Modern.Controls.MessageBox.Show(System.String,System.String,System.Windows.MessageBoxButton,System.Windows.MessageBoxImage)">
+        <attribute ctor="M:JetBrains.Annotations.LocalizationRequiredAttribute.#ctor" />
+    </member>
+    <member name="M:iNKORE.UI.WPF.Modern.Controls.MessageBox.Show(System.String)">
+        <attribute ctor="M:JetBrains.Annotations.LocalizationRequiredAttribute.#ctor" />
+    </member>
+</assembly>
