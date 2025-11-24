@@ -400,7 +400,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             RawPosition = new FocusPoint(0, 1),
             Icon = "GFX_GER_Test3",
         };
-        f3.Prerequisite.Add([focus]);
+        f3.AddPrerequisite([focus]);
         _nodes.Add(new FocusNodeViewModel(f3));
         var f4 = new FocusNode("", FocusType.Normal)
         {
@@ -408,7 +408,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             RawPosition = new FocusPoint(2, 1),
             Icon = "GFX_GER_Test4",
         };
-        f4.Prerequisite.Add([focus]);
+        f4.AddPrerequisite([focus]);
         _nodes.Add(new FocusNodeViewModel(f4));
 
         _focusTreeFiles.Add("TestFocusFile1.txt");
@@ -420,25 +420,29 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         return _focusTreeFiles;
     }
 
-    public void CreateConnection(FocusNode source, FocusNode target, ConnectionType type)
+    public void CreateConnection(FocusNode source, FocusNode target, ConnectionType addType)
     {
         bool changed = false;
 
-        // TODO: 需要检查后置条件中是否存在
-        if (type == ConnectionType.MutuallyExclusive && !source.MutuallyExclusive.Contains(target))
+        if (
+            addType == ConnectionType.MutuallyExclusive
+            && !source.MutuallyExclusive.Contains(target)
+            && !target.Children.Contains(source)
+            && !source.Children.Contains(target)
+        )
         {
-            source.MutuallyExclusive.Add(target);
-            target.MutuallyExclusive.Add(source);
+            source.AddMutuallyExclusive(target);
             changed = true;
         }
         else if (
-            type == ConnectionType.Prerequisite
+            addType == ConnectionType.Prerequisite
             // 检查是否已经存在于任何前置组中
-            && !source.Prerequisite.Any(group => group.Contains(target))
+            && !target.Children.Contains(source)
+            // 互斥的时候不能作为前置条件
             && !source.MutuallyExclusive.Contains(target)
         )
         {
-            source.Prerequisite.Add([target]);
+            source.AddPrerequisite([target]);
             changed = true;
         }
 
@@ -446,5 +450,38 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
         }
+    }
+
+    public void DeleteFocusNode(FocusNode deletedFocusNode)
+    {
+        if (!_editorNodesMap.Remove(deletedFocusNode.Id))
+        {
+            Log.Warn("删除Focus失败, 未在映射表中找到对应的 FocusNode: {FocusId}", deletedFocusNode.Id);
+            return;
+        }
+
+        FocusNodeViewModel? viewModel = null;
+        int index = 0;
+        for (; index < _nodes.Count; index++)
+        {
+            var current = _nodes[index];
+            if (current.Model == deletedFocusNode)
+            {
+                viewModel = current;
+                break;
+            }
+        }
+        if (viewModel is not null)
+        {
+            _nodes.RemoveAt(index);
+            viewModel.Dispose();
+        }
+        else
+        {
+            Log.Warn("删除Focus失败, 未找到对应的 FocusNodeViewModel: {FocusId}", deletedFocusNode.Id);
+            return;
+        }
+
+        WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
     }
 }

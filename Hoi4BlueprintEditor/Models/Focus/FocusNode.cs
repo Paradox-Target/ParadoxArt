@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Messages;
@@ -19,12 +20,19 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// </summary>
     public string Path { get; } = path;
 
-    public List<FocusNode> MutuallyExclusive { get; } = [];
+    public IReadOnlyList<FocusNode> MutuallyExclusive => _mutuallyExclusive;
+    private readonly List<FocusNode> _mutuallyExclusive = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]
     [NotifyPropertyChangedFor(nameof(Y))]
     private FocusNode? _relativePosition;
+
+    /// <summary>
+    /// 使用此节点作为相对位置源的节点的集合
+    /// </summary>
+    public IReadOnlyCollection<FocusNode> RelativePositionChildren => _relativePositionChildren;
+    private readonly List<FocusNode> _relativePositionChildren = [];
 
     /// <summary>
     /// 前提条件
@@ -34,10 +42,18 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// 内层 List 集合 OR 前置条件
     /// 外层 List 集合 AND 前置条件
     /// </remarks>
-    public List<List<FocusNode>> Prerequisite { get; } = [];
+    public IReadOnlyList<IReadOnlyList<FocusNode>> Prerequisite => _prerequisite;
+
+    private readonly List<List<FocusNode>> _prerequisite = [];
 
     /// <summary>
-    /// 原始的位置，不包含相对位置的偏移, 不能代表显示位置。
+    /// 将本节点当作前提条件的 <see cref="FocusNode"/> 集合
+    /// </summary>
+    public IReadOnlyList<FocusNode> Children => _children;
+    private readonly List<FocusNode> _children = [];
+
+    /// <summary>
+    /// 原始的位置, 对应脚本中的 X 与 Y 值 ,不包含相对位置的偏移, 不能代表显示位置。
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]
@@ -51,6 +67,107 @@ public sealed partial class FocusNode(string path, FocusType type)
     private string _icon = string.Empty;
 
     public decimal Cost { get; set; }
+
+    /// <summary>
+    /// 添加互斥节点关系, 双向添加
+    /// </summary>
+    /// <param name="focusNode">节点</param>
+    public void AddMutuallyExclusive(FocusNode focusNode)
+    {
+        if (!_mutuallyExclusive.Contains(focusNode))
+        {
+            _mutuallyExclusive.Add(focusNode);
+        }
+        if (!focusNode._mutuallyExclusive.Contains(this))
+        {
+            focusNode._mutuallyExclusive.Add(this);
+        }
+    }
+
+    public void AddPrerequisite(List<FocusNode> prerequisiteNodes)
+    {
+        _prerequisite.Add(prerequisiteNodes);
+        foreach (var node in prerequisiteNodes)
+        {
+            if (!node._children.Contains(this))
+            {
+                node._children.Add(this);
+            }
+        }
+    }
+
+    public void RemovePrerequisite(FocusNode focusNode)
+    {
+        InternalRemovePrerequisite(focusNode, true);
+    }
+
+    public void ClearChildren()
+    {
+        foreach (var child in _children)
+        {
+            child.InternalRemovePrerequisite(this, false);
+        }
+        _children.Clear();
+    }
+
+    private void InternalRemovePrerequisite(FocusNode focusNode, bool removeFromChildren)
+    {
+        foreach (var prerequisiteGroup in _prerequisite)
+        {
+            if (!prerequisiteGroup.Remove(focusNode))
+            {
+                continue;
+            }
+
+            if (removeFromChildren)
+            {
+                focusNode._children.Remove(this);
+            }
+            if (prerequisiteGroup.Count == 0)
+            {
+                _prerequisite.Remove(prerequisiteGroup);
+            }
+            break;
+        }
+    }
+
+    public void ClearPrerequisites()
+    {
+        foreach (var group in _prerequisite)
+        {
+            foreach (var node in group)
+            {
+                node._children.Remove(this);
+            }
+        }
+        _prerequisite.Clear();
+    }
+
+    /// <summary>
+    /// 清除使用此节点作为相对位置的所有节点的相对位置设置
+    /// </summary>
+    public void ClearRelativePositionChildren()
+    {
+        foreach (var child in _relativePositionChildren.ToArray())
+        {
+            // 将使用相对位置的节点转换为使用绝对位置
+            // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+            child._rawPosition = new FocusPoint(child.X, child.Y);
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+            child.RelativePosition = null;
+        }
+        _relativePositionChildren.Clear();
+    }
+
+    public void ClearMutuallyExclusive()
+    {
+        foreach (var node in _mutuallyExclusive)
+        {
+            node._mutuallyExclusive.Remove(this);
+        }
+        _mutuallyExclusive.Clear();
+    }
 
     /// <summary>
     /// 将 <c>RawPosition.X</c> 设置为指定值，自动扣除 <see cref="RelativePosition"/> 的偏移
@@ -104,11 +221,13 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (oldValue is not null)
         {
             oldValue.PropertyChanged -= OnPropertyChanged;
+            oldValue._relativePositionChildren.Remove(this);
         }
 
         if (newValue is not null)
         {
             newValue.PropertyChanged += OnPropertyChanged;
+            newValue._relativePositionChildren.Add(this);
         }
     }
 
@@ -169,9 +288,21 @@ public sealed partial class FocusNode(string path, FocusType type)
         return !Equals(left, right);
     }
 
-    // TODO: 删除节点时调用
     public void Dispose()
     {
         RelativePosition?.PropertyChanged -= OnPropertyChanged;
+        // 越过属性，直接置空，避免触发 OnRelativePositionChanged
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+        _relativePosition = null;
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+        ClearChildren();
+        ClearPrerequisites();
+        ClearRelativePositionChildren();
+        ClearMutuallyExclusive();
+    }
+
+    public override string ToString()
+    {
+        return $"FocusNode [{Id} ({Path})]";
     }
 }

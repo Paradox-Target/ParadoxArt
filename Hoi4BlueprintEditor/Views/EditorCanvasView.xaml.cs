@@ -9,12 +9,15 @@ using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
 using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using ZLinq;
+using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Hoi4BlueprintEditor.Views;
 
@@ -35,12 +38,22 @@ public sealed partial class EditorCanvasView : UserControl
             ConnectionPreviewOverlay.State = value;
         }
     } = ConnectionType.None;
+
+    /// <summary>
+    /// 鼠标右键点击位置是否在某个国策节点上
+    /// </summary>
     private bool CursorOverFocus => _lastRightClickFocus is not null;
+
+    /// <summary>
+    /// 鼠标右键点击位置是否不在某个国策节点上
+    /// </summary>
     private bool CursorNotOverFocus => !CursorOverFocus;
 
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private static readonly LocalizationService LocalizationService =
+        App.Current.Services.GetRequiredService<LocalizationService>();
 
     public EditorCanvasView()
     {
@@ -105,6 +118,49 @@ public sealed partial class EditorCanvasView : UserControl
 
         FocusConnectionType = ConnectionType.Prerequisite;
         ConnectionPreviewOverlay.From = _lastRightClickFocus;
+    }
+
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void DeleteFocusNode()
+    {
+        var focus = _lastRightClickFocus;
+        if (focus is null)
+        {
+            return;
+        }
+
+        if (focus.RelativePositionChildren.Count > 0)
+        {
+            var impactedFocusIds = focus
+                .RelativePositionChildren.AsValueEnumerable()
+                .Select(static f => LocalizationService.GetValue(f.Id))
+                .JoinToString('\n');
+            var result = MessageBox.Show(
+                $"有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?\n\n受影响节点:\n\n{impactedFocusIds}",
+                "确认删除",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning
+            );
+            if (result != MessageBoxResult.Yes)
+            {
+                return;
+            }
+        }
+
+        //TODO: 删除后App内弹出提示
+
+        // 关闭信息卡, 并释放 ViewModel 资源, 防止内存泄漏
+        if (FocusInfoView.DataContext is FocusInfoViewModel infoViewModel && infoViewModel.FocusNode == focus)
+        {
+            FocusInfoView.IsOpen = false;
+            FocusInfoView.DataContext = null;
+            infoViewModel.Dispose();
+        }
+
+        _viewModel.DeleteFocusNode(focus);
+        _lastRightClickFocus = null;
+
+        Debug.Assert(ConnectionPreviewOverlay.From != focus && ConnectionPreviewOverlay.To != focus);
     }
 
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -209,7 +265,7 @@ public sealed partial class EditorCanvasView : UserControl
             }
         }
 
-        // 设置连接线时禁止移动国策
+        // 设置连接线时禁止拖动国策
         if (
             FocusConnectionType == ConnectionType.None
             && e.LeftButton == MouseButtonState.Pressed
@@ -306,6 +362,7 @@ public sealed partial class EditorCanvasView : UserControl
         CreateNewFocusCommand.NotifyCanExecuteChanged();
         SetPrerequisiteFocusCommand.NotifyCanExecuteChanged();
         SetMutuallyExclusiveFocusCommand.NotifyCanExecuteChanged();
+        DeleteFocusNodeCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>

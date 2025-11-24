@@ -51,6 +51,9 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
         }
     }
 
+    /// <summary>
+    /// 取消事件订阅, 清理所属 <see cref="FocusNode"/> 所有的连接关系
+    /// </summary>
     public void Dispose()
     {
         Model.PropertyChanged -= OnModelPropertyChanged;

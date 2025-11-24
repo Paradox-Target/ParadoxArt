@@ -155,36 +155,47 @@ public static class FocusNodeHelper
 
     private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
-        for (int index = focusNode.MutuallyExclusive.Count - 1; index >= 0; index--)
+        var newMutuallyExclusive = new List<FocusNode>(focusNode.MutuallyExclusive.Count);
+        foreach (var focusNodeMutuallyExclusive in focusNode.MutuallyExclusive)
         {
-            var focusNodeMutuallyExclusive = focusNode.MutuallyExclusive[index];
             if (focusMap.TryGetValue(focusNodeMutuallyExclusive.Id, out var node))
             {
-                focusNode.MutuallyExclusive[index] = node;
+                newMutuallyExclusive.Add(node);
             }
-            else
-            {
-                focusNode.MutuallyExclusive.RemoveAt(index);
-            }
+        }
+
+        focusNode.ClearMutuallyExclusive();
+        foreach (var node in newMutuallyExclusive)
+        {
+            focusNode.AddMutuallyExclusive(node);
         }
     }
 
     private static void ProcessPrerequisite(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
+        var newPrerequisites = new List<List<FocusNode>>();
+
         foreach (var prerequisiteList in focusNode.Prerequisite)
         {
-            for (int i = prerequisiteList.Count - 1; i >= 0; i--)
+            var newGroup = new List<FocusNode>(prerequisiteList.Count);
+            foreach (var prerequisiteNode in prerequisiteList)
             {
-                var prerequisiteNode = prerequisiteList[i];
                 if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
                 {
-                    prerequisiteList[i] = node;
-                }
-                else
-                {
-                    prerequisiteList.RemoveAt(i);
+                    newGroup.Add(node);
                 }
             }
+
+            if (newGroup.Count > 0)
+            {
+                newPrerequisites.Add(newGroup);
+            }
+        }
+
+        focusNode.ClearPrerequisites();
+        foreach (var group in newPrerequisites)
+        {
+            focusNode.AddPrerequisite(group);
         }
     }
 
@@ -236,7 +247,7 @@ public static class FocusNodeHelper
                 {
                     foreach (var focusLeaf in node.Leaves)
                     {
-                        model.MutuallyExclusive.Add(
+                        model.AddMutuallyExclusive(
                             new FocusNode(string.Empty, FocusType.Normal) { Id = focusLeaf.ValueText }
                         );
                     }
@@ -252,7 +263,7 @@ public static class FocusNodeHelper
                         .ToList();
                     if (prerequisite.Count != 0)
                     {
-                        model.Prerequisite.Add(prerequisite);
+                        model.AddPrerequisite(prerequisite);
                     }
                 }
             }

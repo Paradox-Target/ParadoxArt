@@ -8,13 +8,13 @@ public sealed class FocusNodeTests
     [Test]
     public void CalculatedPosition_WithoutRelative_IsRawPosition()
     {
-        var node = new FocusNode("path", default)
-        {
-            RawPosition = new FocusPoint(10, 20)
-        };
+        var node = new FocusNode("path", default) { RawPosition = new FocusPoint(10, 20) };
 
-        Assert.That(node.X, Is.EqualTo(10));
-        Assert.That(node.Y, Is.EqualTo(20));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(10));
+            Assert.That(node.Y, Is.EqualTo(20));
+        }
     }
 
     [Test]
@@ -28,8 +28,11 @@ public sealed class FocusNodeTests
 
         node.RelativePosition = relative;
 
-        Assert.That(node.X, Is.EqualTo(8)); // 5 + 3
-        Assert.That(node.Y, Is.EqualTo(10)); // 6 + 4
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(8)); // 5 + 3
+            Assert.That(node.Y, Is.EqualTo(10)); // 6 + 4
+        }
     }
 
     [Test]
@@ -43,15 +46,21 @@ public sealed class FocusNodeTests
         node.RawPosition = new FocusPoint(0, 0);
 
         node.SetRawX(10);
-        Assert.That(node.RawPosition.X, Is.EqualTo(8)); // 10 - 2
-        Assert.That(node.RawPosition.Y, Is.Zero);
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.RawPosition.X, Is.EqualTo(8)); // 10 - 2
+            Assert.That(node.RawPosition.Y, Is.Zero);
+        }
 
         node.SetRawY(20);
         Assert.That(node.RawPosition.Y, Is.EqualTo(17)); // 20 - 3
 
         node.SetRawPosition(30, 40);
-        Assert.That(node.RawPosition.X, Is.EqualTo(28)); // 30 - 2
-        Assert.That(node.RawPosition.Y, Is.EqualTo(37)); // 40 - 3
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.RawPosition.X, Is.EqualTo(28)); // 30 - 2
+            Assert.That(node.RawPosition.Y, Is.EqualTo(37)); // 40 - 3
+        }
     }
 
     [Test]
@@ -65,7 +74,6 @@ public sealed class FocusNodeTests
         a.RawPosition = new FocusPoint(1, 2);
         b.RawPosition = new FocusPoint(1, 2);
 
-        Assert.That(a, Is.EqualTo(b));
         Assert.That(a, Is.EqualTo(b));
         Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
     }
@@ -98,5 +106,181 @@ public sealed class FocusNodeTests
         // Dispose 后，相对位置的变更不应再传播
         rel.SetRawX(20);
         Assert.That(count, Is.EqualTo(beforeDispose));
+    }
+
+    [Test]
+    public void AddPrerequisite_AddsToCollectionAndUpdatesChildren()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+        var pre2 = new FocusNode("path", default) { Id = "pre2" };
+
+        node.AddPrerequisite([pre1, pre2]);
+
+        Assert.That(node.Prerequisite, Has.Count.EqualTo(1));
+        Assert.That(node.Prerequisite[0], Contains.Item(pre1));
+        Assert.That(node.Prerequisite[0], Contains.Item(pre2));
+
+        Assert.That(pre1.Children, Contains.Item(node));
+        Assert.That(pre2.Children, Contains.Item(node));
+    }
+
+    [Test]
+    public void RemovePrerequisite_RemovesFromCollectionAndUpdatesChildren()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+        var pre2 = new FocusNode("path", default) { Id = "pre2" };
+
+        node.AddPrerequisite([pre1, pre2]);
+        node.RemovePrerequisite(pre1);
+
+        Assert.That(node.Prerequisite, Has.Count.EqualTo(1));
+        Assert.That(node.Prerequisite[0], Does.Not.Contain(pre1));
+        Assert.That(node.Prerequisite[0], Contains.Item(pre2));
+
+        Assert.That(pre1.Children, Does.Not.Contain(node));
+        Assert.That(pre2.Children, Contains.Item(node));
+    }
+
+    [Test]
+    public void RemovePrerequisite_RemovesGroupWhenEmpty()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+
+        node.AddPrerequisite([pre1]);
+        node.RemovePrerequisite(pre1);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.Prerequisite, Is.Empty);
+            Assert.That(pre1.Children, Does.Not.Contain(node));
+        }
+    }
+
+    [Test]
+    public void ClearPrerequisites_RemovesAllAndUpdatesChildren()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var pre1 = new FocusNode("path", default) { Id = "pre1" };
+        var pre2 = new FocusNode("path", default) { Id = "pre2" };
+
+        node.AddPrerequisite([pre1]);
+        node.AddPrerequisite([pre2]);
+
+        node.ClearPrerequisites();
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.Prerequisite, Is.Empty);
+            Assert.That(pre1.Children, Does.Not.Contain(node));
+            Assert.That(pre2.Children, Does.Not.Contain(node));
+        }
+    }
+
+    [Test]
+    public void ClearChildren_RemovesFromChildrenAndUpdatesPrerequisites()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        var parent2 = new FocusNode("path", default) { Id = "parent2" };
+        var child1 = new FocusNode("path", default) { Id = "child1" };
+        var child2 = new FocusNode("path", default) { Id = "child2" };
+
+        child1.AddPrerequisite([parent]);
+        child2.AddPrerequisite([parent]);
+        child2.AddPrerequisite([parent2]);
+
+        Assert.That(parent.Children, Contains.Item(child1));
+        Assert.That(parent.Children, Contains.Item(child2));
+        Assert.That(parent2.Children, Contains.Item(child2));
+
+        parent.ClearChildren();
+
+        Assert.That(parent.Children, Is.Empty);
+        Assert.That(child1.Prerequisite, Is.Empty);
+        Assert.That(child2.Prerequisite, Is.Not.Empty);
+        Assert.That(child2.Prerequisite[0], Is.EquivalentTo([parent2]));
+    }
+
+    [Test]
+    public void RelativePosition_UpdatesRelativePositionChildren()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        var child = new FocusNode("path", default) { Id = "child" };
+        var child2 = new FocusNode("path", default) { Id = "child2" };
+
+        child.RelativePosition = parent;
+        child2.RelativePosition = parent;
+
+        Assert.That(parent.RelativePositionChildren, Contains.Item(child));
+        Assert.That(parent.RelativePositionChildren, Contains.Item(child2));
+
+        child.RelativePosition = null;
+
+        Assert.That(parent.RelativePositionChildren, Does.Not.Contain(child));
+        Assert.That(parent.RelativePositionChildren, Contains.Item(child2));
+    }
+
+    [Test]
+    public void ClearRelativePositionChildren_ResetsChildrenPosition()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        parent.RawPosition = new FocusPoint(10, 10);
+
+        var child1 = new FocusNode("path", default) { Id = "child1" };
+        child1.RawPosition = new FocusPoint(2, 3); // Relative offset
+        child1.RelativePosition = parent;
+
+        var child2 = new FocusNode("path", default) { Id = "child2" };
+        child2.RawPosition = new FocusPoint(-1, -2); // Relative offset
+        child2.RelativePosition = parent;
+
+        // Verify initial absolute positions
+        Assert.That(child1.X, Is.EqualTo(12));
+        Assert.That(child1.Y, Is.EqualTo(13));
+        Assert.That(child2.X, Is.EqualTo(9));
+        Assert.That(child2.Y, Is.EqualTo(8));
+
+        Assert.That(parent.RelativePositionChildren, Has.Count.EqualTo(2));
+
+        parent.ClearRelativePositionChildren();
+
+        Assert.That(parent.RelativePositionChildren, Is.Empty);
+        Assert.That(child1.RelativePosition, Is.Null);
+        Assert.That(child2.RelativePosition, Is.Null);
+
+        // Verify positions are preserved (converted to absolute)
+        Assert.That(child1.X, Is.EqualTo(12));
+        Assert.That(child1.Y, Is.EqualTo(13));
+        Assert.That(child1.RawPosition.X, Is.EqualTo(12));
+        Assert.That(child1.RawPosition.Y, Is.EqualTo(13));
+
+        Assert.That(child2.X, Is.EqualTo(9));
+        Assert.That(child2.Y, Is.EqualTo(8));
+        Assert.That(child2.RawPosition.X, Is.EqualTo(9));
+        Assert.That(child2.RawPosition.Y, Is.EqualTo(8));
+    }
+
+    [Test]
+    public void ClearMutuallyExclusive_RemovesBidirectionalLinks()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        var other1 = new FocusNode("path", default) { Id = "other1" };
+        var other2 = new FocusNode("path", default) { Id = "other2" };
+
+        // Setup bidirectional links
+        node.AddMutuallyExclusive(other1);
+        node.AddMutuallyExclusive(other2);
+
+        Assert.That(node.MutuallyExclusive, Has.Count.EqualTo(2));
+        Assert.That(other1.MutuallyExclusive, Contains.Item(node));
+        Assert.That(other2.MutuallyExclusive, Contains.Item(node));
+
+        node.ClearMutuallyExclusive();
+
+        Assert.That(node.MutuallyExclusive, Is.Empty);
+        Assert.That(other1.MutuallyExclusive, Does.Not.Contain(node));
+        Assert.That(other2.MutuallyExclusive, Does.Not.Contain(node));
     }
 }
