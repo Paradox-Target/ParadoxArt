@@ -34,6 +34,8 @@ public sealed partial class SettingsWindowViewModel : ObservableObject
         }
     }
 
+    public string DotNetVersion => Environment.Version.ToString();
+
     [ObservableProperty]
     private int _selectedAppLanguagesIndex;
 
