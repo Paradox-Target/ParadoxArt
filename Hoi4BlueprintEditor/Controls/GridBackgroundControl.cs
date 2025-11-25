@@ -62,9 +62,9 @@ public sealed class GridBackgroundControl : Control
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
-        
+
         // 绘制垂直网格线和X轴标尺
-        GridDrawHelper.GetXRange(TranslateX, Scale, ActualWidth, out int startX, out int endX);
+        (int startX, int endX) = GridDrawHelper.GetXRange(TranslateX, Scale, ActualWidth);
         for (int i = startX; i <= endX; i++)
         {
             double xPos = GridDrawHelper.GetX(TranslateX, Scale, i);
@@ -72,7 +72,7 @@ public sealed class GridBackgroundControl : Control
         }
 
         // 绘制水平网格线和Y轴标尺
-        GridDrawHelper.GetXRange(TranslateY, Scale, ActualHeight, out int startY, out int endY);
+        (int startY, int endY) = GridDrawHelper.GetXRange(TranslateY, Scale, ActualHeight);
         for (int i = startY; i <= endY; i++)
         {
             double yPos = GridDrawHelper.GetY(TranslateY, Scale, i);

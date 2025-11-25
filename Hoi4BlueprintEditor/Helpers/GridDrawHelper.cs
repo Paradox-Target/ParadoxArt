@@ -7,39 +7,21 @@ public static class GridDrawHelper
     private static double CellWidth => FocusMapConstants.CellWidth;
     private static double CellHeight => FocusMapConstants.CellHeight;
 
-    private static void GetRange(
+    private static (int Start, int End) GetRange(
         double translate,
         double scale,
         double viewLength,
-        double cellLength,
-        out int start,
-        out int end
+        double cellLength
     )
     {
-        start = (int)(-translate / (cellLength * scale));
-        end = (int)((viewLength - translate) / (cellLength * scale));
+        int start = (int)(-translate / (cellLength * scale));
+        int end = (int)((viewLength - translate) / (cellLength * scale));
+        return (start, end);
     }
 
-    public static void GetXRange(
-        double translate,
-        double scale,
-        double viewLength,
-        out int start,
-        out int end
-    )
+    public static (int Start, int End) GetXRange(double translate, double scale, double viewLength)
     {
-        GetRange(translate, scale, viewLength, CellWidth, out start, out end);
-    }
-
-    public static void GetYRange(
-        double translate,
-        double scale,
-        double viewLength,
-        out int start,
-        out int end
-    )
-    {
-        GetRange(translate, scale, viewLength, CellHeight, out start, out end);
+        return GetRange(translate, scale, viewLength, CellWidth);
     }
 
     private static double GetPos(double translate, double scale, int index, double cellLength)
