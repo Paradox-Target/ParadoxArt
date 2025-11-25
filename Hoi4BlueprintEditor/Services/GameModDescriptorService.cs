@@ -22,24 +22,22 @@ public sealed class GameModDescriptorService
     private const string FileName = "descriptor.mod";
 
     /// <summary>
-    /// 按文件绝对路径构建
+    /// 按Mod根目录查找描述文件
     /// </summary>
-    /// <exception cref="FileNotFoundException">当文件不存在时</exception>
-    /// <exception cref="IOException"></exception>
     public GameModDescriptorService(SettingsService settingService)
     {
         var logger = LogManager.GetCurrentClassLogger();
         string descriptorFilePath = Path.Combine(settingService.ModRootFolderPath, FileName);
         if (!File.Exists(descriptorFilePath))
         {
-            _replacePaths = FrozenSet<string>.Empty;
+            _replacePaths = [];
             logger.Warn("Mod 描述文件不存在");
             return;
         }
 
         if (!TextParser.TryParse(descriptorFilePath, out var rootNode, out var error))
         {
-            _replacePaths = FrozenSet<string>.Empty;
+            _replacePaths = [];
             logger.Warn("Mod descriptor.mod file read is failure");
             logger.LogParseError(error);
             return;
