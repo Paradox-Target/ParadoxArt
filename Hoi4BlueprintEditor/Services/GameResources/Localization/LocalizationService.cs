@@ -9,12 +9,12 @@ using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using MethodTimer;
-using Microsoft.Extensions.DependencyInjection;
 using ParadoxPower.CSharp;
 using ParadoxPower.Localisation;
 
 namespace Hoi4BlueprintEditor.Services.GameResources.Localization;
 
+[RegisterSingleton<LocalizationService>]
 public sealed class LocalizationService
     : ResourcesService<LocalizationService, FrozenDictionary<string, string>, YAMLLocalisationParser.LocFile>
 {
@@ -29,11 +29,7 @@ public sealed class LocalizationService
     [Time("加载本地化文件")]
     public LocalizationService(SettingsService settingsService)
         : base(
-            Path.Combine(
-                "localisation",
-                App.Current.Services.GetRequiredService<SettingsService>()
-                    .GameLanguage.ToGameLocalizationLanguage()
-            ),
+            Path.Combine("localisation", settingsService.GameLanguage.ToGameLocalizationLanguage()),
             WatcherFilter.LocalizationFiles,
             PathType.Folder,
             SearchOption.AllDirectories,
