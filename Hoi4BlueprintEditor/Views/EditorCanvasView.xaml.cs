@@ -377,16 +377,8 @@ public sealed partial class EditorCanvasView : UserControl
         double width = FocusMapConstants.CellWidth * _viewModel.Scale;
         double height = FocusMapConstants.CellHeight * _viewModel.Scale;
 
-        int x = (int)(rX / width);
-        int y = (int)(rY / height);
-        if (rX % width <= 0)
-        {
-            x--;
-        }
-        if (rY % height <= 0)
-        {
-            y--;
-        }
+        int x = (int)Math.Floor(rX / width);
+        int y = (int)Math.Floor(rY / height);
 
         return (x, y);
     }
