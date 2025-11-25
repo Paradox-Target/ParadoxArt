@@ -14,6 +14,7 @@
     ui:TitleBar.Height="36"
     ui:WindowHelper.SystemBackdropType="Mica"
     ui:WindowHelper.UseModernWindowStyle="True"
+    Closed="MainWindow_OnClosed"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <ContentControl Content="{Binding CurrentView}" />

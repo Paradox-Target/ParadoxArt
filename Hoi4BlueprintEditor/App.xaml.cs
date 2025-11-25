@@ -38,6 +38,7 @@ public sealed partial class App : Application
 
         services.AddSingleton<AppLocalizationService>();
         services.AddSingleton(static _ => SettingsService.LoadSettings());
+        services.AddSingleton(static _ => WindowSettingsService.LoadSettings());
         services.AddSingleton<LocalizationService>();
         services.AddSingleton<LocalizationFormatService>();
         services.AddSingleton<LocalizationTextColorsService>();
@@ -79,6 +80,7 @@ public sealed partial class App : Application
     {
         base.OnExit(e);
 
+        Current.Services.GetRequiredService<WindowSettingsService>().SaveSettings();
         Services.Dispose();
         LogManager.Flush();
     }
