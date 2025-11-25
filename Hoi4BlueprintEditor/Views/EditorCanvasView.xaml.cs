@@ -323,7 +323,7 @@ public sealed partial class EditorCanvasView : UserControl
     {
         var viewModel = new CreateNewFocusViewModel(_viewModel.GetAllFocusFiles())
         {
-            FocusId = _viewModel.GetNextFocusId()
+            FocusId = _viewModel.GetNextFocusId(),
         };
         var dialog = new ContentDialog
         {
@@ -332,7 +332,7 @@ public sealed partial class EditorCanvasView : UserControl
             CloseButtonText = "取消",
             PrimaryButtonText = "创建",
             DefaultButton = ContentDialogButton.Primary,
-            IsPrimaryButtonEnabled = false
+            IsPrimaryButtonEnabled = false,
         };
 
         Action<bool> onPrimaryEnableChanged = enable => dialog.IsPrimaryButtonEnabled = enable;
@@ -372,9 +372,22 @@ public sealed partial class EditorCanvasView : UserControl
     /// <returns></returns>
     private (int X, int Y) GetMousePositionOnGrid(Point mousePoint)
     {
-        double scale = _viewModel.Scale;
-        int x = (int)((mousePoint.X - _viewModel.TranslateX) / (FocusMapConstants.CellWidth * scale));
-        int y = (int)((mousePoint.Y - _viewModel.TranslateY) / (FocusMapConstants.CellHeight * scale));
+        double rX = mousePoint.X - _viewModel.TranslateX;
+        double rY = mousePoint.Y - _viewModel.TranslateY;
+        double width = FocusMapConstants.CellWidth * _viewModel.Scale;
+        double height = FocusMapConstants.CellHeight * _viewModel.Scale;
+
+        int x = (int)(rX / width);
+        int y = (int)(rY / height);
+        if (rX % width <= 0)
+        {
+            x--;
+        }
+        if (rY % height <= 0)
+        {
+            y--;
+        }
+
         return (x, y);
     }
 
