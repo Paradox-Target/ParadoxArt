@@ -2,7 +2,7 @@ using Hoi4BlueprintEditor.Services;
 
 namespace Hoi4BlueprintEditor.UnitTests;
 
-[TestFixture]
+[TestFixture(TestOf = typeof(GameModDescriptorService))]
 public class GameModDescriptorServiceTests
 {
     private string _testDataPath;
