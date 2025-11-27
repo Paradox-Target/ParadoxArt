@@ -16,8 +16,15 @@ public sealed class SpriteService
     : CommonResourcesService<SpriteService, FrozenDictionary<string, SpriteInfo>>
 {
     [Time("加载所有 Sprite 文件")]
-    public SpriteService(GameResourcesPathService pathService)
-        : base("interface", WatcherFilter.GfxFiles, PathType.Folder, SearchOption.AllDirectories, true)
+    public SpriteService(GameResourcesPathService pathService, IServiceProvider serviceProvider)
+        : base(
+            "interface",
+            WatcherFilter.GfxFiles,
+            serviceProvider,
+            PathType.Folder,
+            SearchOption.AllDirectories,
+            true
+        )
     {
         _pathService = pathService;
     }

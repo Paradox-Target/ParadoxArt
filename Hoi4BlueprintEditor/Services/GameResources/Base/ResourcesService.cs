@@ -32,6 +32,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
     protected ResourcesService(
         string folderOrFileRelativePath,
         WatcherFilter filter,
+        IServiceProvider serviceProvider,
         PathType pathType,
         SearchOption searchOption = SearchOption.TopDirectoryOnly,
         bool isAsyncLoading = false
@@ -39,10 +40,10 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
     {
         _folderOrFileRelativePath = folderOrFileRelativePath;
         Log = LogManager.GetLogger(typeof(TType).FullName ?? string.Empty);
-        _settingService = App.Current.Services.GetRequiredService<SettingsService>();
+        _settingService = serviceProvider.GetRequiredService<SettingsService>();
 
-        var gameResourcesPathService = App.Current.Services.GetRequiredService<GameResourcesPathService>();
-        var watcherService = App.Current.Services.GetRequiredService<GameResourcesWatcherService>();
+        var gameResourcesPathService = serviceProvider.GetRequiredService<GameResourcesPathService>();
+        var watcherService = serviceProvider.GetRequiredService<GameResourcesWatcherService>();
 
         bool isFolderPath = pathType == PathType.Folder;
         string[] filePaths;

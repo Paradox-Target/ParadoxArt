@@ -14,10 +14,11 @@ public sealed class LocalizationTextColorsService
     : CommonResourcesService<LocalizationTextColorsService, FrozenDictionary<char, LocalizationTextColor>>
 {
     [Time("加载本地化文本颜色")]
-    public LocalizationTextColorsService()
+    public LocalizationTextColorsService(IServiceProvider serviceProvider)
         : base(
             Path.Combine("interface", WatcherFilter.InterfaceCoreGfxFile.Name),
             WatcherFilter.InterfaceCoreGfxFile,
+            serviceProvider,
             PathType.File
         ) { }
 
