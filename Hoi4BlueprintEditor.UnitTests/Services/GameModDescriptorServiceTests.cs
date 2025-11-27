@@ -1,6 +1,6 @@
 using Hoi4BlueprintEditor.Services;
 
-namespace Hoi4BlueprintEditor.UnitTests;
+namespace Hoi4BlueprintEditor.UnitTests.Services;
 
 [TestFixture(TestOf = typeof(GameModDescriptorService))]
 public class GameModDescriptorServiceTests
