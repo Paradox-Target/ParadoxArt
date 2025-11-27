@@ -109,7 +109,7 @@ public sealed class LocalizationService
             GameLanguage.French => "l_french:",
             GameLanguage.Spanish => "l_spanish:",
             GameLanguage.Russian => "l_russian:",
-            GameLanguage.Chinese => "l_chinese:",
+            GameLanguage.Chinese => "l_simp_chinese:",
             GameLanguage.Japanese => "l_japanese:",
             GameLanguage.Portuguese => "l_braz_por:",
             GameLanguage.Polish => "l_polish:",
