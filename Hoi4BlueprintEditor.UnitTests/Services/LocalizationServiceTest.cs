@@ -28,8 +28,7 @@ public class LocalizationServiceTests
     public void Setup()
     {
         // 1. 为每个测试创建一个唯一的临时目录，确保隔离
-        _testRunDirectory = Path.Combine(Path.GetTempPath(), "Hoi4Editor_Tests", Guid.NewGuid().ToString());
-        Directory.CreateDirectory(_testRunDirectory);
+        _testRunDirectory = TestHelper.CreateUniqueTempDirectory();
         TestContext.Out.WriteLine($"测试临时文件夹: {_testRunDirectory}");
 
         // 2. 准备测试环境：模拟 Mod 目录结构
