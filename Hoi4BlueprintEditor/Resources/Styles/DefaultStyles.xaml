@@ -6,9 +6,7 @@
         <Setter Property="FontFamily" Value="Cascadia Code" />
     </Style>
 
-    <Style TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="Sarasa UI SC" />
-    </Style>
+    <FontFamily x:Key="ContentControlThemeFontFamily">Sarasa UI SC</FontFamily>
 
     <Style TargetType="ui:NumberBox">
         <Setter Property="FontFamily" Value="Cascadia Code" />
