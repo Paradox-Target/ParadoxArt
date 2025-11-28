@@ -1,0 +1,12 @@
+spriteTypes = {
+    SpriteType = {
+        name = "GFX_test_3"
+        texturefile = "gfx/GFX_test_3.dds"
+    }
+
+    SpriteType = {
+        name = "GFX_test_4"
+        texturefile = "gfx/GFX_test_4.dds"
+        noOfFrames = 7
+    }
+}

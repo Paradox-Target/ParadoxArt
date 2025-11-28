@@ -6,4 +6,9 @@ public static class TestApp
         TestContext.CurrentContext.TestDirectory,
         "TestData"
     );
+
+    public static readonly string TempDirectory = Path.Combine(
+        TestContext.CurrentContext.TestDirectory,
+        "Temp"
+    );
 }
