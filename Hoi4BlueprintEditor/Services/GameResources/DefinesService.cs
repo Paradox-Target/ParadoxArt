@@ -14,8 +14,9 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
 {
     private static readonly Lua GlobalLua = new() { State = { Encoding = Encoding.UTF8 } };
 
-    public DefinesService()
-        : base(Path.Combine(Keywords.Common, "defines"), WatcherFilter.Lua, PathType.Folder) { }
+    public DefinesService(IServiceProvider serviceProvider)
+        : base(Path.Combine(Keywords.Common, "defines"), WatcherFilter.Lua, serviceProvider, PathType.Folder)
+    { }
 
     protected override void SortFilePath(string[] filePathArray)
     {

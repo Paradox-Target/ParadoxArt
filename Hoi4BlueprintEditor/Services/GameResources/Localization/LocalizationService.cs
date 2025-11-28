@@ -27,10 +27,11 @@ public sealed class LocalizationService
     > _filesLocalisations = new();
 
     [Time("加载本地化文件")]
-    public LocalizationService(SettingsService settingsService)
+    public LocalizationService(SettingsService settingsService, IServiceProvider serviceProvider)
         : base(
             Path.Combine("localisation", settingsService.GameLanguage.ToGameLocalizationLanguage()),
             WatcherFilter.LocalizationFiles,
+            serviceProvider,
             PathType.Folder,
             SearchOption.AllDirectories,
             true
