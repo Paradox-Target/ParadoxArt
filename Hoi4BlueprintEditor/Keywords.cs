@@ -10,4 +10,5 @@ public static class Keywords
     public const string Icon = "icon";
     public const string Cost = "cost";
     public const string Common = "common";
+    public const string CompletionReward = "completion_reward";
 }

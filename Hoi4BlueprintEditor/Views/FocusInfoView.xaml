@@ -28,13 +28,14 @@
         <Border
             x:Name="InfoBorder"
             MinWidth="200"
-            Padding="10"
             BorderBrush="Gray"
             BorderThickness="1"
             CornerRadius="4">
-            <Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                <Grid>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -107,8 +108,16 @@
                         Text="{Binding FocusDaysTip}" />
                 </StackPanel>
 
+                <StackPanel Grid.Row="6" Margin="0,4,0,0">
+                    <TextBlock FontSize="22" Text="完成效果" />
+                    <TextBox
+                        AcceptsReturn="True"
+                        Text="{Binding FocusNode.CompletionReward, Mode=TwoWay}"
+                        VerticalScrollBarVisibility="Auto" />
+                </StackPanel>
+
                 <StackPanel
-                    Grid.Row="6"
+                    Grid.Row="7"
                     Margin="0,8,0,0"
                     Orientation="Horizontal">
                     <TextBlock
@@ -121,12 +130,12 @@
                         SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="7">
+                <StackPanel Grid.Row="8">
                     <TextBlock Margin="0,4,0,0" Text="Text" />
                     <TextBox Margin="0,4,0,0" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="8">
+                <StackPanel Grid.Row="9">
                     <TextBlock Margin="0,4,0,0" Text="描述" />
 
                     <TextBox
@@ -139,6 +148,7 @@
                         VerticalScrollBarVisibility="Auto" />
                 </StackPanel>
             </Grid>
+            </ScrollViewer>
         </Border>
     </Grid>
 </UserControl>

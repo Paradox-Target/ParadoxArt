@@ -1,5 +1,6 @@
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Models.Focus;
+using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
 using ParadoxPower.Process;
@@ -9,6 +10,8 @@ namespace Hoi4BlueprintEditor.Helpers;
 
 public static class NodeHelper
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     /// 同步 <c>focusTreeNode</c> 节点的子节点
     /// </summary>
@@ -58,6 +61,8 @@ public static class NodeHelper
 
         AddPrerequisiteToChildrenIfExist(children, editorModel);
 
+        AddCompletionRewardToChildrenIfExist(children, editorModel);
+
         if (editorModel.RelativePosition is not null)
         {
             children.Add(
@@ -66,6 +71,24 @@ public static class NodeHelper
         }
 
         focusNode.AllArray = children.ToArray();
+    }
+
+    public static void AddCompletionRewardToChildrenIfExist(List<Child> children, FocusNode editorModel)
+    {
+        if (string.IsNullOrWhiteSpace(editorModel.CompletionReward))
+        {
+            return;
+        }
+
+        if (TextParser.TryParse(string.Empty, editorModel.CompletionReward, out var node, out var error))
+        {
+            var completionRewardNode = ChildHelper.Node(Keywords.CompletionReward, node.AllArray);
+            children.Add(completionRewardNode);
+        }
+        else
+        {
+            Log.Warn("解析完成效果失败, 无法插入到AST树中. {Message}", error.ErrorMessage);
+        }
     }
 
     private static void SyncLeafContent(Node focusNode, FocusNode editorModel)
@@ -98,13 +121,14 @@ public static class NodeHelper
             .AllArray.AsValueEnumerable()
             .Where(static child =>
             {
-                // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId
+                // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId, CompletionReward
                 // 这些内容完全按照编辑器模型保存
                 if (
                     child.TryGetNode(out var node)
                     && (
                         node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive)
                         || node.Key.EqualsIgnoreCase(Keywords.Prerequisite)
+                        || node.Key.EqualsIgnoreCase(Keywords.CompletionReward)
                     )
                 )
                 {
@@ -121,7 +145,7 @@ public static class NodeHelper
             .ToList();
     }
 
-    private static void AddMutuallyExclusiveToChildrenIfExist(List<Child> children, FocusNode editorModel)
+    public static void AddMutuallyExclusiveToChildrenIfExist(List<Child> children, FocusNode editorModel)
     {
         if (editorModel.MutuallyExclusive.Count == 0)
         {
@@ -136,7 +160,7 @@ public static class NodeHelper
         children.Add(mutuallyExclusiveChild);
     }
 
-    private static void AddPrerequisiteToChildrenIfExist(List<Child> children, FocusNode editorModel)
+    public static void AddPrerequisiteToChildrenIfExist(List<Child> children, FocusNode editorModel)
     {
         if (editorModel.Prerequisite.Count == 0)
         {

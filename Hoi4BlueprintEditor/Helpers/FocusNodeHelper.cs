@@ -266,6 +266,10 @@ public static class FocusNodeHelper
                         model.AddPrerequisite(prerequisite);
                     }
                 }
+                else if (node.Key.EqualsIgnoreCase(Keywords.CompletionReward))
+                {
+                    model.CompletionReward = node.ToScript();
+                }
             }
         }
 
@@ -301,31 +305,12 @@ public static class FocusNodeHelper
             );
         }
 
-        if (editorModel.MutuallyExclusive.Count != 0)
-        {
-            children.Add(
-                ChildHelper.Node(
-                    Keywords.MutuallyExclusive,
-                    editorModel.MutuallyExclusive.Select(static focus =>
-                        ChildHelper.LeafString(Keywords.Focus, focus.Id)
-                    )
-                )
-            );
-        }
+        NodeHelper.AddCompletionRewardToChildrenIfExist(children, editorModel);
+        NodeHelper.AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
+        NodeHelper.AddPrerequisiteToChildrenIfExist(children, editorModel);
 
-        foreach (var prerequisite in editorModel.Prerequisite)
-        {
-            var prerequisiteNode = ChildHelper.Node(
-                Keywords.Prerequisite,
-                prerequisite.Select(static focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
-            );
-            children.Add(prerequisiteNode);
-        }
-
-        var focusNode = new Node(editorModel.Type == FocusType.Shared ? Keywords.SharedFocus : Keywords.Focus)
-        {
-            AllArray = children.ToArray()
-        };
+        string key = editorModel.Type == FocusType.Shared ? Keywords.SharedFocus : Keywords.Focus;
+        var focusNode = new Node(key) { AllArray = children.ToArray() };
         return focusNode;
     }
 }
