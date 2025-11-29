@@ -68,6 +68,7 @@ public sealed class FocusNodeParserTests
             Assert.That(focus1.Prerequisite, Is.Empty, "节点先决条件不正确");
             Assert.That(focus1.RelativePosition, Is.Null, "节点相对位置不正确");
             Assert.That(focus1.MutuallyExclusive, Is.Empty, "节点互斥关系不正确");
+            Assert.That(focus1.CompletionReward, Does.Contain("add_political_power = 100"), "节点完成奖励不正确");
         }
     }
 
@@ -92,12 +93,14 @@ public sealed class FocusNodeParserTests
         Assert.That(focus2.MutuallyExclusive, Is.Not.Null, "互斥节点集合为空");
         Assert.That(focus2.MutuallyExclusive.Count, Is.EqualTo(1), "互斥节点数量不正确");
         Assert.That(focus2.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_3"), "互斥节点ID不正确");
+        Assert.That(focus2.CompletionReward, Is.Null);
 
         // 验证focus3的互斥关系
         var focus3 = nodes["test_focus_3"];
         Assert.That(focus3.MutuallyExclusive, Is.Not.Null, "focus3互斥节点集合为空");
         Assert.That(focus3.MutuallyExclusive.Count, Is.EqualTo(1), "focus3互斥节点数量不正确");
         Assert.That(focus3.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_2"), "focus3互斥节点ID不正确");
+        Assert.That(focus3.CompletionReward, Is.Null);
     }
 
     [Test]
