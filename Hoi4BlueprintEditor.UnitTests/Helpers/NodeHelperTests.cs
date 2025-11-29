@@ -198,4 +198,24 @@ focus_tree = {
         Assert.That(relLeaf, Is.Not.Null);
         Assert.That(relLeaf.ValueText, Is.EqualTo("parent_focus"));
     }
+
+    [Test]
+    public void SyncNodeContent_ShouldHandleCompletionReward()
+    {
+        // Arrange
+        var focusNode = new Node("focus") { AllArray = [] };
+        var editorModel = new FocusNode("path", FocusType.Normal)
+        {
+            Id = "test_focus",
+            CompletionReward = "add_political_power = 100"
+        };
+
+        // Act
+        NodeHelper.SyncNodeContent(focusNode, editorModel);
+
+        // Assert
+        var rewardNode = focusNode.Nodes.FirstOrDefault(n => n.Key == "completion_reward");
+        Assert.That(rewardNode, Is.Not.Null);
+        Assert.That(rewardNode.Leaves.Any(l => l.Key == "add_political_power" && l.ValueText == "100"), Is.True);
+    }
 }
