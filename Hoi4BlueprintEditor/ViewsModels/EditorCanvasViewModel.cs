@@ -12,7 +12,6 @@ using MethodTimer;
 using NLog;
 using ObservableCollections;
 using ParadoxPower.CSharpExtensions;
-using ParadoxPower.Parser;
 using ParadoxPower.Process;
 using ZLinq;
 
@@ -191,7 +190,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             if (editorNodesMap.TryGetValue(id, out var editorModel))
             {
                 // 更新 AST 节点
-                SyncNodeContent(node, editorModel);
+                NodeHelper.SyncNodeContent(node, editorModel);
                 editorNodesMap.Remove(id);
             }
             else
@@ -202,10 +201,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
 
         if (focusTreeNode is not null)
         {
-            SyncNode(focusTreeNode, removedFocus, editorNodesMap, FocusType.Normal);
+            NodeHelper.SyncNodeChildren(focusTreeNode, removedFocus, editorNodesMap, FocusType.Normal);
         }
         // 同步 shared_focus
-        SyncNode(rootNode, removedFocus, editorNodesMap, FocusType.Shared);
+        NodeHelper.SyncNodeChildren(rootNode, removedFocus, editorNodesMap, FocusType.Shared);
 
         var fileOrigin = _pathService.GetFileOrigin(filePath);
         if (fileOrigin == FileOrigin.Mod)
@@ -221,147 +220,6 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         else
         {
             Log.Error("保存文件中遇到无法识别的文件来源: {FilePath}", filePath);
-        }
-    }
-
-    private static void SyncNode(
-        Node focusTreeNode,
-        List<Node> removedFocus,
-        Dictionary<string, FocusNode> editorNodesMap,
-        FocusType syncFocusType
-    )
-    {
-        var children = focusTreeNode.AllArray.ToList();
-        // 删除编辑器中不存在的节点
-        foreach (var node in removedFocus)
-        {
-            for (int i = 0; i < children.Count; i++)
-            {
-                var child = children[i];
-                if (child.TryGetNode(out var existingNode) && existingNode.Position == node.Position)
-                {
-                    children.RemoveAt(i);
-                    break;
-                }
-            }
-        }
-
-        // 添加新增的节点
-        foreach (
-            var editorModel in editorNodesMap
-                .Values.AsValueEnumerable()
-                .Where(focus => focus.Type == syncFocusType)
-        )
-        {
-            var focusNode = FocusNodeHelper.CreateAstNodeFromEditorModel(editorModel);
-            children.Add(focusNode);
-            editorNodesMap.Remove(editorModel.Id);
-        }
-        focusTreeNode.AllArray = children.ToArray();
-    }
-
-    private static void SyncNodeContent(Node focusNode, FocusNode editorModel)
-    {
-        SyncLeafContent(focusNode, editorModel);
-
-        var children = GetFilteredChildren(focusNode);
-
-        AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
-
-        AddPrerequisiteToChildrenIfExist(children, editorModel);
-
-        if (editorModel.RelativePosition is not null)
-        {
-            children.Add(
-                ChildHelper.LeafString(Keywords.RelativePositionId, editorModel.RelativePosition.Id)
-            );
-        }
-
-        focusNode.AllArray = children.ToArray();
-    }
-
-    private static void SyncLeafContent(Node focusNode, FocusNode editorModel)
-    {
-        // TODO: 不遍历直接写入到 Children 中性能是不是会更好?
-        foreach (var leaf in focusNode.Leaves)
-        {
-            if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
-            {
-                leaf.Value = Types.Value.NewFloat(editorModel.Cost);
-            }
-            else if (leaf.Key.EqualsIgnoreCase("x"))
-            {
-                leaf.Value = Types.Value.NewInt(editorModel.RawPosition.X);
-            }
-            else if (leaf.Key.EqualsIgnoreCase("y"))
-            {
-                leaf.Value = Types.Value.NewInt(editorModel.RawPosition.Y);
-            }
-            else if (leaf.Key.EqualsIgnoreCase(Keywords.Icon))
-            {
-                leaf.Value = Types.Value.NewString(editorModel.Icon);
-            }
-        }
-    }
-
-    private static List<Child> GetFilteredChildren(Node focusNode)
-    {
-        return focusNode
-            .AllArray.AsValueEnumerable()
-            .Where(static child =>
-            {
-                // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId
-                // 这些内容完全按照编辑器模型保存
-                if (
-                    child.TryGetNode(out var node)
-                    && (
-                        node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive)
-                        || node.Key.EqualsIgnoreCase(Keywords.Prerequisite)
-                    )
-                )
-                {
-                    return false;
-                }
-
-                if (child.TryGetLeaf(out var leaf) && leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
-                {
-                    return false;
-                }
-
-                return true;
-            })
-            .ToList();
-    }
-
-    private static void AddMutuallyExclusiveToChildrenIfExist(List<Child> children, FocusNode editorModel)
-    {
-        if (editorModel.MutuallyExclusive.Count == 0)
-        {
-            return;
-        }
-
-        var mutuallyExclusive = editorModel
-            .MutuallyExclusive.AsValueEnumerable()
-            .Select(static focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
-            .ToArray();
-        var mutuallyExclusiveChild = ChildHelper.Node(Keywords.MutuallyExclusive, mutuallyExclusive);
-        children.Add(mutuallyExclusiveChild);
-    }
-
-    private static void AddPrerequisiteToChildrenIfExist(List<Child> children, FocusNode editorModel)
-    {
-        if (editorModel.Prerequisite.Count == 0)
-        {
-            return;
-        }
-
-        foreach (var prerequisite in editorModel.Prerequisite)
-        {
-            var prerequisiteChildren = prerequisite
-                .AsValueEnumerable()
-                .Select(static focus => ChildHelper.LeafString(Keywords.Focus, focus.Id))
-                .ToArray();
-            children.Add(ChildHelper.Node(Keywords.Prerequisite, prerequisiteChildren));
         }
     }
 
