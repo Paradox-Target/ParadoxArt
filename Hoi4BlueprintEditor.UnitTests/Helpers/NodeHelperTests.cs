@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Models.Focus;
-using NUnit.Framework;
 using ParadoxPower.CSharpExtensions;
-using ParadoxPower.Parser;
 using ParadoxPower.Process;
 
 namespace Hoi4BlueprintEditor.UnitTests.Helpers;
