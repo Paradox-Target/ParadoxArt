@@ -1,12 +1,16 @@
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Xml;
 using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Models.Focus;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.ViewsModels;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
@@ -28,6 +32,8 @@ public sealed partial class FocusInfoView : UserControl
         set => SetValue(IsOpenProperty, value);
     }
 
+    private FocusInfoViewModel _viewModel;
+
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
     private static readonly FileResourceService FileResourceService =
@@ -41,13 +47,30 @@ public sealed partial class FocusInfoView : UserControl
         InitializeComponent();
 
         // 设置 DataContext 防止运行时提示绑定错误
-        DataContext = new FocusInfoViewModel(new FocusNode(string.Empty, FocusType.Unknown));
+        _viewModel = new FocusInfoViewModel(new FocusNode(string.Empty, FocusType.Unknown));
+        DataContext = _viewModel;
         DataContextChanged += FocusInfoView_DataContextChanged;
         // 点击信息面板时阻止事件冒泡, 导致点击FocusInfoView时关闭面板
         MouseLeftButtonDown += static (_, args) =>
         {
             args.Handled = true;
         };
+        SetSyntaxHighlighting();
+    }
+
+    private void SetSyntaxHighlighting()
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        const string resourceName = "Hoi4BlueprintEditor.Assets.Hoi4Syntax.xshd";
+        using var file = assembly.GetManifestResourceStream(resourceName);
+        if (file is not null)
+        {
+            using var reader = new XmlTextReader(file);
+            CompletionRewardEditor.SyntaxHighlighting = HighlightingLoader.Load(
+                reader,
+                HighlightingManager.Instance
+            );
+        }
     }
 
     private void FocusInfoView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -57,20 +80,28 @@ public sealed partial class FocusInfoView : UserControl
             return;
         }
 
+        _viewModel = viewModel;
         if (e.OldValue is FocusInfoViewModel oldViewModel)
         {
             oldViewModel.FocusNode.PropertyChanged -= FocusNodeOnPropertyChanged;
+            CompletionRewardEditor.Document.TextChanged -= OnDocumentTextChanged;
             oldViewModel.Dispose();
         }
 
         viewModel.FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
 
-        if (string.IsNullOrEmpty(viewModel.FocusNode.Icon))
+        if (!string.IsNullOrEmpty(viewModel.FocusNode.Icon))
         {
-            return;
+            SetImage(ImageService.GetFocusIconByName(viewModel.FocusNode.Icon));
         }
 
-        SetImage(ImageService.GetFocusIconByName(viewModel.FocusNode.Icon));
+        CompletionRewardEditor.Document.Text = viewModel.FocusNode.CompletionReward;
+        CompletionRewardEditor.Document.TextChanged += OnDocumentTextChanged;
+    }
+
+    private void OnDocumentTextChanged(object? o, EventArgs eventArgs)
+    {
+        _viewModel.FocusNode.CompletionReward = CompletionRewardEditor.Document.Text;
     }
 
     private void FocusNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -118,9 +149,7 @@ public sealed partial class FocusInfoView : UserControl
             viewModel.FocusNode.Icon = result.IconId;
 
             Log.Info("添加图标成功: {Name}", result.IconId);
-            NotificationService.Show(
-                result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功"
-            );
+            NotificationService.Show(result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功");
         }
     }
 
