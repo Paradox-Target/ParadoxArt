@@ -67,7 +67,7 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public decimal Cost { get; set; }
 
-    public string? CompletionReward { get; set; }
+    public string CompletionReward { get; set; } = string.Empty;
 
     /// <summary>
     /// 添加互斥节点关系, 双向添加
