@@ -93,14 +93,14 @@ public sealed class FocusNodeParserTests
         Assert.That(focus2.MutuallyExclusive, Is.Not.Null, "互斥节点集合为空");
         Assert.That(focus2.MutuallyExclusive.Count, Is.EqualTo(1), "互斥节点数量不正确");
         Assert.That(focus2.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_3"), "互斥节点ID不正确");
-        Assert.That(focus2.CompletionReward, Is.Null);
+        Assert.That(focus2.CompletionReward, Is.Empty);
 
         // 验证focus3的互斥关系
         var focus3 = nodes["test_focus_3"];
         Assert.That(focus3.MutuallyExclusive, Is.Not.Null, "focus3互斥节点集合为空");
         Assert.That(focus3.MutuallyExclusive.Count, Is.EqualTo(1), "focus3互斥节点数量不正确");
         Assert.That(focus3.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_2"), "focus3互斥节点ID不正确");
-        Assert.That(focus3.CompletionReward, Is.Null);
+        Assert.That(focus3.CompletionReward, Is.Empty);
     }
 
     [Test]
