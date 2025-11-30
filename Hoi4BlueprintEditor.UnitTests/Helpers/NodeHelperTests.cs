@@ -218,4 +218,21 @@ focus_tree = {
         Assert.That(rewardNode, Is.Not.Null);
         Assert.That(rewardNode.Leaves.Any(l => l.Key == "add_political_power" && l.ValueText == "100"), Is.True);
     }
+
+    [Test]
+    public void AddCompletionRewardToChildrenIfExist_ShouldNotAddChildren_WhenParsingFails()
+    {
+        // Arrange
+        var children = new List<Child>();
+        var editorModel = new FocusNode("path", FocusType.Normal)
+        {
+            CompletionReward = "invalid { syntax"
+        };
+
+        // Act
+        NodeHelper.AddCompletionRewardToChildrenIfExist(children, editorModel);
+
+        // Assert - children should remain empty when parsing fails
+        Assert.That(children, Is.Empty);
+    }
 }
