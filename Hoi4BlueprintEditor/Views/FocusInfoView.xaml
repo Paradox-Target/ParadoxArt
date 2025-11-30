@@ -2,6 +2,7 @@
     x:Class="Hoi4BlueprintEditor.Views.FocusInfoView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
@@ -111,7 +112,6 @@
                     <StackPanel Grid.Row="6" Margin="0,4,0,0">
                         <TextBlock FontSize="22" Text="完成效果" />
                         <avalonEdit:TextEditor
-                            xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
                             Name="CompletionRewardEditor"
                             FontFamily="Cascadia Code"
                             FontSize="12pt"
