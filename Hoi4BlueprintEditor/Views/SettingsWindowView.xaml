@@ -125,6 +125,7 @@
                             <ui:HyperlinkButton Content="Enums.NET" NavigateUri="https://github.com/TylerBrinkley/Enums.NET" />
                             <ui:HyperlinkButton Content="Injectio" NavigateUri="https://github.com/loresoft/Injectio" />
                             <ui:HyperlinkButton Content="JetBrains.Annotations" NavigateUri="https://www.jetbrains.com/" />
+                            <ui:HyperlinkButton Content="AvalonEdit" NavigateUri="http://www.avalonedit.net/" />
                         </ui:GridView>
                     </ui:SettingsCard>
                 </ui:SettingsExpander.Items>
