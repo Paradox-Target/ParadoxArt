@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using EnumsNET;
 using Hoi4BlueprintEditor.Models;
@@ -15,6 +16,16 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 {
     [LocalizationRequired]
     public string LocationSystemText => FocusNode.RelativePosition is null ? "绝对位置" : "相对位置";
+    public Visibility RelativePositionInfoVisibility =>
+        FocusNode.RelativePosition is null ? Visibility.Collapsed : Visibility.Visible;
+
+    public string RelativePositionFocusName =>
+        $"{GetRelativePositionFocusLocalizedName()} ({FocusNode.RelativePosition?.Id ?? string.Empty})";
+
+    private string GetRelativePositionFocusLocalizedName() =>
+        FocusNode.RelativePosition is null
+            ? string.Empty
+            : LocalizationFormatService.GetFormatText(FocusNode.RelativePosition.Id);
 
     public decimal Cost
     {
@@ -67,8 +78,8 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     {
         FocusNode = focusNode;
 
-        _idText = LocalizationService.GetValue(FocusNode.Id);
-        _descriptionText = LocalizationService.GetValue($"{FocusNode.Id}_desc");
+        _idText = LocalizationFormatService.GetFormatText(FocusNode.Id);
+        _descriptionText = LocalizationFormatService.GetFormatText($"{FocusNode.Id}_desc");
         _selectedLanguageIndex = _lastSelectedLanguageIndex;
 
         FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
@@ -90,6 +101,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         else if (e.PropertyName == nameof(FocusNode.RelativePosition))
         {
             OnPropertyChanged(nameof(LocationSystemText));
+            OnPropertyChanged(nameof(RelativePositionInfoVisibility));
         }
     }
 
@@ -116,6 +128,8 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     private const string DefineName = "NDefines.NFocus.FOCUS_POINT_DAYS";
     private static readonly LocalizationService LocalizationService =
         App.Current.Services.GetRequiredService<LocalizationService>();
+    private static readonly LocalizationFormatService LocalizationFormatService =
+        App.Current.Services.GetRequiredService<LocalizationFormatService>();
 
     partial void OnIdTextChanged(string value)
     {

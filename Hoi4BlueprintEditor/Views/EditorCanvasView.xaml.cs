@@ -52,8 +52,8 @@ public sealed partial class EditorCanvasView : UserControl
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-    private static readonly LocalizationService LocalizationService =
-        App.Current.Services.GetRequiredService<LocalizationService>();
+    private static readonly LocalizationFormatService LocalizationFormatService =
+        App.Current.Services.GetRequiredService<LocalizationFormatService>();
 
     public EditorCanvasView()
     {
@@ -131,9 +131,9 @@ public sealed partial class EditorCanvasView : UserControl
 
         if (focus.RelativePositionChildren.Count > 0)
         {
-            var impactedFocusIds = focus
+            string impactedFocusIds = focus
                 .RelativePositionChildren.AsValueEnumerable()
-                .Select(static f => LocalizationService.GetValue(f.Id))
+                .Select(static f => LocalizationFormatService.GetFormatText(f.Id))
                 .JoinToString('\n');
             var result = MessageBox.Show(
                 $"有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?\n\n受影响节点:\n\n{impactedFocusIds}",
