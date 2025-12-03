@@ -63,6 +63,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
@@ -97,6 +98,18 @@
                     <StackPanel
                         Grid.Row="3"
                         Margin="0,8,0,0"
+                        Orientation="Horizontal"
+                        Visibility="{Binding RelativePositionInfoVisibility}">
+                        <TextBlock VerticalAlignment="Bottom" Text="位置相对于: " />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            VerticalAlignment="Top"
+                            Text="{Binding RelativePositionFocusName, Mode=OneWay}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="4"
+                        Margin="0,8,0,0"
                         Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center" Text="X: " />
                         <ui:NumberBox Value="{Binding X, Mode=TwoWay}" />
@@ -108,12 +121,12 @@
                     </StackPanel>
 
                     <TextBlock
-                        Grid.Row="4"
+                        Grid.Row="5"
                         Margin="0,8,0,0"
                         Text="Cost" />
 
                     <StackPanel
-                        Grid.Row="5"
+                        Grid.Row="6"
                         Margin="0,4,0,0"
                         Orientation="Horizontal">
                         <ui:NumberBox
@@ -127,7 +140,7 @@
                             Text="{Binding FocusDaysTip}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Row="6" Margin="0,8,0,0">
+                    <StackPanel Grid.Row="7" Margin="0,8,0,0">
                         <TextBlock FontSize="22" Text="完成效果" />
                         <!--  将包裹编辑器的边框改为仅底部一条灰色边线，像原生输入框一样  -->
                         <Border
@@ -147,7 +160,7 @@
                     </StackPanel>
 
                     <StackPanel
-                        Grid.Row="7"
+                        Grid.Row="8"
                         Margin="0,8,0,0"
                         Orientation="Horizontal">
                         <TextBlock
@@ -160,12 +173,12 @@
                             SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Row="8">
+                    <StackPanel Grid.Row="9">
                         <TextBlock Margin="0,4,0,0" Text="Text" />
                         <TextBox Margin="0,4,0,0" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                     </StackPanel>
 
-                    <StackPanel Grid.Row="9">
+                    <StackPanel Grid.Row="10">
                         <TextBlock Margin="0,4,0,0" Text="描述" />
 
                         <TextBox
