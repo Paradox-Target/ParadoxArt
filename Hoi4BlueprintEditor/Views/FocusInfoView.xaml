@@ -15,23 +15,8 @@
     Visibility="Collapsed"
     mc:Ignorable="d">
 
-    <!-- 详细计划（伪代码）:
-         目标：当右侧垂直滚动条出现时，仅增加右侧内边距，避免滚动条遮挡 InfoBorder 内部元素；默认为统一 10 的内边距。
-
-         步骤:
-         1. 保持现有 ScrollViewer 的属性（VerticalScrollBarVisibility="Auto"、默认 Padding="10"）。
-         2. 在 ScrollViewer 内添加一个 Style：
-            - 默认 Setter 将 Padding 设为 "10"（即四边均为 10）。
-            - 添加 Trigger，监听 ScrollViewer 的 ComputedVerticalScrollBarVisibility 属性。
-            - 当该属性等于 Visible 时，使用 Setter 将 Padding 改为 "10,10,17,10"（左,上,右,下），右侧增加典型滚动条宽度 17。
-         3. 只在滚动条出现时改变右侧间距；其他情况保留默认 Padding。
-         4. 保持对现有内容布局和主题的其余配置不变。
-    -->
-
     <UserControl.Resources>
-        <!-- 调整行号与代码区域/右侧分隔线的距离 -->
         <Style TargetType="{x:Type avalonEdit:LineNumberMargin}">
-            <!-- 右侧间距：越大表示行号与代码之间的空隙越大 -->
             <Setter Property="Margin" Value="0,0,4,0" />
         </Style>
     </UserControl.Resources>
@@ -56,10 +41,9 @@
             <ScrollViewer Padding="10" VerticalScrollBarVisibility="Auto">
                 <ScrollViewer.Style>
                     <Style TargetType="ScrollViewer">
-                        <!-- 默认内边距：四边均为 10 -->
                         <Setter Property="Padding" Value="10" />
                         <Style.Triggers>
-                            <!-- 当垂直滚动条出现时，仅增加右边内边距，避免遮挡内容 -->
+                            <!--  当垂直滚动条出现时，仅增加右边内边距，避免遮挡内容  -->
                             <Trigger Property="ComputedVerticalScrollBarVisibility" Value="Visible">
                                 <Setter Property="Padding" Value="10,10,18,10" />
                             </Trigger>
@@ -145,20 +129,20 @@
 
                     <StackPanel Grid.Row="6" Margin="0,8,0,0">
                         <TextBlock FontSize="22" Text="完成效果" />
-                        <!-- 将包裹编辑器的边框改为仅底部一条灰色边线，像原生输入框一样 -->
+                        <!--  将包裹编辑器的边框改为仅底部一条灰色边线，像原生输入框一样  -->
                         <Border
                             Margin="0,4,0,0"
-                            CornerRadius="4"
+                            Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
                             BorderBrush="Gray"
                             BorderThickness="0,0,0,1"
-                            Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}">
+                            CornerRadius="4">
                             <avalonEdit:TextEditor
                                 Name="CompletionRewardEditor"
+                                Padding="4,0,0,18"
+                                Background="Transparent"
                                 FontFamily="Cascadia Code"
                                 FontSize="12pt"
-                                ShowLineNumbers="True"
-                                Padding="4,0,0,18"
-                                Background="Transparent"/>
+                                ShowLineNumbers="True" />
                         </Border>
                     </StackPanel>
 
