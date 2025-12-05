@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Messages;
 
 namespace Hoi4BlueprintEditor.Models.Focus;
@@ -181,7 +182,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (newPosition != RawPosition)
         {
             RawPosition = newPosition;
-            WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+            RedrawFocusConnectionLinesIfNeed();
         }
     }
 
@@ -196,7 +197,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (newPosition != RawPosition)
         {
             RawPosition = newPosition;
-            WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+            RedrawFocusConnectionLinesIfNeed();
         }
     }
 
@@ -213,6 +214,19 @@ public sealed partial class FocusNode(string path, FocusType type)
         if (newPosition != RawPosition)
         {
             RawPosition = newPosition;
+            RedrawFocusConnectionLinesIfNeed();
+        }
+    }
+
+    private void RedrawFocusConnectionLinesIfNeed()
+    {
+        if (
+            RelativePositionChildren.IsNotEmpty
+            || MutuallyExclusive.IsNotEmpty
+            || Prerequisite.IsNotEmpty
+            || Children.IsNotEmpty
+        )
+        {
             WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
         }
     }
