@@ -102,6 +102,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         {
             OnPropertyChanged(nameof(LocationSystemText));
             OnPropertyChanged(nameof(RelativePositionInfoVisibility));
+            OnPropertyChanged(nameof(RelativePositionFocusName));
         }
     }
 
