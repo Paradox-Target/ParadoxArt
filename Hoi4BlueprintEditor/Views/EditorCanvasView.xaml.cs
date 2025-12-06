@@ -154,7 +154,6 @@ public sealed partial class EditorCanvasView : UserControl
         {
             FocusInfoView.IsOpen = false;
             FocusInfoView.DataContext = null;
-            infoViewModel.Dispose();
         }
 
         _viewModel.DeleteFocusNode(focus);

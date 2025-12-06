@@ -32,7 +32,7 @@ public sealed partial class FocusInfoView : UserControl
         set => SetValue(IsOpenProperty, value);
     }
 
-    private FocusInfoViewModel _viewModel;
+    private FocusInfoViewModel? _viewModel;
 
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
@@ -56,6 +56,7 @@ public sealed partial class FocusInfoView : UserControl
             args.Handled = true;
         };
         SetSyntaxHighlighting();
+        CompletionRewardEditor.Document.TextChanged += OnDocumentTextChanged;
     }
 
     private void SetSyntaxHighlighting()
@@ -75,33 +76,32 @@ public sealed partial class FocusInfoView : UserControl
 
     private void FocusInfoView_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
-        if (e.NewValue is not FocusInfoViewModel viewModel)
+        // 清理原来的 ViewModel 资源
+        if (_viewModel is not null)
+        {
+            _viewModel.Dispose();
+            _viewModel.FocusNode.PropertyChanged -= FocusNodeOnPropertyChanged;
+            _viewModel = null;
+        }
+
+        if (e.NewValue is not FocusInfoViewModel newViewModel)
         {
             return;
         }
 
-        _viewModel = viewModel;
-        if (e.OldValue is FocusInfoViewModel oldViewModel)
+        _viewModel = newViewModel;
+        newViewModel.FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
+        CompletionRewardEditor.Document.Text = newViewModel.FocusNode.CompletionReward;
+
+        if (!string.IsNullOrEmpty(newViewModel.FocusNode.Icon))
         {
-            oldViewModel.FocusNode.PropertyChanged -= FocusNodeOnPropertyChanged;
-            CompletionRewardEditor.Document.TextChanged -= OnDocumentTextChanged;
-            oldViewModel.Dispose();
+            SetImage(ImageService.GetFocusIconByName(newViewModel.FocusNode.Icon));
         }
-
-        viewModel.FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
-
-        if (!string.IsNullOrEmpty(viewModel.FocusNode.Icon))
-        {
-            SetImage(ImageService.GetFocusIconByName(viewModel.FocusNode.Icon));
-        }
-
-        CompletionRewardEditor.Document.Text = viewModel.FocusNode.CompletionReward;
-        CompletionRewardEditor.Document.TextChanged += OnDocumentTextChanged;
     }
 
     private void OnDocumentTextChanged(object? o, EventArgs eventArgs)
     {
-        _viewModel.FocusNode.CompletionReward = CompletionRewardEditor.Document.Text;
+        _viewModel?.FocusNode.CompletionReward = CompletionRewardEditor.Document.Text;
     }
 
     private void FocusNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
