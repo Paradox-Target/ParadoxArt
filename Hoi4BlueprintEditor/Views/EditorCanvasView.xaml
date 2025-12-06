@@ -52,6 +52,11 @@
                             <ui:FontIcon Glyph="&#xE74D;" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Command="{Binding ConvertToAbsolutePositionCommand}" Header="转换为绝对位置">
+                        <MenuItem.Icon>
+                            <ui:FontIcon Glyph="&#xE707;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </controls:GridRulerControl.ContextMenu>
         </controls:GridRulerControl>

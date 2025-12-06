@@ -323,7 +323,7 @@ public sealed partial class EditorCanvasView : UserControl
     {
         var viewModel = new CreateNewFocusViewModel(_viewModel.GetAllFocusFiles())
         {
-            FocusId = _viewModel.GetNextFocusId(),
+            FocusId = _viewModel.GetNextFocusId()
         };
         var dialog = new ContentDialog
         {
@@ -332,7 +332,7 @@ public sealed partial class EditorCanvasView : UserControl
             CloseButtonText = "取消",
             PrimaryButtonText = "创建",
             DefaultButton = ContentDialogButton.Primary,
-            IsPrimaryButtonEnabled = false,
+            IsPrimaryButtonEnabled = false
         };
 
         Action<bool> onPrimaryEnableChanged = enable => dialog.IsPrimaryButtonEnabled = enable;
@@ -357,12 +357,26 @@ public sealed partial class EditorCanvasView : UserControl
         viewModel.PrimaryEnableChanged -= onPrimaryEnableChanged;
     }
 
+    private bool CanConvertToAbsolutePosition => _lastRightClickFocus?.RelativePosition is not null;
+
+    [RelayCommand(CanExecute = nameof(CanConvertToAbsolutePosition))]
+    private void ConvertToAbsolutePosition()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+
+        _lastRightClickFocus.ConvertToAbsolutePosition();
+    }
+
     private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
     {
         CreateNewFocusCommand.NotifyCanExecuteChanged();
         SetPrerequisiteFocusCommand.NotifyCanExecuteChanged();
         SetMutuallyExclusiveFocusCommand.NotifyCanExecuteChanged();
         DeleteFocusNodeCommand.NotifyCanExecuteChanged();
+        ConvertToAbsolutePositionCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>
