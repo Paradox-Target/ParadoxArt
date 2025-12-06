@@ -273,14 +273,45 @@ public sealed class FocusNodeTests
         node.AddMutuallyExclusive(other1);
         node.AddMutuallyExclusive(other2);
 
-        Assert.That(node.MutuallyExclusive, Has.Count.EqualTo(2));
-        Assert.That(other1.MutuallyExclusive, Contains.Item(node));
-        Assert.That(other2.MutuallyExclusive, Contains.Item(node));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.MutuallyExclusive, Is.EquivalentTo([other1, other2]));
+            Assert.That(other1.MutuallyExclusive, Contains.Item(node));
+            Assert.That(other2.MutuallyExclusive, Contains.Item(node));
+        }
 
         node.ClearMutuallyExclusive();
 
-        Assert.That(node.MutuallyExclusive, Is.Empty);
-        Assert.That(other1.MutuallyExclusive, Does.Not.Contain(node));
-        Assert.That(other2.MutuallyExclusive, Does.Not.Contain(node));
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.MutuallyExclusive, Is.Empty);
+            Assert.That(other1.MutuallyExclusive, Does.Not.Contain(node));
+            Assert.That(other2.MutuallyExclusive, Does.Not.Contain(node));
+        }
+    }
+
+    [Test]
+    public void ConvertToAbsolutePosition()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        parent.RawPosition = new FocusPoint(15, 25);
+        var child = new FocusNode("path", default) { Id = "child" };
+        // Relative offset
+        child.RawPosition = new FocusPoint(5, 10);
+        child.RelativePosition = parent;
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(child.X, Is.EqualTo(20));
+            Assert.That(child.Y, Is.EqualTo(35));
+        }
+
+        child.ConvertToAbsolutePosition();
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(child.RelativePosition, Is.Null);
+            Assert.That(child.RawPosition.X, Is.EqualTo(20));
+            Assert.That(child.RawPosition.Y, Is.EqualTo(35));
+        }
     }
 }
