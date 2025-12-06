@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.IO;
 using DirectXTexNet;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Helpers;

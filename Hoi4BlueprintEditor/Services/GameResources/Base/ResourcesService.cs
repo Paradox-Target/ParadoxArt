@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 

@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace Hoi4BlueprintEditor.Helpers;
 
 public static class ImageHelper

@@ -1,4 +1,3 @@
-using System.IO;
 using EnumsNET;
 using Hoi4BlueprintEditor.Core;
 using NLog;

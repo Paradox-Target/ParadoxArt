@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Hoi4BlueprintEditor.Extensions;
+﻿using Hoi4BlueprintEditor.Extensions;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 

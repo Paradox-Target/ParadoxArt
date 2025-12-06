@@ -1,5 +1,4 @@
 ﻿using System.Collections.Frozen;
-using System.IO;
 using Hoi4BlueprintEditor.Extensions;
 using NLog;
 using ParadoxPower.CSharpExtensions;

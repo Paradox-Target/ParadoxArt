@@ -1,7 +1,6 @@
 ﻿using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
-using System.IO;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using MethodTimer;

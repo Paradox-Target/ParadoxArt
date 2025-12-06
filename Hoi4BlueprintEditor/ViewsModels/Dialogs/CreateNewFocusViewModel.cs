@@ -1,5 +1,4 @@
-﻿using System.IO;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Models.Focus;
 using ZLinq;
 
