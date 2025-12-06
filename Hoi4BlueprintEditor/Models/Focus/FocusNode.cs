@@ -152,12 +152,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     {
         foreach (var child in _relativePositionChildren.ToArray())
         {
-            // 将使用相对位置的节点转换为使用绝对位置
-            // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
-#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
-            child._rawPosition = new FocusPoint(child.X, child.Y);
-#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
-            child.RelativePosition = null;
+            child.ConvertToAbsolutePosition();
         }
         _relativePositionChildren.Clear();
     }
@@ -229,6 +224,23 @@ public sealed partial class FocusNode(string path, FocusType type)
         {
             WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
         }
+    }
+
+    /// <summary>
+    /// 相对位置转换为绝对位置, 并清除 <see cref="RelativePosition"/> 设置
+    /// </summary>
+    public void ConvertToAbsolutePosition()
+    {
+        if (RelativePosition is null)
+        {
+            return;
+        }
+
+        // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+        _rawPosition = new FocusPoint(X, Y);
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
+        RelativePosition = null;
     }
 
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)
