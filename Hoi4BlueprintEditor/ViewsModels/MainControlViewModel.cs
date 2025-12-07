@@ -86,4 +86,12 @@ public sealed partial class MainControlViewModel : ObservableObject
         var view = App.Current.Services.GetRequiredService<SettingsWindowView>();
         view.ShowDialog();
     }
+
+    [RelayCommand]
+    private void OpenModInitializePageView()
+    {
+        // TODO: 仅供测试，应该把新建和读取分成两个菜单项
+        var view = App.Current.Services.GetRequiredService<ModInitializeWindowView>();
+        view.ShowDialog();
+    }
 }

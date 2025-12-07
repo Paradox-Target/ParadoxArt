@@ -183,4 +183,10 @@
   <data name="GameSettings.ModRoot" xml:space="preserve">
     <value>Mod Root Directory</value>
   </data>
+  <data name="ModIni.CreateMod" xml:space="preserve">
+    <value>Create Mod</value>
+  </data>
+  <data name="ModIni_OpenMod" xml:space="preserve">
+    <value>打开模组</value>
+  </data>
 </root>

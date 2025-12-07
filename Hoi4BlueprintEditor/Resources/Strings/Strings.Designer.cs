@@ -177,6 +177,24 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create Mod.
+        /// </summary>
+        public static string ModIni_CreateMod {
+            get {
+                return ResourceManager.GetString("ModIni.CreateMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 打开模组.
+        /// </summary>
+        public static string ModIni_OpenMod {
+            get {
+                return ResourceManager.GetString("ModIni_OpenMod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _New(N).
         /// </summary>
         public static string NewMenuItem {

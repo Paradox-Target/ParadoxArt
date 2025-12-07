@@ -1,0 +1,41 @@
+﻿<Window
+    Height="450"
+    Title="ModInitializeWindowView"
+    Visibility="{Binding Visible}"
+    Width="800"
+    WindowStartupLocation="CenterScreen"
+    d:DataContext="{d:DesignInstance vms:ModInitializeWindowViewModel}"
+    mc:Ignorable="d"
+    x:Class="Hoi4BlueprintEditor.Views.ModInitializeWindowView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:language="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
+    xmlns:local="clr-namespace:Hoi4BlueprintEditor.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintEditor.ViewsModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Button
+            Command="{Binding CreateModCommand}"
+            Content="{x:Static language:Strings.ModIni_CreateMod}"
+            Grid.Column="0"
+            HorizontalAlignment="Center" />
+        <Button
+            Command="{Binding OpenModCommand}"
+            Content="{x:Static language:Strings.ModIni_OpenMod}"
+            Grid.Column="1"
+            HorizontalAlignment="Center" />
+        <ListView
+            Grid.Column="2"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center">
+            <ListViewItem Content="文件树" />
+        </ListView>
+    </Grid>
+</Window>
