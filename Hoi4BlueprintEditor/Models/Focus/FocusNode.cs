@@ -249,12 +249,54 @@ public sealed partial class FocusNode(string path, FocusType type)
         RelativePosition = null;
     }
 
-    // TODO: 处理循环引用的问题
-    public void ConvertToRelativePosition(FocusNode relativeNode)
+    /// <summary>
+    /// 检查是否会形成循环引用
+    /// </summary>
+    /// <param name="targetNode">目标相对位置节点</param>
+    /// <returns>如果会形成循环引用则返回 true</returns>
+    private bool WouldCreateCircularReference(FocusNode targetNode)
+    {
+        // 检查目标节点的所有祖先节点，看是否包含当前节点
+        var visited = new HashSet<FocusNode>();
+        var current = targetNode;
+
+        while (current != null)
+        {
+            // 如果在目标节点的祖先链中找到了当前节点，则会形成循环
+            if (current == this)
+            {
+                return true;
+            }
+
+            // 防止无限循环（理论上不应该发生，但作为安全措施）
+            if (!visited.Add(current))
+            {
+                // 检测到已存在的循环，但不涉及当前节点
+                break;
+            }
+
+            current = current.RelativePosition;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 将节点转换为相对定位模式
+    /// </summary>
+    /// <param name="relativeNode">相对位置参考节点</param>
+    /// <returns>如果转换成功返回 true，如果会导致循环引用则返回 false</returns>
+    public bool ConvertToRelativePosition(FocusNode relativeNode)
     {
         if (relativeNode == this)
         {
-            return;
+            return false;
+        }
+
+        // 检查是否会形成循环引用
+        if (WouldCreateCircularReference(relativeNode))
+        {
+            return false;
         }
 
         int offsetX = X - relativeNode.X;
@@ -264,6 +306,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         _rawPosition = new FocusPoint(offsetX, offsetY);
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing
         RelativePosition = relativeNode;
+        return true;
     }
 
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)

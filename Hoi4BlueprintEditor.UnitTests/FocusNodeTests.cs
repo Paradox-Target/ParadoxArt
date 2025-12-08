@@ -314,4 +314,168 @@ public sealed class FocusNodeTests
             Assert.That(child.RawPosition.Y, Is.EqualTo(35));
         }
     }
+
+    [Test]
+    public void ConvertToRelativePosition_PreventsSelfReference()
+    {
+        var node = new FocusNode("path", default) { Id = "node" };
+        node.RawPosition = new FocusPoint(10, 10);
+
+        bool result = node.ConvertToRelativePosition(node);
+
+        Assert.That(result, Is.False);
+        Assert.That(node.RelativePosition, Is.Null);
+    }
+
+    [Test]
+    public void ConvertToRelativePosition_PreventsDirectCircularReference()
+    {
+        var nodeA = new FocusNode("path", default) { Id = "A" };
+        var nodeB = new FocusNode("path", default) { Id = "B" };
+
+        nodeA.RawPosition = new FocusPoint(0, 0);
+        nodeB.RawPosition = new FocusPoint(10, 10);
+
+        // A's position is relative to B
+        bool result1 = nodeA.ConvertToRelativePosition(nodeB);
+        Assert.That(result1, Is.True);
+        Assert.That(nodeA.RelativePosition, Is.EqualTo(nodeB));
+
+        // Try to make B's position relative to A (would create a cycle)
+        bool result2 = nodeB.ConvertToRelativePosition(nodeA);
+        Assert.That(result2, Is.False);
+        Assert.That(nodeB.RelativePosition, Is.Null);
+    }
+
+    [Test]
+    public void ConvertToRelativePosition_PreventsIndirectCircularReference()
+    {
+        var nodeA = new FocusNode("path", default) { Id = "A" };
+        var nodeB = new FocusNode("path", default) { Id = "B" };
+        var nodeC = new FocusNode("path", default) { Id = "C" };
+
+        nodeA.RawPosition = new FocusPoint(0, 0);
+        nodeB.RawPosition = new FocusPoint(10, 10);
+        nodeC.RawPosition = new FocusPoint(20, 20);
+
+        // A -> B -> C chain
+        bool result1 = nodeA.ConvertToRelativePosition(nodeB);
+        Assert.That(result1, Is.True);
+
+        bool result2 = nodeB.ConvertToRelativePosition(nodeC);
+        Assert.That(result2, Is.True);
+
+        // Try to make C relative to A (would create a cycle: A->B->C->A)
+        bool result3 = nodeC.ConvertToRelativePosition(nodeA);
+        Assert.That(result3, Is.False);
+        Assert.That(nodeC.RelativePosition, Is.Null);
+    }
+
+    [Test]
+    public void ConvertToRelativePosition_PreventsFourNodeCircularReference()
+    {
+        var nodeA = new FocusNode("path", default) { Id = "A" };
+        var nodeB = new FocusNode("path", default) { Id = "B" };
+        var nodeC = new FocusNode("path", default) { Id = "C" };
+        var nodeD = new FocusNode("path", default) { Id = "D" };
+
+        nodeA.RawPosition = new FocusPoint(0, 0);
+        nodeB.RawPosition = new FocusPoint(10, 10);
+        nodeC.RawPosition = new FocusPoint(20, 20);
+        nodeD.RawPosition = new FocusPoint(30, 30);
+
+        // Create chain: A -> B -> C -> D
+        Assert.That(nodeA.ConvertToRelativePosition(nodeB), Is.True);
+        Assert.That(nodeB.ConvertToRelativePosition(nodeC), Is.True);
+        Assert.That(nodeC.ConvertToRelativePosition(nodeD), Is.True);
+
+        // Try to make D relative to A (would create cycle)
+        Assert.That(nodeD.ConvertToRelativePosition(nodeA), Is.False);
+        Assert.That(nodeD.RelativePosition, Is.Null);
+
+        // Try to make D relative to B (would create cycle)
+        Assert.That(nodeD.ConvertToRelativePosition(nodeB), Is.False);
+        Assert.That(nodeD.RelativePosition, Is.Null);
+
+        // Try to make D relative to C (already done, but verify it's still there)
+        Assert.That(nodeD.RelativePosition, Is.EqualTo(nodeC));
+    }
+
+    [Test]
+    public void ConvertToRelativePosition_AllowsNonCircularReferences()
+    {
+        var nodeA = new FocusNode("path", default) { Id = "A" };
+        var nodeB = new FocusNode("path", default) { Id = "B" };
+        var nodeC = new FocusNode("path", default) { Id = "C" };
+        var nodeD = new FocusNode("path", default) { Id = "D" };
+
+        nodeA.RawPosition = new FocusPoint(0, 0);
+        nodeB.RawPosition = new FocusPoint(10, 10);
+        nodeC.RawPosition = new FocusPoint(20, 20);
+        nodeD.RawPosition = new FocusPoint(30, 30);
+
+        // Create chain: A -> B
+        Assert.That(nodeA.ConvertToRelativePosition(nodeB), Is.True);
+
+        // C and D can both reference B without creating a cycle
+        Assert.That(nodeC.ConvertToRelativePosition(nodeB), Is.True);
+        Assert.That(nodeD.ConvertToRelativePosition(nodeB), Is.True);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(nodeA.RelativePosition, Is.EqualTo(nodeB));
+            Assert.That(nodeC.RelativePosition, Is.EqualTo(nodeB));
+            Assert.That(nodeD.RelativePosition, Is.EqualTo(nodeB));
+        }
+    }
+
+    [Test]
+    public void ConvertToRelativePosition_CalculatesCorrectOffsets()
+    {
+        var parent = new FocusNode("path", default) { Id = "parent" };
+        var child = new FocusNode("path", default) { Id = "child" };
+
+        parent.RawPosition = new FocusPoint(15, 25);
+        child.RawPosition = new FocusPoint(20, 35);
+
+        bool result = child.ConvertToRelativePosition(parent);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(result, Is.True);
+            Assert.That(child.RelativePosition, Is.EqualTo(parent));
+            Assert.That(child.RawPosition.X, Is.EqualTo(5));  // 20 - 15
+            Assert.That(child.RawPosition.Y, Is.EqualTo(10)); // 35 - 25
+            Assert.That(child.X, Is.EqualTo(20)); // Absolute position preserved
+            Assert.That(child.Y, Is.EqualTo(35)); // Absolute position preserved
+        }
+    }
+
+    [Test]
+    public void ConvertToRelativePosition_CanSwitchRelativeParent()
+    {
+        var nodeA = new FocusNode("path", default) { Id = "A" };
+        var nodeB = new FocusNode("path", default) { Id = "B" };
+        var nodeC = new FocusNode("path", default) { Id = "C" };
+
+        nodeA.RawPosition = new FocusPoint(0, 0);
+        nodeB.RawPosition = new FocusPoint(10, 10);
+        nodeC.RawPosition = new FocusPoint(25, 25);
+
+        // C relative to A
+        Assert.That(nodeC.ConvertToRelativePosition(nodeA), Is.True);
+        Assert.That(nodeC.X, Is.EqualTo(25));
+        Assert.That(nodeC.Y, Is.EqualTo(25));
+
+        // Switch C to be relative to B instead
+        Assert.That(nodeC.ConvertToRelativePosition(nodeB), Is.True);
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(nodeC.RelativePosition, Is.EqualTo(nodeB));
+            Assert.That(nodeC.X, Is.EqualTo(25)); // Position should be preserved
+            Assert.That(nodeC.Y, Is.EqualTo(25)); // Position should be preserved
+            Assert.That(nodeC.RawPosition.X, Is.EqualTo(15)); // 25 - 10
+            Assert.That(nodeC.RawPosition.Y, Is.EqualTo(15)); // 25 - 10
+        }
+    }
 }

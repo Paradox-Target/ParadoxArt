@@ -304,8 +304,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         }
         else if (addType == ConnectionType.RelativePosition)
         {
-            source.ConvertToRelativePosition(target);
-            changed = true;
+            changed = source.ConvertToRelativePosition(target);
         }
 
         if (changed)
