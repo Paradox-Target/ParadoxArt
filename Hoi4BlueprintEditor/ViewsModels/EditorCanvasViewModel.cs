@@ -302,6 +302,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
             source.AddPrerequisite([target]);
             changed = true;
         }
+        else if (addType == ConnectionType.RelativePosition)
+        {
+            source.ConvertToRelativePosition(target);
+            changed = true;
+        }
 
         if (changed)
         {

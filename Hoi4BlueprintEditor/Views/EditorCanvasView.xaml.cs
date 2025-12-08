@@ -29,13 +29,13 @@ public sealed partial class EditorCanvasView : UserControl
     private FocusNode? _lastRightClickFocus;
     private Point _lastRightClickPoint;
 
-    private ConnectionType FocusConnectionType
+    private ConnectionType FocusConnectionMode
     {
         get;
         set
         {
             field = value;
-            ConnectionPreviewOverlay.State = value;
+            ConnectionPreviewOverlay.Mode = value;
         }
     } = ConnectionType.None;
 
@@ -86,9 +86,9 @@ public sealed partial class EditorCanvasView : UserControl
         }
 
         // 连接模式时右键取消连接模式
-        if (FocusConnectionType != ConnectionType.None)
+        if (FocusConnectionMode != ConnectionType.None)
         {
-            FocusConnectionType = ConnectionType.None;
+            FocusConnectionMode = ConnectionType.None;
         }
         else
         {
@@ -104,7 +104,7 @@ public sealed partial class EditorCanvasView : UserControl
             return;
         }
 
-        FocusConnectionType = ConnectionType.MutuallyExclusive;
+        FocusConnectionMode = ConnectionType.MutuallyExclusive;
         ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
@@ -116,7 +116,7 @@ public sealed partial class EditorCanvasView : UserControl
             return;
         }
 
-        FocusConnectionType = ConnectionType.Prerequisite;
+        FocusConnectionMode = ConnectionType.Prerequisite;
         ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
@@ -162,6 +162,18 @@ public sealed partial class EditorCanvasView : UserControl
         Debug.Assert(ConnectionPreviewOverlay.From != focus && ConnectionPreviewOverlay.To != focus);
     }
 
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void SetRelativePosition()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+
+        FocusConnectionMode = ConnectionType.RelativePosition;
+        ConnectionPreviewOverlay.From = _lastRightClickFocus;
+    }
+
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
         _movedFocusNode = null;
@@ -175,8 +187,8 @@ public sealed partial class EditorCanvasView : UserControl
         {
             if (
                 _lastRightClickFocus is not null
+                && FocusConnectionMode != ConnectionType.None
                 && _lastRightClickFocus != viewModel.Model
-                && FocusConnectionType != ConnectionType.None
             )
             {
                 SetFocusConnection(viewModel);
@@ -214,16 +226,16 @@ public sealed partial class EditorCanvasView : UserControl
     {
         Debug.Assert(_lastRightClickFocus is not null);
 
-        _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionType);
+        _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionMode);
 
         _lastRightClickFocus = null;
-        FocusConnectionType = ConnectionType.None;
+        FocusConnectionMode = ConnectionType.None;
         ConnectionPreviewOverlay.ClearPreview();
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        if (FocusConnectionType != ConnectionType.None)
+        if (FocusConnectionMode != ConnectionType.None)
         {
             Cursor = Cursors.Cross;
             var position = e.GetPosition(this);
@@ -258,7 +270,7 @@ public sealed partial class EditorCanvasView : UserControl
         {
             _lastMousePositionOnCanvas = null;
             // 在设置国策间条件时, 鼠标样式会被设置为 Cross, 为了防止被覆盖, 需要在这里检查
-            if (FocusConnectionType == ConnectionType.None)
+            if (FocusConnectionMode == ConnectionType.None)
             {
                 Cursor = Cursors.Arrow;
             }
@@ -266,7 +278,7 @@ public sealed partial class EditorCanvasView : UserControl
 
         // 设置连接线时禁止拖动国策
         if (
-            FocusConnectionType == ConnectionType.None
+            FocusConnectionMode == ConnectionType.None
             && e.LeftButton == MouseButtonState.Pressed
             && _movedFocusNode is not null
         )
@@ -376,6 +388,7 @@ public sealed partial class EditorCanvasView : UserControl
         SetMutuallyExclusiveFocusCommand.NotifyCanExecuteChanged();
         DeleteFocusNodeCommand.NotifyCanExecuteChanged();
         ConvertToAbsolutePositionCommand.NotifyCanExecuteChanged();
+        SetRelativePositionCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>

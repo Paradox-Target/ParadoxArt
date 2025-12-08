@@ -57,6 +57,11 @@
                             <ui:FontIcon Glyph="&#xE707;" />
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Command="{Binding SetRelativePositionCommand}" Header="设置相对位置">
+                        <MenuItem.Icon>
+                            <ui:FontIcon Glyph="&#xEB9D;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </controls:GridRulerControl.ContextMenu>
         </controls:GridRulerControl>
