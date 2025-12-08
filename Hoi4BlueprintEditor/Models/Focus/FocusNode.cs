@@ -6,6 +6,12 @@ using Hoi4BlueprintEditor.Messages;
 
 namespace Hoi4BlueprintEditor.Models.Focus;
 
+/// <summary>
+/// 国策节点
+/// </summary>
+/// <remarks>不能充当键值, 因为 <see cref="GetHashCode"/> 值会变</remarks>
+/// <param name="path">来源文件绝对路径</param>
+/// <param name="type">国策类型</param>
 public sealed partial class FocusNode(string path, FocusType type)
     : ObservableObject,
         IEquatable<FocusNode>,
@@ -241,6 +247,23 @@ public sealed partial class FocusNode(string path, FocusType type)
         _rawPosition = new FocusPoint(X, Y);
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
         RelativePosition = null;
+    }
+
+    // TODO: 处理循环引用的问题
+    public void ConvertToRelativePosition(FocusNode relativeNode)
+    {
+        if (relativeNode == this)
+        {
+            return;
+        }
+
+        int offsetX = X - relativeNode.X;
+        int offsetY = Y - relativeNode.Y;
+        // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing
+        _rawPosition = new FocusPoint(offsetX, offsetY);
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing
+        RelativePosition = relativeNode;
     }
 
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)

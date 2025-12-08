@@ -4,5 +4,6 @@ public enum ConnectionType : byte
 {
     None,
     MutuallyExclusive,
-    Prerequisite
+    Prerequisite,
+    RelativePosition
 }
