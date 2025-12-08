@@ -9,7 +9,7 @@ namespace Hoi4BlueprintEditor.Models.Focus;
 /// <summary>
 /// 国策节点
 /// </summary>
-/// <remarks>不能充当键值, 因为 <see cref="GetHashCode"/> 值会变</remarks>
+/// <remarks>充当键值时, 必须确保值不会改变, 因为 <see cref="GetHashCode"/> 不是固定的</remarks>
 /// <param name="path">来源文件绝对路径</param>
 /// <param name="type">国策类型</param>
 public sealed partial class FocusNode(string path, FocusType type)
@@ -250,17 +250,45 @@ public sealed partial class FocusNode(string path, FocusType type)
     }
 
     /// <summary>
+    /// 将节点转换为相对定位模式
+    /// </summary>
+    /// <param name="relativeTo">相对位置参考节点</param>
+    /// <returns>如果转换成功返回 <c>true</c>，如果会导致循环引用则返回 <c>false</c></returns>
+    public bool ConvertToRelativePosition(FocusNode relativeTo)
+    {
+        if (relativeTo == this)
+        {
+            return false;
+        }
+
+        // 检查是否会形成循环引用
+        if (WouldCreateCircularReference(relativeTo))
+        {
+            return false;
+        }
+
+        int offsetX = X - relativeTo.X;
+        int offsetY = Y - relativeTo.Y;
+        // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing
+        _rawPosition = new FocusPoint(offsetX, offsetY);
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing
+        RelativePosition = relativeTo;
+        return true;
+    }
+
+    /// <summary>
     /// 检查是否会形成循环引用
     /// </summary>
     /// <param name="targetNode">目标相对位置节点</param>
-    /// <returns>如果会形成循环引用则返回 true</returns>
+    /// <returns>如果会形成循环引用则返回 <c>true</c></returns>
     private bool WouldCreateCircularReference(FocusNode targetNode)
     {
         // 检查目标节点的所有祖先节点，看是否包含当前节点
         var visited = new HashSet<FocusNode>();
         var current = targetNode;
 
-        while (current != null)
+        while (current is not null)
         {
             // 如果在目标节点的祖先链中找到了当前节点，则会形成循环
             if (current == this)
@@ -279,34 +307,6 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
 
         return false;
-    }
-
-    /// <summary>
-    /// 将节点转换为相对定位模式
-    /// </summary>
-    /// <param name="relativeNode">相对位置参考节点</param>
-    /// <returns>如果转换成功返回 true，如果会导致循环引用则返回 false</returns>
-    public bool ConvertToRelativePosition(FocusNode relativeNode)
-    {
-        if (relativeNode == this)
-        {
-            return false;
-        }
-
-        // 检查是否会形成循环引用
-        if (WouldCreateCircularReference(relativeNode))
-        {
-            return false;
-        }
-
-        int offsetX = X - relativeNode.X;
-        int offsetY = Y - relativeNode.Y;
-        // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
-#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing
-        _rawPosition = new FocusPoint(offsetX, offsetY);
-#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing
-        RelativePosition = relativeNode;
-        return true;
     }
 
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)

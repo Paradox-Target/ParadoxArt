@@ -358,14 +358,14 @@ public sealed class FocusNodeTests
         nodeB.RawPosition = new FocusPoint(10, 10);
         nodeC.RawPosition = new FocusPoint(20, 20);
 
-        // A -> B -> C chain
+        // A -> B -> C
         bool result1 = nodeA.ConvertToRelativePosition(nodeB);
         Assert.That(result1, Is.True);
 
         bool result2 = nodeB.ConvertToRelativePosition(nodeC);
         Assert.That(result2, Is.True);
 
-        // Try to make C relative to A (would create a cycle: A->B->C->A)
+        // 试着让C相对于A（会形成一个循环：A->B->C->A）
         bool result3 = nodeC.ConvertToRelativePosition(nodeA);
         Assert.That(result3, Is.False);
         Assert.That(nodeC.RelativePosition, Is.Null);
@@ -384,21 +384,22 @@ public sealed class FocusNodeTests
         nodeC.RawPosition = new FocusPoint(20, 20);
         nodeD.RawPosition = new FocusPoint(30, 30);
 
-        // Create chain: A -> B -> C -> D
+        // 建立相对位置链：A -> B -> C -> D
         Assert.That(nodeA.ConvertToRelativePosition(nodeB), Is.True);
         Assert.That(nodeB.ConvertToRelativePosition(nodeC), Is.True);
         Assert.That(nodeC.ConvertToRelativePosition(nodeD), Is.True);
 
-        // Try to make D relative to A (would create cycle)
+        // 试着让 D 相对于 A（会形成循环）
         Assert.That(nodeD.ConvertToRelativePosition(nodeA), Is.False);
         Assert.That(nodeD.RelativePosition, Is.Null);
 
-        // Try to make D relative to B (would create cycle)
+        // 试着让 D 相对于 B（会形成循环）
         Assert.That(nodeD.ConvertToRelativePosition(nodeB), Is.False);
         Assert.That(nodeD.RelativePosition, Is.Null);
 
-        // Try to make D relative to C (already done, but verify it's still there)
-        Assert.That(nodeD.RelativePosition, Is.EqualTo(nodeC));
+        // 试着让 D 相对于 C（会形成循环）
+        Assert.That(nodeD.ConvertToRelativePosition(nodeC), Is.False);
+        Assert.That(nodeD.RelativePosition, Is.Null);
     }
 
     [Test]
@@ -444,7 +445,7 @@ public sealed class FocusNodeTests
         {
             Assert.That(result, Is.True);
             Assert.That(child.RelativePosition, Is.EqualTo(parent));
-            Assert.That(child.RawPosition.X, Is.EqualTo(5));  // 20 - 15
+            Assert.That(child.RawPosition.X, Is.EqualTo(5)); // 20 - 15
             Assert.That(child.RawPosition.Y, Is.EqualTo(10)); // 35 - 25
             Assert.That(child.X, Is.EqualTo(20)); // Absolute position preserved
             Assert.That(child.Y, Is.EqualTo(35)); // Absolute position preserved
