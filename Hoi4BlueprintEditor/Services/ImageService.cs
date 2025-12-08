@@ -1,24 +1,53 @@
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.Messaging;
+using Hoi4BlueprintEditor.Core;
+using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services.GameResources;
 using Pfim;
 
 namespace Hoi4BlueprintEditor.Services;
 
 [RegisterSingleton<ImageService>]
-public sealed class ImageService(SpriteService spriteService)
+public sealed class ImageService : IDisposable
 {
     // TODO: 文件变更监控，变更时释放缓存
-    private readonly Dictionary<string, ImageMeta> _handles = [];
+    private readonly Dictionary<string, DdsMeta> _ddsHandles = [];
+    private readonly SpriteService _spriteService;
+    private readonly FileSystemSafeWatcher _fileSystemWatcher;
+
+    public ImageService(SpriteService spriteService, SettingsService settingsService)
+    {
+        _spriteService = spriteService;
+        _fileSystemWatcher = new FileSystemSafeWatcher(
+            Path.Combine(settingsService.ModRootFolderPath, "gfx"),
+            "*.dds"
+        );
+        _fileSystemWatcher.Deleted += OnDeleted;
+        _fileSystemWatcher.EnableRaisingEvents = true;
+        _fileSystemWatcher.IncludeSubdirectories = true;
+    }
+
+    private void OnDeleted(object _, FileSystemEventArgs e)
+    {
+        if (!_ddsHandles.TryGetValue(e.FullPath, out var meta))
+        {
+            return;
+        }
+
+        meta.Handle.Free();
+        _ddsHandles.Remove(e.FullPath);
+        StrongReferenceMessenger.Default.Send(new DeleteImageResourceMessage(meta.SpriteName));
+    }
 
     private const string Unknown = "GFX_goal_unknown";
 
     public BitmapSource? GetFocusIconByName(string spriteName)
     {
-        if (!spriteService.TryGetSpriteFilePath(spriteName, out string? filePath))
+        if (!_spriteService.TryGetSpriteFilePath(spriteName, out string? filePath))
         {
-            _ = spriteService.TryGetSpriteFilePath(Unknown, out filePath);
+            _ = _spriteService.TryGetSpriteFilePath(Unknown, out filePath);
         }
 
         if (filePath is null)
@@ -26,16 +55,17 @@ public sealed class ImageService(SpriteService spriteService)
             return null;
         }
 
-        return GetImageSource(filePath);
+        return GetImageSource(spriteName, filePath);
     }
 
     /// <summary>
     /// 从指定路径加载图像并返回对应的 BitmapSource.
     /// </summary>
     /// <remarks>仅支持 Png 和 Dds 格式</remarks>
+    /// <param name="spriteId">图像ID</param>
     /// <param name="filePath">图像文件路径</param>
     /// <returns>如果是不支持的图像格式, 返回 <c>null</c></returns>
-    public BitmapSource? GetImageSource(string filePath)
+    public BitmapSource? GetImageSource(string spriteId, string filePath)
     {
         var extension = Path.GetExtension(filePath.AsSpan());
         BitmapSource? bitmapSource = null;
@@ -51,20 +81,21 @@ public sealed class ImageService(SpriteService spriteService)
 
         if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))
         {
-            bitmapSource = GetImageSourceFromDds(filePath);
+            bitmapSource = GetImageSourceFromDds(spriteId, filePath);
         }
 
         bitmapSource?.Freeze();
         return bitmapSource;
     }
 
-    private BitmapSource GetImageSourceFromDds(string filePath)
+    private BitmapSource GetImageSourceFromDds(string spriteName, string filePath)
     {
-        if (!_handles.TryGetValue(filePath, out var meta))
+        if (!_ddsHandles.TryGetValue(filePath, out var meta))
         {
             using var image = Pfimage.FromFile(filePath);
             var pinnedArray = GCHandle.Alloc(image.Data, GCHandleType.Pinned);
-            meta = new ImageMeta(
+            meta = new DdsMeta(
+                spriteName,
                 pinnedArray,
                 image.Width,
                 image.Height,
@@ -72,7 +103,7 @@ public sealed class ImageService(SpriteService spriteService)
                 image.DataLen,
                 image.Stride
             );
-            _handles.Add(filePath, meta);
+            _ddsHandles.Add(filePath, meta);
         }
 
         IntPtr addr = meta.Handle.AddrOfPinnedObject();
@@ -104,7 +135,8 @@ public sealed class ImageService(SpriteService spriteService)
         };
     }
 
-    private sealed record ImageMeta(
+    private sealed record DdsMeta(
+        string SpriteName,
         GCHandle Handle,
         int Width,
         int Height,
@@ -112,4 +144,9 @@ public sealed class ImageService(SpriteService spriteService)
         int DataLength,
         int Stride
     );
+
+    public void Dispose()
+    {
+        _fileSystemWatcher.Dispose();
+    }
 }

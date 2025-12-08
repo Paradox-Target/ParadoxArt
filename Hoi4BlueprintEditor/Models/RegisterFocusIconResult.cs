@@ -1,11 +1,11 @@
 ﻿namespace Hoi4BlueprintEditor.Models;
 
-public sealed class RegisterFocusIconResult(string iconId, string destFilePath, bool isConvertToDds)
+public sealed class RegisterFocusIconResult(string spriteName, string destFilePath, bool isConvertToDds)
 {
     /// <summary>
     /// 国策图标的ID
     /// </summary>
-    public string IconId { get; } = iconId;
+    public string SpriteName { get; } = spriteName;
     /// <summary>
     /// 导入的图标文件的最终路径
     /// </summary>

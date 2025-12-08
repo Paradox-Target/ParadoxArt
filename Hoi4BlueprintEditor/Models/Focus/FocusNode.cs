@@ -232,6 +232,11 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
     }
 
+    public void RefreshIcon()
+    {
+        OnPropertyChanged(nameof(Icon));
+    }
+
     /// <summary>
     /// 相对位置转换为绝对位置, 并清除 <see cref="RelativePosition"/> 设置
     /// </summary>
