@@ -23,7 +23,7 @@ public sealed class FocusMapControl : ItemsControl
 
     private static Pen InitializePrerequisiteLinePen()
     {
-        var prerequisiteLinePen = new Pen(Colors.OrangeRed.ToBrush(), LinePenWidth);
+        var prerequisiteLinePen = new Pen(Colors.PaleGoldenrod.ToBrush(), LinePenWidth);
         prerequisiteLinePen.Freeze();
         return prerequisiteLinePen;
     }
