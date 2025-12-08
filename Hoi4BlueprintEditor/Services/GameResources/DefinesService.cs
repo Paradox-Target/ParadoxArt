@@ -11,7 +11,7 @@ namespace Hoi4BlueprintEditor.Services.GameResources;
 [RegisterSingleton<DefinesService>]
 public sealed class DefinesService : ResourcesService<DefinesService, byte, byte>, IDisposable
 {
-    private static readonly Lua GlobalLua = new() { State = { Encoding = Encoding.UTF8 } };
+    private readonly Lua _globalLua = new() { State = { Encoding = Encoding.UTF8 } };
 
     public DefinesService(IServiceProvider serviceProvider)
         : base(Path.Combine(Keywords.Common, "defines"), WatcherFilter.Lua, serviceProvider, PathType.Folder)
@@ -51,7 +51,7 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
 
     public long GetLong(string defineName)
     {
-        return GlobalLua.GetLong(defineName);
+        return _globalLua.GetLong(defineName);
     }
 
     protected override byte ParseFileToContent(byte result)
@@ -61,13 +61,13 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
 
     protected override byte GetParseResult(string filePath)
     {
-        GlobalLua.DoFile(filePath);
+        _globalLua.DoFile(filePath);
 
         return 0;
     }
 
     public void Dispose()
     {
-        GlobalLua.Dispose();
+        _globalLua.Dispose();
     }
 }

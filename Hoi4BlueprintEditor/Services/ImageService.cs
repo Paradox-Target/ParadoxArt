@@ -100,7 +100,7 @@ public sealed class ImageService(SpriteService spriteService)
             ImageFormat.Rgb8 => PixelFormats.Gray8,
             ImageFormat.R5g5b5a1 or ImageFormat.R5g5b5 => PixelFormats.Bgr555,
             ImageFormat.R5g6b5 => PixelFormats.Bgr565,
-            _ => throw new Exception($"Unable to convert {image.Format} to WPF PixelFormat")
+            _ => throw new NotSupportedException($"Unable to convert {image.Format} to WPF PixelFormat")
         };
     }
 

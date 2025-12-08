@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Messages;
+using ZLinq;
 
 namespace Hoi4BlueprintEditor.Models.Focus;
 
@@ -95,12 +96,11 @@ public sealed partial class FocusNode(string path, FocusType type)
     public void AddPrerequisite(List<FocusNode> prerequisiteNodes)
     {
         _prerequisite.Add(prerequisiteNodes);
-        foreach (var node in prerequisiteNodes)
+        foreach (
+            var node in prerequisiteNodes.AsValueEnumerable().Where(node => !node._children.Contains(this))
+        )
         {
-            if (!node._children.Contains(this))
-            {
-                node._children.Add(this);
-            }
+            node._children.Add(this);
         }
     }
 

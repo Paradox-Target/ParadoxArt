@@ -9,14 +9,13 @@ public sealed class NavigationService
 
     public object? CurrentView
     {
-        get => _currentView;
+        get;
         private set
         {
-            _currentView = value;
+            field = value;
             ViewChanged?.Invoke();
         }
     }
-    private object? _currentView;
 
     public void NavigateTo<TView>()
     {

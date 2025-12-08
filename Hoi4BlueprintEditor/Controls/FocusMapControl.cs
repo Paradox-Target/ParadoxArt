@@ -17,21 +17,32 @@ public sealed class FocusMapControl : ItemsControl
     private static double CellHeight => FocusMapConstants.CellHeight;
 
     private const double LinePenWidth = 3.0;
-    public static readonly Pen PrerequisiteLinePen;
-    private static readonly Pen ExclusiveLinePen;
-    private static readonly Pen PrerequisiteDashPen;
+    public static readonly Pen PrerequisiteLinePen = InitializePrerequisiteLinePen();
+    private static readonly Pen ExclusiveLinePen = InitializeExclusiveLinePen();
+    private static readonly Pen PrerequisiteDashPen = InitializePrerequisiteDashPen();
 
-    static FocusMapControl()
+    private static Pen InitializePrerequisiteLinePen()
     {
-        PrerequisiteDashPen = new Pen(Colors.LightGray.ToBrush(), LinePenWidth)
+        var prerequisiteLinePen = new Pen(Colors.OrangeRed.ToBrush(), LinePenWidth);
+        prerequisiteLinePen.Freeze();
+        return prerequisiteLinePen;
+    }
+
+    private static Pen InitializeExclusiveLinePen()
+    {
+        var exclusiveLinePen = new Pen(Colors.OrangeRed.ToBrush(), LinePenWidth);
+        exclusiveLinePen.Freeze();
+        return exclusiveLinePen;
+    }
+
+    private static Pen InitializePrerequisiteDashPen()
+    {
+        var prerequisiteDashPen = new Pen(Colors.LightGray.ToBrush(), LinePenWidth)
         {
-            DashStyle = new DashStyle { Offset = 0, Dashes = [1, 2] },
+            DashStyle = new DashStyle { Offset = 0, Dashes = [1, 2] }
         };
-        PrerequisiteDashPen.Freeze();
-        ExclusiveLinePen = new Pen(Colors.OrangeRed.ToBrush(), LinePenWidth);
-        ExclusiveLinePen.Freeze();
-        PrerequisiteLinePen = new Pen(Colors.PaleGoldenrod.ToBrush(), LinePenWidth);
-        PrerequisiteLinePen.Freeze();
+        prerequisiteDashPen.Freeze();
+        return prerequisiteDashPen;
     }
 
     protected override void OnInitialized(EventArgs e)
