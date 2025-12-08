@@ -304,7 +304,12 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         }
         else if (addType == ConnectionType.RelativePosition)
         {
-            changed = source.ConvertToRelativePosition(target);
+            bool isSuccessful = source.ConvertToRelativePosition(target);
+            if (!isSuccessful)
+            {
+                _notificationService.Show("无法建立相对位置连接, 因为会导致循环引用");
+            }
+            changed = isSuccessful;
         }
 
         if (changed)
