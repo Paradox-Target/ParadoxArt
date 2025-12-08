@@ -351,7 +351,10 @@ public sealed partial class FocusNode(string path, FocusType type)
         return Id == other.Id
             && Type == other.Type
             && Path == other.Path
-            && RawPosition.Equals(other.RawPosition);
+            && X == other.X
+            && Y == other.Y
+            && Cost == other.Cost
+            && Icon == other.Icon;
     }
 
     public override bool Equals(object? obj)
@@ -366,7 +369,10 @@ public sealed partial class FocusNode(string path, FocusType type)
             int hashCode = Id.GetHashCode();
             hashCode = (hashCode * 397) ^ (int)Type;
             hashCode = (hashCode * 397) ^ Path.GetHashCode();
-            hashCode = (hashCode * 397) ^ RawPosition.GetHashCode();
+            hashCode = (hashCode * 397) ^ X;
+            hashCode = (hashCode * 397) ^ Y;
+            hashCode = (hashCode * 397) ^ Cost.GetHashCode();
+            hashCode = (hashCode * 397) ^ Icon.GetHashCode();
             return hashCode;
         }
     }
