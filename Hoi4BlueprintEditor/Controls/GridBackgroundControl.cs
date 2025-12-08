@@ -8,7 +8,14 @@ namespace Hoi4BlueprintEditor.Controls;
 
 public sealed class GridBackgroundControl : Control
 {
-    private static readonly Pen GridPen = new("#444444".ToBrush(), 1.0);
+    private static readonly Pen GridPen = InitializeGridPen();
+
+    private static Pen InitializeGridPen()
+    {
+        var pen = new Pen("#444444".ToBrush(), 1.0);
+        pen.Freeze();
+        return pen;
+    }
 
     #region Dependency Proerties (依赖属性)
 
