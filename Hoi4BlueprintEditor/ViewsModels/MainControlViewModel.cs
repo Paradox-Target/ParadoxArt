@@ -86,4 +86,10 @@ public sealed partial class MainControlViewModel : ObservableObject
         var view = App.Current.Services.GetRequiredService<SettingsWindowView>();
         view.ShowDialog();
     }
+
+    [RelayCommand]
+    private void SaveFocusTreeToPng()
+    {
+        WeakReferenceMessenger.Default.Send(new SaveFocusTreeToPngMessage());
+    }
 }

@@ -9,12 +9,14 @@ using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
 using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using NLog;
 using ZLinq;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
@@ -28,6 +30,7 @@ public sealed partial class EditorCanvasView : UserControl
     private readonly EditorCanvasViewModel _viewModel;
     private FocusNode? _lastRightClickFocus;
     private Point _lastRightClickPoint;
+    private readonly ScreenshotService _screenshotService;
 
     private ConnectionType FocusConnectionMode
     {
@@ -66,10 +69,48 @@ public sealed partial class EditorCanvasView : UserControl
         MouseLeftButtonUp += OnMouseLeftButtonUp;
         MouseRightButtonDown += OnMouseRightButtonDown;
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
+        _screenshotService = App.Current.Services.GetRequiredService<ScreenshotService>();
         DataContext = _viewModel;
 
         // 方便右键菜单在前端绑定 Command
         RightContextMenu.DataContext = this;
+        WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+    }
+
+    private void SaveToPng(object o, SaveFocusTreeToPngMessage saveFocusTreeToPngMessage)
+    {
+        var nodes = _viewModel.Nodes;
+        if (nodes.Count == 0)
+        {
+            MessageBox.Show("没有可显示的国策", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        var dialog = new SaveFileDialog
+        {
+            Title = "导出国策树为图片",
+            DefaultExt = ".png",
+            Filter = "PNG 图片 (*.png)|*.png",
+            FileName = "FocusTree.png"
+        };
+
+        if (dialog.ShowDialog() != true || string.IsNullOrWhiteSpace(dialog.FileName))
+        {
+            return;
+        }
+
+        var notificationService = App.Current.Services.GetRequiredService<NotificationService>();
+        try
+        {
+            _screenshotService.SaveFocusTreeScreenshot(nodes, dialog.FileName);
+            Log.Info("已导出图片: {FileName}", dialog.FileName);
+            notificationService.Show("导出图片成功");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "导出国策树图片失败");
+            MessageBox.Show("导出图片失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
