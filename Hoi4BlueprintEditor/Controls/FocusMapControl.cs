@@ -68,7 +68,12 @@ public sealed class FocusMapControl : ItemsControl
     {
         base.OnRender(dc);
 
-        foreach (FocusNodeViewModel viewModel in Items)
+        DrawNodeConnectionsLines(dc, Items.Cast<FocusNodeViewModel>());
+    }
+
+    public static void DrawNodeConnectionsLines(DrawingContext dc, IEnumerable<FocusNodeViewModel> nodes)
+    {
+        foreach (var viewModel in nodes)
         {
             var node = viewModel.Model;
             if (node.Prerequisite.Count > 0)

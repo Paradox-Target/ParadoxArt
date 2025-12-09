@@ -11,7 +11,7 @@ namespace Hoi4BlueprintEditor.ViewsModels;
 public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 {
     public FocusNode Model { get; }
-    public string LocalizedName => LocalizationService.GetFormatText(Model.Id);
+    public string LocalizedName => LocalizationFormatService.GetFormatText(Model.Id);
 
     [ObservableProperty]
     private BitmapSource? _bitmapSource;
@@ -22,7 +22,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private double _height;
 
-    private static readonly LocalizationFormatService LocalizationService =
+    private static readonly LocalizationFormatService LocalizationFormatService =
         App.Current.Services.GetRequiredService<LocalizationFormatService>();
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
