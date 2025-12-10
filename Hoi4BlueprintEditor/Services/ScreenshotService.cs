@@ -5,7 +5,6 @@ using System.Windows.Media.Imaging;
 using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Controls;
 using Hoi4BlueprintEditor.ViewsModels;
-using ZLinq;
 
 namespace Hoi4BlueprintEditor.Services;
 
@@ -14,13 +13,8 @@ public sealed class ScreenshotService
 {
     public void SaveFocusTreeScreenshot(IReadOnlyCollection<FocusNodeViewModel> nodes, string filePath)
     {
-        // 1. Calculate Bounds
-        double minX = nodes.AsValueEnumerable().Min(static n => n.Model.X);
-        double minY = nodes.AsValueEnumerable().Min(static n => n.Model.Y);
-        double maxX = nodes.AsValueEnumerable().Max(static n => n.Model.X);
-        double maxY = nodes.AsValueEnumerable().Max(static n => n.Model.Y);
-
-        const double padding = 1.0; // 1 cell padding
+        (double minX, double minY, double maxX, double maxY) = CalculateBounds(nodes);
+        const double padding = 1.0;
         double width = (maxX - minX + 1 + 2 * padding) * FocusMapConstants.CellWidth;
         double height = (maxY - minY + 1 + 2 * padding) * FocusMapConstants.CellHeight;
 
@@ -63,6 +57,53 @@ public sealed class ScreenshotService
         encoder.Save(fileStream);
     }
 
+    private (double MinX, double MinY, double MaxX, double MaxY) CalculateBounds(
+        IReadOnlyCollection<FocusNodeViewModel> nodes
+    )
+    {
+        double minX,
+            minY,
+            maxX,
+            maxY;
+        if (nodes.Count == 0)
+        {
+            minX = minY = maxX = maxY = 0;
+        }
+        else
+        {
+            minX = double.PositiveInfinity;
+            minY = double.PositiveInfinity;
+            maxX = double.NegativeInfinity;
+            maxY = double.NegativeInfinity;
+            foreach (var n in nodes)
+            {
+                int x = n.Model.X;
+                int y = n.Model.Y;
+                if (x < minX)
+                {
+                    minX = x;
+                }
+
+                if (x > maxX)
+                {
+                    maxX = x;
+                }
+
+                if (y < minY)
+                {
+                    minY = y;
+                }
+
+                if (y > maxY)
+                {
+                    maxY = y;
+                }
+            }
+        }
+
+        return (minX, minY, maxX, maxY);
+    }
+
     private static void DrawNode(DrawingContext dc, FocusNodeViewModel viewModel)
     {
         double x = viewModel.Model.X * FocusMapConstants.CellWidth;
@@ -88,7 +129,7 @@ public sealed class ScreenshotService
                 CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight,
                 new Typeface("Microsoft YaHei"),
-                12,
+                13,
                 Brushes.White,
                 96
             )
