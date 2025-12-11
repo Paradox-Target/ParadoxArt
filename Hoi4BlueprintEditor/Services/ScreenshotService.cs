@@ -19,6 +19,7 @@ public sealed class ScreenshotService
         double height = (maxY - minY + 1 + 2 * padding) * FocusMapConstants.CellHeight;
 
         var drawingVisual = new DrawingVisual();
+        RenderOptions.SetBitmapScalingMode(drawingVisual, BitmapScalingMode.HighQuality);
         using (var dc = drawingVisual.RenderOpen())
         {
             // Draw Background
@@ -50,14 +51,31 @@ public sealed class ScreenshotService
         var renderBitmap = new RenderTargetBitmap((int)width, (int)height, 96d, 96d, PixelFormats.Pbgra32);
         renderBitmap.Render(drawingVisual);
 
-        var encoder = new PngBitmapEncoder();
+        var extension = Path.GetExtension(filePath.AsSpan());
+        BitmapEncoder encoder;
+        if (
+            extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
+            || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
+        )
+        {
+            encoder = new JpegBitmapEncoder { QualityLevel = 100 };
+        }
+        else if (extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
+        {
+            encoder = new BmpBitmapEncoder();
+        }
+        else
+        {
+            encoder = new PngBitmapEncoder();
+        }
+
         encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
 
         using var fileStream = new FileStream(filePath, FileMode.Create);
         encoder.Save(fileStream);
     }
 
-    private (double MinX, double MinY, double MaxX, double MaxY) CalculateBounds(
+    private static (double MinX, double MinY, double MaxX, double MaxY) CalculateBounds(
         IReadOnlyCollection<FocusNodeViewModel> nodes
     )
     {
