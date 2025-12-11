@@ -90,7 +90,7 @@ public sealed partial class EditorCanvasView : UserControl
         {
             Title = "导出国策树为图片",
             DefaultExt = ".png",
-            Filter = "PNG 图片 (*.png)|*.png",
+            Filter = "PNG 图片 (*.png)|*.png|JPG 图片 (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP 图片 (*.bmp)|*.bmp",
             FileName = "FocusTree.png"
         };
 
