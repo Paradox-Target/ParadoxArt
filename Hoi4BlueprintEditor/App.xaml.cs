@@ -4,8 +4,8 @@ using Hoi4BlueprintEditor.Helpers;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
-using Hoi4BlueprintEditor.ViewsModels;
 using Hoi4BlueprintEditor.Views;
+using Hoi4BlueprintEditor.ViewsModels;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
@@ -47,7 +47,7 @@ public sealed partial class App : Application
         services.AddSingleton<MainWindow>();
         services.AddSingleton<MainWindowViewModel>();
 
-        services.AddTransient<EditorCanvasViewModel>();
+        services.AddSingleton<EditorCanvasViewModel>();
 
         services.AddHoi4BlueprintEditor();
 

@@ -5,7 +5,6 @@ using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources.Base;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Microsoft.Extensions.DependencyInjection;
-using NUnit.Framework.Internal;
 
 namespace Hoi4BlueprintEditor.UnitTests.Services;
 

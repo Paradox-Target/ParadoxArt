@@ -9,12 +9,14 @@ using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
+using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Services.GameResources.Localization;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels;
 using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using NLog;
 using ZLinq;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
@@ -28,14 +30,15 @@ public sealed partial class EditorCanvasView : UserControl
     private readonly EditorCanvasViewModel _viewModel;
     private FocusNode? _lastRightClickFocus;
     private Point _lastRightClickPoint;
+    private readonly ScreenshotService _screenshotService;
 
-    private ConnectionType FocusConnectionType
+    private ConnectionType FocusConnectionMode
     {
         get;
         set
         {
             field = value;
-            ConnectionPreviewOverlay.State = value;
+            ConnectionPreviewOverlay.Mode = value;
         }
     } = ConnectionType.None;
 
@@ -66,10 +69,48 @@ public sealed partial class EditorCanvasView : UserControl
         MouseLeftButtonUp += OnMouseLeftButtonUp;
         MouseRightButtonDown += OnMouseRightButtonDown;
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
+        _screenshotService = App.Current.Services.GetRequiredService<ScreenshotService>();
         DataContext = _viewModel;
 
         // 方便右键菜单在前端绑定 Command
         RightContextMenu.DataContext = this;
+        WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+    }
+
+    private void SaveToPng(object o, SaveFocusTreeToPngMessage saveFocusTreeToPngMessage)
+    {
+        var nodes = _viewModel.Nodes;
+        if (nodes.Count == 0)
+        {
+            MessageBox.Show("没有可显示的国策", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        var dialog = new SaveFileDialog
+        {
+            Title = "导出国策树为图片",
+            DefaultExt = ".png",
+            Filter = "PNG 图片 (*.png)|*.png|JPG 图片 (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP 图片 (*.bmp)|*.bmp",
+            FileName = "FocusTree.png"
+        };
+
+        if (dialog.ShowDialog() != true || string.IsNullOrWhiteSpace(dialog.FileName))
+        {
+            return;
+        }
+
+        var notificationService = App.Current.Services.GetRequiredService<NotificationService>();
+        try
+        {
+            _screenshotService.SaveFocusTreeScreenshot(nodes, dialog.FileName);
+            Log.Info("已导出图片: {FileName}", dialog.FileName);
+            notificationService.Show("导出图片成功");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "导出国策树图片失败");
+            MessageBox.Show("导出图片失败", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -86,9 +127,9 @@ public sealed partial class EditorCanvasView : UserControl
         }
 
         // 连接模式时右键取消连接模式
-        if (FocusConnectionType != ConnectionType.None)
+        if (FocusConnectionMode != ConnectionType.None)
         {
-            FocusConnectionType = ConnectionType.None;
+            FocusConnectionMode = ConnectionType.None;
         }
         else
         {
@@ -104,7 +145,7 @@ public sealed partial class EditorCanvasView : UserControl
             return;
         }
 
-        FocusConnectionType = ConnectionType.MutuallyExclusive;
+        FocusConnectionMode = ConnectionType.MutuallyExclusive;
         ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
@@ -116,7 +157,7 @@ public sealed partial class EditorCanvasView : UserControl
             return;
         }
 
-        FocusConnectionType = ConnectionType.Prerequisite;
+        FocusConnectionMode = ConnectionType.Prerequisite;
         ConnectionPreviewOverlay.From = _lastRightClickFocus;
     }
 
@@ -162,6 +203,18 @@ public sealed partial class EditorCanvasView : UserControl
         Debug.Assert(ConnectionPreviewOverlay.From != focus && ConnectionPreviewOverlay.To != focus);
     }
 
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void SetRelativePosition()
+    {
+        if (_lastRightClickFocus is null)
+        {
+            return;
+        }
+
+        FocusConnectionMode = ConnectionType.RelativePosition;
+        ConnectionPreviewOverlay.From = _lastRightClickFocus;
+    }
+
     private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
         _movedFocusNode = null;
@@ -175,8 +228,8 @@ public sealed partial class EditorCanvasView : UserControl
         {
             if (
                 _lastRightClickFocus is not null
+                && FocusConnectionMode != ConnectionType.None
                 && _lastRightClickFocus != viewModel.Model
-                && FocusConnectionType != ConnectionType.None
             )
             {
                 SetFocusConnection(viewModel);
@@ -214,16 +267,16 @@ public sealed partial class EditorCanvasView : UserControl
     {
         Debug.Assert(_lastRightClickFocus is not null);
 
-        _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionType);
+        _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionMode);
 
         _lastRightClickFocus = null;
-        FocusConnectionType = ConnectionType.None;
+        FocusConnectionMode = ConnectionType.None;
         ConnectionPreviewOverlay.ClearPreview();
     }
 
     private void OnMouseMove(object sender, MouseEventArgs e)
     {
-        if (FocusConnectionType != ConnectionType.None)
+        if (FocusConnectionMode != ConnectionType.None)
         {
             Cursor = Cursors.Cross;
             var position = e.GetPosition(this);
@@ -258,7 +311,7 @@ public sealed partial class EditorCanvasView : UserControl
         {
             _lastMousePositionOnCanvas = null;
             // 在设置国策间条件时, 鼠标样式会被设置为 Cross, 为了防止被覆盖, 需要在这里检查
-            if (FocusConnectionType == ConnectionType.None)
+            if (FocusConnectionMode == ConnectionType.None)
             {
                 Cursor = Cursors.Arrow;
             }
@@ -266,7 +319,7 @@ public sealed partial class EditorCanvasView : UserControl
 
         // 设置连接线时禁止拖动国策
         if (
-            FocusConnectionType == ConnectionType.None
+            FocusConnectionMode == ConnectionType.None
             && e.LeftButton == MouseButtonState.Pressed
             && _movedFocusNode is not null
         )
@@ -376,6 +429,7 @@ public sealed partial class EditorCanvasView : UserControl
         SetMutuallyExclusiveFocusCommand.NotifyCanExecuteChanged();
         DeleteFocusNodeCommand.NotifyCanExecuteChanged();
         ConvertToAbsolutePositionCommand.NotifyCanExecuteChanged();
+        SetRelativePositionCommand.NotifyCanExecuteChanged();
     }
 
     /// <summary>

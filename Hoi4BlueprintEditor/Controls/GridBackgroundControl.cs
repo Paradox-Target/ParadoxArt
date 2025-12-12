@@ -8,16 +8,18 @@ namespace Hoi4BlueprintEditor.Controls;
 
 public sealed class GridBackgroundControl : Control
 {
-    // 标尺大小
-    private const double RulerSize = 30.0;
-    private static readonly SolidColorBrush RulerBrush =
-        "#4A4A4A".ToBrush() ?? new SolidColorBrush(Colors.Brown);
-    private static readonly Pen GridPen = new("#444444".ToBrush(), 1.0);
+    private static readonly Pen GridPen = InitializeGridPen();
+
+    private static Pen InitializeGridPen()
+    {
+        var pen = new Pen("#444444".ToBrush(), 1.0);
+        pen.Freeze();
+        return pen;
+    }
 
     #region Dependency Proerties (依赖属性)
 
     // 接收ViewModel的Scale和Translate
-
     public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register(
         nameof(Scale),
         typeof(double),

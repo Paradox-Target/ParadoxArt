@@ -50,51 +50,61 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         // 假数据测试
         LoadTestData();
 
-        WeakReferenceMessenger.Default.Register<OpenFileMessage>(
-            this,
-            (_, message) =>
-            {
-                if (!TextParser.TryParse(message.FilePath, out var rootNode, out var _))
-                {
-                    return;
-                }
-
-                ClearResources();
-
-                var (focusNodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(message.FilePath, rootNode);
-                _editorNodesMap = focusNodes;
-                _focusTreeFiles.AddRange(filePaths);
-                _nodes.AddRange(
-                    _editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode))
-                );
-                Log.Info("已加载国策树文件: {FilePath}", message.FilePath);
-                Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
-            }
-        );
-
+        WeakReferenceMessenger.Default.Register<OpenFileMessage>(this, OnOpenFile);
         WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
-        WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(
+        WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
+        // 如果某一天EditorCanvasViewModel不是单例模式了, 就需要改一下这个
+        StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(
             this,
             (_, message) =>
             {
-                message.Reply(
-                    Task.Run(() =>
-                    {
-                        var focus = new FocusNode(message.FocusFilePath, message.FocusType)
-                        {
-                            RawPosition = message.Position,
-                            Id = message.FocusId
-                        };
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            _nodes.Add(new FocusNodeViewModel(focus));
-                        });
-                        _editorNodesMap[focus.Id] = focus;
-                        return focus;
-                    })
-                );
+                foreach (
+                    var focus in _nodes
+                        .AsValueEnumerable()
+                        .Where(focus => focus.Model.Icon == message.SpriteName)
+                )
+                {
+                    focus.Model.RefreshIcon();
+                }
             }
         );
+    }
+
+    private void CreateNewFocus(object sender, CreateNewFocusMessage message)
+    {
+        message.Reply(
+            Task.Run(() =>
+            {
+                var focus = new FocusNode(message.FocusFilePath, message.FocusType)
+                {
+                    RawPosition = message.Position,
+                    Id = message.FocusId
+                };
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _nodes.Add(new FocusNodeViewModel(focus));
+                });
+                _editorNodesMap[focus.Id] = focus;
+                return focus;
+            })
+        );
+    }
+
+    private void OnOpenFile(object sender, OpenFileMessage message)
+    {
+        if (!TextParser.TryParse(message.FilePath, out var rootNode, out var _))
+        {
+            return;
+        }
+
+        ClearResources();
+
+        var (focusNodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(message.FilePath, rootNode);
+        _editorNodesMap = focusNodes;
+        _focusTreeFiles.AddRange(filePaths);
+        _nodes.AddRange(_editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode)));
+        Log.Info("已加载国策树文件: {FilePath}", message.FilePath);
+        Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
     }
 
     // 从 2 开始, 但先检查 1 是否被使用
@@ -301,6 +311,15 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         {
             source.AddPrerequisite([target]);
             changed = true;
+        }
+        else if (addType == ConnectionType.RelativePosition)
+        {
+            bool isSuccessful = source.ConvertToRelativePosition(target);
+            if (!isSuccessful)
+            {
+                _notificationService.Show("无法建立相对位置连接, 因为会导致循环引用");
+            }
+            changed = isSuccessful;
         }
 
         if (changed)

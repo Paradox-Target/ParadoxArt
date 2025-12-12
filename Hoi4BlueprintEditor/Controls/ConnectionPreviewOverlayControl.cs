@@ -1,8 +1,8 @@
 using System.Windows;
 using System.Windows.Media;
+using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Models;
 using Hoi4BlueprintEditor.Models.Focus;
-using Hoi4BlueprintEditor.Views;
 
 namespace Hoi4BlueprintEditor.Controls;
 
@@ -67,12 +67,12 @@ public sealed class ConnectionPreviewOverlayControl : FrameworkElement
         set => SetValue(TranslateYProperty, value);
     }
 
-    public ConnectionType State { get; set; }
+    public ConnectionType Mode { get; set; }
 
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
-        if (From is null || To is null || State == ConnectionType.None)
+        if (From is null || To is null || Mode == ConnectionType.None)
         {
             return;
         }
@@ -82,14 +82,23 @@ public sealed class ConnectionPreviewOverlayControl : FrameworkElement
         matrix.Translate(TranslateX, TranslateY);
         dc.PushTransform(new MatrixTransform(matrix));
 
-        if (State == ConnectionType.MutuallyExclusive)
+        if (Mode == ConnectionType.MutuallyExclusive)
         {
             FocusMapControl.DrawMutuallyExclusive(dc, From, To);
         }
 
-        if (State == ConnectionType.Prerequisite)
+        if (Mode == ConnectionType.Prerequisite)
         {
             FocusMapControl.DrawPrerequisite(dc, From, To, FocusMapControl.PrerequisiteLinePen);
+        }
+
+        if (Mode == ConnectionType.RelativePosition)
+        {
+            dc.DrawLine(
+                FocusMapControl.PrerequisiteLinePen,
+                GetNodeCenterPoint(From),
+                GetNodeCenterPoint(To)
+            );
         }
         dc.Pop();
     }
@@ -98,6 +107,14 @@ public sealed class ConnectionPreviewOverlayControl : FrameworkElement
     {
         From = null;
         To = null;
-        State = ConnectionType.None;
+        Mode = ConnectionType.None;
+    }
+
+    private static Point GetNodeCenterPoint(FocusNode node)
+    {
+        return new Point(
+            node.X * FocusMapConstants.CellWidth + FocusMapConstants.CellWidth / 2,
+            node.Y * FocusMapConstants.CellHeight + FocusMapConstants.CellHeight / 2
+        );
     }
 }

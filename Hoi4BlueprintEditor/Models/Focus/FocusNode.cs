@@ -3,9 +3,16 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Extensions;
 using Hoi4BlueprintEditor.Messages;
+using ZLinq;
 
 namespace Hoi4BlueprintEditor.Models.Focus;
 
+/// <summary>
+/// 国策节点
+/// </summary>
+/// <remarks>充当键值时, 必须确保值不会改变, 因为 <see cref="GetHashCode"/> 不是固定的</remarks>
+/// <param name="path">来源文件绝对路径</param>
+/// <param name="type">国策类型</param>
 public sealed partial class FocusNode(string path, FocusType type)
     : ObservableObject,
         IEquatable<FocusNode>,
@@ -89,12 +96,11 @@ public sealed partial class FocusNode(string path, FocusType type)
     public void AddPrerequisite(List<FocusNode> prerequisiteNodes)
     {
         _prerequisite.Add(prerequisiteNodes);
-        foreach (var node in prerequisiteNodes)
+        foreach (
+            var node in prerequisiteNodes.AsValueEnumerable().Where(node => !node._children.Contains(this))
+        )
         {
-            if (!node._children.Contains(this))
-            {
-                node._children.Add(this);
-            }
+            node._children.Add(this);
         }
     }
 
@@ -226,6 +232,11 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
     }
 
+    public void RefreshIcon()
+    {
+        OnPropertyChanged(nameof(Icon));
+    }
+
     /// <summary>
     /// 相对位置转换为绝对位置, 并清除 <see cref="RelativePosition"/> 设置
     /// </summary>
@@ -241,6 +252,66 @@ public sealed partial class FocusNode(string path, FocusType type)
         _rawPosition = new FocusPoint(X, Y);
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
         RelativePosition = null;
+    }
+
+    /// <summary>
+    /// 将节点转换为相对定位模式
+    /// </summary>
+    /// <param name="relativeTo">相对位置参考节点</param>
+    /// <returns>如果转换成功返回 <c>true</c>，如果会导致循环引用则返回 <c>false</c></returns>
+    public bool ConvertToRelativePosition(FocusNode relativeTo)
+    {
+        if (relativeTo == this)
+        {
+            return false;
+        }
+
+        // 检查是否会形成循环引用
+        if (WouldCreateCircularReference(relativeTo))
+        {
+            return false;
+        }
+
+        int offsetX = X - relativeTo.X;
+        int offsetY = Y - relativeTo.Y;
+        // 注意这里不能直接赋值 RawPosition，因为会发送多余的消息
+#pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing
+        _rawPosition = new FocusPoint(offsetX, offsetY);
+#pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing
+        RelativePosition = relativeTo;
+        return true;
+    }
+
+    /// <summary>
+    /// 检查是否会形成循环引用
+    /// </summary>
+    /// <param name="targetNode">目标相对位置节点</param>
+    /// <returns>如果会形成循环引用则返回 <c>true</c></returns>
+    private bool WouldCreateCircularReference(FocusNode targetNode)
+    {
+        // 检查目标节点的所有祖先节点，看是否包含当前节点
+        var visited = new HashSet<FocusNode>();
+        var current = targetNode;
+
+        while (current is not null)
+        {
+            // 如果在目标节点的祖先链中找到了当前节点，则会形成循环
+            if (current == this)
+            {
+                return true;
+            }
+
+            // 防止无限循环（理论上不应该发生，但作为安全措施）
+            if (!visited.Add(current))
+            {
+                // 检测到已存在的循环，但不涉及当前节点
+                break;
+            }
+
+            current = current.RelativePosition;
+        }
+
+        return false;
     }
 
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)
@@ -285,7 +356,10 @@ public sealed partial class FocusNode(string path, FocusType type)
         return Id == other.Id
             && Type == other.Type
             && Path == other.Path
-            && RawPosition.Equals(other.RawPosition);
+            && X == other.X
+            && Y == other.Y
+            && Cost == other.Cost
+            && Icon == other.Icon;
     }
 
     public override bool Equals(object? obj)
@@ -300,7 +374,10 @@ public sealed partial class FocusNode(string path, FocusType type)
             int hashCode = Id.GetHashCode();
             hashCode = (hashCode * 397) ^ (int)Type;
             hashCode = (hashCode * 397) ^ Path.GetHashCode();
-            hashCode = (hashCode * 397) ^ RawPosition.GetHashCode();
+            hashCode = (hashCode * 397) ^ X;
+            hashCode = (hashCode * 397) ^ Y;
+            hashCode = (hashCode * 397) ^ Cost.GetHashCode();
+            hashCode = (hashCode * 397) ^ Icon.GetHashCode();
             return hashCode;
         }
     }
