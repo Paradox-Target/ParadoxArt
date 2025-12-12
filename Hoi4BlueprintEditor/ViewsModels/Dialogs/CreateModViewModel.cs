@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Hoi4BlueprintEditor.Services;
 using Microsoft.Win32;
 
 namespace Hoi4BlueprintEditor.ViewsModels.Dialogs;
 
-public sealed partial class CreateModViewModel : ObservableObject
+public sealed partial class CreateModViewModel(SettingsService settings) : ObservableObject
 {
     [ObservableProperty]
     private string _modName = string.Empty;
@@ -17,18 +18,19 @@ public sealed partial class CreateModViewModel : ObservableObject
 
     partial void OnModNameChanged(string value)
     {
-        string path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        RootFolder = Path.Combine(path, "Paradox Interactive", "Hearts of Iron IV", "mod", value);
+        RootFolder = Path.Combine(settings.ModRootFolderPath, value);
     }
 
     [RelayCommand]
     private void SelectRootFolder()
     {
+        Directory.CreateDirectory(RootFolder);
+
         var openFolderDialog = new OpenFolderDialog
         {
-            FolderName = RootFolder,
             Title = "选择Mod文件夹",
             Multiselect = false,
+            InitialDirectory = settings.ModRootFolderPath,
         };
 
         if (openFolderDialog.ShowDialog() != true)
@@ -37,5 +39,6 @@ public sealed partial class CreateModViewModel : ObservableObject
         }
 
         RootFolder = openFolderDialog.FolderName;
+        ModName = Path.GetFileName(RootFolder);
     }
 }

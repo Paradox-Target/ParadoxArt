@@ -184,9 +184,9 @@
     <value>Mod Root Directory</value>
   </data>
   <data name="ModIni.CreateMod" xml:space="preserve">
-    <value>Create Mod</value>
+    <value>Create Mod Folder</value>
   </data>
   <data name="ModIni_OpenMod" xml:space="preserve">
-    <value>打开模组</value>
+    <value>Open Mod Folder</value>
   </data>
 </root>

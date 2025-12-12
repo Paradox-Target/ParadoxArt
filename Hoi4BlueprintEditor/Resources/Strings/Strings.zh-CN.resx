@@ -184,9 +184,9 @@
     <value>模组根目录</value>
   </data>
   <data name="ModIni.CreateMod" xml:space="preserve">
-    <value>新建模组</value>
+    <value>新建模组文件夹</value>
   </data>
   <data name="ModIni_OpenMod" xml:space="preserve">
-    <value>Open Mod</value>
+    <value>打开模组文件夹</value>
   </data>
 </root>

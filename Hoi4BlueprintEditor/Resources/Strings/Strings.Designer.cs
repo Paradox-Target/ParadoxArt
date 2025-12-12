@@ -177,7 +177,7 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create Mod.
+        ///   Looks up a localized string similar to Create Mod Folder.
         /// </summary>
         public static string ModIni_CreateMod {
             get {
@@ -186,7 +186,7 @@ namespace Hoi4BlueprintEditor.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 打开模组.
+        ///   Looks up a localized string similar to Open Mod Folder.
         /// </summary>
         public static string ModIni_OpenMod {
             get {
