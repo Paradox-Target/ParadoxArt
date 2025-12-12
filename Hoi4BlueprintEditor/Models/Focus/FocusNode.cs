@@ -77,6 +77,8 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public string CompletionReward { get; set; } = string.Empty;
 
+    public FocusOffset? Offset { get; set; }
+
     /// <summary>
     /// 添加互斥节点关系, 双向添加
     /// </summary>

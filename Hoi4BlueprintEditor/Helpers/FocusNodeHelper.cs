@@ -209,72 +209,104 @@ public static class FocusNodeHelper
         {
             if (child.TryGetLeaf(out var leaf))
             {
-                if (leaf.Key.EqualsIgnoreCase("x"))
-                {
-                    x = leaf.Value.TryGetInt(out int result) ? result : 0;
-                }
-                else if (leaf.Key.EqualsIgnoreCase("y"))
-                {
-                    y = leaf.Value.TryGetInt(out int result) ? result : 0;
-                }
-                else if (leaf.Key.EqualsIgnoreCase("id"))
-                {
-                    model.Id = leaf.ValueText;
-                }
-                else if (leaf.Key.EqualsIgnoreCase(Keywords.Icon))
-                {
-                    model.Icon = leaf.ValueText;
-                }
-                else if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
-                {
-                    if (!leaf.Value.TryGetDecimal(out decimal cost) && leaf.Value.TryGetInt(out int costInt))
-                    {
-                        cost = costInt;
-                    }
-                    model.Cost = cost;
-                }
-                else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
-                {
-                    model.RelativePosition = new FocusNode(string.Empty, FocusType.Normal)
-                    {
-                        Id = leaf.ValueText
-                    };
-                }
+                ProcessLeaf(ref x, ref y, leaf, model);
             }
             else if (child.TryGetNode(out var node))
             {
-                if (node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive))
-                {
-                    foreach (var focusLeaf in node.Leaves)
-                    {
-                        model.AddMutuallyExclusive(
-                            new FocusNode(string.Empty, FocusType.Normal) { Id = focusLeaf.ValueText }
-                        );
-                    }
-                }
-                else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
-                {
-                    var prerequisite = node
-                        .Leaves.AsValueEnumerable()
-                        .Select(static nodeLeaf => new FocusNode(string.Empty, FocusType.Normal)
-                        {
-                            Id = nodeLeaf.ValueText
-                        })
-                        .ToList();
-                    if (prerequisite.Count != 0)
-                    {
-                        model.AddPrerequisite(prerequisite);
-                    }
-                }
-                else if (node.Key.EqualsIgnoreCase(Keywords.CompletionReward))
-                {
-                    model.CompletionReward = node.ToScript();
-                }
+                ProcessNode(node, model);
             }
         }
 
         model.RawPosition = new FocusPoint(x, y);
         return model;
+    }
+
+    private static void ProcessLeaf(ref int x, ref int y, Leaf leaf, FocusNode model)
+    {
+        if (leaf.Key.EqualsIgnoreCase("x"))
+        {
+            x = leaf.Value.TryGetInt(out int result) ? result : 0;
+        }
+        else if (leaf.Key.EqualsIgnoreCase("y"))
+        {
+            y = leaf.Value.TryGetInt(out int result) ? result : 0;
+        }
+        else if (leaf.Key.EqualsIgnoreCase("id"))
+        {
+            model.Id = leaf.ValueText;
+        }
+        else if (leaf.Key.EqualsIgnoreCase(Keywords.Icon))
+        {
+            model.Icon = leaf.ValueText;
+        }
+        else if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
+        {
+            if (!leaf.Value.TryGetDecimal(out decimal cost) && leaf.Value.TryGetInt(out int costInt))
+            {
+                cost = costInt;
+            }
+            model.Cost = cost;
+        }
+        else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
+        {
+            model.RelativePosition = new FocusNode(string.Empty, FocusType.Normal) { Id = leaf.ValueText };
+        }
+    }
+
+    private static void ProcessNode(Node node, FocusNode model)
+    {
+        if (node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive))
+        {
+            foreach (var focusLeaf in node.Leaves)
+            {
+                model.AddMutuallyExclusive(
+                    new FocusNode(string.Empty, FocusType.Normal) { Id = focusLeaf.ValueText }
+                );
+            }
+        }
+        else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
+        {
+            var prerequisite = node
+                .Leaves.AsValueEnumerable()
+                .Select(static nodeLeaf => new FocusNode(string.Empty, FocusType.Normal)
+                {
+                    Id = nodeLeaf.ValueText
+                })
+                .ToList();
+            if (prerequisite.Count != 0)
+            {
+                model.AddPrerequisite(prerequisite);
+            }
+        }
+        else if (node.Key.EqualsIgnoreCase(Keywords.CompletionReward))
+        {
+            model.CompletionReward = node.ToScript();
+        }
+        else if (node.Key.EqualsIgnoreCase("offset"))
+        {
+            int x = 0;
+            int y = 0;
+            Node? trigger = null;
+            foreach (var child in node.AllArray)
+            {
+                if (child.TryGetLeaf(out var leaf))
+                {
+                    if (leaf.Key.EqualsIgnoreCase("x"))
+                    {
+                        x = leaf.Value.TryGetInt(out int result) ? result : 0;
+                    }
+                    else if (leaf.Key.EqualsIgnoreCase("y"))
+                    {
+                        y = leaf.Value.TryGetInt(out int result) ? result : 0;
+                    }
+                }
+                else if (child.TryGetNode(out var childNode) && childNode.Key.EqualsIgnoreCase("trigger"))
+                {
+                    trigger = childNode.Clone();
+                }
+            }
+            model.Offset = new FocusOffset(new FocusPoint(x, y), trigger);
+        }
     }
 
     private static FocusType GetFocusType(Node focusNode)
