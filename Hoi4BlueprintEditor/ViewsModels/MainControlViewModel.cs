@@ -54,6 +54,7 @@ public sealed partial class MainControlViewModel : ObservableObject
             Filter = "Focus Files (*.txt)|*.txt|All Files (*.*)|*.*",
             Title = "选择国策树文件",
             Multiselect = false,
+            InitialDirectory = Path.Combine(_settingsService.ModRootFolderPath, "common", "national_focus"),
         };
 
         if (openFileDialog.ShowDialog() != true)
