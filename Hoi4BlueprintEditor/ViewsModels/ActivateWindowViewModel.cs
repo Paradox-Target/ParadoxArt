@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
-using Microsoft.Extensions.DependencyInjection;
+using Hoi4BlueprintEditor.Views;
 using NLog;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
+[RegisterTransient<ActivateWindowViewModel>]
 public sealed partial class ActivateWindowViewModel : ObservableObject
 {
     public bool IsActivated { get; private set; }
@@ -20,8 +19,22 @@ public sealed partial class ActivateWindowViewModel : ObservableObject
     [ObservableProperty]
     private string _buttonText = "激活设备";
 
-    private readonly AuthService _authService = App.Current.Services.GetRequiredService<AuthService>();
+    private readonly AuthService _authService;
+    private readonly NavigationService _navigationService;
+    private readonly NotificationService _notificationService;
+
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    public ActivateWindowViewModel(
+        AuthService authService,
+        NavigationService navigationService,
+        NotificationService notificationService
+    )
+    {
+        _authService = authService;
+        _navigationService = navigationService;
+        _notificationService = notificationService;
+    }
 
     [RelayCommand]
     private async Task Activate()
@@ -45,13 +58,8 @@ public sealed partial class ActivateWindowViewModel : ObservableObject
 
             if (IsActivated)
             {
-                await MessageBox.ShowAsync(
-                    "激活设备成功, 感谢您的支持!",
-                    "激活成功",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information
-                );
-                WeakReferenceMessenger.Default.Send(new ActivateSuccessMessage());
+                _notificationService.Show("设备激活成功，感谢您的支持！");
+                _navigationService.NavigateTo<MainControlView>();
             }
             else
             {
