@@ -1,4 +1,5 @@
 ﻿using System.Collections.Frozen;
+using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Extensions;
 using NLog;
 using ParadoxPower.CSharpExtensions;
@@ -18,15 +19,16 @@ public sealed class GameModDescriptorService
     public IReadOnlySet<string> ReplacePaths => _replacePaths;
     private readonly FrozenSet<string> _replacePaths;
 
-    private const string FileName = "descriptor.mod";
-
     /// <summary>
     /// 按Mod根目录查找描述文件
     /// </summary>
     public GameModDescriptorService(SettingsService settingService)
     {
         var logger = LogManager.GetCurrentClassLogger();
-        string descriptorFilePath = Path.Combine(settingService.ModRootFolderPath, FileName);
+        string descriptorFilePath = Path.Combine(
+            settingService.ModRootFolderPath,
+            GameConstants.ModDescriptorFileName
+        );
         if (!File.Exists(descriptorFilePath))
         {
             _replacePaths = [];

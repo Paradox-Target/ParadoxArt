@@ -1,14 +1,15 @@
 ﻿using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Hoi4BlueprintEditor.Constants;
 using Hoi4BlueprintEditor.Models;
-using Hoi4BlueprintEditor.Resources;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Win32;
-using MessageBox = System.Windows.MessageBox;
+using NLog;
+using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
@@ -17,18 +18,16 @@ public sealed partial class ModInitializeWindowViewModel(SettingsService setting
 {
     public Window? Window { get; set; }
 
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     [RelayCommand]
     private async Task CreateMod()
     {
-        var viewModel = new CreateModViewModel(settings)
-        {
-            ModName = "新建mod",
-            Version = DefaultSettings.CurrentGameVersion.ToString(),
-        };
+        var viewModel = new CreateModViewModel(settings) { ModName = "新建mod", Version = "1.0.0", };
         var dialog = new ContentDialog
         {
             Title = "新建 Mod",
-            Content = new CreateModView() { DataContext = viewModel },
+            Content = new CreateModView { DataContext = viewModel },
             CloseButtonText = "取消",
             PrimaryButtonText = "创建",
             DefaultButton = ContentDialogButton.Primary,
@@ -42,14 +41,10 @@ public sealed partial class ModInitializeWindowViewModel(SettingsService setting
 
         try
         {
-            var modData = new ModData
-            {
-                ModName = viewModel.ModName,
-                SupportedVersion = Version.Parse(viewModel.Version),
-            };
+            var modData = new ModData { ModName = viewModel.ModName, SupportedVersion = viewModel.Version, };
             Directory.CreateDirectory(viewModel.RootFolder);
-            string modFilePath = Path.Combine(viewModel.RootFolder, DefaultSettings.ModDescriptorFileName);
-            File.WriteAllText(modFilePath, modData.ToScript());
+            string modFilePath = Path.Combine(viewModel.RootFolder, GameConstants.ModDescriptorFileName);
+            await File.WriteAllTextAsync(modFilePath, modData.ToScript()).ConfigureAwait(false);
 
             string focusFolderPath = Path.Combine(viewModel.RootFolder, "common", "national_focus");
             Directory.CreateDirectory(focusFolderPath);
@@ -63,6 +58,7 @@ public sealed partial class ModInitializeWindowViewModel(SettingsService setting
             {
                 Directory.Delete(viewModel.RootFolder, true);
             }
+            Log.Error(ex, "创建Mod文件夹失败");
         }
     }
 
@@ -80,20 +76,13 @@ public sealed partial class ModInitializeWindowViewModel(SettingsService setting
             return;
         }
 
-        try
-        {
-            string descriptorPath = Path.Combine(
-                openFolderDialog.FolderName,
-                DefaultSettings.ModDescriptorFileName
-            );
-            var modeData = new ModData();
-            modeData.ParseScript(descriptorPath);
+        string descriptorPath = Path.Combine(
+            openFolderDialog.FolderName,
+            GameConstants.ModDescriptorFileName
+        );
+        var modeData = new ModData();
+        modeData.ParseScript(descriptorPath);
 
-            settings.CurrentModData = modeData;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(Window!, $"打开mod文件夹失败：{ex.Message}");
-        }
+        settings.CurrentModData = modeData;
     }
 }

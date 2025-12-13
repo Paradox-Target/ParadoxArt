@@ -1,5 +1,4 @@
-﻿using Hoi4BlueprintEditor.Resources;
-using ParadoxPower.CSharpExtensions;
+﻿using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 
 namespace Hoi4BlueprintEditor.Models;
@@ -10,8 +9,8 @@ public sealed class ModData
     private const string ModNameKey = "name";
     private const string SupportedVersionKey = "supported_version";
 
-    public Version SupportedVersion { get; set; } = DefaultSettings.CurrentGameVersion;
-    public string ModName { get; set; } = DefaultSettings.DefaultModName;
+    public string SupportedVersion { get; set; } = "";
+    public string ModName { get; set; } = "新建 mod";
 
     public void ParseScript(string filePath)
     {
@@ -26,7 +25,7 @@ public sealed class ModData
         string? supportedVersion = node.GetLeaf(SupportedVersionKey)?.Value.ValueText;
         ArgumentNullException.ThrowIfNull(supportedVersion);
 
-        SupportedVersion = Version.Parse(supportedVersion);
+        SupportedVersion = supportedVersion;
         ModName = modName;
     }
 
