@@ -15,13 +15,12 @@
 
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{x:Static language:Strings.FileMenu}">
-                <MenuItem Header="{x:Static language:Strings.NewMenuItem}" />
                 <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
                 <MenuItem Command="{Binding SaveFocusFileCommand}" Header="{x:Static language:Strings.SaveMenuItem}" />
                 <Separator />
                 <MenuItem Command="{Binding OpenModInitializePageViewCommand}" Header="模组初始化" />
                 <Separator />
-                <MenuItem Header="{x:Static language:Strings.ExitMenuItem}" />
+                <MenuItem Command="{Binding ExitCommand}" Header="{x:Static language:Strings.ExitMenuItem}" />
             </MenuItem>
             <!-- <MenuItem Header="{x:Static language:Strings.EditMenuItem}"> -->
             <!--     <MenuItem Header="{x:Static language:Strings.UndoMenuItem}" /> -->

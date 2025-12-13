@@ -101,4 +101,17 @@ public sealed partial class MainControlViewModel : ObservableObject
     {
         WeakReferenceMessenger.Default.Send(new SaveFocusTreeToPngMessage());
     }
+
+    [RelayCommand]
+    private void Exit()
+    {
+        if (
+            MessageBox.Show("是否需要保存文件?", "退出确认", MessageBoxButton.YesNo, MessageBoxImage.Question)
+            == MessageBoxResult.Yes
+        )
+        {
+            SaveFocusFile();
+        }
+        Application.Current.Shutdown();
+    }
 }
