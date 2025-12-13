@@ -7,6 +7,7 @@ using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views.Dialogs;
 using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using NLog;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
@@ -48,8 +49,6 @@ public sealed partial class ModInitializeWindowViewModel(SettingsService setting
 
             string focusFolderPath = Path.Combine(viewModel.RootFolder, "common", "national_focus");
             Directory.CreateDirectory(focusFolderPath);
-
-            settings.CurrentModData = modData;
         }
         catch (Exception ex)
         {
@@ -65,24 +64,14 @@ public sealed partial class ModInitializeWindowViewModel(SettingsService setting
     [RelayCommand]
     private void OpenMod()
     {
-        var openFolderDialog = new OpenFolderDialog
-        {
-            Title = "选择国策树文件",
-            Multiselect = false,
-            InitialDirectory = settings.ModRootFolderPath,
-        };
+        var openFolderDialog = new OpenFolderDialog { Title = "选择 MOD 根目录", Multiselect = false };
         if (openFolderDialog.ShowDialog() != true)
         {
             return;
         }
 
-        string descriptorPath = Path.Combine(
-            openFolderDialog.FolderName,
-            GameConstants.ModDescriptorFileName
-        );
-        var modeData = new ModData();
-        modeData.ParseScript(descriptorPath);
-
-        settings.CurrentModData = modeData;
+        settings.ModRootFolderPath = openFolderDialog.FolderName;
+        App.Current.Services.GetRequiredService<GameModDescriptorService>().Reload();
+        Log.Info("已选择 Mod 根目录: {ModRootFolderPath}", settings.ModRootFolderPath);
     }
 }

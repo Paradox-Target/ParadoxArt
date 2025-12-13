@@ -9,7 +9,7 @@ public sealed class ModData
     private const string ModNameKey = "name";
     private const string SupportedVersionKey = "supported_version";
 
-    public string SupportedVersion { get; set; } = "";
+    public string SupportedVersion { get; set; } = string.Empty;
     public string ModName { get; set; } = "新建 mod";
 
     public void ParseScript(string filePath)
@@ -32,9 +32,9 @@ public sealed class ModData
     public string ToScript()
     {
         var node = Node.Create(string.Empty);
-        node.AddLeafString(VersionKey, SupportedVersion.ToString());
+        node.AddLeafString(VersionKey, SupportedVersion);
         node.AddLeafString(ModNameKey, ModName);
-        node.AddLeafString(SupportedVersionKey, SupportedVersion.ToString());
+        node.AddLeafString(SupportedVersionKey, SupportedVersion);
         return node.ToScript();
     }
 }
