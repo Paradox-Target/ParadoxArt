@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using Hoi4BlueprintEditor.Helpers;
@@ -23,6 +22,7 @@ public sealed partial class App : Application
             "Hoi4BlueprintEditor"
         );
 
+    public Task<bool> IsActivated { get; private set; } = null!;
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
 
     /// <summary>
@@ -31,8 +31,6 @@ public sealed partial class App : Application
     public static readonly Encoding Utf8Encoding = new UTF8Encoding(false);
 
     private MainWindow _main = null!;
-
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     private static ServiceProvider ConfigureServices()
     {
@@ -70,11 +68,12 @@ public sealed partial class App : Application
             Directory.CreateDirectory(ConfigFolder);
         }
 
+        // 提前查询
+        IsActivated = Services.GetRequiredService<AuthService>().IsActivatedAsync();
         var settingsService = Services.GetRequiredService<SettingsService>();
         LanguageHelper.SetLanguage(settingsService.AppLanguage);
 
         _main = Services.GetRequiredService<MainWindow>();
-        Verify();
         _main.ShowDialog();
     }
 
@@ -85,45 +84,5 @@ public sealed partial class App : Application
         Current.Services.GetRequiredService<WindowSettingsService>().SaveSettings();
         Services.Dispose();
         LogManager.Flush();
-    }
-
-    [Conditional("RELEASE")]
-    private void Verify()
-    {
-        Task.Run(async () =>
-        {
-            try
-            {
-                var auth = Services.GetRequiredService<AuthService>();
-                if (!await auth.IsActivatedAsync())
-                {
-                    Current.Dispatcher.Invoke(() =>
-                    {
-                        var viewModel = new ActivateWindowViewModel();
-                        var activateWindow = new ActivateWindowView(viewModel);
-                        activateWindow.ShowDialog();
-                        if (viewModel.IsActivated)
-                        {
-                            Log.Info("设备激活成功");
-                        }
-                        else
-                        {
-                            Shutdown();
-                        }
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e, "启动验证失败");
-                MessageBox.Show(
-                    $"启动失败, 请检查网络连接后重试!\n{e.Message}",
-                    "错误",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error
-                );
-                Current.Dispatcher.Invoke(Shutdown);
-            }
-        });
     }
 }
