@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:lang="clr-namespace:Hoi4BlueprintEditor.Resources.Strings"
-    xmlns:local="clr-namespace:Hoi4BlueprintEditor.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:root="clr-namespace:Hoi4BlueprintEditor"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
@@ -80,7 +79,7 @@
                 FontWeight="Bold"
                 Text="关于" />
 
-            <ui:SettingsExpander Description="© Editer Commitee 2025. All rights reserved." Header="Focus Editer">
+            <ui:SettingsExpander Description="© Paradox Target 2025. All rights reserved." Header="Focus Editer">
 
                 <TextBlock Foreground="{DynamicResource {x:Static ui:ThemeKeys.TextFillColorSecondaryBrushKey}}" Text="0.0.1" />
                 <ui:SettingsExpander.Items>
@@ -89,7 +88,7 @@
                     </ui:SettingsCard>
                     <ui:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
                         <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
-                            <ui:HyperlinkButton Content="反馈问题" />
+                            <ui:HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
                         </StackPanel>
                     </ui:SettingsCard>
                 </ui:SettingsExpander.Items>
@@ -126,6 +125,7 @@
                             <ui:HyperlinkButton Content="Injectio" NavigateUri="https://github.com/loresoft/Injectio" />
                             <ui:HyperlinkButton Content="JetBrains.Annotations" NavigateUri="https://www.jetbrains.com/" />
                             <ui:HyperlinkButton Content="AvalonEdit" NavigateUri="http://www.avalonedit.net/" />
+                            <ui:HyperlinkButton Content="DeviceId.Windows" NavigateUri="https://github.com/MatthewKing/DeviceId" />
                         </ui:GridView>
                     </ui:SettingsCard>
                 </ui:SettingsExpander.Items>
