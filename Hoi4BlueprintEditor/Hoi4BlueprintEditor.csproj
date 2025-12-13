@@ -15,6 +15,7 @@
     <PackageReference Include="Ardalis.SmartEnum" Version="8.2.0" />
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="DeviceId.Windows" Version="6.9.0" />
     <PackageReference Include="DirectXTexNet" Version="1.0.7" />
     <PackageReference Include="Enums.NET" Version="5.0.0" />
     <PackageReference Include="Fody" Version="6.9.3">
