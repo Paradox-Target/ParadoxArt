@@ -54,6 +54,7 @@ public sealed partial class MainControlViewModel : ObservableObject
             Filter = "Focus Files (*.txt)|*.txt|All Files (*.*)|*.*",
             Title = "选择国策树文件",
             Multiselect = false,
+            InitialDirectory = Path.Combine(_settingsService.ModRootFolderPath, "common", "national_focus"),
         };
 
         if (openFileDialog.ShowDialog() != true)
@@ -88,8 +89,29 @@ public sealed partial class MainControlViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void OpenModInitializePageView()
+    {
+        // TODO: 仅供测试，应该把新建和读取分成两个菜单项
+        var view = App.Current.Services.GetRequiredService<ModInitializeWindowView>();
+        view.ShowDialog();
+    }
+
+    [RelayCommand]
     private void SaveFocusTreeToPng()
     {
         WeakReferenceMessenger.Default.Send(new SaveFocusTreeToPngMessage());
+    }
+
+    [RelayCommand]
+    private void Exit()
+    {
+        if (
+            MessageBox.Show("是否需要保存文件?", "退出确认", MessageBoxButton.YesNo, MessageBoxImage.Question)
+            == MessageBoxResult.Yes
+        )
+        {
+            SaveFocusFile();
+        }
+        Application.Current.Shutdown();
     }
 }

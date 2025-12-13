@@ -15,24 +15,19 @@
 
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{x:Static language:Strings.FileMenu}">
-                <MenuItem Header="{x:Static language:Strings.NewMenuItem}" />
                 <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
                 <MenuItem Command="{Binding SaveFocusFileCommand}" Header="{x:Static language:Strings.SaveMenuItem}" />
                 <Separator />
-                <MenuItem Header="{x:Static language:Strings.ExitMenuItem}" />
+                <MenuItem Command="{Binding OpenModInitializePageViewCommand}" Header="模组初始化" />
+                <Separator />
+                <MenuItem Command="{Binding ExitCommand}" Header="{x:Static language:Strings.ExitMenuItem}" />
             </MenuItem>
             <!-- <MenuItem Header="{x:Static language:Strings.EditMenuItem}"> -->
             <!--     <MenuItem Header="{x:Static language:Strings.UndoMenuItem}" /> -->
             <!--     <MenuItem Header="{x:Static language:Strings.RedoMenuItem}" /> -->
             <!-- </MenuItem> -->
             <MenuItem Command="{Binding SaveFocusTreeToPngCommand}" Header="导出国策树截图" />
-            <MenuItem Header="{x:Static language:Strings.ViewMenuItem}">
-                <MenuItem Header="{x:Static language:Strings.ZInMenuItem}" />
-                <MenuItem Header="{x:Static language:Strings.ZOutMenuItem}" />
-            </MenuItem>
-            <MenuItem Header="{x:Static language:Strings.HelpMenuItem}">
-                <MenuItem Header="{x:Static language:Strings.AboutMenuItem}" />
-            </MenuItem>
+
             <MenuItem Header="{x:Static language:Strings.Menu_Settings}">
                 <MenuItem Command="{Binding OpenSettingsViewCommand}" Header="配置项" />
                 <MenuItem Header="{x:Static language:Strings.Menu_Language}">
