@@ -17,7 +17,7 @@ public sealed class StatusBarService : IDisposable
         _ramUsageTimer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(2));
     }
 
-    private void OnRamUsageTimerTick(object? sender)
+    private void OnRamUsageTimerTick(object? state)
     {
         _currentProcess.Refresh();
         long memoryUsageInMB = _currentProcess.WorkingSet64 / (1024 * 1024);
