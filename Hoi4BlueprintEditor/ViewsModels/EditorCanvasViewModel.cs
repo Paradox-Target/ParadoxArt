@@ -34,19 +34,23 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
     private readonly NotificationService _notificationService;
+    private readonly StatusBarService _statusBarService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public EditorCanvasViewModel(
         GameResourcesPathService pathService,
         SettingsService settingsService,
-        NotificationService notificationService
+        NotificationService notificationService,
+        StatusBarService statusBarService
     )
     {
         _pathService = pathService;
         _settingsService = settingsService;
         _notificationService = notificationService;
+        _statusBarService = statusBarService;
         Nodes = _nodes.ToNotifyCollectionChanged();
+        _nodes.CollectionChanged += OnNodeChanged;
         // 假数据测试
         LoadTestData();
 
@@ -68,6 +72,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 }
             }
         );
+    }
+
+    private void OnNodeChanged(in NotifyCollectionChangedEventArgs<FocusNodeViewModel> e)
+    {
+        _statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
 
     private void CreateNewFocus(object sender, CreateNewFocusMessage message)

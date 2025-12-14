@@ -38,9 +38,15 @@
             </MenuItem>
         </Menu>
 
-        <StatusBar DockPanel.Dock="Bottom">
+        <StatusBar Margin="0,2" DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="准备就绪" />
+                <TextBlock Margin="12,0,0,0" Text="{Binding RamUsage}" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock
+                    Margin="0,0,12,0"
+                    HorizontalAlignment="Right"
+                    Text="{Binding FocusCount}" />
             </StatusBarItem>
         </StatusBar>
 
