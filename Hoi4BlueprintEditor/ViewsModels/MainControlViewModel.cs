@@ -15,16 +15,41 @@ namespace Hoi4BlueprintEditor.ViewsModels;
 [RegisterSingleton<MainControlViewModel>]
 public sealed partial class MainControlViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private string _focusCount = "国策数量: 0";
+
+    [ObservableProperty]
+    private string _ramUsage = "内存使用: 0 MB";
+
     private readonly SettingsService _settingsService;
     private readonly AppLocalizationService _appLocalizationService;
+    private readonly StatusBarService _statusBarService;
 
     public MainControlViewModel(
         SettingsService settingsService,
-        AppLocalizationService appLocalizationService
+        AppLocalizationService appLocalizationService,
+        StatusBarService statusBarService
     )
     {
         _settingsService = settingsService;
         _appLocalizationService = appLocalizationService;
+        _statusBarService = statusBarService;
+
+        _statusBarService.UpdateRamUsage += ramUsage =>
+        {
+            try
+            {
+                App.Current.Dispatcher.Invoke(() => RamUsage = ramUsage);
+            }
+            catch (Exception)
+            {
+                // ignore
+            }
+        };
+        _statusBarService.UpdateFocusCount += focusCount =>
+        {
+            App.Current.Dispatcher.Invoke(() => FocusCount = focusCount);
+        };
     }
 
     private void SetLanguage(string cultureCode)
