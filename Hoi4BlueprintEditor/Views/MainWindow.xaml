@@ -11,11 +11,45 @@
     Width="{StaticResource MainWindowWidth}"
     Height="{StaticResource MainWindowHeight}"
     d:DataContext="{d:DesignInstance vms:MainWindowViewModel}"
+    ui:TitleBar.ExtendViewIntoTitleBar="True"
     ui:TitleBar.Height="36"
     ui:WindowHelper.SystemBackdropType="Mica"
     ui:WindowHelper.UseModernWindowStyle="True"
     Closed="MainWindow_OnClosed"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <ContentControl Content="{Binding CurrentView}" />
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Border Height="36">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image
+                    Width="20"
+                    Height="20"
+                    Margin="8,2,0,0"
+                    Source="/logo.ico" />
+
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="4,2,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    FontSize="13"
+                    Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Title}" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="{DynamicResource {x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}}">
+            <ContentControl Content="{Binding CurrentView}" />
+        </Border>
+    </Grid>
 </Window>
