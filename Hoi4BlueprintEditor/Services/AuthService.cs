@@ -13,6 +13,7 @@ public sealed class AuthService : IDisposable
     {
         _deviceService = deviceService;
         _client = new HttpClient();
+        _client.Timeout = TimeSpan.FromSeconds(15);
 #if DEBUG
         _client.BaseAddress = new Uri("https://localhost:7017/api/");
 #else
