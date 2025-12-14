@@ -12,6 +12,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Grid
+        ClipToBounds="True"
         Height="{x:Static const:FocusMapConstants.CellHeight}"
         ToolTip="{Binding Model.Id}"
         Width="{x:Static const:FocusMapConstants.CellWidth}">
