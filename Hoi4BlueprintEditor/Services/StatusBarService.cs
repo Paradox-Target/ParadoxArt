@@ -19,9 +19,16 @@ public sealed class StatusBarService : IDisposable
 
     private void OnRamUsageTimerTick(object? state)
     {
-        _currentProcess.Refresh();
-        long memoryUsageInMB = _currentProcess.WorkingSet64 / (1024 * 1024);
-        UpdateRamUsage?.Invoke($"内存使用: {memoryUsageInMB} MB");
+        try
+        {
+            _currentProcess.Refresh();
+            long memoryUsageInMB = _currentProcess.WorkingSet64 / (1024 * 1024);
+            UpdateRamUsage?.Invoke($"内存使用: {memoryUsageInMB} MB");
+        }
+        catch
+        {
+            // Ignore exceptions that may occur if the process has exited or is being disposed.
+        }
     }
 
     public void SetCurrentFocusCount(int count)
