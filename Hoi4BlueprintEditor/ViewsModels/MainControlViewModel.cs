@@ -9,6 +9,7 @@ using Hoi4BlueprintEditor.Views;
 using Hoi4BlueprintEditor.Views.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
+using NLog;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
@@ -24,6 +25,8 @@ public sealed partial class MainControlViewModel : ObservableObject
     private readonly SettingsService _settingsService;
     private readonly AppLocalizationService _appLocalizationService;
     private readonly StatusBarService _statusBarService;
+
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public MainControlViewModel(
         SettingsService settingsService,
@@ -41,14 +44,21 @@ public sealed partial class MainControlViewModel : ObservableObject
             {
                 App.Current.Dispatcher.Invoke(() => RamUsage = ramUsage);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // ignore
+                Log.Warn(e, "更新内存使用信息失败");
             }
         };
         _statusBarService.UpdateFocusCount += focusCount =>
         {
-            App.Current.Dispatcher.Invoke(() => FocusCount = focusCount);
+            try
+            {
+                App.Current.Dispatcher.Invoke(() => FocusCount = focusCount);
+            }
+            catch (Exception e)
+            {
+                Log.Warn(e, "更新国策数量信息失败");
+            }
         };
     }
 
