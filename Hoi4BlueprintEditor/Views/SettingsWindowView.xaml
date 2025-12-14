@@ -79,7 +79,7 @@
                 FontWeight="Bold"
                 Text="关于" />
 
-            <ui:SettingsExpander Description="© Paradox Target 2025. All rights reserved." Header="Focus Editer">
+            <ui:SettingsExpander Description="© Paradox Target 2025. All rights reserved." Header="Focus Editor">
 
                 <TextBlock Foreground="{DynamicResource {x:Static ui:ThemeKeys.TextFillColorSecondaryBrushKey}}" Text="0.0.1" />
                 <ui:SettingsExpander.Items>
