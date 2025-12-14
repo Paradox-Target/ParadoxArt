@@ -25,9 +25,9 @@ public sealed class AuthService : IDisposable
     public async Task<bool> IsActivatedAsync()
     {
         var body = new DeviceCheckRequest { DeviceId = _deviceService.GetDeviceId() };
-        using var status = await _client.PostAsJsonAsync("device/check", body);
-        status.EnsureSuccessStatusCode();
-        var response = await status.Content.ReadFromJsonAsync<DeviceStatusResponse>();
+        using var result = await _client.PostAsJsonAsync("device/check", body);
+        result.EnsureSuccessStatusCode();
+        var response = await result.Content.ReadFromJsonAsync<DeviceStatusResponse>();
         return response is not null && response.IsActivated;
     }
 
@@ -38,9 +38,9 @@ public sealed class AuthService : IDisposable
             DeviceId = _deviceService.GetDeviceId(),
             ActivationCode = activationCode
         };
-        using var status = await _client.PostAsJsonAsync("device/activate", body);
-        status.EnsureSuccessStatusCode();
-        return await status.Content.ReadFromJsonAsync<DeviceStatusResponse>();
+        using var result = await _client.PostAsJsonAsync("device/activate", body);
+        result.EnsureSuccessStatusCode();
+        return await result.Content.ReadFromJsonAsync<DeviceStatusResponse>();
     }
 
     public void Dispose()
