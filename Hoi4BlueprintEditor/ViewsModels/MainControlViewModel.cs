@@ -75,10 +75,9 @@ public sealed partial class MainControlViewModel : ObservableObject
     [RelayCommand]
     private void GameSettings()
     {
-        // TODO: 暂时仅供界面测试
-        //  如果已编辑提示是否保存
-        //  使用弹窗而不是欢迎界面
+#if DEBUG
         App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainWelcomeView>();
+#endif
     }
 
     [RelayCommand]
