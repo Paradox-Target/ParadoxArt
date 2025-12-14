@@ -20,6 +20,9 @@ public sealed partial class MainWindowViewModel : ObservableObject
             CurrentView = _navigationService.CurrentView;
         };
 
+#if DEBUG
+        navigationService.NavigateTo<MainControlView>();
+#else
         if (settingsService.IsFirstRun)
         {
             navigationService.NavigateTo<ActivateWindowView>();
@@ -32,5 +35,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
         {
             navigationService.NavigateTo<LoadingView>();
         }
+#endif
     }
 }
