@@ -4,22 +4,27 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Hoi4BlueprintBuilder.Core.Constants;
+using Hoi4BlueprintBuilder.Core.Controls;
+using Hoi4BlueprintBuilder.Core.ViewModels;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<ScreenshotService>]
 public sealed class ScreenshotService
 {
-    public void SaveFocusTreeScreenshot(IReadOnlyCollection<FocusNodeViewModel> nodes, string filePath)
+    public void SaveFocusTreeScreenshot(
+        IReadOnlyCollection<FocusNodeViewModel> nodes,
+        string filePath
+    )
     {
         (double minX, double minY, double maxX, double maxY) = CalculateBounds(nodes);
         const double padding = 1.0;
         double width = (maxX - minX + 1 + 2 * padding) * FocusMapConstants.CellWidth;
         double height = (maxY - minY + 1 + 2 * padding) * FocusMapConstants.CellHeight;
 
-        var drawingVisual = new DrawingVisual();
-        RenderOptions.SetBitmapScalingMode(drawingVisual, BitmapScalingMode.HighQuality);
-        using (var dc = drawingVisual.RenderOpen())
+        var size = new PixelSize((int)width, (int)height);
+        var renderBitmap = new RenderTargetBitmap(size);
+        using (var dc = renderBitmap.CreateDrawingContext())
         {
             // Draw Background
             dc.DrawRectangle(
@@ -33,7 +38,7 @@ public sealed class ScreenshotService
                 (padding - minX) * FocusMapConstants.CellWidth,
                 (padding - minY) * FocusMapConstants.CellHeight
             );
-            dc.PushTransform(transform);
+            var pushedState = dc.PushTransform(transform.Value);
 
             // Draw Connections
             FocusMapControl.DrawNodeConnectionsLines(dc, nodes);
@@ -44,34 +49,11 @@ public sealed class ScreenshotService
                 DrawNode(dc, viewModel);
             }
 
-            dc.Pop();
+            pushedState.Dispose();
         }
-
-        var renderBitmap = new RenderTargetBitmap((int)width, (int)height, 96d, 96d, PixelFormats.Pbgra32);
-        renderBitmap.Render(drawingVisual);
-
-        var extension = Path.GetExtension(filePath.AsSpan());
-        BitmapEncoder encoder;
-        if (
-            extension.Equals(".jpg", StringComparison.OrdinalIgnoreCase)
-            || extension.Equals(".jpeg", StringComparison.OrdinalIgnoreCase)
-        )
-        {
-            encoder = new JpegBitmapEncoder { QualityLevel = 100 };
-        }
-        else if (extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
-        {
-            encoder = new BmpBitmapEncoder();
-        }
-        else
-        {
-            encoder = new PngBitmapEncoder();
-        }
-
-        encoder.Frames.Add(BitmapFrame.Create(renderBitmap));
 
         using var fileStream = new FileStream(filePath, FileMode.Create);
-        encoder.Save(fileStream);
+        renderBitmap.Save(fileStream);
     }
 
     private static (double MinX, double MinY, double MaxX, double MaxY) CalculateBounds(
@@ -147,13 +129,12 @@ public sealed class ScreenshotService
                 FlowDirection.LeftToRight,
                 new Typeface("Microsoft YaHei"),
                 13,
-                Brushes.White,
-                96
+                Brushes.White
             )
             {
                 MaxTextWidth = FocusMapConstants.CellWidth - 4,
                 TextAlignment = TextAlignment.Center,
-                Trimming = TextTrimming.CharacterEllipsis
+                Trimming = TextTrimming.CharacterEllipsis,
             };
 
             double textY = y + FocusMapConstants.FocusHeight + FocusMapConstants.FocusNameUpOffset;
