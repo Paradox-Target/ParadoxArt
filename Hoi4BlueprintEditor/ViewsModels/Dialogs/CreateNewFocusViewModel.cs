@@ -29,6 +29,7 @@ public sealed partial class CreateNewFocusViewModel(IReadOnlyCollection<string> 
 
     public sealed record FocusFileItem(string FileName, string FilePath);
 
+    // TODO: 消除重复代码
     public event Action<bool>? PrimaryEnableChanged;
 
     partial void OnFocusIdChanged(string value)

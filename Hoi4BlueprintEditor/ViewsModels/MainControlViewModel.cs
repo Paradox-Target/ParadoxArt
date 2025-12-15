@@ -6,10 +6,15 @@ using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views;
-using Hoi4BlueprintEditor.Views.Initialization;
+using Hoi4BlueprintEditor.Views.Dialogs;
+using Hoi4BlueprintEditor.ViewsModels.Dialogs;
+using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using NLog;
+using ParadoxPower.CSharpExtensions;
+using ParadoxPower.Process;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
@@ -147,5 +152,95 @@ public sealed partial class MainControlViewModel : ObservableObject
             SaveFocusFile();
         }
         Application.Current.Shutdown();
+    }
+
+    [RelayCommand]
+    private async Task CreateNewFile()
+    {
+        //TODO: 消除重复代码
+        string focusTreeDirectory = Path.Combine(
+            _settingsService.ModRootFolderPath,
+            "common",
+            "national_focus"
+        );
+
+        Directory.CreateDirectory(focusTreeDirectory);
+        var viewModel = new CreateNewFocusTreeFileViewModel();
+        var dialog = new ContentDialog
+        {
+            Title = "新建国策",
+            Content = new CreateNewFocusTreeFileView { DataContext = viewModel },
+            CloseButtonText = "取消",
+            PrimaryButtonText = "创建",
+            DefaultButton = ContentDialogButton.Primary,
+            IsPrimaryButtonEnabled = false
+        };
+        Action<bool> onPrimaryEnableChanged = enable => dialog.IsPrimaryButtonEnabled = enable;
+        viewModel.PrimaryEnableChanged += onPrimaryEnableChanged;
+        var result = await dialog.ShowAsync(App.Current.MainWindow);
+        viewModel.PrimaryEnableChanged -= onPrimaryEnableChanged;
+        if (result != ContentDialogResult.Primary)
+        {
+            return;
+        }
+
+        string fileName = viewModel.FileName;
+        if (!fileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            fileName += ".txt";
+        }
+
+        string filePath = Path.Combine(focusTreeDirectory, fileName);
+        if (File.Exists(filePath))
+        {
+            MessageBox.Show("文件已存在, 无法创建同名文件.", "创建失败", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        try
+        {
+            await File.WriteAllTextAsync(
+                filePath,
+                CreateNewFocusTree(viewModel.Id, viewModel.CountryTag, viewModel.IsDefaultFocusTree),
+                App.Utf8Encoding
+            );
+            WeakReferenceMessenger.Default.Send(new OpenFileMessage(filePath));
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "创建国策树文件失败");
+            MessageBox.Show($"创建国策树文件失败: {e.Message}", "创建失败", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private string CreateNewFocusTree(string id, string countryTag, bool isDefaultFocusTree)
+    {
+        var rootNode = new Node(string.Empty);
+        var focusTreeNode = new Node("focus_tree");
+        var countryNode = new Node("country");
+        if (isDefaultFocusTree)
+        {
+            countryNode.AllArray = [ChildHelper.Leaf("factor", 1)];
+        }
+        else
+        {
+            countryNode.AllArray =
+            [
+                ChildHelper.Leaf("factor", 0),
+                ChildHelper.Node(
+                    "modifier",
+                    [ChildHelper.Leaf("add", 100), ChildHelper.LeafString("tag", countryTag)]
+                )
+            ];
+        }
+        focusTreeNode.AllArray =
+        [
+            ChildHelper.LeafString("id", id),
+            countryNode,
+            ChildHelper.Leaf("default", isDefaultFocusTree)
+        ];
+
+        rootNode.AllArray = [focusTreeNode];
+        return rootNode.ToScript();
     }
 }

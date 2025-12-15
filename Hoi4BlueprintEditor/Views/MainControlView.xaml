@@ -15,6 +15,7 @@
 
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="{x:Static language:Strings.FileMenu}">
+                <MenuItem Command="{Binding CreateNewFileCommand}" Header="{x:Static language:Strings.NewMenuItem}" />
                 <MenuItem Command="{Binding OpenFocusFileCommand}" Header="{x:Static language:Strings.OpenMenuItem}" />
                 <MenuItem Command="{Binding SaveFocusFileCommand}" Header="{x:Static language:Strings.SaveMenuItem}" />
                 <Separator />
