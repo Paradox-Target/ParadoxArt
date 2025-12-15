@@ -1,5 +1,0 @@
-<assembly name="ICSharpCode.AvalonEdit">
-    <member name="P:ICSharpCode.AvalonEdit.Document.TextDocument.Text">
-        <attribute ctor="M:JetBrains.Annotations.NotNullAttribute.#ctor" />
-    </member>
-</assembly>
