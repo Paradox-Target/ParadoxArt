@@ -7,6 +7,7 @@ using Hoi4BlueprintEditor.Messages;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views;
 using Hoi4BlueprintEditor.Views.Dialogs;
+using Hoi4BlueprintEditor.Views.Initialization;
 using Hoi4BlueprintEditor.ViewsModels.Dialogs;
 using iNKORE.UI.WPF.Modern.Controls;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ using Microsoft.Win32;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
-using MessageBox = System.Windows.MessageBox;
+using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
