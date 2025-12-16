@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
-using Hoi4BlueprintBuilder.Core.ViewModels;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
 

@@ -6,7 +6,7 @@ using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Hoi4BlueprintBuilder.Core.ViewModels;
+namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
 public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 {
