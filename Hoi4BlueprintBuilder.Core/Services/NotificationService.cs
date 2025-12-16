@@ -8,11 +8,12 @@ public sealed class NotificationService : IDisposable
     [LocalizationRequired]
     public void Show(string message)
     {
-        new ToastContentBuilder().AddText(message).Show();
+        // TODO: Ursa.Avalonia
+        // new ToastContentBuilder().AddText(message).Show();
     }
 
     public void Dispose()
     {
-        ToastNotificationManagerCompat.Uninstall();
+        // ToastNotificationManagerCompat.Uninstall();
     }
 }

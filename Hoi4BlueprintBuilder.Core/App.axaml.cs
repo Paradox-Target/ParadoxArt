@@ -6,7 +6,7 @@ using Avalonia.Markup.Xaml;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
-using Hoi4BlueprintBuilder.Core.ViewModels;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
 

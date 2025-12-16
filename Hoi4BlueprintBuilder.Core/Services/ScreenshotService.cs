@@ -1,11 +1,11 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Controls;
-using Hoi4BlueprintBuilder.Core.ViewModels;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -109,7 +109,7 @@ public sealed class ScreenshotService
         double y = viewModel.Model.Y * FocusMapConstants.CellHeight;
 
         // Draw Image
-        if (viewModel.BitmapSource is not null)
+        if (viewModel.Bitmap is not null)
         {
             double imgWidth = viewModel.Width;
             double imgHeight = viewModel.Height;
@@ -117,7 +117,7 @@ public sealed class ScreenshotService
             double imgX = x + (FocusMapConstants.CellWidth - imgWidth) / 2;
             double imgY = y + (FocusMapConstants.CellHeight - imgHeight) / 2;
 
-            dc.DrawImage(viewModel.BitmapSource, new Rect(imgX, imgY, imgWidth, imgHeight));
+            dc.DrawImage(viewModel.Bitmap, new Rect(imgX, imgY, imgWidth, imgHeight));
         }
 
         // Draw Text

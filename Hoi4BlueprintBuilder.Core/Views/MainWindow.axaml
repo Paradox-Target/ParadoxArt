@@ -4,13 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="using:Hoi4BlueprintBuilder.Core.Views"
-    xmlns:views1="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
-    xmlns:vm="using:Hoi4BlueprintBuilder.Core.ViewModels"
+    xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
     Title="Hoi4BlueprintBuilder"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Icon="/Assets/avalonia-logo.ico"
     mc:Ignorable="d">
-    <views1:MainView />
+    <views:MainView />
 </Window>
