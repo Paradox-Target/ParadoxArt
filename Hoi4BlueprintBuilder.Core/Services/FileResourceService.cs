@@ -194,7 +194,6 @@ public sealed class FileResourceService(SettingsService settingsService)
 
     private static void PngToDds(string pngFilePath, string outputFilePath)
     {
-        // TODO: 检查有效性, CompressionFormat 可能对不上
         Debug.Assert(Path.GetExtension(pngFilePath).EqualsIgnoreCase(".png"));
 
         using var image = Image.Load<Rgba32>(pngFilePath);
@@ -204,7 +203,7 @@ public sealed class FileResourceService(SettingsService settingsService)
             OutputOptions =
             {
                 Quality = CompressionQuality.Balanced,
-                Format = CompressionFormat.Rgb,
+                Format = CompressionFormat.Bgra,
                 FileFormat = OutputFileFormat.Dds
             }
         };
