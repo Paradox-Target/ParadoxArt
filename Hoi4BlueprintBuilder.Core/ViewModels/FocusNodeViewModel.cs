@@ -14,7 +14,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     public string LocalizedName => LocalizationFormatService.GetFormatText(Model.Id);
 
     [ObservableProperty]
-    private Bitmap? _bitmapSource;
+    private Bitmap? _bitmap;
 
     [ObservableProperty]
     private double _width;
@@ -49,9 +49,9 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 
     private void LoadBitmapSource()
     {
-        BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
-        Width = BitmapSource?.PixelSize.Width ?? 0;
-        Height = BitmapSource?.PixelSize.Height ?? 0;
+        Bitmap = ImageService.GetFocusIconByName(Model.Icon);
+        Width = Bitmap?.PixelSize.Width ?? 0;
+        Height = Bitmap?.PixelSize.Height ?? 0;
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     /// </summary>
     public void Dispose()
     {
-        BitmapSource?.Dispose();
+        Bitmap?.Dispose();
         Model.PropertyChanged -= OnModelPropertyChanged;
         Model.Dispose();
     }
