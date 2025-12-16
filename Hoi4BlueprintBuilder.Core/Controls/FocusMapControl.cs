@@ -1,4 +1,4 @@
-using System.Collections.Specialized;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Messaging;
@@ -21,33 +21,32 @@ public sealed class FocusMapControl : ItemsControl
 
     private static Pen InitializePrerequisiteLinePen()
     {
-        var prerequisiteLinePen = new Pen(Colors.PaleGoldenrod.ToBrush(), LinePenWidth);
-        prerequisiteLinePen.Freeze();
-        return prerequisiteLinePen;
+        return new Pen(new SolidColorBrush(Colors.PaleGoldenrod), LinePenWidth);
     }
 
     private static Pen InitializeExclusiveLinePen()
     {
-        var exclusiveLinePen = new Pen(Colors.OrangeRed.ToBrush(), LinePenWidth);
-        exclusiveLinePen.Freeze();
-        return exclusiveLinePen;
+        return new Pen(new SolidColorBrush(Colors.OrangeRed), LinePenWidth);
     }
 
     private static Pen InitializePrerequisiteDashPen()
     {
-        var prerequisiteDashPen = new Pen(Colors.LightGray.ToBrush(), LinePenWidth)
-        {
-            DashStyle = new DashStyle { Offset = 0, Dashes = [1, 2] }
-        };
-        prerequisiteDashPen.Freeze();
-        return prerequisiteDashPen;
+        return new Pen(
+            new SolidColorBrush(Colors.LightGray),
+            LinePenWidth,
+            new DashStyle([1, 2], 0)
+        );
     }
 
-    protected override void OnInitialized(EventArgs e)
+    protected override void OnInitialized()
     {
-        base.OnInitialized(e);
+        base.OnInitialized();
 
-        WeakReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(this, OnMoveFocus);
+        WeakReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(
+            this,
+            OnMoveFocus
+        );
+        Items.CollectionChanged += (_, _) => InvalidateVisual();
     }
 
     private void OnMoveFocus(object recipient, RedrawFocusConnectionLinesMessage message)
@@ -55,21 +54,17 @@ public sealed class FocusMapControl : ItemsControl
         InvalidateVisual();
     }
 
-    protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+    public override void Render(DrawingContext context)
     {
-        base.OnItemsChanged(e);
+        base.Render(context);
 
-        InvalidateVisual();
+        DrawNodeConnectionsLines(context, Items.Cast<FocusNodeViewModel>());
     }
 
-    protected override void OnRender(DrawingContext dc)
-    {
-        base.OnRender(dc);
-
-        DrawNodeConnectionsLines(dc, Items.Cast<FocusNodeViewModel>());
-    }
-
-    public static void DrawNodeConnectionsLines(DrawingContext dc, IEnumerable<FocusNodeViewModel> nodes)
+    public static void DrawNodeConnectionsLines(
+        DrawingContext dc,
+        IEnumerable<FocusNodeViewModel> nodes
+    )
     {
         foreach (var viewModel in nodes)
         {
@@ -104,17 +99,18 @@ public sealed class FocusMapControl : ItemsControl
         }
     }
 
-    public static void DrawPrerequisite(DrawingContext dc, FocusNode node, FocusNode pre, Pen pen)
+    public static void DrawPrerequisite(DrawingContext dc, FocusNode node, FocusNode pre, IPen pen)
     {
         var offset = new Vector(0, CellHeight / 2);
 
         var nodeJoint = GetNodeCenter(node);
         var preJoint = GetNodeCenter(pre);
-        var nodeCorner = Point.Subtract(nodeJoint, offset);
-        var preCorner = Point.Add(preJoint, offset);
+        var nodeCorner = nodeJoint - offset;
+        var preCorner = preJoint + offset;
 
         var middleY = (nodeCorner.Y + preCorner.Y) / 2;
-        nodeCorner.Y = preCorner.Y = middleY;
+        nodeCorner = nodeCorner.WithY(middleY);
+        preCorner = preCorner.WithY(middleY);
 
         dc.DrawLine(pen, nodeJoint, nodeCorner);
         dc.DrawLine(pen, preJoint, preCorner);
@@ -129,7 +125,11 @@ public sealed class FocusMapControl : ItemsControl
         }
     }
 
-    public static void DrawMutuallyExclusive(DrawingContext dc, FocusNode node, FocusNode secondNode)
+    public static void DrawMutuallyExclusive(
+        DrawingContext dc,
+        FocusNode node,
+        FocusNode secondNode
+    )
     {
         var nodeJoint = GetNodeCenter(node);
         var exJoint = GetNodeCenter(secondNode);

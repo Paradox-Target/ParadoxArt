@@ -1,4 +1,6 @@
 using System.Runtime.InteropServices;
+using Avalonia;
+using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Infrastructure;
@@ -42,7 +44,7 @@ public sealed class ImageService : IDisposable
 
     private const string Unknown = "GFX_goal_unknown";
 
-    public BitmapSource? GetFocusIconByName(string spriteName)
+    public Bitmap? GetFocusIconByName(string spriteName)
     {
         if (!_spriteService.TryGetSpriteFilePath(spriteName, out string? filePath))
         {
@@ -64,30 +66,24 @@ public sealed class ImageService : IDisposable
     /// <param name="spriteId">图像ID</param>
     /// <param name="filePath">图像文件路径</param>
     /// <returns>如果是不支持的图像格式, 返回 <c>null</c></returns>
-    public BitmapSource? GetImageSource(string spriteId, string filePath)
+    public Bitmap? GetImageSource(string spriteId, string filePath)
     {
         var extension = Path.GetExtension(filePath.AsSpan());
-        BitmapSource? bitmapSource = null;
+        Bitmap? bitmap = null;
         if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
         {
-            var image = new BitmapImage();
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.UriSource = new Uri(filePath, UriKind.Absolute);
-            image.EndInit();
-            bitmapSource = image;
+            bitmap = new Bitmap(filePath);
         }
 
         if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))
         {
-            bitmapSource = GetImageSourceFromDds(spriteId, filePath);
+            bitmap = GetImageSourceFromDds(spriteId, filePath);
         }
 
-        bitmapSource?.Freeze();
-        return bitmapSource;
+        return bitmap;
     }
 
-    private BitmapSource GetImageSourceFromDds(string spriteName, string filePath)
+    private Bitmap GetImageSourceFromDds(string spriteName, string filePath)
     {
         if (!_ddsHandles.TryGetValue(filePath, out var meta))
         {
@@ -99,22 +95,18 @@ public sealed class ImageService : IDisposable
                 image.Width,
                 image.Height,
                 GetPixelFormat(image),
-                image.DataLen,
                 image.Stride
             );
             _ddsHandles.Add(filePath, meta);
         }
 
         IntPtr addr = meta.Handle.AddrOfPinnedObject();
-        var bsource = BitmapSource.Create(
-            meta.Width,
-            meta.Height,
-            96.0,
-            96.0,
+        var bsource = new Bitmap(
             meta.Format,
-            null,
+            AlphaFormat.Unpremul,
             addr,
-            meta.DataLength,
+            new PixelSize(meta.Width, meta.Height),
+            new Vector(96, 96),
             meta.Stride
         );
 
@@ -126,7 +118,7 @@ public sealed class ImageService : IDisposable
         return image.Format switch
         {
             ImageFormat.Rgb24 => PixelFormats.Bgr24,
-            ImageFormat.Rgba32 => PixelFormats.Bgra32,
+            ImageFormat.Rgba32 => PixelFormats.Rgba8888,
             ImageFormat.Rgb8 => PixelFormats.Gray8,
             ImageFormat.R5g5b5a1 or ImageFormat.R5g5b5 => PixelFormats.Bgr555,
             ImageFormat.R5g6b5 => PixelFormats.Bgr565,
@@ -143,7 +135,6 @@ public sealed class ImageService : IDisposable
         int Width,
         int Height,
         PixelFormat Format,
-        int DataLength,
         int Stride
     );
 

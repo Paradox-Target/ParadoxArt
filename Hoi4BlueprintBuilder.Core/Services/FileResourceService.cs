@@ -195,7 +195,6 @@ public sealed class FileResourceService(SettingsService settingsService)
     {
         Debug.Assert(Path.GetExtension(pngFilePath).EqualsIgnoreCase(".png"));
         
-        using var png = TexHelper.Instance.LoadFromWICFile(pngFilePath, WIC_FLAGS.NONE);
-        png.SaveToDDSFile(DDS_FLAGS.NONE, outputFilePath);
+        
     }
 }

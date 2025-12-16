@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
@@ -13,7 +14,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     public string LocalizedName => LocalizationFormatService.GetFormatText(Model.Id);
 
     [ObservableProperty]
-    private BitmapSource? _bitmapSource;
+    private Bitmap? _bitmapSource;
 
     [ObservableProperty]
     private double _width;
@@ -29,9 +30,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     public FocusNodeViewModel(FocusNode model)
     {
         Model = model;
-        BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
-        Width = BitmapSource?.PixelWidth ?? 0;
-        Height = BitmapSource?.PixelHeight ?? 0;
+        LoadBitmapSource();
 
         Model.PropertyChanged += OnModelPropertyChanged;
     }
@@ -44,10 +43,15 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
         }
         else if (args.PropertyName == nameof(Model.Icon))
         {
-            BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
-            Width = BitmapSource?.PixelWidth ?? 0;
-            Height = BitmapSource?.PixelHeight ?? 0;
+            LoadBitmapSource();
         }
+    }
+
+    private void LoadBitmapSource()
+    {
+        BitmapSource = ImageService.GetFocusIconByName(Model.Icon);
+        Width = BitmapSource?.PixelSize.Width ?? 0;
+        Height = BitmapSource?.PixelSize.Height ?? 0;
     }
 
     /// <summary>
@@ -55,6 +59,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     /// </summary>
     public void Dispose()
     {
+        BitmapSource?.Dispose();
         Model.PropertyChanged -= OnModelPropertyChanged;
         Model.Dispose();
     }
