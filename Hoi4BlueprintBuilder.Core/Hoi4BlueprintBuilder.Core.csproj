@@ -20,6 +20,8 @@
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="BCnEncoder.Net" />
+        <PackageReference Include="BCnEncoder.Net.ImageSharp" />
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="NLog" />
@@ -28,6 +30,7 @@
         <PackageReference Include="ParadoxPower.CSharpExtensions" />
         <PackageReference Include="Pfim" />
         <PackageReference Include="Pidgin" />
+        <PackageReference Include="SixLabors.ImageSharp" />
         <PackageReference Include="ZLinq" />
         <PackageReference Include="Ardalis.SmartEnum" />
         <PackageReference Include="Ardalis.SmartEnum" />

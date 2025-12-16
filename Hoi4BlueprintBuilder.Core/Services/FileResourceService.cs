@@ -1,10 +1,15 @@
 using System.Diagnostics;
+using BCnEncoder.Encoder;
+using BCnEncoder.ImageSharp;
+using BCnEncoder.Shared;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
 using ParadoxPower.Process;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
@@ -127,11 +132,7 @@ public sealed class FileResourceService(SettingsService settingsService)
             rootNode.AllArray = [spriteTypesNode];
         }
         spriteTypesNode.AddChild(spriteType);
-        File.WriteAllText(
-            focusIconRegistrationFilePath,
-            rootNode.ToScript(),
-            App.Utf8Encoding
-        );
+        File.WriteAllText(focusIconRegistrationFilePath, rootNode.ToScript(), App.Utf8Encoding);
     }
 
     private static Node CreateFocusSpriteTypeNode(string name, string relativePath)
@@ -193,8 +194,22 @@ public sealed class FileResourceService(SettingsService settingsService)
 
     private static void PngToDds(string pngFilePath, string outputFilePath)
     {
+        // TODO: 检查有效性, CompressionFormat 可能对不上
         Debug.Assert(Path.GetExtension(pngFilePath).EqualsIgnoreCase(".png"));
-        
-        
+
+        using var image = Image.Load<Rgba32>(pngFilePath);
+
+        var encoder = new BcEncoder
+        {
+            OutputOptions =
+            {
+                Quality = CompressionQuality.Balanced,
+                Format = CompressionFormat.Rgb,
+                FileFormat = OutputFileFormat.Dds
+            }
+        };
+
+        using var fs = File.Open(outputFilePath, FileMode.Create);
+        encoder.EncodeToStream(image, fs);
     }
 }
