@@ -1,0 +1,78 @@
+﻿<UserControl
+    d:DataContext="{d:DesignInstance vms:AppSettingsPageViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Hoi4BlueprintBuilder.Core.Views.Initialization.AppSettingsPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Initialization"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid
+        ColumnDefinitions="*,*,*"
+        RowDefinitions="*,*,*,*"
+        VerticalAlignment="Center">
+
+        <StackPanel
+            Grid.RowSpan="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Image Source="{StaticResource AppSettingsMainIcon}" Style="{StaticResource SettingsIconImageStyle}" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Margin="20">
+            <StackPanel Margin="0,16">
+                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="语言(Language)" />
+                <ComboBox
+                    FontFamily="Cascadia Code, Sarasa UI SC"
+                    ItemsSource="{Binding Languages, Mode=OneTime}"
+                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                    Style="{StaticResource SettingsPickComboboxStyle}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayName, Mode=OneTime}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="游戏语言(Game Language)" />
+                <ComboBox
+                    ItemsSource="{Binding GameLanguages, Mode=OneTime}"
+                    SelectedIndex="{Binding SelectedGameLanguageIndex, Mode=TwoWay}"
+                    Style="{StaticResource SettingsPickComboboxStyle}" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Column="1"
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            Margin="0,28">
+            <Button
+                Click="Previous_OnClick"
+                Content="上一步"
+                HorizontalAlignment="Right"
+                Style="{StaticResource SettingsStepButtonStyle}" />
+        </StackPanel>
+        <StackPanel
+            Grid.Column="2"
+            Grid.Row="3"
+            HorizontalAlignment="Center"
+            Margin="0,28">
+            <Button
+                Background="#00B7C3"
+                Click="Next_OnClick"
+                Content="下一步"
+                HorizontalAlignment="Right"
+                Style="{StaticResource SettingsStepButtonStyle}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
