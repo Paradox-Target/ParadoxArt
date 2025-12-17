@@ -1,6 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
+using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 

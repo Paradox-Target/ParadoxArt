@@ -23,6 +23,7 @@
         <PackageReference Include="BCnEncoder.Net" />
         <PackageReference Include="BCnEncoder.Net.ImageSharp" />
         <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="NLog" />
 

@@ -1,14 +1,18 @@
 ﻿using System.Diagnostics;
-using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views.Initialization;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Initialization;
 
 [RegisterTransient<GameSettingsPageViewModel>]
-public sealed partial class GameSettingsPageViewModel(SettingsService settings) : ObservableObject
+public sealed partial class GameSettingsPageViewModel(
+    SettingsService settings,
+    FileService fileService
+) : ObservableObject
 {
     public Frame? Frame { get; set; }
 
@@ -28,26 +32,27 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings) 
     private string _modPath = string.Empty;
 
     [RelayCommand]
-    private void PickGamePath()
+    private async Task PickGamePath()
     {
-        var dialog = new OpenFolderDialog { Multiselect = false };
+        var storageFolder = await fileService.OpenFolderAsync();
 
-        if (dialog.ShowDialog() == true)
+        if (storageFolder is not null)
         {
-            GamePath = dialog.FolderName;
-            settings.GameRootFolderPath = dialog.FolderName;
+            GamePath = storageFolder.TryGetLocalPath() ?? throw new NullReferenceException();
+            settings.GameRootFolderPath = GamePath;
         }
     }
 
     [RelayCommand]
-    private void PickModPath()
+    private async Task PickModPath()
     {
-        var dialog = new OpenFolderDialog { Multiselect = false };
+        var storageFolder = await fileService.OpenFolderAsync();
 
-        if (dialog.ShowDialog() == true)
+        if (storageFolder is not null)
         {
-            ModPath = dialog.FolderName;
-            settings.ModRootFolderPath = dialog.FolderName;
+            // TODO: 也许需要改成 Uri
+            ModPath = storageFolder.TryGetLocalPath() ?? throw new NullReferenceException();
+            settings.ModRootFolderPath = ModPath;
         }
     }
 
@@ -62,7 +67,7 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings) 
         }
         else
         {
-            Frame.Navigate(new AppSettingsPageView(Frame));
+            Frame.NavigateFromObject(new AppSettingsPageView(Frame));
         }
     }
 }

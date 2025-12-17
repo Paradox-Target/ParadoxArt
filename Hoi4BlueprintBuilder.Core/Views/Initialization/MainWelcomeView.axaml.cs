@@ -9,6 +9,6 @@ public sealed partial class MainWelcomeView : UserControl
     {
         InitializeComponent();
 
-        MainFrame.Navigate(new GameSettingsPageView(MainFrame));
+        MainFrame.NavigateFromObject(new GameSettingsPageView(MainFrame));
     }
 }
