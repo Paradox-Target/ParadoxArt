@@ -34,7 +34,6 @@
         <PackageReference Include="SixLabors.ImageSharp" />
         <PackageReference Include="ZLinq" />
         <PackageReference Include="Ardalis.SmartEnum" />
-        <PackageReference Include="Ardalis.SmartEnum" />
         <PackageReference Include="Enums.NET" />
         <PackageReference Include="NLua" />
         <PackageReference Include="Injectio" />
