@@ -30,6 +30,6 @@ public partial class AppSettingsPageView : UserControl
         var settingsService = App.Current.Services.GetRequiredService<SettingsService>();
         LanguageHelper.SetLanguage(settingsService.AppLanguage);
         settingsService.SaveSettings();
-        App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainControlView>();
+        // App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainControlView>();
     }
 }

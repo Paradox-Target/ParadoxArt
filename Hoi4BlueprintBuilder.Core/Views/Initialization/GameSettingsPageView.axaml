@@ -1,68 +1,65 @@
 ﻿<UserControl
-    d:DataContext="{d:DesignInstance vms:GameSettingsPageViewModel}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d"
     x:Class="Hoi4BlueprintBuilder.Core.Views.Initialization.GameSettingsPageView"
     xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:language="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Initialization"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:GameSettingsPageViewModel"
+    mc:Ignorable="d">
     <Grid
+        VerticalAlignment="Center"
         ColumnDefinitions="*,*,*"
-        RowDefinitions="*,*,*,*"
-        VerticalAlignment="Center">
+        RowDefinitions="*,*,*,*">
 
         <StackPanel
             Grid.RowSpan="3"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
-            <Image Source="{StaticResource GameSettingsMainIcon}" Style="{StaticResource SettingsIconImageStyle}" />
+            <Image Classes="SettingsIconImage" Source="{StaticResource GameSettingsMainIcon}" />
         </StackPanel>
 
         <StackPanel
-            Grid.Column="1"
-            Grid.ColumnSpan="2"
             Grid.Row="0"
             Grid.RowSpan="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
             Margin="20">
             <StackPanel Margin="0,16">
-                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_GameRoot}" />
+                <TextBlock Classes="SettingsTitleTextBlock" Text="游戏根目录" />
                 <Grid ColumnDefinitions="*,Auto">
-                    <TextBox Style="{StaticResource SettingsPathTextBoxStyle}" Text="{Binding GamePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Classes="SettingsPathTextBox" Text="{Binding GamePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
-                        Command="{Binding PickGamePathCommand}"
-                        Content="{x:Static language:Strings.GameSettings_Overview}"
                         Grid.Column="1"
-                        Style="{StaticResource SettingsPickButtonStyle}" />
+                        Classes="SettingsPickButton"
+                        Command="{Binding PickGamePathCommand}" />
                 </Grid>
             </StackPanel>
 
             <StackPanel>
-                <TextBlock Style="{StaticResource SettingsTitleTextBlockStyle}" Text="{x:Static language:Strings.GameSettings_ModRoot}" />
+                <TextBlock Classes="SettingsTitleTextBlock" Text="MOD 根目录" />
                 <Grid ColumnDefinitions="*,Auto">
-                    <TextBox Style="{StaticResource SettingsPathTextBoxStyle}" Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Classes="SettingsPathTextBox" Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button
-                        Command="{Binding PickModPathCommand}"
-                        Content="{x:Static language:Strings.GameSettings_Overview}"
                         Grid.Column="1"
-                        Style="{StaticResource SettingsPickButtonStyle}" />
+                        Classes="SettingsPickButton"
+                        Command="{Binding PickModPathCommand}" />
                 </Grid>
             </StackPanel>
         </StackPanel>
 
         <StackPanel
-            Grid.Column="2"
             Grid.Row="3"
-            HorizontalAlignment="Center"
-            Margin="0,28">
+            Grid.Column="2"
+            Margin="0,28"
+            HorizontalAlignment="Center">
             <Button
-                Command="{Binding GoToNextPageCommand, Mode=Default}"
-                Content="下一步"
                 HorizontalAlignment="Right"
-                Style="{StaticResource SettingsStepButtonStyle}" />
+                Classes="SettingsStepButton"
+                Command="{Binding GoToNextPageCommand, Mode=Default}"
+                Content="下一步" />
         </StackPanel>
     </Grid>
 </UserControl>
