@@ -10,5 +10,5 @@
     d:DesignWidth="800"
     Icon="/Assets/avalonia-logo.ico"
     mc:Ignorable="d">
-    <views:MainView />
+    <ContentControl x:Name="MainContent" />
 </Window>

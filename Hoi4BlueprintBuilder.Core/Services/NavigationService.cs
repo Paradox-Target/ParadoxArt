@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<NavigationService>]
-public sealed class NavigationService
+public sealed class NavigationService(IServiceProvider serviceProvider)
 {
     public event Action? ViewChanged;
 
@@ -24,6 +24,6 @@ public sealed class NavigationService
 
     private void NavigateTo(Type type)
     {
-        CurrentView = App.Current.Services.GetRequiredService(type);
+        CurrentView = serviceProvider.GetRequiredService(type);
     }
 }

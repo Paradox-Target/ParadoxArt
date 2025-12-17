@@ -6,15 +6,15 @@ using Avalonia.Markup.Xaml;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
-using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core;
 
-public sealed partial class App : Application
+public sealed class App : Application
 {
-    public new static App Current => (App)Application.Current!;
+    // ReSharper disable once ArrangeModifiersOrder
+    public static new App Current => (App)Application.Current!;
     public ServiceProvider Services { get; } = ConfigureServices();
 
     public static string AppFolder { get; } =
@@ -63,11 +63,11 @@ public sealed partial class App : Application
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit.
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow { DataContext = new MainViewModel() };
+            desktop.MainWindow = Services.GetRequiredService<MainWindow>();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = new MainView { DataContext = new MainViewModel() };
+            singleViewPlatform.MainView = Services.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();
