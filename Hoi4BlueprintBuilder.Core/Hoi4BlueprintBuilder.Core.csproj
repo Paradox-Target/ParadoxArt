@@ -45,8 +45,4 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Styles\" />
-    </ItemGroup>
 </Project>
