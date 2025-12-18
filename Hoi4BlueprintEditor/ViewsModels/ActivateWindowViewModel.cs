@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hoi4BlueprintEditor.Services;
-using Hoi4BlueprintEditor.Views;
+using Hoi4BlueprintEditor.Views.Initialization;
 using NLog;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
@@ -59,7 +59,7 @@ public sealed partial class ActivateWindowViewModel : ObservableObject
             if (IsActivated)
             {
                 _notificationService.Show("设备激活成功，感谢您的支持！");
-                _navigationService.NavigateTo<MainControlView>();
+                _navigationService.NavigateTo<MainWelcomeView>();
             }
             else
             {

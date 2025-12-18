@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Hoi4BlueprintEditor.Services;
+using Hoi4BlueprintEditor.Views.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
@@ -34,9 +35,17 @@ public sealed partial class LoadingView : UserControl
                 }
 
                 var navigationService = App.Current.Services.GetRequiredService<NavigationService>();
+                var settingsService = App.Current.Services.GetRequiredService<SettingsService>();
                 if (task.IsCompletedSuccessfully && task.Result)
                 {
-                    navigationService.NavigateTo<MainControlView>();
+                    if (settingsService.IsFirstRun)
+                    {
+                        navigationService.NavigateTo<MainWelcomeView>();
+                    }
+                    else
+                    {
+                        navigationService.NavigateTo<MainControlView>();
+                    }
                 }
                 else
                 {

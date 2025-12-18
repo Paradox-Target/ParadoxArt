@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Net.Security;
 using System.Security.Cryptography;
 using Hoi4BlueprintEditor.DTOs;
+using NLog;
 
 namespace Hoi4BlueprintEditor.Services;
 
@@ -10,6 +11,7 @@ namespace Hoi4BlueprintEditor.Services;
 public sealed class AuthService : IDisposable
 {
     private readonly DeviceService _deviceService;
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public AuthService(DeviceService deviceService)
     {
@@ -43,7 +45,9 @@ public sealed class AuthService : IDisposable
 
     public async Task<bool> IsActivatedAsync()
     {
-        var body = new DeviceCheckRequest { DeviceId = _deviceService.GetDeviceId() };
+        string id = _deviceService.GetDeviceId();
+        Log.Info("User ID: {Id}", id);
+        var body = new DeviceCheckRequest { DeviceId = id };
         using var result = await _client.PostAsJsonAsync("device/check", body);
         result.EnsureSuccessStatusCode();
         var response = await result.Content.ReadFromJsonAsync<DeviceStatusResponse>();

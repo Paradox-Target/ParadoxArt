@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views;
+using Hoi4BlueprintEditor.Views.Initialization;
 
 namespace Hoi4BlueprintEditor.ViewsModels;
 
@@ -29,7 +30,14 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
         else if (App.Current.IsActivated.IsCompletedSuccessfully && App.Current.IsActivated.Result)
         {
-            navigationService.NavigateTo<MainControlView>();
+            if (settingsService.IsFirstRun)
+            {
+                navigationService.NavigateTo<MainWelcomeView>();
+            }
+            else
+            {
+                navigationService.NavigateTo<MainControlView>();
+            }
         }
         else
         {
