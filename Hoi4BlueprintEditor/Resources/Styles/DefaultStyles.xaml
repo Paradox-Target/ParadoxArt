@@ -6,7 +6,7 @@
         <Setter Property="FontFamily" Value="Cascadia Code" />
     </Style>
 
-    <FontFamily x:Key="ContentControlThemeFontFamily">Sarasa UI SC</FontFamily>
+    <!-- <FontFamily x:Key="ContentControlThemeFontFamily">Sarasa UI SC</FontFamily> -->
 
     <Style TargetType="ui:NumberBox">
         <Setter Property="FontFamily" Value="Cascadia Code" />
@@ -16,11 +16,11 @@
         <Setter Property="FontFamily" Value="Cascadia Code" />
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultMenuStyleKey}}" TargetType="Menu">
-        <Setter Property="FontFamily" Value="Sarasa UI SC" />
-    </Style>
-
-    <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultButtonStyleKey}}" TargetType="Button">
-        <Setter Property="FontFamily" Value="Sarasa UI SC" />
-    </Style>
+    <!-- <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultMenuStyleKey}}" TargetType="Menu"> -->
+    <!--     <Setter Property="FontFamily" Value="Sarasa UI SC" /> -->
+    <!-- </Style> -->
+    <!--    -->
+    <!-- <Style BasedOn="{StaticResource {x:Static ui:ThemeKeys.DefaultButtonStyleKey}}" TargetType="Button"> -->
+    <!--     <Setter Property="FontFamily" Value="Sarasa UI SC" /> -->
+    <!-- </Style> -->
 </ResourceDictionary>
