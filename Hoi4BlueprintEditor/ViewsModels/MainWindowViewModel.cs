@@ -1,3 +1,4 @@
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintEditor.Services;
 using Hoi4BlueprintEditor.Views;
@@ -32,7 +33,23 @@ public sealed partial class MainWindowViewModel : ObservableObject
             }
             else
             {
-                navigationService.NavigateTo<MainControlView>();
+                if (
+                    Directory.Exists(settingsService.GameRootFolderPath)
+                    && Directory.Exists(settingsService.ModRootFolderPath)
+                )
+                {
+                    navigationService.NavigateTo<MainControlView>();
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "游戏或MOD文件夹路径无效，请重新设置",
+                        "路径无效",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+                    navigationService.NavigateTo<MainWelcomeView>();
+                }
             }
         }
         else

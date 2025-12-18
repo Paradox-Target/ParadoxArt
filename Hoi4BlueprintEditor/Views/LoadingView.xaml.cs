@@ -44,7 +44,23 @@ public sealed partial class LoadingView : UserControl
                     }
                     else
                     {
-                        navigationService.NavigateTo<MainControlView>();
+                        if (
+                            Directory.Exists(settingsService.GameRootFolderPath)
+                            && Directory.Exists(settingsService.ModRootFolderPath)
+                        )
+                        {
+                            navigationService.NavigateTo<MainControlView>();
+                        }
+                        else
+                        {
+                            MessageBox.Show(
+                                "游戏或MOD文件夹路径无效，请重新设置",
+                                "路径无效",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning
+                            );
+                            navigationService.NavigateTo<MainWelcomeView>();
+                        }
                     }
                 }
                 else
