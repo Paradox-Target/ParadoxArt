@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Hoi4BlueprintBuilder.Core.Models"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Initialization"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -34,7 +35,7 @@
                     ItemsSource="{Binding Languages, Mode=OneTime}"
                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="models:LanguageInfo">
                             <TextBlock Text="{Binding DisplayName, Mode=OneTime}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
