@@ -1,0 +1,1 @@
+dotnet publish -r win-x64 -o .\publish\win-x64 .\Hoi4BlueprintEditor\Hoi4BlueprintEditor.csproj --self-contained true
