@@ -24,11 +24,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
 #if DEBUG
         navigationService.NavigateTo<MainControlView>();
 #else
-        if (settingsService.IsFirstRun)
-        {
-            navigationService.NavigateTo<ActivateWindowView>();
-        }
-        else if (App.Current.IsActivated.IsCompletedSuccessfully && App.Current.IsActivated.Result)
+        if (App.Current.IsActivated.IsCompletedSuccessfully && App.Current.IsActivated.Result)
         {
             if (settingsService.IsFirstRun)
             {
