@@ -14,8 +14,8 @@ namespace Hoi4BlueprintBuilder.Core;
 
 public sealed class App : Application
 {
-    // ReSharper disable once ArrangeModifiersOrder
     public static new App Current => (App)Application.Current!;
+    public Task<bool>? IsActivated { get; private set; }
     public ServiceProvider Services { get; } = ConfigureServices();
 
     public static string AppFolder { get; } =
@@ -52,6 +52,8 @@ public sealed class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+
+        IsActivated = Services.GetRequiredService<AuthService>().IsActivatedAsync();
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -64,6 +66,7 @@ public sealed class App : Application
             desktop.MainWindow = Services.GetRequiredService<MainWindow>();
             desktop.Exit += (_, _) =>
             {
+                // TODO: 安卓平台的资源清理
                 Services.Dispose();
                 LogManager.Flush();
             };
@@ -76,7 +79,7 @@ public sealed class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private void DisableAvaloniaDataAnnotationValidation()
+    private static void DisableAvaloniaDataAnnotationValidation()
     {
         // Get an array of plugins to remove
         var dataValidationPluginsToRemove = BindingPlugins

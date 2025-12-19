@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintBuilder.Core.Services;
-using Hoi4BlueprintBuilder.Core.Views.Initialization;
+using Hoi4BlueprintBuilder.Core.Views;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
@@ -20,6 +20,17 @@ public sealed partial class MainWindowViewModel : ObservableObject
             CurrentView = _navigationService.CurrentView;
         };
 
-        _navigationService.NavigateTo<MainWelcomeView>();
+#if DEBUG
+        navigationService.NavigateTo<MainView>();
+#else
+        if (App.Current.IsActivated?.IsCompleted is true)
+        {
+            navigationService.NavigateBasedOnDeviceStatus();
+        }
+        else
+        {
+            navigationService.NavigateTo<LoadingView>();
+        }
+#endif
     }
 }
