@@ -1,0 +1,44 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.Dialogs.CreateNewFocusView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    x:DataType="vms:CreateNewFocusViewModel"
+    mc:Ignorable="d">
+    <Grid RowDefinitions="*,*,*">
+
+        <TextBox
+            Grid.Row="0"
+            Margin="4"
+            VerticalAlignment="Center"
+            Text="{Binding FocusId, Mode=TwoWay}" />
+
+        <ComboBox
+            Grid.Row="1"
+            Margin="4"
+            ItemsSource="{Binding FocusTypes, Mode=OneTime}"
+            SelectedIndex="{Binding SelectedFocusTypeIndex, Mode=TwoWay}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vms:FocusTypeItem">
+                    <TextBlock Text="{Binding Path=DisplayName, Mode=OneTime}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ComboBox
+            Grid.Row="2"
+            Margin="4"
+            ItemsSource="{Binding FocusFileNames, Mode=OneTime}"
+            SelectedIndex="{Binding SelectedFocusFileNameIndex, Mode=TwoWay}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="vms:FocusFileItem">
+                    <TextBlock Text="{Binding Path=FileName, Mode=OneTime}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+    </Grid>
+</UserControl>

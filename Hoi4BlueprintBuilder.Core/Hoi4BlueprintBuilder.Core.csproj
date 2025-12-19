@@ -28,6 +28,7 @@
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="MessageBox.Avalonia" />
         <PackageReference Include="NLog" />
+        <PackageReference Include="ObservableCollections" />
 
         <PackageReference Include="ParadoxPower" />
         <PackageReference Include="ParadoxPower.CSharpExtensions" />

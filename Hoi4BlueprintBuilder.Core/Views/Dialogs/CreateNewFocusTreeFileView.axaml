@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.Dialogs.CreateNewFocusTreeFileView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    x:DataType="vms:CreateNewFocusTreeFileViewModel"
+    mc:Ignorable="d">
+
+    <Grid RowDefinitions="*,*,*,*">
+
+        <TextBox
+            Grid.Row="0"
+            MinWidth="200"
+            Margin="8,0"
+            VerticalAlignment="Center"
+            Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBox
+            Grid.Row="1"
+            MinWidth="200"
+            Margin="8,0"
+            VerticalAlignment="Center"
+            Text="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <TextBox
+            Grid.Row="2"
+            MinWidth="200"
+            Margin="8,0"
+            VerticalAlignment="Center"
+            Text="{Binding CountryTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <ToggleSwitch
+            Grid.Row="3"
+            Margin="8,8,8,0"
+            IsChecked="{Binding IsDefaultFocusTree, Mode=TwoWay}" />
+    </Grid>
+</UserControl>

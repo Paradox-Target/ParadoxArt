@@ -1,0 +1,113 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.EditorCanvasView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:const="clr-namespace:Hoi4BlueprintBuilder.Core.Constants"
+    xmlns:controls="clr-namespace:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:converters="clr-namespace:Hoi4BlueprintBuilder.Core.Infrastructure.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    x:DataType="vms:EditorCanvasViewModel"
+    Background="#333333"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
+    </UserControl.Resources>
+
+    <Grid ClipToBounds="True">
+
+        <controls:GridRulerControl
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}"
+            ZIndex="{x:Static const:FocusMapConstants.GridRulerZIndex}">
+            <controls:GridRulerControl.ContextMenu>
+                <ContextMenu
+                    x:Name="RightContextMenu"
+                    d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Opened="ContextMenu_OnOpened">
+                    <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
+                        <MenuItem.Icon>
+                            <fa:FontIcon Glyph="&#xE710;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Header="设置互斥国策">
+                        <MenuItem.Icon>
+                            <fa:FontIcon Glyph="&#xE711;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding SetPrerequisiteFocusCommand}" Header="设置前置国策">
+                        <MenuItem.Icon>
+                            <fa:FontIcon Glyph="&#xE71B;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding DeleteFocusNodeCommand}" Header="删除">
+                        <MenuItem.Icon>
+                            <fa:FontIcon Glyph="&#xE74D;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding ConvertToAbsolutePositionCommand}" Header="转换为绝对位置">
+                        <MenuItem.Icon>
+                            <fa:FontIcon Glyph="&#xE707;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding SetRelativePositionCommand}" Header="设置相对位置">
+                        <MenuItem.Icon>
+                            <fa:FontIcon Glyph="&#xEB9D;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </controls:GridRulerControl.ContextMenu>
+        </controls:GridRulerControl>
+
+        <controls:GridBackgroundControl
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}"
+            ZIndex="{x:Static const:FocusMapConstants.GridBackgroundZIndex}" />
+
+        <controls:FocusMapControl ItemsSource="{Binding Nodes}" ZIndex="{x:Static const:FocusMapConstants.FocusMapZIndex}">
+
+            <controls:FocusMapControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                    <TranslateTransform X="{Binding TranslateX}" Y="{Binding TranslateY}" />
+                </TransformGroup>
+            </controls:FocusMapControl.RenderTransform>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <views:FocusNodeView />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.Styles>
+                <Style x:DataType="vms:FocusNodeViewModel" Selector="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellWidth}}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellHeight}}" />
+                </Style>
+            </ItemsControl.Styles>
+        </controls:FocusMapControl>
+
+        <controls:ConnectionPreviewOverlayControl
+            x:Name="ConnectionPreviewOverlay"
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}"
+            ZIndex="1" />
+
+        <!-- <views:FocusInfoView x:Name="FocusInfoView" /> -->
+    </Grid>
+</UserControl>
