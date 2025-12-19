@@ -8,6 +8,7 @@ using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
+using NLog;
 
 namespace Hoi4BlueprintBuilder.Core;
 
@@ -61,6 +62,11 @@ public sealed class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = Services.GetRequiredService<MainWindow>();
+            desktop.Exit += (_, _) =>
+            {
+                Services.Dispose();
+                LogManager.Flush();
+            };
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
