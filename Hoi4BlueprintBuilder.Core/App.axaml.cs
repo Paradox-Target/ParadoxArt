@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
@@ -52,12 +53,13 @@ public sealed class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-
-        IsActivated = Services.GetRequiredService<AuthService>().IsActivatedAsync();
+        NLogSetupHelper.Setup();
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
+        IsActivated = Services.GetRequiredService<AuthService>().IsActivatedAsync();
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit.
