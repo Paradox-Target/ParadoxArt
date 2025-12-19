@@ -17,7 +17,6 @@
     <PackageVersion Include="DeviceId.Linux" Version="6.9.0" />
     <PackageVersion Include="DeviceId.Windows" Version="6.9.0" />
     <PackageVersion Include="FluentAvaloniaUI" Version="2.4.1" />
-    <PackageVersion Include="Irihi.Ursa" Version="1.14.0" />
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageVersion Include="NLog" Version="6.0.7" />
     <PackageVersion Include="ParadoxPower" Version="0.12.2-beta" />
