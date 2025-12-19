@@ -3,9 +3,9 @@
         <Setter Property="FontFamily" Value="Cascadia Code" />
     </Style>
 
-    <Style Selector="TextBlock">
+    <!-- <Style Selector="TextBlock">
         <Setter Property="FontFamily" Value="Sarasa UI SC" />
-    </Style>
+    </Style> -->
 
     <!-- <Style Selector="ui:NumberBox"> -->
     <!--     <Setter Property="FontFamily" Value="Cascadia Code" /> -->
@@ -15,11 +15,11 @@
         <Setter Property="FontFamily" Value="Cascadia Code" />
     </Style>
 
-    <Style Selector="Menu">
+    <!-- <Style Selector="Menu">
         <Setter Property="FontFamily" Value="Sarasa UI SC" />
     </Style>
 
     <Style Selector="Button">
         <Setter Property="FontFamily" Value="Sarasa UI SC" />
-    </Style>
+    </Style> -->
 </Styles>

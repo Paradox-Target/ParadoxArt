@@ -1,3 +1,4 @@
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
@@ -24,6 +25,9 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
 
     private void NavigateTo(Type type)
     {
-        CurrentView = serviceProvider.GetRequiredService(type);
+        Dispatcher.UIThread.Post(() =>
+        {
+            CurrentView = serviceProvider.GetRequiredService(type);
+        });
     }
 }

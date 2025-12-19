@@ -1,8 +1,7 @@
-﻿<controls:UserControl
+﻿<UserControl
     x:Class="Hoi4BlueprintBuilder.Core.Views.Initialization.MainWelcomeView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -10,4 +9,4 @@
     d:DesignWidth="{StaticResource MainWindowWidth}"
     mc:Ignorable="d">
     <fa:Frame Name="MainFrame" />
-</controls:UserControl>
+</UserControl>

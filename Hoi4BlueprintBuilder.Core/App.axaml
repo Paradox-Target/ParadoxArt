@@ -13,4 +13,12 @@
         <StyleInclude Source="/Styles/DefaultStyles.axaml" />
         <StyleInclude Source="/Styles/SettingsStyle.axaml" />
     </Application.Styles>
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Assets/ConstantDictionary.axaml" />
+                <ResourceInclude Source="/Assets/Icons/IconsDictionary.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

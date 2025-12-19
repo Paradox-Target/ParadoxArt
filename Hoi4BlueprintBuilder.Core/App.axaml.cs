@@ -41,9 +41,6 @@ public sealed class App : Application
         services.AddSingleton<GameModDescriptorService>();
         services.AddSingleton<GameResourcesWatcherService>();
 
-        // services.AddSingleton<MainWindow>();
-        // services.AddSingleton<MainWindowViewModel>();
-
         // services.AddSingleton<EditorCanvasViewModel>();
 
         services.AddHoi4BlueprintBuilderCore();

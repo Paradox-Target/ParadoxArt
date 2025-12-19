@@ -1,18 +1,14 @@
 using Avalonia.Controls;
-using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
 [RegisterSingleton<MainWindow>]
 public partial class MainWindow : Window
 {
-    public MainWindow(NavigationService navigationService)
+    public MainWindow(MainWindowViewModel mainWindowViewModel)
     {
         InitializeComponent();
-
-        navigationService.ViewChanged += () =>
-        {
-            MainContent.Content = navigationService.CurrentView;
-        };
+        DataContext = mainWindowViewModel;
     }
 }

@@ -34,6 +34,7 @@
                     <Button
                         Grid.Column="1"
                         Classes="SettingsPickButton"
+                        Content="..."
                         Command="{Binding PickGamePathCommand}" />
                 </Grid>
             </StackPanel>
@@ -45,6 +46,7 @@
                     <Button
                         Grid.Column="1"
                         Classes="SettingsPickButton"
+                        Content="..."
                         Command="{Binding PickModPathCommand}" />
                 </Grid>
             </StackPanel>

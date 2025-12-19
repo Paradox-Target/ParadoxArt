@@ -5,10 +5,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
     Title="Hoi4BlueprintBuilder"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    x:DataType="vms:MainWindowViewModel"
     Icon="/Assets/logo.ico"
     mc:Ignorable="d">
-    <ContentControl x:Name="MainContent" />
+    <ContentControl x:Name="MainContent" Content="{Binding CurrentView, Mode=OneWay}" />
 </Window>
