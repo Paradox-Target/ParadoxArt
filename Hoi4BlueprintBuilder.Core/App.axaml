@@ -2,9 +2,8 @@
     x:Class="Hoi4BlueprintBuilder.Core.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:core="clr-namespace:Hoi4BlueprintBuilder.Core"
     xmlns:local="using:Hoi4BlueprintBuilder"
-    xmlns:styling="clr-namespace:FluentAvalonia.Styling;assembly=FluentAvalonia"
+    xmlns:styling="using:FluentAvalonia.Styling"
     RequestedThemeVariant="Default">
     <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
 

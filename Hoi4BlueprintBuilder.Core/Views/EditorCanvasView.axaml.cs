@@ -58,7 +58,7 @@ public sealed partial class EditorCanvasView : UserControl
     /// </summary>
     private bool CursorNotOverFocus => !CursorOverFocus;
 
-    private MenuFlyout _menuFlyout;
+    private readonly FAMenuFlyout _menuFlyout;
 
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
@@ -68,7 +68,7 @@ public sealed partial class EditorCanvasView : UserControl
     {
         InitializeComponent();
 
-        _menuFlyout = (MenuFlyout?)MainGrid.ContextFlyout ?? throw new ArgumentNullException();
+        _menuFlyout = (FAMenuFlyout?)MainGrid.ContextFlyout ?? throw new ArgumentNullException();
         PointerWheelChanged += OnPointerWheelChanged;
         PointerMoved += OnPointerMoved;
         PointerExited += OnPointerExited;
@@ -85,7 +85,7 @@ public sealed partial class EditorCanvasView : UserControl
     private void OnInitialized(object? sender, EventArgs e)
     {
         // 方便右键菜单在前端绑定 Command
-        foreach (MenuItem? item in _menuFlyout.Items)
+        foreach (MenuFlyoutItem? item in _menuFlyout.Items)
         {
             item?.DataContext = this;
         }

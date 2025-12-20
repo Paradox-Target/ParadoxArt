@@ -3,10 +3,10 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:const="clr-namespace:Hoi4BlueprintBuilder.Core.Constants"
-    xmlns:controls="clr-namespace:Hoi4BlueprintBuilder.Core.Controls"
-    xmlns:converters="clr-namespace:Hoi4BlueprintBuilder.Core.Infrastructure.Converters"
+    xmlns:controls="using:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:converters="using:Hoi4BlueprintBuilder.Core.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
@@ -23,38 +23,38 @@
     <Grid x:Name="MainGrid" ClipToBounds="True">
 
         <Grid.ContextFlyout>
-            <MenuFlyout x:DataType="views:EditorCanvasView" Opening="ContextMenu_OnOpening">
-                <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
-                    <MenuItem.Icon>
-                        <fa:FontIcon Glyph="&#xE710;" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Header="设置互斥国策">
-                    <MenuItem.Icon>
-                        <fa:FontIcon Glyph="&#xE711;" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding SetPrerequisiteFocusCommand}" Header="设置前置国策">
-                    <MenuItem.Icon>
-                        <fa:FontIcon Glyph="&#xE71B;" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding DeleteFocusNodeCommand}" Header="删除">
-                    <MenuItem.Icon>
-                        <fa:FontIcon Glyph="&#xE74D;" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding ConvertToAbsolutePositionCommand}" Header="转换为绝对位置">
-                    <MenuItem.Icon>
-                        <fa:FontIcon Glyph="&#xE707;" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Command="{Binding SetRelativePositionCommand}" Header="设置相对位置">
-                    <MenuItem.Icon>
-                        <fa:FontIcon Glyph="&#xEB9D;" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuFlyout>
+            <fa:FAMenuFlyout x:DataType="views:EditorCanvasView" Opening="ContextMenu_OnOpening">
+                <fa:MenuFlyoutItem Command="{Binding CreateNewFocusCommand}" Text="新建国策">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Add" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Text="设置互斥国策">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Cancel" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding SetPrerequisiteFocusCommand}" Text="设置前置国策">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Link" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding DeleteFocusNodeCommand}" Text="删除">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Delete" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding ConvertToAbsolutePositionCommand}" Text="转换为绝对位置">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="MapPin" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding SetRelativePositionCommand}" Text="设置相对位置">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Previous" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+            </fa:FAMenuFlyout>
         </Grid.ContextFlyout>
 
         <controls:GridRulerControl
