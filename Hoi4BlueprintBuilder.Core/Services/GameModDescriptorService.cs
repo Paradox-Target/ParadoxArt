@@ -7,6 +7,7 @@ using ParadoxPower.CSharpExtensions;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
+[RegisterSingleton<GameModDescriptorService>]
 public sealed class GameModDescriptorService
 {
     private readonly SettingsService _settingService;

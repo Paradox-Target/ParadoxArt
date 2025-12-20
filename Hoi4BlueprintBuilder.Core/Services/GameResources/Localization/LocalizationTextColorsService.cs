@@ -9,6 +9,7 @@ using ParadoxPower.Process;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 
+[RegisterSingleton<LocalizationTextColorsService>]
 public sealed class LocalizationTextColorsService
     : CommonResourcesService<LocalizationTextColorsService, FrozenDictionary<char, LocalizationTextColor>>
 {

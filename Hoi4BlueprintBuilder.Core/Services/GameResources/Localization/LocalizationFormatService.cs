@@ -6,6 +6,7 @@ using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 
+[RegisterSingleton<LocalizationFormatService>]
 public sealed class LocalizationFormatService(
     LocalizationTextColorsService localizationTextColorsService,
     LocalizationService localizationService

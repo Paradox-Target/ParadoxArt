@@ -37,14 +37,6 @@ public sealed class App : Application
 
         services.AddSingleton(static _ => SettingsService.LoadSettings());
         // services.AddSingleton(static _ => WindowSettingsService.LoadSettings());
-        services.AddSingleton<LocalizationFormatService>();
-        services.AddSingleton<LocalizationTextColorsService>();
-        services.AddSingleton<GameResourcesPathService>();
-        services.AddSingleton<GameModDescriptorService>();
-        services.AddSingleton<GameResourcesWatcherService>();
-
-        // services.AddSingleton<EditorCanvasViewModel>();
-
         services.AddHoi4BlueprintBuilderCore();
 
         return services.BuildServiceProvider();

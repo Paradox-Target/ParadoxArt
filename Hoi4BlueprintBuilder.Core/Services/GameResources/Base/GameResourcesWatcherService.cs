@@ -7,6 +7,7 @@ namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 /// <summary>
 /// 用来监听游戏资源的改变, 如注册的国家标签, 资源, 建筑物
 /// </summary>
+[RegisterSingleton<GameResourcesWatcherService>]
 public sealed class GameResourcesWatcherService : IDisposable
 {
     /// <summary>
@@ -43,25 +44,15 @@ public sealed class GameResourcesWatcherService : IDisposable
 
     private void OnModResourceFolderCreatedOrRenamed(object sender, FileSystemEventArgs args)
     {
-        string relativePath = Path.GetRelativePath(
-            _settingService.ModRootFolderPath,
-            args.FullPath
-        );
-        int index = _waitingWatchFolders.FindIndex(tuple =>
-            tuple.folderRelativePath == relativePath
-        );
+        string relativePath = Path.GetRelativePath(_settingService.ModRootFolderPath, args.FullPath);
+        int index = _waitingWatchFolders.FindIndex(tuple => tuple.folderRelativePath == relativePath);
         if (index != -1)
         {
-            (_, var resourcesService, string filter, bool includeSubFolders) = _waitingWatchFolders[
-                index
-            ];
+            (_, var resourcesService, string filter, bool includeSubFolders) = _waitingWatchFolders[index];
             Watch(relativePath, resourcesService, filter, includeSubFolders);
             _waitingWatchFolders.RemoveAt(index);
 
-            Log.Info(
-                "等待监听的文件夹 '{FolderName}' 被创建或重命名, 从待监听列表中移除并开始监听",
-                Path.GetFileName(args.FullPath)
-            );
+            Log.Info("等待监听的文件夹 '{FolderName}' 被创建或重命名, 从待监听列表中移除并开始监听", Path.GetFileName(args.FullPath));
         }
     }
 
@@ -76,9 +67,7 @@ public sealed class GameResourcesWatcherService : IDisposable
         // 如果 Mod文件夹 不存在, 监听上一级文件夹, 当 Mod文件夹 创建后, 自动监听
         if (!Directory.Exists(modFolderPath))
         {
-            _waitingWatchFolders.Add(
-                (folderRelativePath, resourcesService, filter, includeSubFolders)
-            );
+            _waitingWatchFolders.Add((folderRelativePath, resourcesService, filter, includeSubFolders));
 
             Log.Info("Mod 目录中 '{FolderPath}' 文件夹不存在, 无法监听, 已添加到等待监听列表", folderRelativePath);
             Log.Debug("Path: {FolderPath}", modFolderPath);
@@ -86,8 +75,7 @@ public sealed class GameResourcesWatcherService : IDisposable
         }
 
         var watcher = new FileSystemSafeWatcher(modFolderPath, filter);
-        watcher.NotifyFilter =
-            NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+        watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
         watcher.Changed += (_, args) =>
         {
             if (args.ChangeType.HasAnyFlags(WatcherChangeTypes.Changed))
@@ -100,9 +88,7 @@ public sealed class GameResourcesWatcherService : IDisposable
             if (
                 args.ChangeType.HasAnyFlags(WatcherChangeTypes.Changed)
                 && args.ChangeType.HasAnyFlags(
-                    WatcherChangeTypes.Renamed
-                        | WatcherChangeTypes.Deleted
-                        | WatcherChangeTypes.Created
+                    WatcherChangeTypes.Renamed | WatcherChangeTypes.Deleted | WatcherChangeTypes.Created
                 )
             )
             {
@@ -137,9 +123,7 @@ public sealed class GameResourcesWatcherService : IDisposable
             watcherList.ForEach(static watcher => watcher.Dispose());
             _watchedPaths.Remove(folderRelativePath);
             bool isRemoved =
-                _waitingWatchFolders.RemoveAll(tuple =>
-                    tuple.folderRelativePath == folderRelativePath
-                ) != 0;
+                _waitingWatchFolders.RemoveAll(tuple => tuple.folderRelativePath == folderRelativePath) != 0;
             if (isRemoved)
             {
                 Log.Info("从待监听文件夹列表中移除: {FolderPath}", folderRelativePath);

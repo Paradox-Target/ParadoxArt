@@ -2,6 +2,7 @@ using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
+[RegisterSingleton<GameResourcesPathService>]
 public sealed class GameResourcesPathService(
     SettingsService settingService,
     GameModDescriptorService descriptor
