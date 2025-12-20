@@ -14,8 +14,7 @@
     <Grid
         Width="{x:Static const:FocusMapConstants.CellWidth}"
         Height="{x:Static const:FocusMapConstants.CellHeight}"
-        ClipToBounds="True"
-        ToolTip.Tip="{Binding Model.Id}">
+        ClipToBounds="True">
 
         <Image
             Width="{Binding Width}"
