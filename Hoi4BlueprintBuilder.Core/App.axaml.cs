@@ -54,6 +54,9 @@ public sealed class App : Application
     {
         AvaloniaXamlLoader.Load(this);
         NLogSetupHelper.Setup();
+#if DEBUG
+        this.AttachDeveloperTools();
+#endif
     }
 
     public override void OnFrameworkInitializationCompleted()
