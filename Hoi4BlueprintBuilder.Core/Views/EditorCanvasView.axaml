@@ -20,52 +20,48 @@
         <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
     </UserControl.Resources>
 
-    <Grid ClipToBounds="True">
+    <Grid x:Name="MainGrid" ClipToBounds="True">
+
+        <Grid.ContextFlyout>
+            <MenuFlyout x:DataType="views:EditorCanvasView" Opening="ContextMenu_OnOpening">
+                <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
+                    <MenuItem.Icon>
+                        <fa:FontIcon Glyph="&#xE710;" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Header="设置互斥国策">
+                    <MenuItem.Icon>
+                        <fa:FontIcon Glyph="&#xE711;" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding SetPrerequisiteFocusCommand}" Header="设置前置国策">
+                    <MenuItem.Icon>
+                        <fa:FontIcon Glyph="&#xE71B;" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding DeleteFocusNodeCommand}" Header="删除">
+                    <MenuItem.Icon>
+                        <fa:FontIcon Glyph="&#xE74D;" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding ConvertToAbsolutePositionCommand}" Header="转换为绝对位置">
+                    <MenuItem.Icon>
+                        <fa:FontIcon Glyph="&#xE707;" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="{Binding SetRelativePositionCommand}" Header="设置相对位置">
+                    <MenuItem.Icon>
+                        <fa:FontIcon Glyph="&#xEB9D;" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuFlyout>
+        </Grid.ContextFlyout>
 
         <controls:GridRulerControl
             Scale="{Binding Scale}"
             TranslateX="{Binding TranslateX}"
             TranslateY="{Binding TranslateY}"
-            ZIndex="{x:Static const:FocusMapConstants.GridRulerZIndex}">
-            <controls:GridRulerControl.ContextMenu>
-                <ContextMenu
-                    x:Name="RightContextMenu"
-                    d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    x:DataType="views:EditorCanvasView"
-                    Opened="ContextMenu_OnOpened">
-                    <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
-                        <MenuItem.Icon>
-                            <fa:FontIcon Glyph="&#xE710;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Header="设置互斥国策">
-                        <MenuItem.Icon>
-                            <fa:FontIcon Glyph="&#xE711;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding SetPrerequisiteFocusCommand}" Header="设置前置国策">
-                        <MenuItem.Icon>
-                            <fa:FontIcon Glyph="&#xE71B;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding DeleteFocusNodeCommand}" Header="删除">
-                        <MenuItem.Icon>
-                            <fa:FontIcon Glyph="&#xE74D;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding ConvertToAbsolutePositionCommand}" Header="转换为绝对位置">
-                        <MenuItem.Icon>
-                            <fa:FontIcon Glyph="&#xE707;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Command="{Binding SetRelativePositionCommand}" Header="设置相对位置">
-                        <MenuItem.Icon>
-                            <fa:FontIcon Glyph="&#xEB9D;" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </ContextMenu>
-            </controls:GridRulerControl.ContextMenu>
-        </controls:GridRulerControl>
+            ZIndex="{x:Static const:FocusMapConstants.GridRulerZIndex}" />
 
         <controls:GridBackgroundControl
             Scale="{Binding Scale}"
