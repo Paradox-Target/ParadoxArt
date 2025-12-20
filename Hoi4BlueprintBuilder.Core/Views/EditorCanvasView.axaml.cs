@@ -35,6 +35,8 @@ public sealed partial class EditorCanvasView : UserControl
     private FocusNode? _lastRightClickFocus;
     private Point _lastRightClickPoint;
     private readonly ScreenshotService _screenshotService;
+    private readonly LocalizationFormatService _localizationFormatService =
+        App.Current.Services.GetRequiredService<LocalizationFormatService>();
 
     private ConnectionType FocusConnectionMode
     {
@@ -56,28 +58,37 @@ public sealed partial class EditorCanvasView : UserControl
     /// </summary>
     private bool CursorNotOverFocus => !CursorOverFocus;
 
+    private MenuFlyout _menuFlyout;
+
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-    private static readonly LocalizationFormatService LocalizationFormatService =
-        App.Current.Services.GetRequiredService<LocalizationFormatService>();
 
     public EditorCanvasView()
     {
         InitializeComponent();
-        
+
+        _menuFlyout = (MenuFlyout?)MainGrid.ContextFlyout ?? throw new ArgumentNullException();
         PointerWheelChanged += OnPointerWheelChanged;
         PointerMoved += OnPointerMoved;
         PointerExited += OnPointerExited;
         PointerPressed += OnPointerPressed;
         PointerReleased += OnPointerReleased;
+        Initialized += OnInitialized;
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
         _screenshotService = App.Current.Services.GetRequiredService<ScreenshotService>();
         DataContext = _viewModel;
 
-        // 方便右键菜单在前端绑定 Command
-        RightContextMenu.DataContext = this;
         WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+    }
+
+    private void OnInitialized(object? sender, EventArgs e)
+    {
+        // 方便右键菜单在前端绑定 Command
+        foreach (MenuItem? item in _menuFlyout.Items)
+        {
+            item?.DataContext = this;
+        }
     }
 
     private async void SaveToPng(object o, SaveFocusTreeToPngMessage saveFocusTreeToPngMessage)
@@ -95,18 +106,20 @@ public sealed partial class EditorCanvasView : UserControl
             return;
         }
 
-        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-        {
-            Title = "导出国策树为图片",
-            DefaultExtension = ".png",
-            SuggestedFileName = "FocusTree.png",
-            FileTypeChoices =
-            [
-                new FilePickerFileType("PNG 图片") { Patterns = ["*.png"] },
-                new FilePickerFileType("JPG 图片") { Patterns = ["*.jpg", "*.jpeg"] },
-                new FilePickerFileType("BMP 图片") { Patterns = ["*.bmp"] }
-            ]
-        });
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(
+            new FilePickerSaveOptions
+            {
+                Title = "导出国策树为图片",
+                DefaultExtension = ".png",
+                SuggestedFileName = "FocusTree.png",
+                FileTypeChoices =
+                [
+                    new FilePickerFileType("PNG 图片") { Patterns = ["*.png"] },
+                    new FilePickerFileType("JPG 图片") { Patterns = ["*.jpg", "*.jpeg"] },
+                    new FilePickerFileType("BMP 图片") { Patterns = ["*.bmp"] }
+                ]
+            }
+        );
 
         if (file is null)
         {
@@ -130,7 +143,12 @@ public sealed partial class EditorCanvasView : UserControl
     private static async Task ShowErrorMessageBoxAsync(string message, string title)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(title, message, icon: Icon.Error);
-        if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
+        if (
+            App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
+            {
+                MainWindow: not null
+            } desktop
+        )
         {
             await box.ShowWindowDialogAsync(desktop.MainWindow);
         }
@@ -142,13 +160,13 @@ public sealed partial class EditorCanvasView : UserControl
 
     private static async Task<ButtonResult> ShowConfirmMessageBoxAsync(string message, string title)
     {
-        var box = MessageBoxManager.GetMessageBoxStandard(
-            title,
-            message,
-            ButtonEnum.YesNo,
-            Icon.Warning
-        );
-        if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
+        var box = MessageBoxManager.GetMessageBoxStandard(title, message, ButtonEnum.YesNo, Icon.Warning);
+        if (
+            App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
+            {
+                MainWindow: not null
+            } desktop
+        )
         {
             return await box.ShowWindowDialogAsync(desktop.MainWindow);
         }
@@ -168,7 +186,7 @@ public sealed partial class EditorCanvasView : UserControl
         }
         else
         {
-            RightContextMenu.Open(this);
+            _menuFlyout.ShowAt(this, true);
         }
     }
 
@@ -222,7 +240,7 @@ public sealed partial class EditorCanvasView : UserControl
         {
             string impactedFocusIds = focus
                 .RelativePositionChildren.AsValueEnumerable()
-                .Select(static f => LocalizationFormatService.GetFormatText(f.Id))
+                .Select(f => _localizationFormatService.GetFormatText(f.Id))
                 .JoinToString('\n');
             var result = await ShowConfirmMessageBoxAsync(
                 $"有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?\n\n受影响节点:\n\n{impactedFocusIds}",
@@ -237,7 +255,10 @@ public sealed partial class EditorCanvasView : UserControl
         //TODO: 删除后App内弹出提示
 
         // 关闭信息卡, 并释放 ViewModel 资源, 防止内存泄漏
-        if (FocusInfoViewControl.DataContext is FocusInfoViewModel infoViewModel && infoViewModel.FocusNode == focus)
+        if (
+            FocusInfoViewControl.DataContext is FocusInfoViewModel infoViewModel
+            && infoViewModel.FocusNode == focus
+        )
         {
             FocusInfoViewControl.IsOpen = false;
             FocusInfoViewControl.DataContext = null;
@@ -273,7 +294,7 @@ public sealed partial class EditorCanvasView : UserControl
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var props = e.GetCurrentPoint(this).Properties;
-        
+
         if (props.IsRightButtonPressed)
         {
             OnPointerRightButtonDown(e);
@@ -492,7 +513,7 @@ public sealed partial class EditorCanvasView : UserControl
         _lastRightClickFocus.ConvertToAbsolutePosition();
     }
 
-    private void ContextMenu_OnOpened(object sender, RoutedEventArgs e)
+    private void ContextMenu_OnOpening(object sender, EventArgs e)
     {
         CreateNewFocusCommand.NotifyCanExecuteChanged();
         SetPrerequisiteFocusCommand.NotifyCanExecuteChanged();
@@ -530,7 +551,9 @@ public sealed partial class EditorCanvasView : UserControl
 
     private static Window? GetMainWindow()
     {
-        return App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop
+        return
+            App.Current.ApplicationLifetime
+                is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop
             ? desktop.MainWindow
             : null;
     }

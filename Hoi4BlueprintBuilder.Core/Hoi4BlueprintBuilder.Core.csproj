@@ -47,5 +47,6 @@
         <PackageReference Include="MethodTimer.Fody">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True" />
     </ItemGroup>
 </Project>

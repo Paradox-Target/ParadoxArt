@@ -29,11 +29,10 @@ public sealed partial class FocusInfoView : UserControl
 
     private FocusInfoViewModel? _viewModel;
 
-    private static readonly ImageService ImageService =
-        App.Current.Services.GetRequiredService<ImageService>();
-    private static readonly FileResourceService FileResourceService =
+    private readonly ImageService _imageService = App.Current.Services.GetRequiredService<ImageService>();
+    private readonly FileResourceService _fileResourceService =
         App.Current.Services.GetRequiredService<FileResourceService>();
-    private static readonly NotificationService NotificationService =
+    private readonly NotificationService _notificationService =
         App.Current.Services.GetRequiredService<NotificationService>();
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -89,7 +88,7 @@ public sealed partial class FocusInfoView : UserControl
 
         if (!string.IsNullOrEmpty(newViewModel.FocusNode.Icon))
         {
-            SetImage(ImageService.GetFocusIconByName(newViewModel.FocusNode.Icon));
+            SetImage(_imageService.GetFocusIconByName(newViewModel.FocusNode.Icon));
         }
     }
 
@@ -124,7 +123,7 @@ public sealed partial class FocusInfoView : UserControl
         if (e.PropertyName == nameof(FocusNode.Icon))
         {
             var focusNode = (FocusNode?)sender;
-            SetImage(ImageService.GetFocusIconByName(focusNode!.Icon));
+            SetImage(_imageService.GetFocusIconByName(focusNode!.Icon));
         }
     }
 
@@ -153,21 +152,21 @@ public sealed partial class FocusInfoView : UserControl
 
         if (ImageHelper.IsValidFocusImageFormat(filePath))
         {
-            var result = FileResourceService.RegisterFocusIcon(filePath);
+            var result = _fileResourceService.RegisterFocusIcon(filePath);
             if (string.IsNullOrEmpty(result.SpriteName) || string.IsNullOrEmpty(result.DestFilePath))
             {
-                NotificationService.Show("添加图标失败");
+                _notificationService.Show("添加图标失败");
                 return;
             }
 
-            SetImage(ImageService.GetImageSource(result.SpriteName, result.DestFilePath));
+            SetImage(_imageService.GetImageSource(result.SpriteName, result.DestFilePath));
             if (_viewModel is not null)
             {
                 _viewModel.FocusNode.Icon = result.SpriteName;
             }
 
             Log.Info("添加图标成功: {Name}", result.SpriteName);
-            NotificationService.Show(result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功");
+            _notificationService.Show(result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功");
         }
     }
 

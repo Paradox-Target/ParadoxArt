@@ -33,5 +33,6 @@
     <PackageVersion Include="Injectio" Version="5.1.0" />
     <PackageVersion Include="Fody" Version="6.9.3" />
     <PackageVersion Include="MethodTimer.Fody" Version="3.2.3" />
+    <PackageVersion Include="HotAvalonia" Version="3.0.2" />
   </ItemGroup>
 </Project>
