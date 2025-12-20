@@ -118,7 +118,7 @@ public sealed class ImageService : IDisposable
         return image.Format switch
         {
             ImageFormat.Rgb24 => PixelFormats.Bgr24,
-            ImageFormat.Rgba32 => PixelFormats.Rgba8888,
+            ImageFormat.Rgba32 => PixelFormats.Bgra8888,
             ImageFormat.Rgb8 => PixelFormats.Gray8,
             ImageFormat.R5g5b5a1 or ImageFormat.R5g5b5 => PixelFormats.Bgr555,
             ImageFormat.R5g6b5 => PixelFormats.Bgr565,
