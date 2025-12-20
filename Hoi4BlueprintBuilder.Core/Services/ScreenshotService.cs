@@ -40,7 +40,7 @@ public sealed class ScreenshotService
             var pushedState = dc.PushTransform(transform.Value);
 
             // Draw Connections
-            FocusMapControl.DrawNodeConnectionsLines(dc, nodes);
+            FocusConnectionLinesControl.DrawNodeConnectionsLines(dc, nodes);
 
             // Draw Nodes
             foreach (var viewModel in nodes)

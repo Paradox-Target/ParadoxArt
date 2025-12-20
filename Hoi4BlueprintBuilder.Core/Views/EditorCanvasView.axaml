@@ -31,6 +31,7 @@
                 <ContextMenu
                     x:Name="RightContextMenu"
                     d:DataContext="{Binding Path='', RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    x:DataType="views:EditorCanvasView"
                     Opened="ContextMenu_OnOpened">
                     <MenuItem Command="{Binding CreateNewFocusCommand}" Header="新建国策">
                         <MenuItem.Icon>
@@ -72,17 +73,21 @@
             TranslateY="{Binding TranslateY}"
             ZIndex="{x:Static const:FocusMapConstants.GridBackgroundZIndex}" />
 
-        <controls:FocusMapControl ItemsSource="{Binding Nodes}" ZIndex="{x:Static const:FocusMapConstants.FocusMapZIndex}">
+        <ItemsControl
+            ClipToBounds="False"
+            ItemsSource="{Binding Nodes}"
+            RenderTransformOrigin="0,0"
+            ZIndex="{x:Static const:FocusMapConstants.FocusMapZIndex}">
 
-            <controls:FocusMapControl.RenderTransform>
+            <ItemsControl.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
                     <TranslateTransform X="{Binding TranslateX}" Y="{Binding TranslateY}" />
                 </TransformGroup>
-            </controls:FocusMapControl.RenderTransform>
+            </ItemsControl.RenderTransform>
 
             <ItemsControl.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate DataType="vms:FocusNodeViewModel">
                     <views:FocusNodeView />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
@@ -99,7 +104,7 @@
                     <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellHeight}}" />
                 </Style>
             </ItemsControl.Styles>
-        </controls:FocusMapControl>
+        </ItemsControl>
 
         <controls:ConnectionPreviewOverlayControl
             x:Name="ConnectionPreviewOverlay"
@@ -108,6 +113,12 @@
             TranslateY="{Binding TranslateY}"
             ZIndex="1" />
 
-        <!-- <views:FocusInfoView x:Name="FocusInfoView" /> -->
+        <controls:FocusConnectionLinesControl
+            Nodes="{Binding Nodes}"
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}" />
+
+        <views:FocusInfoView x:Name="FocusInfoViewControl" />
     </Grid>
 </UserControl>

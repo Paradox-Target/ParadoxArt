@@ -17,6 +17,7 @@ using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
+[RegisterSingleton<EditorCanvasViewModel>]
 public sealed partial class EditorCanvasViewModel : ObservableObject
 {
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }

@@ -87,18 +87,18 @@ public sealed class ConnectionPreviewOverlayControl : Control
         {
             if (Mode == ConnectionType.MutuallyExclusive)
             {
-                FocusMapControl.DrawMutuallyExclusive(dc, From, To);
+                FocusConnectionLinesControl.DrawMutuallyExclusive(dc, From, To);
             }
 
             if (Mode == ConnectionType.Prerequisite)
             {
-                FocusMapControl.DrawPrerequisite(dc, From, To, FocusMapControl.PrerequisiteLinePen);
+                FocusConnectionLinesControl.DrawPrerequisiteLine(dc, From, To, FocusConnectionLinesControl.PrerequisiteLinePen);
             }
 
             if (Mode == ConnectionType.RelativePosition)
             {
                 dc.DrawLine(
-                    FocusMapControl.PrerequisiteLinePen,
+                    FocusConnectionLinesControl.PrerequisiteLinePen,
                     GetNodeCenterPoint(From),
                     GetNodeCenterPoint(To)
                 );
