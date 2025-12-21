@@ -154,7 +154,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     }
 
     /// <summary>
-    /// 清除使用此节点作为相对位置的所有节点的相对位置设置
+    /// 清除使用此节点作为相对位置的所有节点的相对位置设置, 并转换为绝对位置
     /// </summary>
     public void ClearRelativePositionChildren()
     {
@@ -396,6 +396,9 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public void Dispose()
     {
+        // 注意: 此方法必须在置空 _relativePosition 之前调用
+        // 否则会导致将此 FocusNode 作为相对位置的节点无法被正确设置绝对位置
+        ClearRelativePositionChildren();
         RelativePosition?.PropertyChanged -= OnPropertyChanged;
         // 越过属性，直接置空，避免触发 OnRelativePositionChanged
 #pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
@@ -403,7 +406,6 @@ public sealed partial class FocusNode(string path, FocusType type)
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
         ClearChildren();
         ClearPrerequisites();
-        ClearRelativePositionChildren();
         ClearMutuallyExclusive();
     }
 
