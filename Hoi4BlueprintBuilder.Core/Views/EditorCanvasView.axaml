@@ -116,10 +116,10 @@
             TranslateY="{Binding TranslateY}" />
 
         <!--  框选矩形控件  -->
-        <controls:SelectionRectangleControl
-            x:Name="SelectionRectangle"
-            IsVisible="False"
-            ZIndex="100" />
+        <!--  <controls:SelectionRectangleControl  -->
+        <!--  x:Name="SelectionRectangle"  -->
+        <!--  IsVisible="False"  -->
+        <!--  ZIndex="100" />  -->
 
         <views:FocusInfoView x:Name="FocusInfoViewControl" />
     </Grid>
