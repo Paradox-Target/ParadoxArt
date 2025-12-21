@@ -15,7 +15,7 @@ public sealed class MessageBoxService
         MessageBoxButtons buttons = MessageBoxButtons.Ok
     )
     {
-        return Dispatcher.UIThread.Invoke(() =>
+        return Dispatcher.UIThread.InvokeAsync(async () =>
         {
             var buttonType = ToMsBoxButtons(buttons);
             var box = MessageBoxManager.GetMessageBoxStandard(
@@ -26,23 +26,22 @@ public sealed class MessageBoxService
             );
 
             var lifetime = App.Current.ApplicationLifetime;
-            Task<MessageBoxResult> showTask;
+            Task<ButtonResult> showTask;
 
             if (lifetime is ISingleViewApplicationLifetime)
             {
-                showTask = box.ShowAsync().ContinueWith(t => GetButtonResult(t.Result));
+                showTask = box.ShowAsync();
             }
             else if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
             {
-                showTask = box.ShowWindowDialogAsync(desktop.MainWindow)
-                    .ContinueWith(t => GetButtonResult(t.Result));
+                showTask = box.ShowWindowDialogAsync(desktop.MainWindow);
             }
             else
             {
-                showTask = box.ShowAsync().ContinueWith(t => GetButtonResult(t.Result));
+                showTask = box.ShowAsync();
             }
 
-            return showTask;
+            return GetButtonResult(await showTask);
         });
     }
 
