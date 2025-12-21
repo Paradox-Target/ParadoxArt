@@ -22,6 +22,12 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private double _height;
 
+    /// <summary>
+    /// 是否被选中
+    /// </summary>
+    [ObservableProperty]
+    private bool _isSelected;
+
     private static readonly LocalizationFormatService LocalizationFormatService =
         App.Current.Services.GetRequiredService<LocalizationFormatService>();
     private static readonly ImageService ImageService =

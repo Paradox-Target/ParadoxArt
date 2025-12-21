@@ -16,6 +16,17 @@
         Height="{x:Static const:FocusMapConstants.CellHeight}"
         ClipToBounds="True">
 
+        <!-- 选中状态边框 -->
+        <Border
+            BorderBrush="#0078D7"
+            BorderThickness="2"
+            CornerRadius="4"
+            IsVisible="{Binding IsSelected}">
+            <Border.Background>
+                <SolidColorBrush Color="#280078D7" />
+            </Border.Background>
+        </Border>
+
         <Image
             Width="{Binding Width}"
             Height="{Binding Height}"

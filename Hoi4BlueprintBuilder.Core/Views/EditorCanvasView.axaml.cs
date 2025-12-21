@@ -1,15 +1,12 @@
 using System.Diagnostics;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using FluentAvalonia.UI.Controls;
-using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
@@ -29,40 +26,33 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 [RegisterSingleton<EditorCanvasView>]
 public sealed partial class EditorCanvasView : UserControl
 {
-    private Point? _lastMousePositionOnCanvas;
-    private FocusNode? _movedFocusNode;
     private readonly EditorCanvasViewModel _viewModel;
-    private FocusNode? _lastRightClickFocus;
-    private Point _lastRightClickPoint;
     private readonly ScreenshotService _screenshotService;
     private readonly LocalizationFormatService _localizationFormatService =
         App.Current.Services.GetRequiredService<LocalizationFormatService>();
 
-    private ConnectionType FocusConnectionMode
-    {
-        get;
-        set
-        {
-            field = value;
-            ConnectionPreviewOverlay.Mode = value;
-        }
-    } = ConnectionType.None;
+    private CanvasInteractionManager? _interactionManager;
+    private readonly FAMenuFlyout _menuFlyout;
+
+    private const double FocusInfoViewWidthRatio = 0.35;
+    private const double FocusInfoViewHeightRatio = 0.9;
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     /// 鼠标右键点击位置是否在某个国策节点上
     /// </summary>
-    private bool CursorOverFocus => _lastRightClickFocus is not null;
+    private bool CursorOverFocus => _interactionManager?.CursorOverFocus ?? false;
 
     /// <summary>
     /// 鼠标右键点击位置是否不在某个国策节点上
     /// </summary>
     private bool CursorNotOverFocus => !CursorOverFocus;
 
-    private readonly FAMenuFlyout _menuFlyout;
-
-    private const double FocusInfoViewWidthRatio = 0.35;
-    private const double FocusInfoViewHeightRatio = 0.9;
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    /// <summary>
+    /// 是否可以转换为绝对位置
+    /// </summary>
+    private bool CanConvertToAbsolutePosition =>
+        _interactionManager?.RightClickedNode?.RelativePosition is not null;
 
     public EditorCanvasView()
     {
@@ -75,11 +65,42 @@ public sealed partial class EditorCanvasView : UserControl
         PointerPressed += OnPointerPressed;
         PointerReleased += OnPointerReleased;
         Initialized += OnInitialized;
+        Loaded += OnLoaded;
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
         _screenshotService = App.Current.Services.GetRequiredService<ScreenshotService>();
         DataContext = _viewModel;
 
         WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+    }
+
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        // 控件加载完成后初始化交互管理器
+        _interactionManager = new CanvasInteractionManager(
+            _viewModel,
+            this,
+            ConnectionPreviewOverlay,
+            OpenFocusInfoViewInternal,
+            CloseFocusInfoView
+        );
+
+        _interactionManager.ConnectionRequested += OnConnectionRequested;
+    }
+
+    private void OnConnectionRequested(FocusNode from, FocusNode to, ConnectionType type)
+    {
+        _viewModel.CreateConnection(from, to, type);
+    }
+
+    private bool OpenFocusInfoViewInternal(FocusNode focusNode)
+    {
+        OpenFocusInfoView(focusNode);
+        return true;
+    }
+
+    private void CloseFocusInfoView()
+    {
+        FocusInfoViewControl.IsOpen = false;
     }
 
     private void OnInitialized(object? sender, EventArgs e)
@@ -140,6 +161,7 @@ public sealed partial class EditorCanvasView : UserControl
         }
     }
 
+    // TODO: 重构
     private static async Task ShowErrorMessageBoxAsync(string message, string title)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(title, message, icon: Icon.Error);
@@ -158,6 +180,7 @@ public sealed partial class EditorCanvasView : UserControl
         }
     }
 
+    // TODO: 重构
     private static async Task<ButtonResult> ShowConfirmMessageBoxAsync(string message, string title)
     {
         var box = MessageBoxManager.GetMessageBoxStandard(title, message, ButtonEnum.YesNo, Icon.Warning);
@@ -173,64 +196,87 @@ public sealed partial class EditorCanvasView : UserControl
         return await box.ShowAsync();
     }
 
-    private void OnPointerRightButtonDown(PointerPressedEventArgs e)
-    {
-        _lastRightClickPoint = e.GetPosition(this);
-        var hitVisual = GetHitFocusNodeViewModel(_lastRightClickPoint);
-        _lastRightClickFocus = hitVisual?.Model;
+    #region 鼠标事件处理
 
-        // 连接模式时右键取消连接模式
-        if (FocusConnectionMode != ConnectionType.None)
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _interactionManager?.HandlePointerPressed(e);
+    }
+
+    private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_interactionManager is null)
         {
-            FocusConnectionMode = ConnectionType.None;
+            return;
         }
-        else
+
+        // 在释放前检查是否应该显示上下文菜单
+        bool shouldShowMenu = _interactionManager.ShouldShowContextMenu();
+        var props = e.GetCurrentPoint(this).Properties;
+
+        _interactionManager.HandlePointerReleased(e);
+
+        // 右键释放时，如果应该显示菜单则显示
+        if (shouldShowMenu && props.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
         {
             _menuFlyout.ShowAt(this, true);
         }
     }
 
-    private FocusNodeViewModel? GetHitFocusNodeViewModel(Point position)
+    private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
-        var visuals = this.GetVisualsAt(position);
-        foreach (var visual in visuals)
-        {
-            if (visual is Control { DataContext: FocusNodeViewModel viewModel })
-            {
-                return viewModel;
-            }
-        }
-        return null;
-    }
-
-    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
-    private void SetMutuallyExclusiveFocus()
-    {
-        if (_lastRightClickFocus is null)
+        if (_interactionManager is null)
         {
             return;
         }
 
-        FocusConnectionMode = ConnectionType.MutuallyExclusive;
-        ConnectionPreviewOverlay.From = _lastRightClickFocus;
+        var cursorType = _interactionManager.HandlePointerMoved(e);
+        Cursor = new Cursor(cursorType);
+    }
+
+    private void OnPointerExited(object? sender, PointerEventArgs e)
+    {
+        _interactionManager?.HandlePointerExited();
+        Cursor = Cursor.Default;
+    }
+
+    private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        _interactionManager?.HandlePointerWheelChanged(e);
+    }
+
+    #endregion
+
+    #region 上下文菜单命令
+
+    [RelayCommand(CanExecute = nameof(CursorOverFocus))]
+    private void SetMutuallyExclusiveFocus()
+    {
+        var focusNode = _interactionManager?.RightClickedNode;
+        if (focusNode is null)
+        {
+            return;
+        }
+
+        _interactionManager?.StartConnection(focusNode, ConnectionType.MutuallyExclusive);
     }
 
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
     private void SetPrerequisiteFocus()
     {
-        if (_lastRightClickFocus is null)
+        var focusNode = _interactionManager?.RightClickedNode;
+        if (focusNode is null)
         {
             return;
         }
 
-        FocusConnectionMode = ConnectionType.Prerequisite;
-        ConnectionPreviewOverlay.From = _lastRightClickFocus;
+        _interactionManager?.StartConnection(focusNode, ConnectionType.Prerequisite);
     }
 
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
     private async Task DeleteFocusNode()
     {
-        var focus = _lastRightClickFocus;
+        var focus = _interactionManager?.RightClickedNode;
         if (focus is null)
         {
             return;
@@ -252,8 +298,6 @@ public sealed partial class EditorCanvasView : UserControl
             }
         }
 
-        //TODO: 删除后App内弹出提示
-
         // 关闭信息卡, 并释放 ViewModel 资源, 防止内存泄漏
         if (
             FocusInfoViewControl.DataContext is FocusInfoViewModel infoViewModel
@@ -265,7 +309,6 @@ public sealed partial class EditorCanvasView : UserControl
         }
 
         _viewModel.DeleteFocusNode(focus);
-        _lastRightClickFocus = null;
 
         Debug.Assert(ConnectionPreviewOverlay.From != focus && ConnectionPreviewOverlay.To != focus);
     }
@@ -273,187 +316,13 @@ public sealed partial class EditorCanvasView : UserControl
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
     private void SetRelativePosition()
     {
-        if (_lastRightClickFocus is null)
+        var focusNode = _interactionManager?.RightClickedNode;
+        if (focusNode is null)
         {
             return;
         }
 
-        FocusConnectionMode = ConnectionType.RelativePosition;
-        ConnectionPreviewOverlay.From = _lastRightClickFocus;
-    }
-
-    private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
-    {
-        var props = e.GetCurrentPoint(this).Properties;
-        if (props.PointerUpdateKind == PointerUpdateKind.LeftButtonReleased)
-        {
-            _movedFocusNode = null;
-        }
-    }
-
-    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
-    {
-        var props = e.GetCurrentPoint(this).Properties;
-
-        if (props.IsRightButtonPressed)
-        {
-            OnPointerRightButtonDown(e);
-            return;
-        }
-
-        if (!props.IsLeftButtonPressed)
-        {
-            return;
-        }
-
-        var position = e.GetPosition(this);
-        var hitViewModel = GetHitFocusNodeViewModel(position);
-        if (hitViewModel is not null)
-        {
-            if (
-                _lastRightClickFocus is not null
-                && FocusConnectionMode != ConnectionType.None
-                && _lastRightClickFocus != hitViewModel.Model
-            )
-            {
-                SetFocusConnection(hitViewModel);
-                return;
-            }
-
-            if (e.ClickCount <= 1)
-            {
-                _movedFocusNode = hitViewModel.Model;
-                FocusInfoViewControl.IsOpen = false;
-                return;
-            }
-
-            _movedFocusNode = null;
-            if (
-                FocusInfoViewControl.DataContext is FocusInfoViewModel oldViewModel
-                && oldViewModel.FocusNode == hitViewModel.Model
-            )
-            {
-                FocusInfoViewControl.IsOpen = true;
-                Log.Debug("相同国策, 跳过切换");
-                return;
-            }
-
-            OpenFocusInfoView(hitViewModel.Model);
-            Log.Debug("信息卡切换到国策: {Name}", hitViewModel.Model.Id);
-        }
-        else
-        {
-            FocusInfoViewControl.IsOpen = false;
-        }
-    }
-
-    private void SetFocusConnection(FocusNodeViewModel viewModel)
-    {
-        Debug.Assert(_lastRightClickFocus is not null);
-
-        _viewModel.CreateConnection(_lastRightClickFocus, viewModel.Model, FocusConnectionMode);
-
-        _lastRightClickFocus = null;
-        FocusConnectionMode = ConnectionType.None;
-        ConnectionPreviewOverlay.ClearPreview();
-    }
-
-    private void OnPointerMoved(object? sender, PointerEventArgs e)
-    {
-        var props = e.GetCurrentPoint(this).Properties;
-
-        if (FocusConnectionMode != ConnectionType.None)
-        {
-            Cursor = new Cursor(StandardCursorType.Cross);
-            var position = e.GetPosition(this);
-            var hitViewModel = GetHitFocusNodeViewModel(position);
-            if (hitViewModel is not null)
-            {
-                // TODO: 预览显示连接线之前检查合法性
-                ConnectionPreviewOverlay.To = hitViewModel.Model;
-            }
-            else
-            {
-                ConnectionPreviewOverlay.To = null;
-            }
-        }
-
-        if (props.IsMiddleButtonPressed)
-        {
-            if (_lastMousePositionOnCanvas.HasValue)
-            {
-                var currentMousePosition = e.GetPosition(this);
-                var delta = currentMousePosition - _lastMousePositionOnCanvas.Value;
-
-                _viewModel.TranslateX += delta.X;
-                _viewModel.TranslateY += delta.Y;
-
-                Cursor = new Cursor(StandardCursorType.Hand);
-            }
-
-            _lastMousePositionOnCanvas = e.GetPosition(this);
-        }
-        else
-        {
-            _lastMousePositionOnCanvas = null;
-            // 在设置国策间条件时, 鼠标样式会被设置为 Cross, 为了防止被覆盖, 需要在这里检查
-            if (FocusConnectionMode == ConnectionType.None)
-            {
-                Cursor = Cursor.Default;
-            }
-        }
-
-        // 设置连接线时禁止拖动国策
-        if (
-            FocusConnectionMode == ConnectionType.None
-            && props.IsLeftButtonPressed
-            && _movedFocusNode is not null
-        )
-        {
-            var position = GetMousePositionOnGrid(e.GetPosition(this));
-            _movedFocusNode.SetRawPosition(position.X, position.Y);
-        }
-    }
-
-    private void OnPointerExited(object? sender, PointerEventArgs e)
-    {
-        _lastMousePositionOnCanvas = null;
-        Cursor = Cursor.Default;
-    }
-
-    private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
-    {
-        // 缩放
-        const double scaleRate = 1.1;
-        var mousePoint = e.GetPosition(this);
-
-        double newScale;
-
-        if (e.Delta.Y > 0)
-        {
-            // 放大
-            newScale = _viewModel.Scale * scaleRate;
-        }
-        else
-        {
-            // 缩小
-            newScale = _viewModel.Scale / scaleRate;
-        }
-
-        if (newScale < 0.1)
-        {
-            newScale = 0.1;
-        }
-        if (newScale > 5.0)
-        {
-            newScale = 5.0;
-        }
-
-        double oldScale = _viewModel.Scale;
-        _viewModel.TranslateX = mousePoint.X - (mousePoint.X - _viewModel.TranslateX) * (newScale / oldScale);
-        _viewModel.TranslateY = mousePoint.Y - (mousePoint.Y - _viewModel.TranslateY) * (newScale / oldScale);
-
-        _viewModel.Scale = newScale;
+        _interactionManager?.StartConnection(focusNode, ConnectionType.RelativePosition);
     }
 
     [RelayCommand(CanExecute = nameof(CursorNotOverFocus))]
@@ -484,7 +353,7 @@ public sealed partial class EditorCanvasView : UserControl
 
         if (result == ContentDialogResult.Primary)
         {
-            var position = GetMousePositionOnGrid(_lastRightClickPoint);
+            var position = _interactionManager?.GetRightClickGridPosition() ?? (0, 0);
             var newFocusNode = await WeakReferenceMessenger.Default.Send(
                 new CreateNewFocusMessage(
                     new FocusPoint(position.X, position.Y),
@@ -500,17 +369,10 @@ public sealed partial class EditorCanvasView : UserControl
         viewModel.PrimaryEnableChanged -= onPrimaryEnableChanged;
     }
 
-    private bool CanConvertToAbsolutePosition => _lastRightClickFocus?.RelativePosition is not null;
-
     [RelayCommand(CanExecute = nameof(CanConvertToAbsolutePosition))]
     private void ConvertToAbsolutePosition()
     {
-        if (_lastRightClickFocus is null)
-        {
-            return;
-        }
-
-        _lastRightClickFocus.ConvertToAbsolutePosition();
+        _interactionManager?.RightClickedNode?.ConvertToAbsolutePosition();
     }
 
     private void ContextMenu_OnOpening(object sender, EventArgs e)
@@ -523,24 +385,8 @@ public sealed partial class EditorCanvasView : UserControl
         SetRelativePositionCommand.NotifyCanExecuteChanged();
     }
 
-    /// <summary>
-    /// 获取鼠标在网格中的实际坐标
-    /// </summary>
-    /// <param name="mousePoint">原始坐标</param>
-    /// <returns></returns>
-    private (int X, int Y) GetMousePositionOnGrid(Point mousePoint)
-    {
-        double rX = mousePoint.X - _viewModel.TranslateX;
-        double rY = mousePoint.Y - _viewModel.TranslateY;
-        double width = FocusMapConstants.CellWidth * _viewModel.Scale;
-        double height = FocusMapConstants.CellHeight * _viewModel.Scale;
-
-        int x = (int)Math.Floor(rX / width);
-        int y = (int)Math.Floor(rY / height);
-
-        return (x, y);
-    }
-
+    #endregion
+    
     private void OpenFocusInfoView(FocusNode focusNode)
     {
         FocusInfoViewControl.DataContext = new FocusInfoViewModel(focusNode);

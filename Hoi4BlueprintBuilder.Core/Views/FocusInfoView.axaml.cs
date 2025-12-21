@@ -144,7 +144,7 @@ public sealed partial class FocusInfoView : UserControl
         }
 
         // 当有多个文件时, 只使用第一个文件
-        string? filePath = files.FirstOrDefault()?.Path?.LocalPath;
+        string? filePath = files.FirstOrDefault()?.Path.LocalPath;
         if (string.IsNullOrEmpty(filePath))
         {
             return;
