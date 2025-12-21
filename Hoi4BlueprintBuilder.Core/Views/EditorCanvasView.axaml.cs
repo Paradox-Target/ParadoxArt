@@ -29,11 +29,11 @@ public sealed partial class EditorCanvasView : UserControl
 {
     private readonly EditorCanvasViewModel _viewModel;
     private readonly ScreenshotService _screenshotService;
-    private readonly LocalizationFormatService _localizationFormatService =
-        App.Current.Services.GetRequiredService<LocalizationFormatService>();
-
-    private CanvasInteractionManager? _interactionManager;
+    private readonly LocalizationFormatService _localizationFormatService;
     private readonly FAMenuFlyout _menuFlyout;
+    private readonly MessageBoxService _messageBox;
+    private readonly FileService _fileService;
+    private CanvasInteractionManager? _interactionManager;
 
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
@@ -55,7 +55,13 @@ public sealed partial class EditorCanvasView : UserControl
     private bool CanConvertToAbsolutePosition =>
         _interactionManager?.RightClickedNode?.RelativePosition is not null;
 
-    public EditorCanvasView()
+    public EditorCanvasView(
+        EditorCanvasViewModel viewModel,
+        ScreenshotService screenshotService,
+        MessageBoxService messageBox,
+        LocalizationFormatService localizationFormatService,
+        FileService fileService
+    )
     {
         InitializeComponent();
 
@@ -67,8 +73,12 @@ public sealed partial class EditorCanvasView : UserControl
         AddHandler(PointerReleasedEvent, OnPointerReleased, RoutingStrategies.Tunnel);
         Initialized += OnInitialized;
         Loaded += OnLoaded;
-        _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
-        _screenshotService = App.Current.Services.GetRequiredService<ScreenshotService>();
+
+        _viewModel = viewModel;
+        _screenshotService = screenshotService;
+        _messageBox = messageBox;
+        _localizationFormatService = localizationFormatService;
+        _fileService = fileService;
         DataContext = _viewModel;
 
         WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
@@ -118,17 +128,11 @@ public sealed partial class EditorCanvasView : UserControl
         var nodes = _viewModel.Nodes;
         if (nodes.Count == 0)
         {
-            await ShowErrorMessageBoxAsync("没有可显示的国策", "错误");
+            await _messageBox.ShowAsync("没有可显示的国策", "错误", MessageBoxIcon.Error);
             return;
         }
 
-        var topLevel = TopLevel.GetTopLevel(this);
-        if (topLevel is null)
-        {
-            return;
-        }
-
-        var file = await topLevel.StorageProvider.SaveFilePickerAsync(
+        var file = await _fileService.SaveFileAsync(
             new FilePickerSaveOptions
             {
                 Title = "导出国策树为图片",
@@ -158,43 +162,8 @@ public sealed partial class EditorCanvasView : UserControl
         catch (Exception ex)
         {
             Log.Error(ex, "导出国策树图片失败");
-            await ShowErrorMessageBoxAsync("导出图片失败", "错误");
+            await _messageBox.ShowAsync("导出图片失败", "错误", MessageBoxIcon.Error);
         }
-    }
-
-    // TODO: 重构
-    private static async Task ShowErrorMessageBoxAsync(string message, string title)
-    {
-        var box = MessageBoxManager.GetMessageBoxStandard(title, message, icon: Icon.Error);
-        if (
-            App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
-            {
-                MainWindow: not null
-            } desktop
-        )
-        {
-            await box.ShowWindowDialogAsync(desktop.MainWindow);
-        }
-        else
-        {
-            await box.ShowAsync();
-        }
-    }
-
-    // TODO: 重构
-    private static async Task<ButtonResult> ShowConfirmMessageBoxAsync(string message, string title)
-    {
-        var box = MessageBoxManager.GetMessageBoxStandard(title, message, ButtonEnum.YesNo, Icon.Warning);
-        if (
-            App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime
-            {
-                MainWindow: not null
-            } desktop
-        )
-        {
-            return await box.ShowWindowDialogAsync(desktop.MainWindow);
-        }
-        return await box.ShowAsync();
     }
 
     #region 鼠标事件处理
@@ -295,11 +264,13 @@ public sealed partial class EditorCanvasView : UserControl
                 .RelativePositionChildren.AsValueEnumerable()
                 .Select(f => _localizationFormatService.GetFormatText(f.Id))
                 .JoinToString('\n');
-            var result = await ShowConfirmMessageBoxAsync(
+            var result = await _messageBox.ShowAsync(
                 $"有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?\n\n受影响节点:\n\n{impactedFocusIds}",
-                "确认删除"
+                "确认删除",
+                MessageBoxIcon.Warning,
+                MessageBoxButtons.YesNo
             );
-            if (result != ButtonResult.Yes)
+            if (result != MessageBoxResult.Yes)
             {
                 return;
             }

@@ -1,4 +1,4 @@
-﻿using Avalonia.Platform.Storage;
+using Avalonia.Platform.Storage;
 using Hoi4BlueprintBuilder.Core.Views;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
@@ -29,5 +29,10 @@ public sealed class FileService(MainWindow mainWindow)
         return await mainWindow.StorageProvider.SaveFilePickerAsync(
             new FilePickerSaveOptions { Title = title }
         );
+    }
+
+    public async Task<IStorageFile?> SaveFileAsync(FilePickerSaveOptions options)
+    {
+        return await mainWindow.StorageProvider.SaveFilePickerAsync(options);
     }
 }

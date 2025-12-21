@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
@@ -8,25 +8,53 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<MessageBoxService>]
 public sealed class MessageBoxService
 {
-    public Task ShowAsync(string message, string title = "", MessageBoxIcon icon = MessageBoxIcon.Info)
+    public Task<MessageBoxResult> ShowAsync(
+        string message,
+        string title = "",
+        MessageBoxIcon icon = MessageBoxIcon.Info,
+        MessageBoxButtons buttons = MessageBoxButtons.Ok
+    )
     {
         return Dispatcher.UIThread.Invoke(() =>
         {
-            var box = MessageBoxManager.GetMessageBoxStandard(title, message, icon: ToMsBoxIcon(icon));
+            var buttonType = ToMsBoxButtons(buttons);
+            var box = MessageBoxManager.GetMessageBoxStandard(
+                title,
+                message,
+                @enum: buttonType,
+                icon: ToMsBoxIcon(icon)
+            );
 
             var lifetime = App.Current.ApplicationLifetime;
+            Task<MessageBoxResult> showTask;
+
             if (lifetime is ISingleViewApplicationLifetime)
             {
-                return box.ShowAsync();
+                showTask = box.ShowAsync().ContinueWith(t => GetButtonResult(t.Result));
             }
-
-            if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
+            else if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
             {
-                return box.ShowWindowDialogAsync(desktop.MainWindow);
+                showTask = box.ShowWindowDialogAsync(desktop.MainWindow)
+                    .ContinueWith(t => GetButtonResult(t.Result));
+            }
+            else
+            {
+                showTask = box.ShowAsync().ContinueWith(t => GetButtonResult(t.Result));
             }
 
-            return box.ShowAsync();
+            return showTask;
         });
+    }
+
+    private static MessageBoxResult GetButtonResult(ButtonResult result)
+    {
+        return result switch
+        {
+            ButtonResult.Ok => MessageBoxResult.Ok,
+            ButtonResult.Yes => MessageBoxResult.Yes,
+            ButtonResult.No => MessageBoxResult.No,
+            _ => MessageBoxResult.Ok
+        };
     }
 
     private static Icon ToMsBoxIcon(MessageBoxIcon icon)
@@ -39,6 +67,16 @@ public sealed class MessageBoxService
             _ => Icon.Info
         };
     }
+
+    private static ButtonEnum ToMsBoxButtons(MessageBoxButtons buttons)
+    {
+        return buttons switch
+        {
+            MessageBoxButtons.Ok => ButtonEnum.Ok,
+            MessageBoxButtons.YesNo => ButtonEnum.YesNo,
+            _ => ButtonEnum.Ok
+        };
+    }
 }
 
 public enum MessageBoxIcon : byte
@@ -46,4 +84,17 @@ public enum MessageBoxIcon : byte
     Info,
     Warning,
     Error
+}
+
+public enum MessageBoxResult : byte
+{
+    Ok,
+    Yes,
+    No
+}
+
+public enum MessageBoxButtons : byte
+{
+    Ok,
+    YesNo
 }
