@@ -75,8 +75,8 @@ public sealed class ScreenshotService
             maxY = double.NegativeInfinity;
             foreach (var n in nodes)
             {
-                int x = n.Model.X;
-                int y = n.Model.Y;
+                int x = n.Node.X;
+                int y = n.Node.Y;
                 if (x < minX)
                 {
                     minX = x;
@@ -104,8 +104,8 @@ public sealed class ScreenshotService
 
     private static void DrawNode(DrawingContext dc, FocusNodeViewModel viewModel)
     {
-        double x = viewModel.Model.X * FocusMapConstants.CellWidth;
-        double y = viewModel.Model.Y * FocusMapConstants.CellHeight;
+        double x = viewModel.Node.X * FocusMapConstants.CellWidth;
+        double y = viewModel.Node.Y * FocusMapConstants.CellHeight;
 
         // Draw Image
         if (viewModel.Bitmap is not null)

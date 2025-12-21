@@ -67,10 +67,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
                 foreach (
                     var focus in _nodes
                         .AsValueEnumerable()
-                        .Where(focus => focus.Model.Icon == message.SpriteName)
+                        .Where(focus => focus.Node.Icon == message.SpriteName)
                 )
                 {
-                    focus.Model.RefreshIcon();
+                    focus.Node.RefreshIcon();
                 }
             }
         );
@@ -352,7 +352,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         for (; index < _nodes.Count; index++)
         {
             var current = _nodes[index];
-            if (current.Model == deletedFocusNode)
+            if (current.Node == deletedFocusNode)
             {
                 viewModel = current;
                 break;

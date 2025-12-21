@@ -96,8 +96,8 @@
 
             <ItemsControl.Styles>
                 <Style x:DataType="vms:FocusNodeViewModel" Selector="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding Model.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellWidth}}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Model.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellHeight}}" />
+                    <Setter Property="Canvas.Left" Value="{Binding Node.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellWidth}}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Node.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellHeight}}" />
                 </Style>
             </ItemsControl.Styles>
         </ItemsControl>

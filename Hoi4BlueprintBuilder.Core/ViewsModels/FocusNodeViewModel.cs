@@ -10,8 +10,8 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
 public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 {
-    public FocusNode Model { get; }
-    public string LocalizedName => LocalizationFormatService.GetFormatText(Model.Id);
+    public FocusNode Node { get; }
+    public string LocalizedName => LocalizationFormatService.GetFormatText(Node.Id);
 
     [ObservableProperty]
     private Bitmap? _bitmap;
@@ -33,21 +33,21 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
 
-    public FocusNodeViewModel(FocusNode model)
+    public FocusNodeViewModel(FocusNode node)
     {
-        Model = model;
+        Node = node;
         LoadBitmapSource();
 
-        Model.PropertyChanged += OnModelPropertyChanged;
+        Node.PropertyChanged += OnNodePropertyChanged;
     }
 
-    private void OnModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    private void OnNodePropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
-        if (args.PropertyName == nameof(Model.Id))
+        if (args.PropertyName == nameof(Node.Id))
         {
             OnPropertyChanged(nameof(LocalizedName));
         }
-        else if (args.PropertyName == nameof(Model.Icon))
+        else if (args.PropertyName == nameof(Node.Icon))
         {
             LoadBitmapSource();
         }
@@ -55,7 +55,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 
     private void LoadBitmapSource()
     {
-        Bitmap = ImageService.GetFocusIconByName(Model.Icon);
+        Bitmap = ImageService.GetFocusIconByName(Node.Icon);
         Width = Bitmap?.PixelSize.Width ?? 0;
         Height = Bitmap?.PixelSize.Height ?? 0;
     }
@@ -66,7 +66,7 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     public void Dispose()
     {
         Bitmap?.Dispose();
-        Model.PropertyChanged -= OnModelPropertyChanged;
-        Model.Dispose();
+        Node.PropertyChanged -= OnNodePropertyChanged;
+        Node.Dispose();
     }
 }

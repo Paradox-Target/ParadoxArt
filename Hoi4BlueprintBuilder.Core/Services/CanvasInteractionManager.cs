@@ -22,15 +22,11 @@ public sealed class CanvasInteractionManager
     private readonly Func<FocusNode, bool> _openFocusInfoView;
     private readonly Action _closeFocusInfoView;
 
-    // 右键按下判定的移动阈值（像素）
-    private const double RightClickMoveThreshold = 5.0;
-
     // 交互状态
     private CanvasInteractionMode _mode = CanvasInteractionMode.None;
     private Point _lastMousePosition;
     private Point _rightButtonDownPosition;
     private FocusNode? _draggedNode;
-    private FocusNode? _rightClickedNode;
     private ConnectionType _connectionType = ConnectionType.None;
 
     /// <summary>
@@ -61,14 +57,15 @@ public sealed class CanvasInteractionManager
     }
 
     /// <summary>
-    /// 右键点击的国策节点
+    /// 右键点击的国策节点视图模型
     /// </summary>
-    public FocusNode? RightClickedNode => _rightClickedNode;
+    public FocusNodeViewModel? RightClickedNodeViewModel { get; private set; }
+    public FocusNode? RightClickedNode => RightClickedNodeViewModel?.Node;
 
     /// <summary>
     /// 右键点击位置是否在某个国策节点上
     /// </summary>
-    public bool CursorOverFocus => _rightClickedNode is not null;
+    public bool CursorOverFocus => RightClickedNodeViewModel is not null;
 
     /// <summary>
     /// 右键点击位置是否不在某个国策节点上
@@ -158,7 +155,7 @@ public sealed class CanvasInteractionManager
         if (_mode == CanvasInteractionMode.Connecting)
         {
             var hitViewModel = GetHitFocusNodeViewModel(position);
-            _connectionPreview.To = hitViewModel?.Model;
+            _connectionPreview.To = hitViewModel?.Node;
             return StandardCursorType.Cross;
         }
 
@@ -240,11 +237,11 @@ public sealed class CanvasInteractionManager
     /// <summary>
     /// 开始设置连接
     /// </summary>
-    public void StartConnection(FocusNode from, ConnectionType type)
+    public void StartConnection(FocusNodeViewModel from, ConnectionType type)
     {
-        _rightClickedNode = from;
+        RightClickedNodeViewModel = from;
         ConnectionType = type;
-        _connectionPreview.From = from;
+        _connectionPreview.From = from.Node;
     }
 
     /// <summary>
@@ -274,11 +271,7 @@ public sealed class CanvasInteractionManager
     /// </summary>
     public List<FocusNode> GetSelectedNodes()
     {
-        return _viewModel
-            .Nodes.AsValueEnumerable()
-            .Where(vm => vm.IsSelected)
-            .Select(vm => vm.Model)
-            .ToList();
+        return _viewModel.Nodes.AsValueEnumerable().Where(vm => vm.IsSelected).Select(vm => vm.Node).ToList();
     }
 
     #region Private Methods
@@ -290,7 +283,7 @@ public sealed class CanvasInteractionManager
     )
     {
         _rightButtonDownPosition = position;
-        _rightClickedNode = hitViewModel?.Model;
+        RightClickedNodeViewModel = hitViewModel;
 
         // 连接模式时右键取消
         if (_mode == CanvasInteractionMode.Connecting)
@@ -327,12 +320,16 @@ public sealed class CanvasInteractionManager
         if (
             _mode == CanvasInteractionMode.Connecting
             && hitViewModel is not null
-            && _rightClickedNode is not null
+            && RightClickedNodeViewModel is not null
         )
         {
-            if (_rightClickedNode != hitViewModel.Model)
+            if (RightClickedNodeViewModel.Node != hitViewModel.Node)
             {
-                ConnectionRequested?.Invoke(_rightClickedNode, hitViewModel.Model, _connectionType);
+                ConnectionRequested?.Invoke(
+                    RightClickedNodeViewModel.Node,
+                    hitViewModel.Node,
+                    _connectionType
+                );
                 CancelConnection();
             }
             return;
@@ -343,12 +340,12 @@ public sealed class CanvasInteractionManager
             if (e.ClickCount > 1)
             {
                 // 双击打开详情
-                _openFocusInfoView(hitViewModel.Model);
+                _openFocusInfoView(hitViewModel.Node);
             }
             else
             {
                 // 单击开始拖动
-                _draggedNode = hitViewModel.Model;
+                _draggedNode = hitViewModel.Node;
                 _mode = CanvasInteractionMode.DraggingNode;
                 _closeFocusInfoView();
 

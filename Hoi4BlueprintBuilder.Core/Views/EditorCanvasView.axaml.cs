@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
@@ -63,7 +64,7 @@ public sealed partial class EditorCanvasView : UserControl
         PointerMoved += OnPointerMoved;
         PointerExited += OnPointerExited;
         PointerPressed += OnPointerPressed;
-        PointerReleased += OnPointerReleased;
+        AddHandler(PointerReleasedEvent, OnPointerReleased, RoutingStrategies.Tunnel);
         Initialized += OnInitialized;
         Loaded += OnLoaded;
         _viewModel = App.Current.Services.GetRequiredService<EditorCanvasViewModel>();
@@ -219,6 +220,12 @@ public sealed partial class EditorCanvasView : UserControl
         // 右键释放时，如果应该显示菜单则显示
         if (shouldShowMenu && props.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
         {
+            // 右键打开菜单时，先清除已有选择，再选中被指向的节点以便展示
+            _interactionManager.ClearSelection();
+
+            var focus = _interactionManager?.RightClickedNodeViewModel;
+            focus?.IsSelected = true;
+
             _menuFlyout.ShowAt(this, true);
         }
     }
@@ -252,7 +259,7 @@ public sealed partial class EditorCanvasView : UserControl
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
     private void SetMutuallyExclusiveFocus()
     {
-        var focusNode = _interactionManager?.RightClickedNode;
+        var focusNode = _interactionManager?.RightClickedNodeViewModel;
         if (focusNode is null)
         {
             return;
@@ -264,7 +271,7 @@ public sealed partial class EditorCanvasView : UserControl
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
     private void SetPrerequisiteFocus()
     {
-        var focusNode = _interactionManager?.RightClickedNode;
+        var focusNode = _interactionManager?.RightClickedNodeViewModel;
         if (focusNode is null)
         {
             return;
@@ -316,7 +323,7 @@ public sealed partial class EditorCanvasView : UserControl
     [RelayCommand(CanExecute = nameof(CursorOverFocus))]
     private void SetRelativePosition()
     {
-        var focusNode = _interactionManager?.RightClickedNode;
+        var focusNode = _interactionManager?.RightClickedNodeViewModel;
         if (focusNode is null)
         {
             return;
@@ -386,7 +393,7 @@ public sealed partial class EditorCanvasView : UserControl
     }
 
     #endregion
-    
+
     private void OpenFocusInfoView(FocusNode focusNode)
     {
         FocusInfoViewControl.DataContext = new FocusInfoViewModel(focusNode);
