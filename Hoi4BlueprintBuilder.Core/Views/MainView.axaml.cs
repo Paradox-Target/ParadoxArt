@@ -11,15 +11,22 @@ public sealed partial class MainView : UserControl
 {
     private GridLength _rawFileTreeColumnWidth;
     private GridLength _rawSplitterColumnWidth;
-    private Animation _settingsButtonAnimation;
+    private readonly Animation _settingsButtonAnimation;
 
     private static readonly GridLength ZeroSize = new(0, GridUnitType.Pixel);
 
+    /// <summary>
+    /// 设计器使用
+    /// </summary>
     public MainView()
+        : this(new FileTreeView()) { }
+
+    public MainView(FileTreeView fileTree)
     {
         InitializeComponent();
         _settingsButtonAnimation = InitializeSettingsButtonAnimation();
 
+        FileTreeView.Content = fileTree;
         FileTreeToggleButton.IsChecked = FileTreeView.IsVisible;
         _rawFileTreeColumnWidth = ContentGrid.ColumnDefinitions[0].Width;
         _rawSplitterColumnWidth = ContentGrid.ColumnDefinitions[1].Width;

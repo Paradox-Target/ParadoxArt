@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:fa="using:FluentAvalonia.UI.Controls"
+             xmlns:views="using:Hoi4BlueprintBuilder.Core.Views"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Hoi4BlueprintBuilder.Core.Views.MainView">
     <UserControl.Styles>
@@ -34,13 +35,7 @@
             </DockPanel>
 
             <Grid x:Name="ContentGrid" Grid.Column="1" ColumnDefinitions="Auto,Auto,*">
-                <TreeView x:Name="FileTreeView" AutoScrollToSelectedItem="True" Grid.Column="0">
-                    <TreeView.Items>
-                        <TreeViewItem Header="项目文件" />
-                        <TreeViewItem Header="蓝图列表" />
-                        <TreeViewItem Header="组件库" />
-                    </TreeView.Items>
-                </TreeView>
+                <ContentControl x:Name="FileTreeView" Grid.Column="0" />
                 <GridSplitter x:Name="MainGridSplitter" Grid.Column="1" />
                 <ContentControl Background="Aquamarine" Grid.Column="2" x:Name="EditorCanvasViewControl"  />
             </Grid>

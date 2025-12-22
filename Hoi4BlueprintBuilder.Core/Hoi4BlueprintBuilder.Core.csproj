@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**"/>
+        <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia"/>
-        <PackageReference Include="Avalonia.Themes.Fluent"/>
-        <PackageReference Include="Avalonia.Fonts.Inter"/>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Fonts.Inter" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Include="AvaloniaUI.DiagnosticsSupport">
             <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
@@ -21,7 +21,7 @@
         </PackageReference>
         <PackageReference Include="BCnEncoder.Net" />
         <PackageReference Include="BCnEncoder.Net.ImageSharp" />
-        <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="DeviceId.Linux" />
         <PackageReference Include="DeviceId.Windows" />
         <PackageReference Include="FluentAvaloniaUI" />

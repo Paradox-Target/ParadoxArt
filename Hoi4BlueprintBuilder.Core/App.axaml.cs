@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -5,8 +6,6 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
-using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
-using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
@@ -17,7 +16,7 @@ public sealed class App : Application
 {
     public static new App Current => (App)Application.Current!;
     public Task<bool>? IsActivated { get; private set; }
-    public ServiceProvider Services { get; } = ConfigureServices();
+    public ServiceProvider Services { get; private set; } = null!;
 
     public static string AppFolder { get; } =
         Path.Combine(
@@ -25,27 +24,30 @@ public sealed class App : Application
             "Hoi4BlueprintEditor"
         );
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
+    public event Action<IServiceCollection>? ConfiguringServices;
+
+    private ServiceCollection? _serviceCollection;
 
     /// <summary>
     /// 不带 BOM 的 UTF-8
     /// </summary>
     public static readonly Encoding Utf8Encoding = new UTF8Encoding(false);
 
-    private static ServiceProvider ConfigureServices()
+    [MemberNotNull(nameof(_serviceCollection))]
+    private void InitializeServices()
     {
-        var services = new ServiceCollection();
+        _serviceCollection = [];
 
-        services.AddSingleton(static _ => SettingsService.LoadSettings());
+        _serviceCollection.AddSingleton(static _ => SettingsService.LoadSettings());
         // services.AddSingleton(static _ => WindowSettingsService.LoadSettings());
-        services.AddHoi4BlueprintBuilderCore();
-
-        return services.BuildServiceProvider();
+        _serviceCollection.AddHoi4BlueprintBuilderCore();
     }
 
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
         NLogSetupHelper.Setup();
+        InitializeServices();
 #if DEBUG
         this.AttachDeveloperTools();
 #endif
@@ -53,6 +55,10 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        ConfiguringServices?.Invoke(_serviceCollection ?? throw new ArgumentException());
+        Services =
+            _serviceCollection?.BuildServiceProvider()
+            ?? throw new ArgumentException("serviceCollection未初始化");
         IsActivated = Services.GetRequiredService<AuthService>().IsActivatedAsync();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

@@ -13,11 +13,12 @@
 
     <ItemGroup>
         <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True" />
-        <PackageReference Include="Avalonia.Desktop"/>
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Vanara.Windows.Shell" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Hoi4BlueprintBuilder.Core\Hoi4BlueprintBuilder.Core.csproj"/>
+        <ProjectReference Include="..\Hoi4BlueprintBuilder.Core\Hoi4BlueprintBuilder.Core.csproj" />
     </ItemGroup>
 </Project>
