@@ -10,8 +10,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 public sealed class SettingsService
 {
     public string AppLanguage { get; set; } = string.Empty;
-    public GameLanguage GameLanguage { get; set; } =
-        LanguageHelper.GetGameLanguageBySystemLanguage();
+    public GameLanguage GameLanguage { get; set; } = LanguageHelper.GetGameLanguageBySystemLanguage();
     public string GameRootFolderPath { get; set; } = string.Empty;
     public string ModRootFolderPath { get; set; } = string.Empty;
 
@@ -25,10 +24,7 @@ public sealed class SettingsService
 
     private const string SettingsFileName = "settings.json";
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
-    private static readonly string SettingsFilePath = Path.Combine(
-        App.ConfigFolder,
-        SettingsFileName
-    );
+    private static readonly string SettingsFilePath = Path.Combine(App.ConfigFolder, SettingsFileName);
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public static SettingsService LoadSettings()
@@ -42,8 +38,21 @@ public sealed class SettingsService
         try
         {
             string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
-            return JsonSerializer.Deserialize<SettingsService>(json)
-                ?? new SettingsService { IsFirstRun = true };
+            var settings = JsonSerializer.Deserialize<SettingsService>(json);
+            if (settings is null)
+            {
+                settings = new SettingsService { IsFirstRun = true };
+                Log.Warn("反序列化设置失败, 设置为默认值.");
+            }
+            else
+            {
+                Log.Info(
+                    "游戏根目录: {GamePath}, MOD根目录: {ModPath}",
+                    settings.GameLanguage,
+                    settings.ModRootFolderPath
+                );
+            }
+            return settings;
         }
         catch (Exception ex)
         {
