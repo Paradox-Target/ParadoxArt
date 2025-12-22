@@ -1,4 +1,4 @@
-﻿using Avalonia.Threading;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Messages;
@@ -18,18 +18,15 @@ public sealed partial class MainWindowViewModel : ObservableObject
     public MainWindowViewModel(NavigationService navigationService)
     {
         _navigationService = navigationService;
-        _navigationService.ViewChanged += () =>
-        {
-            CurrentView = _navigationService.CurrentView;
-        };
+        _navigationService.ViewChanged += () => CurrentView = _navigationService.CurrentView;
 
 #if DEBUG
-        navigationService.NavigateTo<EditorCanvasView>();
-        Task.Run(async () =>
-        {
-            await Task.Delay(5000);
-            Dispatcher.UIThread.Invoke(() => WeakReferenceMessenger.Default.Send(new OpenFileMessage(@"C:\Users\QWQ\Desktop\Mod\common\national_focus\china_communist.txt")));
-        });
+        navigationService.NavigateTo<MainView>();
+        //Task.Run(async () =>
+        //{
+        //    await Task.Delay(5000);
+        //    Dispatcher.UIThread.Invoke(() => WeakReferenceMessenger.Default.Send(new OpenFileMessage(@"C:\Users\QWQ\Desktop\Mod\common\national_focus\china_communist.txt")));
+        //});
 #else
         if (App.Current.IsActivated?.IsCompleted is true)
         {

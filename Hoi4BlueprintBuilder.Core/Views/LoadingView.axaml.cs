@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Services;
 using NLog;
 
@@ -28,7 +27,7 @@ public sealed partial class LoadingView : UserControl
         });
     }
 
-    public static void ExitApplication()
+    private static void ExitApplication()
     {
         var lifetime = App.Current.ApplicationLifetime;
 
