@@ -20,8 +20,7 @@
         <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
     </UserControl.Resources>
 
-    <Grid x:Name="MainGrid" ClipToBounds="True">
-
+<Grid x:Name="MainGrid" ClipToBounds="True">
         <Grid.ContextFlyout>
             <fa:FAMenuFlyout x:DataType="views:EditorCanvasView" Opening="ContextMenu_OnOpening">
                 <fa:MenuFlyoutItem Command="{Binding CreateNewFocusCommand}" Text="新建国策">

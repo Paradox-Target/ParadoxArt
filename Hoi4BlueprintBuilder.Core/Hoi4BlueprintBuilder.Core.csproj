@@ -24,6 +24,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="DeviceId.Linux" />
         <PackageReference Include="DeviceId.Windows" />
+        <PackageReference Include="DotNet.Glob" />
         <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="MessageBox.Avalonia" />

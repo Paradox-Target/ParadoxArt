@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="vms:FileTreeViewModel"
              x:Class="Hoi4BlueprintBuilder.Core.Views.FileTreeView">
-    <TreeView AutoScrollToSelectedItem="True" ItemsSource="{Binding Items}">
+    <TreeView SelectionMode="Single" SelectionChanged="TreeView_OnSelectionChanged" AutoScrollToSelectedItem="True" ItemsSource="{Binding Items}">
         <TreeView.ItemTemplate>
             <TreeDataTemplate x:DataType="vms:SystemFileItem" ItemsSource="{Binding Children}">
                 <TextBlock Text="{Binding Name}" />

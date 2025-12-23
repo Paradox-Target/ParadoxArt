@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
@@ -17,16 +16,18 @@ using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 using Microsoft.Extensions.DependencyInjection;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 using NLog;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
-[RegisterSingleton<EditorCanvasView>]
-public sealed partial class EditorCanvasView : UserControl
+[RegisterTransient<EditorCanvasView>]
+public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClosed
 {
+    public string Header { get; }
+    public string FilePath { get; }
+    public string ToolTip { get; }
+
     private readonly EditorCanvasViewModel _viewModel;
     private readonly ScreenshotService _screenshotService;
     private readonly LocalizationFormatService _localizationFormatService;
@@ -60,7 +61,8 @@ public sealed partial class EditorCanvasView : UserControl
         ScreenshotService screenshotService,
         MessageBoxService messageBox,
         LocalizationFormatService localizationFormatService,
-        FileService fileService
+        FileService fileService,
+        UserStatusService userStatusService
     )
     {
         InitializeComponent();
@@ -80,6 +82,15 @@ public sealed partial class EditorCanvasView : UserControl
         _localizationFormatService = localizationFormatService;
         _fileService = fileService;
         DataContext = _viewModel;
+        if (userStatusService.CurrentSelectedFile is null)
+        {
+            throw new InvalidOperationException("当前没有选中的国策文件");
+        }
+        _viewModel.OpenFile(userStatusService.CurrentSelectedFile.FullPath);
+
+        FilePath = userStatusService.CurrentSelectedFile.FullPath;
+        Header = userStatusService.CurrentSelectedFile.Name;
+        ToolTip = userStatusService.CurrentSelectedFile.FullPath;
 
         WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
     }
@@ -380,5 +391,10 @@ public sealed partial class EditorCanvasView : UserControl
                 is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop
             ? desktop.MainWindow
             : null;
+    }
+
+    public void Close()
+    {
+        _viewModel.Close();
     }
 }

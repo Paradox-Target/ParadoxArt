@@ -8,6 +8,7 @@ using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Core.Views;
 using MethodTimer;
 using NLog;
 using ObservableCollections;
@@ -17,10 +18,14 @@ using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
-[RegisterSingleton<EditorCanvasViewModel>]
-public sealed partial class EditorCanvasViewModel : ObservableObject
+[RegisterTransient<EditorCanvasViewModel>]
+public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
 {
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
+    /// <summary>
+    /// 国策来源文件路径
+    /// </summary>
+    public IReadOnlyCollection<string> FocusTreeFiles => _focusTreeFiles;
 
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
 
@@ -54,12 +59,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         Nodes = _nodes.ToNotifyCollectionChanged();
         _nodes.CollectionChanged += OnNodeChanged;
         // 假数据测试
-        LoadTestData();
+        //LoadTestData();
 
-        WeakReferenceMessenger.Default.Register<OpenFileMessage>(this, OnOpenFile);
         WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
         WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
-        // 如果某一天EditorCanvasViewModel不是单例模式了, 就需要改一下这个
+        // TODO: 如果某一天EditorCanvasViewModel不是单例模式了, 就需要改一下这个
         StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(
             this,
             (_, message) =>
@@ -101,20 +105,20 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         );
     }
 
-    private void OnOpenFile(object sender, OpenFileMessage message)
+    public void OpenFile(string filePath)
     {
-        if (!TextParser.TryParse(message.FilePath, out var rootNode, out var _))
+        if (!TextParser.TryParse(filePath, out var rootNode, out var _))
         {
             return;
         }
 
         ClearResources();
 
-        var (focusNodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(message.FilePath, rootNode);
+        var (focusNodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(filePath, rootNode);
         _editorNodesMap = focusNodes;
         _focusTreeFiles.AddRange(filePaths);
         _nodes.AddRange(_editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode)));
-        Log.Info("已加载国策树文件: {FilePath}", message.FilePath);
+        Log.Info("已加载国策树文件: {FilePath}", filePath);
         Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
     }
 
@@ -370,5 +374,12 @@ public sealed partial class EditorCanvasViewModel : ObservableObject
         }
 
         WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+    }
+
+    public void Close()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        StrongReferenceMessenger.Default.UnregisterAll(this);
+        ClearResources();
     }
 }

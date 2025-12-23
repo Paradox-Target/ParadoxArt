@@ -15,10 +15,10 @@
         </Style>
     </UserControl.Styles>
     
-    <Grid RowDefinitions="Auto,*">
+    <Grid x:Name="MainGrid" RowDefinitions="Auto,*">
         <TextBlock Grid.Row="0" Text="功能区" Margin="0,4"/>
 
-        <Grid x:Name="MainGrid" Grid.Row="1" ColumnDefinitions="40,*">
+        <Grid Grid.Row="1" ColumnDefinitions="40,*">
 
             <DockPanel x:Name="SidePanel" Grid.Column="0">
                 <ToggleButton x:Name="FileTreeToggleButton" Classes="SideButton" DockPanel.Dock="Top">
@@ -37,7 +37,7 @@
             <Grid x:Name="ContentGrid" Grid.Column="1" ColumnDefinitions="Auto,Auto,*">
                 <ContentControl x:Name="FileTreeView" Grid.Column="0" />
                 <GridSplitter x:Name="MainGridSplitter" Grid.Column="1" />
-                <ContentControl Background="Aquamarine" Grid.Column="2" x:Name="EditorCanvasViewControl"  />
+                <fa:TabView IsAddTabButtonVisible="False" TabCloseRequested="MainTabView_OnTabCloseRequested" Grid.Column="2" x:Name="MainTabView"  />
             </Grid>
         </Grid>
     </Grid>

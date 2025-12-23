@@ -19,7 +19,6 @@ public sealed partial class MainWindowViewModel : ObservableObject
     {
         _navigationService = navigationService;
         _navigationService.ViewChanged += () => CurrentView = _navigationService.CurrentView;
-
 #if DEBUG
         navigationService.NavigateTo<MainView>();
         //Task.Run(async () =>
