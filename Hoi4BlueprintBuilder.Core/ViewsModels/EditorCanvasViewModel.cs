@@ -22,6 +22,7 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
 {
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
+
     /// <summary>
     /// 国策来源文件路径
     /// </summary>
@@ -58,26 +59,29 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
         _statusBarService = statusBarService;
         Nodes = _nodes.ToNotifyCollectionChanged();
         _nodes.CollectionChanged += OnNodeChanged;
-        // 假数据测试
-        //LoadTestData();
+    }
 
+    public void OnLoaded()
+    {
         WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
         WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
-        // TODO: 如果某一天EditorCanvasViewModel不是单例模式了, 就需要改一下这个
-        StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(
-            this,
-            (_, message) =>
-            {
-                foreach (
-                    var focus in _nodes
-                        .AsValueEnumerable()
-                        .Where(focus => focus.Node.Icon == message.SpriteName)
-                )
-                {
-                    focus.Node.RefreshIcon();
-                }
-            }
-        );
+        StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(this, DeleteImageResource);
+    }
+
+    public void OnUnLoaded()
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        StrongReferenceMessenger.Default.UnregisterAll(this);
+    }
+
+    private void DeleteImageResource(object sender, DeleteImageResourceMessage message)
+    {
+        foreach (
+            var focus in _nodes.AsValueEnumerable().Where(focus => focus.Node.Icon == message.SpriteName)
+        )
+        {
+            focus.Node.RefreshIcon();
+        }
     }
 
     private void OnNodeChanged(in NotifyCollectionChangedEventArgs<FocusNodeViewModel> e)

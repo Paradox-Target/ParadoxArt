@@ -75,6 +75,7 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         AddHandler(PointerReleasedEvent, OnPointerReleased, RoutingStrategies.Tunnel);
         Initialized += OnInitialized;
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
 
         _viewModel = viewModel;
         _screenshotService = screenshotService;
@@ -91,22 +92,18 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         FilePath = userStatusService.CurrentSelectedFile.FullPath;
         Header = userStatusService.CurrentSelectedFile.Name;
         ToolTip = userStatusService.CurrentSelectedFile.FullPath;
+    }
 
-        WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+        _viewModel.OnUnLoaded();
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        // 控件加载完成后初始化交互管理器
-        _interactionManager = new CanvasInteractionManager(
-            _viewModel,
-            this,
-            ConnectionPreviewOverlay,
-            OpenFocusInfoViewInternal,
-            CloseFocusInfoView
-        );
-
-        _interactionManager.ConnectionRequested += OnConnectionRequested;
+        WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+        _viewModel.OnLoaded();
     }
 
     private void OnConnectionRequested(FocusNode from, FocusNode to, ConnectionType type)
@@ -132,6 +129,17 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         {
             item?.DataContext = this;
         }
+
+        // 控件加载完成后初始化交互管理器
+        _interactionManager = new CanvasInteractionManager(
+            _viewModel,
+            this,
+            ConnectionPreviewOverlay,
+            OpenFocusInfoViewInternal,
+            CloseFocusInfoView
+        );
+
+        _interactionManager.ConnectionRequested += OnConnectionRequested;
     }
 
     private async void SaveToPng(object o, SaveFocusTreeToPngMessage saveFocusTreeToPngMessage)

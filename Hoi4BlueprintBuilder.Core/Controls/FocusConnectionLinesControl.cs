@@ -1,11 +1,13 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using NLog;
 using ObservableCollections;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
@@ -19,19 +21,21 @@ public sealed class FocusConnectionLinesControl : Control
     private static double CellHeight => FocusMapConstants.CellHeight;
 
     private const double LinePenWidth = 3.0;
-    public static readonly Pen PrerequisiteLinePen = new(new SolidColorBrush(Colors.PaleGoldenrod), LinePenWidth);
+    public static readonly Pen PrerequisiteLinePen =
+        new(new SolidColorBrush(Colors.PaleGoldenrod), LinePenWidth);
     private static readonly Pen ExclusiveLinePen = new(new SolidColorBrush(Colors.OrangeRed), LinePenWidth);
-    private static readonly Pen PrerequisiteDashPen = new(
-        new SolidColorBrush(Colors.LightGray),
-        LinePenWidth,
-        new DashStyle([1, 2], 0)
-    );
+    private static readonly Pen PrerequisiteDashPen =
+        new(new SolidColorBrush(Colors.LightGray), LinePenWidth, new DashStyle([1, 2], 0));
+
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     #region Styled Properties
 
     public static readonly StyledProperty<NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel>?> NodesProperty =
-        AvaloniaProperty.Register<FocusConnectionLinesControl, NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel>?>(
-            nameof(Nodes));
+        AvaloniaProperty.Register<
+            FocusConnectionLinesControl,
+            NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel>?
+        >(nameof(Nodes));
 
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel>? Nodes
     {
@@ -74,26 +78,24 @@ public sealed class FocusConnectionLinesControl : Control
 
     static FocusConnectionLinesControl()
     {
-        AffectsRender<FocusConnectionLinesControl>(NodesProperty, ScaleProperty, TranslateXProperty, TranslateYProperty);
+        AffectsRender<FocusConnectionLinesControl>(
+            NodesProperty,
+            ScaleProperty,
+            TranslateXProperty,
+            TranslateYProperty
+        );
     }
 
     #endregion
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        WeakReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(
-            this,
-            (_, _) => InvalidateVisual()
-        );
-    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property == NodesProperty && change.NewValue is NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> nodes)
+        if (
+            change.Property == NodesProperty
+            && change.NewValue is NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> nodes
+        )
         {
             nodes.CollectionChanged += (_, _) => InvalidateVisual();
         }
@@ -174,12 +176,8 @@ public sealed class FocusConnectionLinesControl : Control
             DrawMutuallyExclusive(dc, node, ex);
         }
     }
-    
-    public static void DrawMutuallyExclusive(
-        DrawingContext dc,
-        FocusNode node,
-        FocusNode secondNode
-    )
+
+    public static void DrawMutuallyExclusive(DrawingContext dc, FocusNode node, FocusNode secondNode)
     {
         var nodeJoint = GetNodeCenter(node);
         var exJoint = GetNodeCenter(secondNode);
@@ -193,5 +191,24 @@ public sealed class FocusConnectionLinesControl : Control
         x += (CellWidth / 2) - (LinePenWidth / 2);
         y += (CellHeight / 2) - (LinePenWidth / 2);
         return new Point(x, y);
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
+
+        base.OnUnloaded(e);
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+
+        WeakReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(this, Handler);
+    }
+
+    private void Handler(object o, RedrawFocusConnectionLinesMessage redrawFocusConnectionLinesMessage)
+    {
+        InvalidateVisual();
     }
 }
