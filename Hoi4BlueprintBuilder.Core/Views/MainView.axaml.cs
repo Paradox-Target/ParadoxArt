@@ -44,7 +44,11 @@ public sealed partial class MainView : UserControl
         MainTabView.SizeChanged += MainTabViewOnSizeChanged;
         FileTreeToggleButton.IsCheckedChanged += OnIsCheckedChanged;
         FileTreeToggleButton.IsChecked = FileTreeView.IsVisible;
-        SettingsButton.Click += (_, _) => _settingsButtonAnimation.RunAsync(SettingsButton);
+        SettingsButton.Click += (_, _) =>
+        {
+            _tabViewService.AddSingleTabFromIoc<AppSettingsView>();
+            _settingsButtonAnimation.RunAsync(SettingsButton);
+        };
     }
 
     private void OnIsCheckedChanged(object? o, RoutedEventArgs routedEventArgs)

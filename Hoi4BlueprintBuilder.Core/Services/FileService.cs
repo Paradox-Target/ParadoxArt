@@ -35,4 +35,9 @@ public sealed class FileService(MainWindow mainWindow)
     {
         return await mainWindow.StorageProvider.SaveFilePickerAsync(options);
     }
+
+    public Task<bool> LaunchUriAsync(string path)
+    {
+        return mainWindow.Launcher.LaunchUriAsync(new Uri(path));
+    }
 }

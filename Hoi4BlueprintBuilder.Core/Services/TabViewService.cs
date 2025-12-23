@@ -76,7 +76,7 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
             {
                 Header = content.Header,
                 Content = content,
-                IconSource = content.Icon
+                IconSource = content.TabIcon
             };
             ToolTip.SetTip(tabViewItem, content.ToolTip);
             UpdateControlSize((Control)content);

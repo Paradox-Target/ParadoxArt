@@ -34,16 +34,6 @@ public sealed class App : Application
     /// </summary>
     public static readonly Encoding Utf8Encoding = new UTF8Encoding(false);
 
-    [MemberNotNull(nameof(_serviceCollection))]
-    private void InitializeServices()
-    {
-        _serviceCollection = [];
-
-        _serviceCollection.AddSingleton(static _ => SettingsService.LoadSettings());
-        // services.AddSingleton(static _ => WindowSettingsService.LoadSettings());
-        _serviceCollection.AddHoi4BlueprintBuilderCore();
-    }
-
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -54,16 +44,26 @@ public sealed class App : Application
 #endif
     }
 
+    [MemberNotNull(nameof(_serviceCollection))]
+    private void InitializeServices()
+    {
+        _serviceCollection = [];
+
+        _serviceCollection.AddSingleton(static _ => SettingsService.LoadSettings());
+        // services.AddSingleton(static _ => WindowSettingsService.LoadSettings());
+        _serviceCollection.AddHoi4BlueprintBuilderCore();
+    }
+
     public override void OnFrameworkInitializationCompleted()
     {
         if (_serviceCollection is null)
         {
             throw new InvalidOperationException();
         }
-        
+
         ConfiguringServices?.Invoke(_serviceCollection);
         _serviceCollection.TryAddSingleton<IFileSortComparer, DefaultFileSortComparer>();
-        
+
         Services =
             _serviceCollection?.BuildServiceProvider()
             ?? throw new ArgumentException("serviceCollection未初始化");

@@ -1,0 +1,130 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.AppSettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:local="using:Hoi4BlueprintBuilder.Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Hoi4BlueprintBuilder.Core.Models"
+    xmlns:viewsModels="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
+    x:DataType="viewsModels:AppSettingsViewModel"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+        <StackPanel Margin="8,0" Spacing="4">
+            <fa:SettingsExpander Description="{Binding GameRootFolderPath, Mode=OneWay}" Header="游戏根目录">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE756;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <Button Command="{Binding PickGameRootPathCommand}" Content="重新选择" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
+            <fa:SettingsExpander Description="使用 DDS 格式有助于加快游戏载入速度" Header="导入 PNG 时自动转换成 DDS 格式">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xEB9F;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ToggleSwitch
+                        IsChecked="{Binding IsAutoFocusPngConvertToDds, Mode=TwoWay}"
+                        OffContent=""
+                        OnContent="" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
+            <fa:SettingsExpander Description="*重启App后生效" Header="App 语言">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xF2B7;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ComboBox ItemsSource="{Binding AppLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedAppLanguagesIndex, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="models:LanguageInfo">
+                                <TextBlock Text="{Binding DisplayName, Mode=OneTime}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
+            <fa:SettingsExpander Description="*重启App后生效" Header="游戏本地化语言">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xF2B7;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ComboBox ItemsSource="{Binding GameLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedGameLanguagesIndex, Mode=TwoWay}" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
+            <fa:SettingsExpander
+                Command="{Binding OpenConfigFolderInExplorerCommand}"
+                CommandParameter="{Binding Description, RelativeSource={RelativeSource Self}}"
+                Description="{x:Static local:App.ConfigFolder}"
+                Header="打开配置文件夹"
+                IsClickEnabled="True">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE8DA;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.ActionIconSource>
+                    <control:FontIconSource Glyph="&#xE8A7;" />
+                </fa:SettingsExpander.ActionIconSource>
+            </fa:SettingsExpander>
+
+            <TextBlock
+                Margin="4,4,0,4"
+                FontSize="18"
+                FontWeight="Bold"
+                Text="关于" />
+
+            <fa:SettingsExpander
+                Description="© Paradox Target 2025. All rights reserved."
+                Footer="v0.1.0"
+                Header="Focus Editor">
+                <fa:SettingsExpanderItem Content=".NET Version" Footer="{Binding DotNetVersion, Mode=OneTime}" />
+                <fa:SettingsExpanderItem>
+                    <HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
+                </fa:SettingsExpanderItem>
+            </fa:SettingsExpander>
+
+            <fa:SettingsExpander Margin="0,0,0,8" Header="开放源代码库">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE943;" />
+                </fa:SettingsExpander.IconSource>
+                <UniformGrid>
+                    <HyperlinkButton Content="Avalonia" NavigateUri="https://avaloniaui.net/" />
+                    <HyperlinkButton Content="Sarasa-Gothic" NavigateUri="https://github.com/be5invis/Sarasa-Gothic" />
+                    <HyperlinkButton Content="cascadia-code" NavigateUri="https://github.com/microsoft/cascadia-code" />
+                    <HyperlinkButton Content="FluentAvaloniaUI" NavigateUri="https://github.com/amwx/FluentAvalonia" />
+                    <HyperlinkButton Content="CommunityToolkit.Mvvm" NavigateUri="https://github.com/CommunityToolkit/dotnet" />
+                    <HyperlinkButton Content="Fody" NavigateUri="https://github.com/Fody/Fody" />
+                    <HyperlinkButton Content="MethodTimer" NavigateUri="https://github.com/Fody/MethodTimer" />
+                    <HyperlinkButton Content="Microsoft.Extensions.DependencyInjection" NavigateUri="https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection" />
+                    <HyperlinkButton Content="NLog" NavigateUri="https://nlog-project.org/" />
+                    <HyperlinkButton Content="ObservableCollections" NavigateUri="https://github.com/Cysharp/ObservableCollections" />
+                    <HyperlinkButton Content="ParadoxPower" NavigateUri="https://github.com/textGamex/ParadoxPower" />
+                    <HyperlinkButton Content="ZLinq" NavigateUri="https://github.com/Cysharp/ZLinq" />
+                    <HyperlinkButton Content="NLua" NavigateUri="https://github.com/nlua/NLua" />
+                    <HyperlinkButton Content="Pfim" NavigateUri="https://nickbabcock.github.io/Pfim/" />
+                    <HyperlinkButton Content="Pidgin" NavigateUri="https://github.com/benjamin-hodgson/Pidgin" />
+                    <HyperlinkButton Content="Ardalis.SmartEnum" NavigateUri="https://github.com/ardalis/SmartEnum" />
+                    <HyperlinkButton Content="BCnEncoder.Net" NavigateUri="https://github.com/Nominom/BCnEncoder.NET" />
+                    <HyperlinkButton Content="Enums.NET" NavigateUri="https://github.com/TylerBrinkley/Enums.NET" />
+                    <HyperlinkButton Content="Injectio" NavigateUri="https://github.com/loresoft/Injectio" />
+                    <HyperlinkButton Content="JetBrains.Annotations" NavigateUri="https://www.jetbrains.com/" />
+                    <HyperlinkButton Content="DeviceId" NavigateUri="https://github.com/MatthewKing/DeviceId" />
+                    <HyperlinkButton Content="DotNet.Glob" NavigateUri="https://github.com/dazinator/DotNet.Glob" />
+                    <HyperlinkButton Content="MessageBox.Avalonia" NavigateUri="https://github.com/CreateLab/MessageBox.Avalonia" />
+                    <HyperlinkButton Content="NaturalSort.Extension" NavigateUri="https://github.com/tompazourek/NaturalSort.Extension" />
+                    <HyperlinkButton Content="SixLabors.ImageSharp" NavigateUri="https://github.com/SixLabors/ImageSharp" />
+                    <HyperlinkButton Content="Vanara" NavigateUri="https://github.com/dahall/vanara" />
+                </UniformGrid>
+            </fa:SettingsExpander>
+        </StackPanel>
+    </ScrollViewer>
+
+
+</UserControl>

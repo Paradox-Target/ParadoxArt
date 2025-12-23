@@ -14,6 +14,7 @@
     </Application.Styles>
     <Application.Resources>
         <ResourceDictionary>
+            <FontFamily x:Key="FluentIconFontFamily">Segoe Fluent Icons</FontFamily>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="/Assets/ConstantDictionary.axaml" />
                 <ResourceInclude Source="/Assets/Icons/IconsDictionary.axaml" />

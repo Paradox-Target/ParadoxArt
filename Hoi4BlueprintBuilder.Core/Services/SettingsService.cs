@@ -32,6 +32,7 @@ public sealed class SettingsService
         Log.Info("尝试加载配置文件: {SettingsFilePath}", SettingsFilePath);
         if (!File.Exists(SettingsFilePath))
         {
+            Log.Info("配置文件不存在, 使用默认设置.");
             return new SettingsService { IsFirstRun = true };
         }
 
