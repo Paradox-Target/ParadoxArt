@@ -8,6 +8,7 @@ using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NLog;
 
 namespace Hoi4BlueprintBuilder.Core;
@@ -55,7 +56,14 @@ public sealed class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        ConfiguringServices?.Invoke(_serviceCollection ?? throw new ArgumentException());
+        if (_serviceCollection is null)
+        {
+            throw new InvalidOperationException();
+        }
+        
+        ConfiguringServices?.Invoke(_serviceCollection);
+        _serviceCollection.TryAddSingleton<IFileSortComparer, DefaultFileSortComparer>();
+        
         Services =
             _serviceCollection?.BuildServiceProvider()
             ?? throw new ArgumentException("serviceCollection未初始化");
