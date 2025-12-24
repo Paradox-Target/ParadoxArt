@@ -92,7 +92,7 @@
 
             <fa:SettingsExpander Margin="0,0,0,8" Header="开放源代码库">
                 <fa:SettingsExpander.IconSource>
-                    <control:FontIconSource Glyph="&#xE943;" />
+                    <control:FontIconSource Glyph="&#xE8F1;" />
                 </fa:SettingsExpander.IconSource>
                 <UniformGrid>
                     <HyperlinkButton Content="Avalonia" NavigateUri="https://avaloniaui.net/" />

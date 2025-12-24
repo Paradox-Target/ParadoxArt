@@ -51,4 +51,8 @@
         </PackageReference>
         <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hoi4BlueprintBuilder.Localization\Hoi4BlueprintBuilder.Localization.csproj" />
+    </ItemGroup>
 </Project>
