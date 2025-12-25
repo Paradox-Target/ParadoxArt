@@ -30,28 +30,7 @@
                 Height="32"
                 Margin="2"
                 Source="../Assets/logo.ico" />
-            <fa:CommandBar x:Name="TitleCommandBar" DefaultLabelPosition="Right">
-                <fa:CommandBar.PrimaryCommands>
-                    <fa:CommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:Resources.Menu_CreateNewFocusTree}">
-                        <fa:CommandBarButton.IconSource>
-                            <control:FontIconSource Glyph="&#xECC8;" />
-                        </fa:CommandBarButton.IconSource>
-                    </fa:CommandBarButton>
-                    <fa:CommandBarButton
-                        Command="{Binding SaveFocusTreeCommand}"
-                        IconSource="Save"
-                        Label="{x:Static lang:Resources.Menu_Save}" />
-
-                    <fa:CommandBarSeparator Margin="4,0" />
-
-                    <fa:CommandBarElementContainer VerticalContentAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock VerticalAlignment="Center" Text="条件:" />
-                            <fa:FAComboBox />
-                        </StackPanel>
-                    </fa:CommandBarElementContainer>
-                </fa:CommandBar.PrimaryCommands>
-            </fa:CommandBar>
+            <views:TitleCommandBarView x:Name="TitleCommandBar" />        
         </StackPanel>
         <ContentControl
             x:Name="MainContent"

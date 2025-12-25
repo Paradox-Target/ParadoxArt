@@ -1,0 +1,39 @@
+<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.TitleCommandBarView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="40"
+    d:DesignWidth="400"
+    x:DataType="vms:TitleCommandBarViewModel"
+    mc:Ignorable="d">
+
+    <fa:CommandBar DefaultLabelPosition="Right">
+        <fa:CommandBar.PrimaryCommands>
+            <fa:CommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:Resources.Menu_CreateNewFocusTree}">
+                <fa:CommandBarButton.IconSource>
+                    <control:FontIconSource Glyph="&#xECC8;" />
+                </fa:CommandBarButton.IconSource>
+            </fa:CommandBarButton>
+            <fa:CommandBarButton
+                Command="{Binding SaveFocusTreeCommand}"
+                IconSource="Save"
+                Label="{x:Static lang:Resources.Menu_Save}" />
+
+            <fa:CommandBarSeparator Margin="4,0" />
+
+            <fa:CommandBarElementContainer VerticalContentAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock VerticalAlignment="Center" Text="条件:" />
+                    <fa:FAComboBox />
+                </StackPanel>
+            </fa:CommandBarElementContainer>
+        </fa:CommandBar.PrimaryCommands>
+    </fa:CommandBar>
+
+</UserControl>

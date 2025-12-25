@@ -36,13 +36,7 @@ public sealed partial class MainWindow : AppWindow
 
     public MainWindow()
         : this(
-            new MainWindowViewModel(
-                new NavigationService(new ServiceContainer()),
-                new SettingsService(),
-                new MessageBoxService(),
-                new TabViewService(new ServiceContainer()),
-                new UserStatusService()
-            ),
+            new MainWindowViewModel(new NavigationService(new ServiceContainer())),
             new NotificationService()
         ) { }
 }
