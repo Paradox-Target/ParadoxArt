@@ -19,6 +19,11 @@ public sealed class SettingsService
     /// </summary>
     public bool IsAutoFocusPngConvertToDds { get; set; } = true;
 
+    /// <summary>
+    /// 创建新国策后是否自动打开国策信息卡
+    /// </summary>
+    public bool IsAutoOpenFocusInfoCard { get; set; } = true;
+
     [JsonIgnore]
     public bool IsFirstRun { get; private init; }
 

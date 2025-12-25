@@ -23,6 +23,16 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         get => _settings.IsAutoFocusPngConvertToDds;
     }
 
+    public bool IsAutoOpenFocusInfoCard
+    {
+        set
+        {
+            _settings.IsAutoOpenFocusInfoCard = value;
+            OnPropertyChanged();
+        }
+        get => _settings.IsAutoOpenFocusInfoCard;
+    }
+
     public string GameRootFolderPath
     {
         get => _settings.GameRootFolderPath;

@@ -34,6 +34,7 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
     private readonly FAMenuFlyout _menuFlyout;
     private readonly MessageBoxService _messageBox;
     private readonly FileService _fileService;
+    private readonly SettingsService _settingsService;
     private CanvasInteractionManager? _interactionManager;
 
     private const double FocusInfoViewWidthRatio = 0.35;
@@ -62,7 +63,8 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         MessageBoxService messageBox,
         LocalizationFormatService localizationFormatService,
         FileService fileService,
-        UserStatusService userStatusService
+        UserStatusService userStatusService,
+        SettingsService settingsService
     )
     {
         InitializeComponent();
@@ -82,6 +84,7 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         _messageBox = messageBox;
         _localizationFormatService = localizationFormatService;
         _fileService = fileService;
+        _settingsService = settingsService;
         DataContext = _viewModel;
         if (userStatusService.CurrentSelectedFile is null)
         {
@@ -359,8 +362,10 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
                 )
             );
 
-            // TODO: 可选
-            OpenFocusInfoView(newFocusNode);
+            if (_settingsService.IsAutoOpenFocusInfoCard)
+            {
+                OpenFocusInfoView(newFocusNode);
+            }
             Log.Debug("创建新国策: {Name}", newFocusNode.Id);
         }
     }

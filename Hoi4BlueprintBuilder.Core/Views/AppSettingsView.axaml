@@ -36,6 +36,18 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
+            <fa:SettingsExpander Description="创建新国策后自动打开国策信息卡以便编辑" Header="自动打开国策信息卡">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE70B;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ToggleSwitch
+                        IsChecked="{Binding IsAutoOpenFocusInfoCard, Mode=TwoWay}"
+                        OffContent=""
+                        OnContent="" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
             <fa:SettingsExpander Description="*重启App后生效" Header="App 语言">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
