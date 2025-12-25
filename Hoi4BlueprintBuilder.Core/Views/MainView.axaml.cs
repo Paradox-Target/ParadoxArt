@@ -28,11 +28,7 @@ public sealed partial class MainView : UserControl
     /// 设计器使用
     /// </summary>
     public MainView()
-        : this(
-            new FileTreeView(),
-            new TabViewService(new ServiceContainer()),
-            new MainViewModel(null!, null!, null!, new UserStatusService())
-        ) { }
+        : this(new FileTreeView(), new TabViewService(new ServiceContainer()), new MainViewModel()) { }
 
     public MainView(FileTreeView fileTree, TabViewService tabViewService, MainViewModel mainViewModel)
     {
@@ -40,14 +36,16 @@ public sealed partial class MainView : UserControl
         DataContext = mainViewModel;
         _tabViewService = tabViewService;
         _settingsButtonAnimation = InitializeSettingsButtonAnimation();
-
         FileTreeView.Content = fileTree;
+
         _tabViewService.Initialize(
             MainTabView,
             () => ContentGrid.ColumnDefinitions[2].ActualWidth,
-            () => MainGrid.RowDefinitions[1].ActualHeight
+            () => Bounds.Height
         );
+        SizeChanged += MainTabViewOnSizeChanged;
         MainTabView.SizeChanged += MainTabViewOnSizeChanged;
+
         FileTreeToggleButton.IsCheckedChanged += OnIsCheckedChanged;
         FileTreeToggleButton.IsChecked = FileTreeView.IsVisible;
         SettingsButton.Click += (_, _) =>
@@ -80,6 +78,7 @@ public sealed partial class MainView : UserControl
 
     private void MainTabViewOnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
+        e.Handled = true;
         _tabViewService.ResizeSelectionTab();
     }
 
