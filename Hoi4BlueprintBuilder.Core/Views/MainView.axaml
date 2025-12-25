@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Hoi4BlueprintBuilder.Core.Views.MainView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -35,7 +35,7 @@
                 Classes="SideButton"
                 DockPanel.Dock="Bottom">
                 <Button.Content>
-                    <fa:SymbolIcon Symbol="Settings" />
+                    <fa:SymbolIcon x:Name="SettingsIcon" Symbol="Settings" />
                 </Button.Content>
             </Button>
             <Border Background="Transparent" />

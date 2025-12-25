@@ -111,7 +111,6 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
         }
 
         UpdateControlSize(control);
-        Log.Trace("重置Tab大小");
     }
 
     private void UpdateControlSize(Control control)

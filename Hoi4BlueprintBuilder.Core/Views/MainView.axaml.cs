@@ -51,7 +51,7 @@ public sealed partial class MainView : UserControl
         SettingsButton.Click += (_, _) =>
         {
             _tabViewService.AddSingleTabFromIoc<AppSettingsView>();
-            _settingsButtonAnimation.RunAsync(SettingsButton);
+            _settingsButtonAnimation.RunAsync(SettingsIcon);
         };
     }
 
