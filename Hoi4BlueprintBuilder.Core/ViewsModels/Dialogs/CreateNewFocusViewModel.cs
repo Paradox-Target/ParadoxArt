@@ -1,48 +1,81 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Cysharp.Text;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 
-public sealed partial class CreateNewFocusViewModel(IReadOnlyCollection<string> filePaths) : ObservableObject
+public sealed partial class CreateNewFocusViewModel : ObservableValidator
 {
     public FocusType SelectedFocusType => FocusTypes[SelectedFocusTypeIndex].Type;
     public string SelectedFocusFilePath => FocusFileNames[SelectedFocusFileNameIndex].FilePath;
     public FocusTypeItem[] FocusTypes { get; } =
-        [new(FocusType.Normal, "普通国策"), new(FocusType.Shared, "共享国策")];
-    public FocusFileItem[] FocusFileNames { get; } =
-        filePaths
-            .AsValueEnumerable()
-            .Select(static path => new FocusFileItem(Path.GetFileName(path), path))
-            .ToArray();
+        [
+            new(FocusType.Normal, Resources.CreateNewFocusView_CommonFocus),
+            new(FocusType.Shared, Resources.CreateNewFocusView_SharedFocus)
+        ];
+    public FocusFileItem[] FocusFileNames { get; }
 
     [ObservableProperty]
+    [Required]
+    [CustomValidation(typeof(CreateNewFocusViewModel), nameof(FocusIdShouldIsUnique))]
+    [NotifyDataErrorInfo]
     private string _focusId = string.Empty;
 
     [ObservableProperty]
+    [Range(0, int.MaxValue)]
+    [NotifyDataErrorInfo]
     private int _selectedFocusTypeIndex;
 
     [ObservableProperty]
-    private int _selectedFocusFileNameIndex = -1;
+    [Range(0, int.MaxValue)]
+    [NotifyDataErrorInfo]
+    private int _selectedFocusFileNameIndex;
 
-    // TODO: 消除重复代码
-    public event Action<bool>? PrimaryEnableChanged;
+    private bool IsValid => SelectedFocusFileNameIndex >= 0 && !HasErrors;
 
-    partial void OnFocusIdChanged(string value)
+    private Action<bool>? _setPrimaryEnableAction;
+    private Func<string, bool>? _focusIdIsExistsFunc;
+
+    public CreateNewFocusViewModel(
+        IReadOnlyCollection<string> filePaths,
+        Action<bool> setPrimaryEnableAction,
+        Func<string, bool> focusIdIsExistsFunc
+    )
     {
-        PrimaryEnableChanged?.Invoke(!string.IsNullOrWhiteSpace(value));
-    }
+        _setPrimaryEnableAction = setPrimaryEnableAction;
+        _focusIdIsExistsFunc = focusIdIsExistsFunc;
+        FocusFileNames = filePaths
+            .AsValueEnumerable()
+            .Select(static path => new FocusFileItem(Path.GetFileName(path), path))
+            .Where(item => !string.IsNullOrWhiteSpace(item.FileName))
+            .ToArray();
 
-    partial void OnSelectedFocusFileNameIndexChanged(int value)
-    {
-        if (value >= 0 && value < FocusFileNames.Length)
+        if (FocusFileNames.Length == 1)
         {
-            string fileName = FocusFileNames[value].FileName;
-            PrimaryEnableChanged?.Invoke(!string.IsNullOrWhiteSpace(fileName));
+            _selectedFocusFileNameIndex = 0;
         }
         else
         {
-            PrimaryEnableChanged?.Invoke(false);
+            _selectedFocusFileNameIndex = -1;
         }
+
+        PropertyChanged += (_, _) => _setPrimaryEnableAction?.Invoke(IsValid);
+    }
+
+    public static ValidationResult? FocusIdShouldIsUnique(string focusId, ValidationContext context)
+    {
+        var viewModel = (CreateNewFocusViewModel)context.ObjectInstance;
+        return viewModel._focusIdIsExistsFunc?.Invoke(focusId) is true
+            ? new ValidationResult(ZString.Format(Resources.CreateNewFocusView_FocusIdAlreadyExist, focusId))
+            : ValidationResult.Success;
+    }
+
+    public void Clean()
+    {
+        _setPrimaryEnableAction = null;
+        _focusIdIsExistsFunc = null;
     }
 }

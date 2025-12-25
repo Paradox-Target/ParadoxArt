@@ -45,7 +45,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal">
-            <TextBlock Text="{x:Static lang:Resources.CreateNewFocusTreeFileView_DefaultFocusTree}" />
+            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.CreateNewFocusTreeFileView_DefaultFocusTree}" />
             <ToggleSwitch IsChecked="{Binding IsDefaultFocusTree, Mode=TwoWay}" />
         </StackPanel>
     </Grid>

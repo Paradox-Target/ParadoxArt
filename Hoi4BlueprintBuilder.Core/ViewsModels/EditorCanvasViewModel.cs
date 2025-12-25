@@ -63,7 +63,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
 
     public void OnLoaded()
     {
-        WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
+        StrongReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
         WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
         StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(this, DeleteImageResource);
     }
@@ -109,9 +109,9 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
         );
     }
 
-    public void OpenFile(string filePath)
+    public void LoadFocusTreeFile(string filePath)
     {
-        if (!TextParser.TryParse(filePath, out var rootNode, out var _))
+        if (!TextParser.TryParse(filePath, out var rootNode, out _))
         {
             return;
         }
@@ -124,6 +124,11 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
         _nodes.AddRange(_editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode)));
         Log.Info("已加载国策树文件: {FilePath}", filePath);
         Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
+    }
+
+    public bool ContainsFocus(string focusId)
+    {
+        return _editorNodesMap.ContainsKey(focusId);
     }
 
     // 从 2 开始, 但先检查 1 是否被使用
@@ -259,47 +264,6 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
 
     [ObservableProperty]
     private double _translateY;
-
-    private void LoadTestData()
-    {
-        var focus = new FocusNode("", FocusType.Normal)
-        {
-            Id = "GER_Test1",
-            RawPosition = new FocusPoint(0, 0),
-            Icon = "GFX_goal_test",
-        };
-        _nodes.Add(new FocusNodeViewModel(focus));
-        _nodes.Add(
-            new FocusNodeViewModel(
-                new FocusNode("", FocusType.Normal)
-                {
-                    Id = "GER_Test2",
-                    RawPosition = new FocusPoint(2, 0),
-                    Icon = "GFX_GER_Test2",
-                    RelativePosition = focus,
-                }
-            )
-        );
-        var f3 = new FocusNode("", FocusType.Normal)
-        {
-            Id = "GER_Test3",
-            RawPosition = new FocusPoint(0, 1),
-            Icon = "GFX_GER_Test3",
-        };
-        f3.AddPrerequisite([focus]);
-        _nodes.Add(new FocusNodeViewModel(f3));
-        var f4 = new FocusNode("", FocusType.Normal)
-        {
-            Id = "GER_Test4",
-            RawPosition = new FocusPoint(2, 1),
-            Icon = "GFX_GER_Test4",
-        };
-        f4.AddPrerequisite([focus]);
-        _nodes.Add(new FocusNodeViewModel(f4));
-
-        _focusTreeFiles.Add("TestFocusFile1.txt");
-        _focusTreeFiles.Add("TestFocusFile2.txt");
-    }
 
     public IReadOnlyCollection<string> GetAllFocusFiles()
     {

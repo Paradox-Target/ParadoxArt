@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
 using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
@@ -27,11 +28,16 @@ public sealed partial class MainView : UserControl
     /// 设计器使用
     /// </summary>
     public MainView()
-        : this(new FileTreeView(), new TabViewService(new ServiceContainer())) { }
+        : this(
+            new FileTreeView(),
+            new TabViewService(new ServiceContainer()),
+            new MainViewModel(null!, null!, null!, new UserStatusService())
+        ) { }
 
-    public MainView(FileTreeView fileTree, TabViewService tabViewService)
+    public MainView(FileTreeView fileTree, TabViewService tabViewService, MainViewModel mainViewModel)
     {
         InitializeComponent();
+        DataContext = mainViewModel;
         _tabViewService = tabViewService;
         _settingsButtonAnimation = InitializeSettingsButtonAnimation();
 

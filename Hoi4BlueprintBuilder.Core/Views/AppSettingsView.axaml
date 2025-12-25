@@ -107,6 +107,7 @@
                     <HyperlinkButton Content="ObservableCollections" NavigateUri="https://github.com/Cysharp/ObservableCollections" />
                     <HyperlinkButton Content="ParadoxPower" NavigateUri="https://github.com/textGamex/ParadoxPower" />
                     <HyperlinkButton Content="ZLinq" NavigateUri="https://github.com/Cysharp/ZLinq" />
+                    <HyperlinkButton Content="ZString" NavigateUri="https://github.com/Cysharp/ZString" />
                     <HyperlinkButton Content="NLua" NavigateUri="https://github.com/nlua/NLua" />
                     <HyperlinkButton Content="Pfim" NavigateUri="https://nickbabcock.github.io/Pfim/" />
                     <HyperlinkButton Content="Pidgin" NavigateUri="https://github.com/benjamin-hodgson/Pidgin" />

@@ -48,9 +48,11 @@ public sealed class SettingsService
             else
             {
                 Log.Info(
-                    "游戏根目录: {GamePath}, MOD根目录: {ModPath}",
-                    settings.GameLanguage,
-                    settings.ModRootFolderPath
+                    "游戏根目录: {GamePath}, 存在: {GamePathExist}, MOD根目录: {ModPath}, 存在: {ModPathExist}",
+                    settings.GameRootFolderPath,
+                    Directory.Exists(settings.GameRootFolderPath),
+                    settings.ModRootFolderPath,
+                    Directory.Exists(settings.ModRootFolderPath)
                 );
             }
             return settings;

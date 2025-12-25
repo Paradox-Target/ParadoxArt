@@ -36,7 +36,7 @@ public sealed class LocalizationService
             true
         )
     {
-        WeakReferenceMessenger.Default.Register<SaveFocusTreeMessage>(
+        StrongReferenceMessenger.Default.Register<SaveFocusTreeMessage>(
             this,
             (_, _) =>
             {

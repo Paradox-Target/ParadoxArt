@@ -1,3 +1,6 @@
 ﻿namespace Hoi4BlueprintBuilder.Core.Messages;
 
-public sealed record SaveFocusTreeMessage(string FilePath);
+/// <summary>
+/// StrongReferenceMessenger
+/// </summary>
+public sealed record SaveFocusTreeMessage;

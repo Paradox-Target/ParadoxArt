@@ -4,6 +4,7 @@ using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -53,9 +54,10 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
     }
 
     /// <summary>
-    ///
+    /// 添加 TabView
     /// </summary>
-    /// <typeparam name="TType"></typeparam>
+    /// <typeparam name="TType">添加的页面类型</typeparam>
+    /// <param name="filePath">用来检查是否存在于标签页内的文件路径</param>
     public void AddTabFromIoc<TType>(string filePath)
         where TType : class, ITabViewItem
     {

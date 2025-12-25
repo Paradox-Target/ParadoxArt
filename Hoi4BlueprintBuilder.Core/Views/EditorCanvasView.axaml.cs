@@ -87,7 +87,7 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         {
             throw new InvalidOperationException("当前没有选中的国策文件");
         }
-        _viewModel.OpenFile(userStatusService.CurrentSelectedFile.FullPath);
+        _viewModel.LoadFocusTreeFile(userStatusService.CurrentSelectedFile.FullPath);
 
         FilePath = userStatusService.CurrentSelectedFile.FullPath;
         Header = userStatusService.CurrentSelectedFile.Name;
@@ -325,28 +325,27 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
     [RelayCommand(CanExecute = nameof(CursorNotOverFocus))]
     private async Task CreateNewFocus()
     {
-        var viewModel = new CreateNewFocusViewModel(_viewModel.GetAllFocusFiles())
-        {
-            FocusId = _viewModel.GetNextFocusId()
-        };
         var dialog = new ContentDialog
         {
             Title = "新建国策",
-            Content = new CreateNewFocusView { DataContext = viewModel },
             CloseButtonText = "取消",
             PrimaryButtonText = "创建",
             DefaultButton = ContentDialogButton.Primary,
             IsPrimaryButtonEnabled = false
         };
-
-        Action<bool> onPrimaryEnableChanged = enable => dialog.IsPrimaryButtonEnabled = enable;
-        viewModel.PrimaryEnableChanged += onPrimaryEnableChanged;
-        var mainWindow = GetMainWindow();
-        if (mainWindow is null)
+        var viewModel = new CreateNewFocusViewModel(
+            _viewModel.GetAllFocusFiles(),
+            enable => dialog.IsPrimaryButtonEnabled = enable,
+            focusId => _viewModel.ContainsFocus(focusId)
+        )
         {
-            return;
-        }
-        var result = await dialog.ShowAsync(mainWindow);
+            FocusId = _viewModel.GetNextFocusId()
+        };
+        var content = new CreateNewFocusView { DataContext = viewModel };
+        dialog.Content = content;
+
+        var result = await dialog.ShowAsync();
+        viewModel.Clean();
 
         if (result == ContentDialogResult.Primary)
         {
@@ -360,10 +359,10 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
                 )
             );
 
+            // TODO: 可选
             OpenFocusInfoView(newFocusNode);
             Log.Debug("创建新国策: {Name}", newFocusNode.Id);
         }
-        viewModel.PrimaryEnableChanged -= onPrimaryEnableChanged;
     }
 
     [RelayCommand(CanExecute = nameof(CanConvertToAbsolutePosition))]
@@ -390,15 +389,6 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         FocusInfoViewControl.Width = Bounds.Width * FocusInfoViewWidthRatio;
         FocusInfoViewControl.Height = Bounds.Height * FocusInfoViewHeightRatio;
         FocusInfoViewControl.IsOpen = true;
-    }
-
-    private static Window? GetMainWindow()
-    {
-        return
-            App.Current.ApplicationLifetime
-                is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop
-            ? desktop.MainWindow
-            : null;
     }
 
     public void Close()

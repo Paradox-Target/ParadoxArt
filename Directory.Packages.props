@@ -37,5 +37,6 @@
     <PackageVersion Include="MethodTimer.Fody" Version="3.2.3" />
     <PackageVersion Include="HotAvalonia" Version="3.0.2" />
     <PackageVersion Include="Vanara.Windows.Shell" Version="4.2.1" />
+    <PackageVersion Include="ZString" Version="2.6.0" />
   </ItemGroup>
 </Project>

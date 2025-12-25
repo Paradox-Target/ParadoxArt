@@ -39,4 +39,25 @@
     <data name="CreateNewFocusTreeFileView_CountryTag" xml:space="preserve">
         <value>Country Tag</value>
     </data>
+    <data name="Menu_CreateNewFocusTree" xml:space="preserve">
+        <value>New</value>
+    </data>
+    <data name="Menu_Save" xml:space="preserve">
+        <value>Save</value>
+    </data>
+    <data name="CreateNewFocusTreeFileView_Title" xml:space="preserve">
+        <value>Create New Focus Tree File</value>
+    </data>
+    <data name="CreateNewFocusView_CommonFocus" xml:space="preserve">
+        <value>Common Focus</value>
+    </data>
+    <data name="CreateNewFocusView_SharedFocus" xml:space="preserve">
+        <value>Shared Focus</value>
+    </data>
+    <data name="CreateNewFocusView_FocusIdAlreadyExist" xml:space="preserve">
+        <value />
+    </data>
+    <data name="CreateNewFocusTreeFileView_FileNameAlreadyExist" xml:space="preserve">
+        <value />
+    </data>
 </root>

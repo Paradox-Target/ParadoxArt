@@ -1,43 +1,82 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:fa="using:FluentAvalonia.UI.Controls"
-             xmlns:views="using:Hoi4BlueprintBuilder.Core.Views"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Hoi4BlueprintBuilder.Core.Views.MainView">
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.MainView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:MainViewModel"
+    mc:Ignorable="d">
     <UserControl.Styles>
         <Style Selector=":is(Button).SideButton">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Padding" Value="2" />
             <Setter Property="FontSize" Value="30" />
         </Style>
     </UserControl.Styles>
-    
-    <Grid x:Name="MainGrid" RowDefinitions="Auto,*">
-        <TextBlock Grid.Row="0" Text="功能区" Margin="0,4"/>
 
+    <Grid x:Name="MainGrid" RowDefinitions="Auto,*">
+        <fa:CommandBar Grid.Row="0" DefaultLabelPosition="Right">
+            <fa:CommandBar.PrimaryCommands>
+                <fa:CommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:Resources.Menu_CreateNewFocusTree}">
+                    <fa:CommandBarButton.IconSource>
+                        <control:FontIconSource Glyph="&#xECC8;" />
+                    </fa:CommandBarButton.IconSource>
+                </fa:CommandBarButton>
+                <fa:CommandBarButton
+                    Command="{Binding SaveFocusTreeCommand}"
+                    IconSource="Save"
+                    Label="{x:Static lang:Resources.Menu_Save}" />
+
+                <fa:CommandBarSeparator Margin="4,0" />
+
+                <fa:CommandBarElementContainer VerticalContentAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock VerticalAlignment="Center" Text="条件:" />
+                        <fa:FAComboBox />
+                    </StackPanel>
+                </fa:CommandBarElementContainer>
+            </fa:CommandBar.PrimaryCommands>
+        </fa:CommandBar>
         <Grid Grid.Row="1" ColumnDefinitions="40,*">
 
             <DockPanel x:Name="SidePanel" Grid.Column="0">
-                <ToggleButton x:Name="FileTreeToggleButton" Classes="SideButton" DockPanel.Dock="Top">
+                <ToggleButton
+                    x:Name="FileTreeToggleButton"
+                    Classes="SideButton"
+                    DockPanel.Dock="Top">
                     <ToggleButton.Content>
-                        <fa:SymbolIcon Symbol="Folder"/>
+                        <fa:SymbolIcon Symbol="Folder" />
                     </ToggleButton.Content>
                 </ToggleButton>
-                <Button x:Name="SettingsButton" Classes="SideButton" DockPanel.Dock="Bottom" >
+                <Button
+                    x:Name="SettingsButton"
+                    Classes="SideButton"
+                    DockPanel.Dock="Bottom">
                     <Button.Content>
-                        <fa:SymbolIcon Symbol="Settings"/>
+                        <fa:SymbolIcon Symbol="Settings" />
                     </Button.Content>
                 </Button>
-                <Border Background="Transparent"/>
+                <Border Background="Transparent" />
             </DockPanel>
 
-            <Grid x:Name="ContentGrid" Grid.Column="1" ColumnDefinitions="Auto,Auto,*">
+            <Grid
+                x:Name="ContentGrid"
+                Grid.Column="1"
+                ColumnDefinitions="Auto,Auto,*">
                 <ContentControl x:Name="FileTreeView" Grid.Column="0" />
                 <GridSplitter x:Name="MainGridSplitter" Grid.Column="1" />
-                <fa:TabView IsAddTabButtonVisible="False" TabCloseRequested="MainTabView_OnTabCloseRequested" Grid.Column="2" x:Name="MainTabView"  />
+                <fa:TabView
+                    x:Name="MainTabView"
+                    Grid.Column="2"
+                    IsAddTabButtonVisible="False"
+                    TabCloseRequested="MainTabView_OnTabCloseRequested" />
             </Grid>
         </Grid>
     </Grid>
