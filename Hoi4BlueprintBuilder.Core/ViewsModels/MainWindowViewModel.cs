@@ -125,7 +125,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
     }
 
-    private string CreateNewFocusTree(string id, string countryTag, bool isDefaultFocusTree)
+    private static string CreateNewFocusTree(string id, string countryTag, bool isDefaultFocusTree)
     {
         var rootNode = new Node(string.Empty);
         var focusTreeNode = new Node("focus_tree");
