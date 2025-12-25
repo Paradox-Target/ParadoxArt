@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Infrastructure;
+using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using NLog;
 
@@ -28,7 +28,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
         _fileWatcher.IncludeSubdirectories = true;
         _fileWatcher.EnableRaisingEvents = true;
 
-        var root = new SystemFileItem(settingService.ModRootFolderPath, false, null);
+        var root = new Models.SystemFileItem(settingService.ModRootFolderPath, false, null);
         LoadFileSystem(settingService.ModRootFolderPath, root);
         Items = root.Children;
         //WeakReferenceMessenger.Default.Register<CompleteAppSettingsMessage>(
@@ -66,7 +66,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
         }
 
         parent.RemoveChild(target);
-        var newItem = new SystemFileItem(e.FullPath, target.IsFile, parent);
+        var newItem = new Models.SystemFileItem(e.FullPath, target.IsFile, parent);
         if (newItem.IsFolder)
         {
             LoadFileSystem(e.FullPath, newItem);
@@ -105,18 +105,18 @@ public sealed partial class FileTreeViewModel : ObservableObject
             return;
         }
 
-        var item = new SystemFileItem(e.FullPath, isFile, parent);
+        var item = new Models.SystemFileItem(e.FullPath, isFile, parent);
         var insertIndex = FindInsertIndex(item);
         parent.InsertChild(insertIndex, item);
     }
 
     /// <summary>
-    /// 查找系统文件夹或文件对应的 <see cref="SystemFileItem"/>
+    /// 查找系统文件夹或文件对应的 <see cref="Models.SystemFileItem"/>
     /// </summary>
     /// <param name="fullPath">文件或文件夹的路径</param>
     /// <param name="items"></param>
     /// <returns></returns>
-    private static SystemFileItem? FindFileItemByPath(string fullPath, IReadOnlyList<SystemFileItem> items)
+    private static Models.SystemFileItem? FindFileItemByPath(string fullPath, IReadOnlyList<Models.SystemFileItem> items)
     {
         for (var index = 0; index < items.Count; index++)
         {
@@ -142,7 +142,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
     /// <param name="newItem">新增的项目</param>
     /// <returns>新项目的插入位置</returns>
     /// <exception cref="ArgumentException">如果 <paramref name="newItem"/> 的父节点为<c>null</c></exception>
-    private int FindInsertIndex(SystemFileItem newItem)
+    private int FindInsertIndex(Models.SystemFileItem newItem)
     {
         var parentChildren = newItem.Parent?.Children;
         if (parentChildren is null)
@@ -189,7 +189,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
         return insertIndex;
     }
 
-    private static int FindLastFolderIndex(IReadOnlyList<SystemFileItem> items)
+    private static int FindLastFolderIndex(IReadOnlyList<Models.SystemFileItem> items)
     {
         var i = 0;
         while (i < items.Count && items[i].IsFolder)
@@ -200,7 +200,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
         return i == 0 ? 0 : i - 1;
     }
 
-    private void LoadFileSystem(string path, SystemFileItem parent)
+    private void LoadFileSystem(string path, Models.SystemFileItem parent)
     {
         var directories = Directory.GetDirectories(path);
         var files = Directory.GetFiles(path);
@@ -210,7 +210,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
 
         foreach (var directoryPath in directories)
         {
-            var item = new SystemFileItem(directoryPath, false, parent);
+            var item = new Models.SystemFileItem(directoryPath, false, parent);
             parent.AddChild(item);
             LoadFileSystem(directoryPath, item);
         }

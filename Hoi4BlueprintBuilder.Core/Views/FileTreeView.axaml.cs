@@ -1,6 +1,7 @@
 using System.ComponentModel.Design;
 using Avalonia.Controls;
 using DotNet.Globbing;
+using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 

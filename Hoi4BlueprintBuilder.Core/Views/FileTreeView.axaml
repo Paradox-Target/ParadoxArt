@@ -1,14 +1,22 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="vms:FileTreeViewModel"
-             x:Class="Hoi4BlueprintBuilder.Core.Views.FileTreeView">
-    <TreeView SelectionMode="Single" SelectionChanged="TreeView_OnSelectionChanged" AutoScrollToSelectedItem="True" ItemsSource="{Binding Items}">
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.FileTreeView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Hoi4BlueprintBuilder.Core.Models"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:FileTreeViewModel"
+    mc:Ignorable="d">
+    <TreeView
+        AutoScrollToSelectedItem="True"
+        ItemsSource="{Binding Items}"
+        SelectionChanged="TreeView_OnSelectionChanged"
+        SelectionMode="Single">
         <TreeView.ItemTemplate>
-            <TreeDataTemplate x:DataType="vms:SystemFileItem" ItemsSource="{Binding Children}">
+            <TreeDataTemplate x:DataType="models:SystemFileItem" ItemsSource="{Binding Children}">
                 <TextBlock Text="{Binding Name}" />
             </TreeDataTemplate>
         </TreeView.ItemTemplate>

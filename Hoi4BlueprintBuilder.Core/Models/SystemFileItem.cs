@@ -2,14 +2,11 @@ using System.Collections.ObjectModel;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
-using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
-using MsBox.Avalonia;
-using MsBox.Avalonia.Enums;
 using NLog;
 
-namespace Hoi4BlueprintBuilder.Core.ViewsModels;
+namespace Hoi4BlueprintBuilder.Core.Models;
 
 public sealed partial class SystemFileItem
 {

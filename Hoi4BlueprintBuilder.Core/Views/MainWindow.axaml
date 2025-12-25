@@ -2,11 +2,8 @@
     x:Class="Hoi4BlueprintBuilder.Core.Views.MainWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="using:FluentAvalonia.UI.Controls"
     xmlns:faWindow="using:FluentAvalonia.UI.Windowing"
-    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
     xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
@@ -30,7 +27,7 @@
                 Height="32"
                 Margin="2"
                 Source="../Assets/logo.ico" />
-            <views:TitleCommandBarView x:Name="TitleCommandBar" />        
+            <views:TitleCommandBarView x:Name="TitleCommandBar" />
         </StackPanel>
         <ContentControl
             x:Name="MainContent"

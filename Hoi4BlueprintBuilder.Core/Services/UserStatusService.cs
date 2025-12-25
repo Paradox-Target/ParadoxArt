@@ -1,4 +1,4 @@
-using Hoi4BlueprintBuilder.Core.ViewsModels;
+using Hoi4BlueprintBuilder.Core.Models;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
