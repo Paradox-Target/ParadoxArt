@@ -37,6 +37,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
     private readonly FileService _fileService;
     private readonly SettingsService _settingsService;
     private CanvasInteractionManager? _interactionManager;
+    private readonly Dictionary<StandardCursorType, Cursor> _cursorCache = new();
 
     private const double FocusInfoViewWidthRatio = 0.35;
     private const double FocusInfoViewHeightRatio = 0.9;
@@ -230,7 +231,13 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         }
 
         var cursorType = _interactionManager.HandlePointerMoved(e);
-        Cursor = new Cursor(cursorType);
+        if (!_cursorCache.TryGetValue(cursorType, out var cursor))
+        {
+            cursor = new Cursor(cursorType);
+            _cursorCache.Add(cursorType, cursor);
+        }
+
+        Cursor = cursor;
     }
 
     private void OnPointerExited(object? sender, PointerEventArgs e)
