@@ -21,14 +21,15 @@ using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
-[RegisterTransient<EditorCanvasView>]
-public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClosed
+[RegisterTransient<FocusTreeEditorView>]
+public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, IClosed
 {
     public string Header { get; }
     public string FilePath { get; }
     public string ToolTip { get; }
 
-    private readonly EditorCanvasViewModel _viewModel;
+    public FocusTreeEditorViewModel ViewModel { get; }
+
     private readonly ScreenshotService _screenshotService;
     private readonly LocalizationFormatService _localizationFormatService;
     private readonly FAMenuFlyout _menuFlyout;
@@ -57,8 +58,8 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
     private bool CanConvertToAbsolutePosition =>
         _interactionManager?.RightClickedNode?.RelativePosition is not null;
 
-    public EditorCanvasView(
-        EditorCanvasViewModel viewModel,
+    public FocusTreeEditorView(
+        FocusTreeEditorViewModel viewModel,
         ScreenshotService screenshotService,
         MessageBoxService messageBox,
         LocalizationFormatService localizationFormatService,
@@ -79,18 +80,18 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
 
-        _viewModel = viewModel;
+        ViewModel = viewModel;
         _screenshotService = screenshotService;
         _messageBox = messageBox;
         _localizationFormatService = localizationFormatService;
         _fileService = fileService;
         _settingsService = settingsService;
-        DataContext = _viewModel;
+        DataContext = ViewModel;
         if (userStatusService.CurrentSelectedFile is null)
         {
             throw new InvalidOperationException("当前没有选中的国策文件");
         }
-        _viewModel.LoadFocusTreeFile(userStatusService.CurrentSelectedFile.FullPath);
+        ViewModel.LoadFocusTreeFile(userStatusService.CurrentSelectedFile.FullPath);
 
         FilePath = userStatusService.CurrentSelectedFile.FullPath;
         Header = userStatusService.CurrentSelectedFile.Name;
@@ -100,18 +101,18 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
     private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
         WeakReferenceMessenger.Default.UnregisterAll(this);
-        _viewModel.OnUnLoaded();
+        ViewModel.OnUnLoaded();
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
-        _viewModel.OnLoaded();
+        ViewModel.OnLoaded();
     }
 
     private void OnConnectionRequested(FocusNode from, FocusNode to, ConnectionType type)
     {
-        _viewModel.CreateConnection(from, to, type);
+        ViewModel.CreateConnection(from, to, type);
     }
 
     private bool OpenFocusInfoViewInternal(FocusNode focusNode)
@@ -135,7 +136,7 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
 
         // 控件加载完成后初始化交互管理器
         _interactionManager = new CanvasInteractionManager(
-            _viewModel,
+            ViewModel,
             this,
             ConnectionPreviewOverlay,
             OpenFocusInfoViewInternal,
@@ -147,7 +148,7 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
 
     private async void SaveToPng(object o, SaveFocusTreeToPngMessage saveFocusTreeToPngMessage)
     {
-        var nodes = _viewModel.Nodes;
+        var nodes = ViewModel.Nodes;
         if (nodes.Count == 0)
         {
             await _messageBox.ShowAsync("没有可显示的国策", "错误", MessageBoxIcon.Error);
@@ -308,7 +309,7 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
             FocusInfoViewControl.DataContext = null;
         }
 
-        _viewModel.DeleteFocusNode(focus);
+        ViewModel.DeleteFocusNode(focus);
 
         Debug.Assert(ConnectionPreviewOverlay.From != focus && ConnectionPreviewOverlay.To != focus);
     }
@@ -337,12 +338,12 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
             IsPrimaryButtonEnabled = false
         };
         var viewModel = new CreateNewFocusViewModel(
-            _viewModel.GetAllFocusFiles(),
+            ViewModel.GetAllFocusFiles(),
             enable => dialog.IsPrimaryButtonEnabled = enable,
-            focusId => _viewModel.ContainsFocus(focusId)
+            focusId => ViewModel.ContainsFocus(focusId)
         )
         {
-            FocusId = _viewModel.GetNextFocusId()
+            FocusId = ViewModel.GetNextFocusId()
         };
         var content = new CreateNewFocusView { DataContext = viewModel };
         dialog.Content = content;
@@ -398,6 +399,6 @@ public sealed partial class EditorCanvasView : UserControl, ITabViewItem, IClose
 
     public void Close()
     {
-        _viewModel.Close();
+        ViewModel.Close();
     }
 }

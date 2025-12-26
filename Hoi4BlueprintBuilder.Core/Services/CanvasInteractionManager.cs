@@ -16,7 +16,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 /// </summary>
 public sealed class CanvasInteractionManager
 {
-    private readonly EditorCanvasViewModel _viewModel;
+    private readonly FocusTreeEditorViewModel _viewModel;
     private readonly Control _canvas;
     private readonly ConnectionPreviewOverlayControl _connectionPreview;
     private readonly Func<FocusNode, bool> _openFocusInfoView;
@@ -83,7 +83,7 @@ public sealed class CanvasInteractionManager
     public event Action<FocusNode, FocusNode, ConnectionType>? ConnectionRequested;
 
     public CanvasInteractionManager(
-        EditorCanvasViewModel viewModel,
+        FocusTreeEditorViewModel viewModel,
         Control canvas,
         ConnectionPreviewOverlayControl connectionPreview,
         Func<FocusNode, bool> openFocusInfoView,

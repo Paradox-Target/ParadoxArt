@@ -67,8 +67,28 @@ public sealed partial class FocusNode(string path, FocusType type)
     [NotifyPropertyChangedFor(nameof(Y))]
     private FocusPoint _rawPosition = new(0, 0);
 
-    public int X => RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
-    public int Y => RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
+    public int X => GetActualX();
+    public int Y => GetActualY();
+
+    private int GetActualX()
+    {
+        int x = RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
+        if (Offset?.Enabled ?? false)
+        {
+            x += Offset.Offset.X;
+        }
+        return x;
+    }
+
+    private int GetActualY()
+    {
+        int y = RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
+        if (Offset?.Enabled ?? false)
+        {
+            y += Offset.Offset.Y;
+        }
+        return y;
+    }
 
     [ObservableProperty]
     private string _icon = string.Empty;
@@ -77,7 +97,38 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public string CompletionReward { get; set; } = string.Empty;
 
-    public FocusOffset? Offset { get; set; }
+    public FocusOffset? Offset
+    {
+        get;
+        set
+        {
+            field?.PropertyChanged -= OnXOrYPropertyChanged;
+
+            field = value;
+            if (field is not null)
+            {
+                field.PropertyChanged += OnFocusOffsetPropertyChanged;
+            }
+        }
+    }
+
+    private void OnFocusOffsetPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(FocusOffset.Enabled))
+        {
+            OnPropertyChanged(nameof(X));
+            OnPropertyChanged(nameof(Y));
+            RedrawFocusConnectionLinesIfNeed();
+        }
+    }
+
+    /// <summary>
+    /// 当为 false 时整个分支都不显示
+    /// </summary>
+    /// <remarks>
+    /// 不写入到国策树文件中
+    /// </remarks>
+    public object? AllowBranch { get; set; }
 
     /// <summary>
     /// 添加互斥节点关系, 双向添加
@@ -320,18 +371,18 @@ public sealed partial class FocusNode(string path, FocusType type)
     {
         if (oldValue is not null)
         {
-            oldValue.PropertyChanged -= OnPropertyChanged;
+            oldValue.PropertyChanged -= OnXOrYPropertyChanged;
             oldValue._relativePositionChildren.Remove(this);
         }
 
         if (newValue is not null)
         {
-            newValue.PropertyChanged += OnPropertyChanged;
+            newValue.PropertyChanged += OnXOrYPropertyChanged;
             newValue._relativePositionChildren.Add(this);
         }
     }
 
-    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnXOrYPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(X))
         {
@@ -399,7 +450,8 @@ public sealed partial class FocusNode(string path, FocusType type)
         // 注意: 此方法必须在置空 _relativePosition 之前调用
         // 否则会导致将此 FocusNode 作为相对位置的节点无法被正确设置绝对位置
         ClearRelativePositionChildren();
-        RelativePosition?.PropertyChanged -= OnPropertyChanged;
+        RelativePosition?.PropertyChanged -= OnXOrYPropertyChanged;
+        Offset?.PropertyChanged -= OnFocusOffsetPropertyChanged;
         // 越过属性，直接置空，避免触发 OnRelativePositionChanged
 #pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
         _relativePosition = null;

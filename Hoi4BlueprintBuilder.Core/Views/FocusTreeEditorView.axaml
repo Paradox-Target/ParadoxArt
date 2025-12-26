@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Hoi4BlueprintBuilder.Core.Views.EditorCanvasView"
+    x:Class="Hoi4BlueprintBuilder.Core.Views.FocusTreeEditorView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:const="clr-namespace:Hoi4BlueprintBuilder.Core.Constants"
@@ -12,7 +12,7 @@
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
     d:DesignHeight="600"
     d:DesignWidth="1000"
-    x:DataType="vms:EditorCanvasViewModel"
+    x:DataType="vms:FocusTreeEditorViewModel"
     Background="#333333"
     mc:Ignorable="d">
 
@@ -20,9 +20,9 @@
         <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
     </UserControl.Resources>
 
-<Grid x:Name="MainGrid" ClipToBounds="True">
+    <Grid x:Name="MainGrid" ClipToBounds="True">
         <Grid.ContextFlyout>
-            <fa:FAMenuFlyout x:DataType="views:EditorCanvasView" Opening="ContextMenu_OnOpening">
+            <fa:FAMenuFlyout x:DataType="views:FocusTreeEditorView" Opening="ContextMenu_OnOpening">
                 <fa:MenuFlyoutItem Command="{Binding CreateNewFocusCommand}" Text="新建国策">
                     <fa:MenuFlyoutItem.IconSource>
                         <fa:SymbolIconSource Symbol="Add" />

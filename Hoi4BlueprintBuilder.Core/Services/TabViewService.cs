@@ -4,13 +4,15 @@ using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
-using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<TabViewService>]
 public sealed class TabViewService(IServiceProvider serviceProvider)
 {
+    public ITabViewItem? CurrentItem => ((TabViewItem?)_tabView?.SelectedItem)?.Content as ITabViewItem;
+    public event Action? CurrentItemChanged;
+
     private TabView TabView => _tabView ?? throw new InvalidOperationException("TabViewService 未初始化");
     private TabView? _tabView;
     private Func<double>? _tabContentHeight;
@@ -28,7 +30,11 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
         _tabContentHeight = tabContentHeight;
         _tabContentWight = tabContentWight;
 
-        _tabView.SelectionChanged += (_, _) => ResizeSelectionTab();
+        _tabView.SelectionChanged += (_, _) =>
+        {
+            ResizeSelectionTab();
+            CurrentItemChanged?.Invoke();
+        };
     }
 
     public void AddTab(ITabViewItem content)

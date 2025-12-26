@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
+using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
@@ -18,6 +19,20 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 [RegisterSingleton<TitleCommandBarViewModel>]
 public sealed partial class TitleCommandBarViewModel : ObservableObject
 {
+    public IEnumerable<FocusOffset> OffsetTriggers => GetOffsetTriggers();
+
+    private IEnumerable<FocusOffset> GetOffsetTriggers()
+    {
+        if (_tabViewService.CurrentItem is not FocusTreeEditorView focusTreeEditorView)
+        {
+            return [];
+        }
+
+        var result = focusTreeEditorView.ViewModel.Offsets.Where(offset => offset.Trigger is not null);
+
+        return result;
+    }
+
     private readonly SettingsService _settingsService;
     private readonly MessageBoxService _messageBoxService;
     private readonly TabViewService _tabViewService;
@@ -36,6 +51,8 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         _messageBoxService = messageBoxService;
         _tabViewService = tabViewService;
         _userStatusService = userStatusService;
+
+        _tabViewService.CurrentItemChanged += () => OnPropertyChanged(nameof(OffsetTriggers));
     }
 
     [RelayCommand]
@@ -92,7 +109,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
             );
 
             _userStatusService.CurrentSelectedFile = new SystemFileItem(filePath, true, null);
-            _tabViewService.AddTabFromIoc<EditorCanvasView>(filePath);
+            _tabViewService.AddTabFromIoc<FocusTreeEditorView>(filePath);
         }
         catch (Exception e)
         {

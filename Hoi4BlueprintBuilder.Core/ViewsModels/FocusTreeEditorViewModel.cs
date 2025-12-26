@@ -18,8 +18,8 @@ using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
-[RegisterTransient<EditorCanvasViewModel>]
-public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
+[RegisterTransient<FocusTreeEditorViewModel>]
+public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 {
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
 
@@ -27,6 +27,8 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
     /// 国策来源文件路径
     /// </summary>
     public IReadOnlyCollection<string> FocusTreeFiles => _focusTreeFiles;
+
+    public IReadOnlyCollection<FocusOffset> Offsets => _offsets;
 
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
 
@@ -39,6 +41,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
     /// 国策来源文件路径
     /// </summary>
     private readonly List<string> _focusTreeFiles = [];
+    private readonly List<FocusOffset> _offsets = [];
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
     private readonly NotificationService _notificationService;
@@ -46,7 +49,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public EditorCanvasViewModel(
+    public FocusTreeEditorViewModel(
         GameResourcesPathService pathService,
         SettingsService settingsService,
         NotificationService notificationService,
@@ -122,6 +125,10 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
         _editorNodesMap = focusNodes;
         _focusTreeFiles.AddRange(filePaths);
         _nodes.AddRange(_editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode)));
+        _offsets.AddRange(
+            _editorNodesMap.Values.Where(node => node.Offset is not null).Select(node => node.Offset!)
+        );
+
         Log.Info("已加载国策树文件: {FilePath}", filePath);
         Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
     }
@@ -165,6 +172,7 @@ public sealed partial class EditorCanvasViewModel : ObservableObject, IClosed
         _nodes.Clear();
         _editorNodesMap.Clear();
         _focusTreeFiles.Clear();
+        _offsets.Clear();
     }
 
     [Time]

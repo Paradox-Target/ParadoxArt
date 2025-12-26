@@ -63,6 +63,6 @@ public sealed partial class FileTreeView : UserControl
             _tabView.AddTabFromIoc<NotSupportInfoControlView>(item.FullPath);
             return;
         }
-        _tabView.AddTabFromIoc<EditorCanvasView>(item.FullPath);
+        _tabView.AddTabFromIoc<FocusTreeEditorView>(item.FullPath);
     }
 }
