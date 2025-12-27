@@ -71,7 +71,7 @@
                 HorizontalAlignment="Right"
                 Classes="SettingsStepButton accent"
                 Click="Next_OnClick"
-                Content="下一步" />
+                Content="完成" />
         </StackPanel>
     </Grid>
 </UserControl>
