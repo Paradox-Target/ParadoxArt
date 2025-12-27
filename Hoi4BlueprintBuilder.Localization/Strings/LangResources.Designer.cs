@@ -60,7 +60,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Country Tag.
+        ///   Looks up a localized string similar to CreateNewFocusTreeFileView_CountryTag.
         /// </summary>
         public static string CreateNewFocusTreeFileView_CountryTag {
             get {
@@ -69,7 +69,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Default.
+        ///   Looks up a localized string similar to CreateNewFocusTreeFileView_DefaultFocusTree.
         /// </summary>
         public static string CreateNewFocusTreeFileView_DefaultFocusTree {
             get {
@@ -78,7 +78,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File Name.
+        ///   Looks up a localized string similar to CreateNewFocusTreeFileView_FileName.
         /// </summary>
         public static string CreateNewFocusTreeFileView_FileName {
             get {
@@ -87,7 +87,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to CreateNewFocusTreeFileView_FileNameAlreadyExist.
         /// </summary>
         public static string CreateNewFocusTreeFileView_FileNameAlreadyExist {
             get {
@@ -96,7 +96,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Focus Tree ID.
+        ///   Looks up a localized string similar to CreateNewFocusTreeFileView_FocusTreeId.
         /// </summary>
         public static string CreateNewFocusTreeFileView_FocusTreeId {
             get {
@@ -105,7 +105,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create New Focus Tree File.
+        ///   Looks up a localized string similar to CreateNewFocusTreeFileView_Title.
         /// </summary>
         public static string CreateNewFocusTreeFileView_Title {
             get {
@@ -114,7 +114,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Common Focus.
+        ///   Looks up a localized string similar to CreateNewFocusView_CommonFocus.
         /// </summary>
         public static string CreateNewFocusView_CommonFocus {
             get {
@@ -123,7 +123,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Focus Id.
+        ///   Looks up a localized string similar to CreateNewFocusView_FocusId.
         /// </summary>
         public static string CreateNewFocusView_FocusId {
             get {
@@ -132,7 +132,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to CreateNewFocusView_FocusIdAlreadyExist.
         /// </summary>
         public static string CreateNewFocusView_FocusIdAlreadyExist {
             get {
@@ -141,7 +141,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Focus Type.
+        ///   Looks up a localized string similar to CreateNewFocusView_FocusType.
         /// </summary>
         public static string CreateNewFocusView_FocusType {
             get {
@@ -150,7 +150,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shared Focus.
+        ///   Looks up a localized string similar to CreateNewFocusView_SharedFocus.
         /// </summary>
         public static string CreateNewFocusView_SharedFocus {
             get {
@@ -159,7 +159,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Target FileName.
+        ///   Looks up a localized string similar to CreateNewFocusView_TargetFileName.
         /// </summary>
         public static string CreateNewFocusView_TargetFileName {
             get {
@@ -168,7 +168,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New.
+        ///   Looks up a localized string similar to Menu_CreateNewFocusTree.
         /// </summary>
         public static string Menu_CreateNewFocusTree {
             get {
@@ -177,7 +177,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save.
+        ///   Looks up a localized string similar to Menu_Save.
         /// </summary>
         public static string Menu_Save {
             get {

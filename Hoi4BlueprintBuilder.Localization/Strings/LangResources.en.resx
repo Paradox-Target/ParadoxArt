@@ -1,0 +1,50 @@
+﻿<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="CreateNewFocusTreeFileView_CountryTag" xml:space="preserve">
+        <value>Country Tag</value>
+    </data>
+    <data name="CreateNewFocusTreeFileView_DefaultFocusTree" xml:space="preserve">
+        <value>Default</value>
+    </data>
+    <data name="CreateNewFocusTreeFileView_FileName" xml:space="preserve">
+        <value>File Name</value>
+    </data>
+    <data name="CreateNewFocusTreeFileView_FocusTreeId" xml:space="preserve">
+        <value>Focus Tree ID</value>
+    </data>
+    <data name="CreateNewFocusTreeFileView_Title" xml:space="preserve">
+        <value>Create New Focus Tree File</value>
+    </data>
+    <data name="CreateNewFocusView_CommonFocus" xml:space="preserve">
+        <value>Common Focus</value>
+    </data>
+    <data name="CreateNewFocusView_FocusId" xml:space="preserve">
+        <value>Focus Id</value>
+    </data>
+    <data name="CreateNewFocusView_FocusType" xml:space="preserve">
+        <value>Focus Type</value>
+    </data>
+    <data name="CreateNewFocusView_SharedFocus" xml:space="preserve">
+        <value>Shared Focus</value>
+    </data>
+    <data name="CreateNewFocusView_TargetFileName" xml:space="preserve">
+        <value>Target FileName</value>
+    </data>
+    <data name="Menu_CreateNewFocusTree" xml:space="preserve">
+        <value>New</value>
+    </data>
+    <data name="Menu_Save" xml:space="preserve">
+        <value>Save</value>
+    </data>
+</root>

@@ -118,45 +118,45 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CreateNewFocusView_FocusId" xml:space="preserve">
-    <value>Focus Id</value>
+    <value>CreateNewFocusView_FocusId</value>
   </data>
   <data name="CreateNewFocusView_TargetFileName" xml:space="preserve">
-    <value>Target FileName</value>
+    <value>CreateNewFocusView_TargetFileName</value>
   </data>
   <data name="CreateNewFocusView_FocusType" xml:space="preserve">
-    <value>Focus Type</value>
+    <value>CreateNewFocusView_FocusType</value>
   </data>
   <data name="CreateNewFocusTreeFileView_DefaultFocusTree" xml:space="preserve">
-    <value>Default</value>
+    <value>CreateNewFocusTreeFileView_DefaultFocusTree</value>
   </data>
   <data name="CreateNewFocusTreeFileView_FileName" xml:space="preserve">
-    <value>File Name</value>
+    <value>CreateNewFocusTreeFileView_FileName</value>
   </data>
   <data name="CreateNewFocusTreeFileView_FocusTreeId" xml:space="preserve">
-    <value>Focus Tree ID</value>
+    <value>CreateNewFocusTreeFileView_FocusTreeId</value>
   </data>
   <data name="CreateNewFocusTreeFileView_CountryTag" xml:space="preserve">
-    <value>Country Tag</value>
+    <value>CreateNewFocusTreeFileView_CountryTag</value>
   </data>
   <data name="Menu_CreateNewFocusTree" xml:space="preserve">
-    <value>New</value>
+    <value>Menu_CreateNewFocusTree</value>
   </data>
   <data name="Menu_Save" xml:space="preserve">
-    <value>Save</value>
+    <value>Menu_Save</value>
   </data>
   <data name="CreateNewFocusTreeFileView_Title" xml:space="preserve">
-    <value>Create New Focus Tree File</value>
+    <value>CreateNewFocusTreeFileView_Title</value>
   </data>
   <data name="CreateNewFocusView_CommonFocus" xml:space="preserve">
-    <value>Common Focus</value>
+    <value>CreateNewFocusView_CommonFocus</value>
   </data>
   <data name="CreateNewFocusView_SharedFocus" xml:space="preserve">
-    <value>Shared Focus</value>
+    <value>CreateNewFocusView_SharedFocus</value>
   </data>
   <data name="CreateNewFocusView_FocusIdAlreadyExist" xml:space="preserve">
-    <value />
+    <value>CreateNewFocusView_FocusIdAlreadyExist</value>
   </data>
   <data name="CreateNewFocusTreeFileView_FileNameAlreadyExist" xml:space="preserve">
-    <value />
+    <value>CreateNewFocusTreeFileView_FileNameAlreadyExist</value>
   </data>
 </root>
