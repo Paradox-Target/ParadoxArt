@@ -50,6 +50,8 @@ public sealed class AuthService : IDisposable
         using var result = await _client.PostAsJsonAsync("device/check", body);
         result.EnsureSuccessStatusCode();
         var response = await result.Content.ReadFromJsonAsync<DeviceStatusResponse>();
+        Log.Debug("IsActivated 服务器查询结果: {@}", response);
+
         return response is not null && response.IsActivated;
     }
 

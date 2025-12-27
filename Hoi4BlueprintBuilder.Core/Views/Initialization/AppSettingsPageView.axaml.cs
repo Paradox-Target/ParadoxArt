@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core.Views.Initialization;
 
-public partial class AppSettingsPageView : UserControl
+public sealed partial class AppSettingsPageView : UserControl
 {
     private readonly Frame _frame;
 
@@ -30,6 +30,6 @@ public partial class AppSettingsPageView : UserControl
         var settingsService = App.Current.Services.GetRequiredService<SettingsService>();
         LanguageHelper.SetLanguage(settingsService.AppLanguage);
         settingsService.SaveSettings();
-        // App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainControlView>();
+        App.Current.Services.GetRequiredService<NavigationService>().NavigateTo<MainView>();
     }
 }
