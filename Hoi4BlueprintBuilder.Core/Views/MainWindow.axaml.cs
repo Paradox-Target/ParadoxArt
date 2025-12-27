@@ -4,7 +4,6 @@ using Avalonia.Interactivity;
 using FluentAvalonia.UI.Windowing;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
-using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
@@ -48,6 +47,4 @@ public sealed partial class MainWindow : AppWindow
             new MainWindowViewModel(new NavigationService(new ServiceContainer()), new SettingsService()),
             new NotificationService()
         ) { }
-
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 }
