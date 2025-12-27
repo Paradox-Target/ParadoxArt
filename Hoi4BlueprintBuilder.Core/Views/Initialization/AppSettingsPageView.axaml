@@ -31,7 +31,7 @@
             <StackPanel Margin="0,16">
                 <TextBlock Classes="SettingsTitleTextBlock" Text="语言(Language)" />
                 <ComboBox
-                    FontFamily="Cascadia Code, Sarasa UI SC"
+                    Classes="SettingsPickComboboxStyle"
                     ItemsSource="{Binding Languages, Mode=OneTime}"
                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
@@ -69,8 +69,7 @@
             HorizontalAlignment="Center">
             <Button
                 HorizontalAlignment="Right"
-                Background="#00B7C3"
-                Classes="SettingsStepButton"
+                Classes="SettingsStepButton accent"
                 Click="Next_OnClick"
                 Content="下一步" />
         </StackPanel>

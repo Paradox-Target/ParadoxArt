@@ -7,6 +7,11 @@ namespace Hoi4BlueprintBuilder.Core.Views.Initialization;
 
 public partial class GameSettingsPageView : UserControl
 {
+    /// <summary>
+    /// 设计器使用
+    /// </summary>
+    public GameSettingsPageView() => InitializeComponent();
+
     public GameSettingsPageView(Frame frame)
     {
         InitializeComponent();
