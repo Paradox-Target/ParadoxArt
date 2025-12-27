@@ -59,7 +59,7 @@
             HorizontalAlignment="Center">
             <Button
                 HorizontalAlignment="Right"
-                Classes="SettingsStepButton"
+                Classes="SettingsStepButton accent"
                 Command="{Binding GoToNextPageCommand, Mode=Default}"
                 Content="下一步" />
         </StackPanel>

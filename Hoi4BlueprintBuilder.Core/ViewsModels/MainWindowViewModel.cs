@@ -2,6 +2,7 @@ using System.ComponentModel.Design;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
+using Hoi4BlueprintBuilder.Core.Views.Initialization;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
@@ -13,17 +14,19 @@ public sealed partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private object? _currentView;
 
-    public MainWindowViewModel(NavigationService navigationService)
+    public MainWindowViewModel(NavigationService navigationService, SettingsService settingsService)
     {
         _navigationService = navigationService;
-        _navigationService.ViewChanged += () => CurrentView = _navigationService.CurrentView;
+        _navigationService.ViewChanged += currentView => CurrentView = currentView;
 #if DEBUG
-        navigationService.NavigateTo<MainView>();
-        //Task.Run(async () =>
-        //{
-        //    await Task.Delay(5000);
-        //    Dispatcher.UIThread.Invoke(() => WeakReferenceMessenger.Default.Send(new OpenFileMessage(@"C:\Users\QWQ\Desktop\Mod\common\national_focus\china_communist.txt")));
-        //});
+        if (settingsService.IsFirstRun)
+        {
+            navigationService.NavigateTo<MainWelcomeView>();
+        }
+        else
+        {
+            navigationService.NavigateTo<MainView>();
+        }
 #else
         if (App.Current.IsActivated?.IsCompleted is true)
         {
@@ -37,5 +40,5 @@ public sealed partial class MainWindowViewModel : ObservableObject
     }
 
     public MainWindowViewModel()
-        : this(new NavigationService(new ServiceContainer())) { }
+        : this(new NavigationService(new ServiceContainer()), new SettingsService()) { }
 }

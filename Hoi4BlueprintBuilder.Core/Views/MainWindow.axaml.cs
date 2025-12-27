@@ -1,9 +1,11 @@
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Interactivity;
 using FluentAvalonia.UI.Windowing;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
@@ -18,10 +20,18 @@ public sealed partial class MainWindow : AppWindow
         DataContext = mainWindowViewModel;
         notificationService.Initialize(this);
 
+        TitleCommandBar
+            .GetPropertyChangedObservable(IsVisibleProperty)
+            .AddClassHandler<TitleCommandBarView>((_, _) => SetDragRectangles());
         Loaded += OnLoaded;
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        SetDragRectangles();
+    }
+
+    private void SetDragRectangles()
     {
         double windowWidth = Width;
         double logoImageWidth = LogoImage.Width + LogoImage.Margin.Left + LogoImage.Margin.Right;
@@ -36,7 +46,9 @@ public sealed partial class MainWindow : AppWindow
 
     public MainWindow()
         : this(
-            new MainWindowViewModel(new NavigationService(new ServiceContainer())),
+            new MainWindowViewModel(new NavigationService(new ServiceContainer()), new SettingsService()),
             new NotificationService()
         ) { }
+
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 }

@@ -21,6 +21,12 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
 {
     public IEnumerable<FocusOffset> OffsetTriggers => GetOffsetTriggers();
 
+    [ObservableProperty]
+    private bool _isVisibleForTitleCommandBar;
+
+    [ObservableProperty]
+    private bool _isFocusTreeEditorAtCurrent;
+
     private IEnumerable<FocusOffset> GetOffsetTriggers()
     {
         if (_tabViewService.CurrentItem is not FocusTreeEditorView focusTreeEditorView)
@@ -37,6 +43,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private readonly MessageBoxService _messageBoxService;
     private readonly TabViewService _tabViewService;
     private readonly UserStatusService _userStatusService;
+    private readonly NavigationService _navigationService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -44,15 +51,30 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         SettingsService settingsService,
         MessageBoxService messageBoxService,
         TabViewService tabViewService,
-        UserStatusService userStatusService
+        UserStatusService userStatusService,
+        NavigationService navigationService
     )
     {
         _settingsService = settingsService;
         _messageBoxService = messageBoxService;
         _tabViewService = tabViewService;
         _userStatusService = userStatusService;
+        _navigationService = navigationService;
 
-        _tabViewService.CurrentItemChanged += () => OnPropertyChanged(nameof(OffsetTriggers));
+        _tabViewService.CurrentItemChanged += () =>
+        {
+            if (IsVisibleForTitleCommandBar)
+            {
+                OnPropertyChanged(nameof(OffsetTriggers));
+            }
+
+            IsFocusTreeEditorAtCurrent = _tabViewService.CurrentItem is FocusTreeEditorView;
+        };
+
+        navigationService.ViewChanged += currentView =>
+        {
+            IsVisibleForTitleCommandBar = currentView is MainView;
+        };
     }
 
     [RelayCommand]

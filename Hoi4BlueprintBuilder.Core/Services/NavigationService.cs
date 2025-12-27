@@ -9,7 +9,10 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<NavigationService>]
 public sealed class NavigationService(IServiceProvider serviceProvider)
 {
-    public event Action? ViewChanged;
+    /// <summary>
+    /// 当前视图改变时触发, 传递参数为当前视图
+    /// </summary>
+    public event Action<object?>? ViewChanged;
 
     public object? CurrentView
     {
@@ -17,7 +20,7 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
         private set
         {
             field = value;
-            ViewChanged?.Invoke();
+            ViewChanged?.Invoke(value);
         }
     }
 
