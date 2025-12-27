@@ -1,7 +1,7 @@
 using Hoi4BlueprintBuilder.Core.Services;
 using Vanara.PInvoke;
 
-namespace Hoi4BlueprintBuilder.Windows.WindowsServices;
+namespace Hoi4BlueprintBuilder.Windows.Services;
 
 public sealed class WindowsFileSortComparer : IFileSortComparer
 {

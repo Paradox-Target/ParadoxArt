@@ -1,7 +1,7 @@
 using Avalonia;
 using Hoi4BlueprintBuilder.Core;
 using Hoi4BlueprintBuilder.Core.Services;
-using Hoi4BlueprintBuilder.Windows.WindowsServices;
+using Hoi4BlueprintBuilder.Windows.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Windows;
