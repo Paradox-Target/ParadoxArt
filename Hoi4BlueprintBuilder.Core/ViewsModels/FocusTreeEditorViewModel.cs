@@ -125,9 +125,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _editorNodesMap = focusNodes;
         _focusTreeFiles.AddRange(filePaths);
         _nodes.AddRange(_editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode)));
-        _offsets.AddRange(
-            _editorNodesMap.Values.Where(node => node.Offset is not null).Select(node => node.Offset!)
-        );
+        _offsets.AddRange(_editorNodesMap.Values.SelectMany(node => node.Offsets));
 
         Log.Info("已加载国策树文件: {FilePath}", filePath);
         Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);

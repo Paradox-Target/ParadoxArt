@@ -70,12 +70,16 @@ public sealed partial class FocusNode(string path, FocusType type)
     public int X => GetActualX();
     public int Y => GetActualY();
 
+    // TODO: 计算两次, 待优化
     private int GetActualX()
     {
         int x = RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
-        if (Offset?.Enabled ?? false)
+        foreach (var offset in Offsets)
         {
-            x += Offset.Offset.X;
+            if (offset.Enabled)
+            {
+                x += offset.Offset.X;
+            }
         }
         return x;
     }
@@ -83,9 +87,12 @@ public sealed partial class FocusNode(string path, FocusType type)
     private int GetActualY()
     {
         int y = RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
-        if (Offset?.Enabled ?? false)
+        foreach (var offset in Offsets)
         {
-            y += Offset.Offset.Y;
+            if (offset.Enabled)
+            {
+                y += offset.Offset.Y;
+            }
         }
         return y;
     }
@@ -97,18 +104,20 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public string CompletionReward { get; set; } = string.Empty;
 
-    public FocusOffset? Offset
-    {
-        get;
-        set
-        {
-            field?.PropertyChanged -= OnXOrYPropertyChanged;
+    public IReadOnlyCollection<FocusOffset> Offsets => _offsets;
+    private readonly List<FocusOffset> _offsets = [];
 
-            field = value;
-            if (field is not null)
-            {
-                field.PropertyChanged += OnFocusOffsetPropertyChanged;
-            }
+    public void AddOffset(FocusOffset offset)
+    {
+        offset.PropertyChanged += OnFocusOffsetPropertyChanged;
+        _offsets.Add(offset);
+    }
+
+    private void ClearOffset()
+    {
+        foreach (var offset in _offsets)
+        {
+            offset.PropertyChanged -= OnFocusOffsetPropertyChanged;
         }
     }
 
@@ -451,7 +460,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         // 否则会导致将此 FocusNode 作为相对位置的节点无法被正确设置绝对位置
         ClearRelativePositionChildren();
         RelativePosition?.PropertyChanged -= OnXOrYPropertyChanged;
-        Offset?.PropertyChanged -= OnFocusOffsetPropertyChanged;
+        ClearOffset();
         // 越过属性，直接置空，避免触发 OnRelativePositionChanged
 #pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing field
         _relativePosition = null;

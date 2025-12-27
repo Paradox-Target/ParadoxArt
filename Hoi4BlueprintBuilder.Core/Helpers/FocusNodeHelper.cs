@@ -23,10 +23,10 @@ public static class FocusNodeHelper
     /// <param name="rootNode"></param>
     /// <returns>FilePaths是所有被加载的文件路径</returns>
     [Time("解析国策树")]
-    public static (
-        Dictionary<string, FocusNode> Nodes,
-        IEnumerable<string> FilePaths
-    ) GetAllNodesFromAst(string filePath, Node rootNode)
+    public static (Dictionary<string, FocusNode> Nodes, IEnumerable<string> FilePaths) GetAllNodesFromAst(
+        string filePath,
+        Node rootNode
+    )
     {
         var focusMap = new Dictionary<string, FocusNode>();
         HashSet<string> filePaths = [filePath];
@@ -88,9 +88,7 @@ public static class FocusNodeHelper
         IEnumerable<Node>? nodes = null;
         if (focusTreeNode is not null)
         {
-            nodes = focusTreeNode.Nodes.Where(static node =>
-                node.Key.EqualsIgnoreCase(Keywords.Focus)
-            );
+            nodes = focusTreeNode.Nodes.Where(static node => node.Key.EqualsIgnoreCase(Keywords.Focus));
         }
 
         var sharedFocusNode = rootNode.Nodes.Where(static node =>
@@ -108,9 +106,7 @@ public static class FocusNodeHelper
             if (focusNode.RelativePosition is not null)
             {
                 // 如果找不到相对位置的节点，则设置为 null
-                focusNode.RelativePosition = focusMap.GetValueOrDefault(
-                    focusNode.RelativePosition.Id
-                );
+                focusNode.RelativePosition = focusMap.GetValueOrDefault(focusNode.RelativePosition.Id);
             }
 
             if (focusNode.MutuallyExclusive.Count != 0)
@@ -157,10 +153,7 @@ public static class FocusNodeHelper
         return configs;
     }
 
-    private static void ProcessMutuallyExclusive(
-        FocusNode focusNode,
-        Dictionary<string, FocusNode> focusMap
-    )
+    private static void ProcessMutuallyExclusive(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
         var newMutuallyExclusive = new List<FocusNode>(focusNode.MutuallyExclusive.Count);
         foreach (var focusNodeMutuallyExclusive in focusNode.MutuallyExclusive)
@@ -178,10 +171,7 @@ public static class FocusNodeHelper
         }
     }
 
-    private static void ProcessPrerequisite(
-        FocusNode focusNode,
-        Dictionary<string, FocusNode> focusMap
-    )
+    private static void ProcessPrerequisite(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
         var newPrerequisites = new List<List<FocusNode>>();
 
@@ -251,9 +241,7 @@ public static class FocusNodeHelper
         }
         else if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
         {
-            if (
-                !leaf.Value.TryGetDecimal(out decimal cost) && leaf.Value.TryGetInt(out int costInt)
-            )
+            if (!leaf.Value.TryGetDecimal(out decimal cost) && leaf.Value.TryGetInt(out int costInt))
             {
                 cost = costInt;
             }
@@ -261,10 +249,7 @@ public static class FocusNodeHelper
         }
         else if (leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
         {
-            model.RelativePosition = new FocusNode(string.Empty, FocusType.Normal)
-            {
-                Id = leaf.ValueText
-            };
+            model.RelativePosition = new FocusNode(string.Empty, FocusType.Normal) { Id = leaf.ValueText };
         }
     }
 
@@ -315,14 +300,13 @@ public static class FocusNodeHelper
                         y = leaf.Value.TryGetInt(out int result) ? result : 0;
                     }
                 }
-                else if (
-                    child.TryGetNode(out var childNode) && childNode.Key.EqualsIgnoreCase("trigger")
-                )
+                else if (child.TryGetNode(out var childNode) && childNode.Key.EqualsIgnoreCase("trigger"))
                 {
                     trigger = childNode.Clone();
                 }
             }
-            model.Offset = new FocusOffset(new FocusPoint(x, y), trigger);
+
+            model.AddOffset(new FocusOffset(new FocusPoint(x, y), trigger));
         }
     }
 
