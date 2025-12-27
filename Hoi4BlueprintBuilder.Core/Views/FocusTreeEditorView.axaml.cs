@@ -14,6 +14,7 @@ using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ZLinq;
@@ -151,7 +152,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         var nodes = ViewModel.Nodes;
         if (nodes.Count == 0)
         {
-            await _messageBox.ShowAsync("没有可显示的国策", "错误", MessageBoxIcon.Error);
+            await _messageBox.ShowAsync("没有可显示的国策", LangResources.Error, MessageBoxIcon.Error);
             return;
         }
 
@@ -185,7 +186,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         catch (Exception ex)
         {
             Log.Error(ex, "导出国策树图片失败");
-            await _messageBox.ShowAsync("导出图片失败", "错误", MessageBoxIcon.Error);
+            await _messageBox.ShowAsync("导出图片失败", LangResources.Error, MessageBoxIcon.Error);
         }
     }
 
