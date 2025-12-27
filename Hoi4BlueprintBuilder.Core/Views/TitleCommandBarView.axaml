@@ -32,7 +32,7 @@
 
     <fa:CommandBar DefaultLabelPosition="Right">
         <fa:CommandBar.PrimaryCommands>
-            <fa:CommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:Resources.Menu_CreateNewFocusTree}">
+            <fa:CommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:LangResources.Menu_CreateNewFocusTree}">
                 <fa:CommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xECC8;" />
                 </fa:CommandBarButton.IconSource>
@@ -41,7 +41,7 @@
                 Command="{Binding SaveFocusTreeCommand}"
                 IconSource="Save"
                 IsEnabled="{Binding IsFocusTreeEditorAtCurrent}"
-                Label="{x:Static lang:Resources.Menu_Save}" />
+                Label="{x:Static lang:LangResources.Menu_Save}" />
 
             <fa:CommandBarSeparator Margin="4,0" />
 

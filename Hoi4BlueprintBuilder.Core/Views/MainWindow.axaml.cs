@@ -1,5 +1,4 @@
 using System.ComponentModel.Design;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Interactivity;
 using FluentAvalonia.UI.Windowing;

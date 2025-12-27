@@ -13,8 +13,8 @@ public sealed partial class CreateNewFocusViewModel : ObservableValidator
     public string SelectedFocusFilePath => FocusFileNames[SelectedFocusFileNameIndex].FilePath;
     public FocusTypeItem[] FocusTypes { get; } =
         [
-            new(FocusType.Normal, Resources.CreateNewFocusView_CommonFocus),
-            new(FocusType.Shared, Resources.CreateNewFocusView_SharedFocus)
+            new(FocusType.Normal, LangResources.CreateNewFocusView_CommonFocus),
+            new(FocusType.Shared, LangResources.CreateNewFocusView_SharedFocus)
         ];
     public FocusFileItem[] FocusFileNames { get; }
 
@@ -69,7 +69,9 @@ public sealed partial class CreateNewFocusViewModel : ObservableValidator
     {
         var viewModel = (CreateNewFocusViewModel)context.ObjectInstance;
         return viewModel._focusIdIsExistsFunc?.Invoke(focusId) is true
-            ? new ValidationResult(ZString.Format(Resources.CreateNewFocusView_FocusIdAlreadyExist, focusId))
+            ? new ValidationResult(
+                ZString.Format(LangResources.CreateNewFocusView_FocusIdAlreadyExist, focusId)
+            )
             : ValidationResult.Success;
     }
 

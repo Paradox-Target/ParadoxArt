@@ -21,7 +21,7 @@
     <Grid RowDefinitions="*,*,*,*">
 
         <StackPanel Grid.Row="0">
-            <TextBlock Text="{x:Static lang:Resources.CreateNewFocusTreeFileView_FileName}" />
+            <TextBlock Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_FileName}" />
             <TextBox
                 MinWidth="200"
                 VerticalAlignment="Center"
@@ -29,7 +29,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1">
-            <TextBlock Text="{x:Static lang:Resources.CreateNewFocusTreeFileView_FocusTreeId}" />
+            <TextBlock Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_FocusTreeId}" />
             <TextBox
                 MinWidth="200"
                 VerticalAlignment="Center"
@@ -37,7 +37,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2">
-            <TextBlock Text="{x:Static lang:Resources.CreateNewFocusTreeFileView_CountryTag}" />
+            <TextBlock Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_CountryTag}" />
             <TextBox
                 MinWidth="200"
                 VerticalAlignment="Center"
@@ -45,7 +45,7 @@
         </StackPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal">
-            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:Resources.CreateNewFocusTreeFileView_DefaultFocusTree}" />
+            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_DefaultFocusTree}" />
             <ToggleSwitch IsChecked="{Binding IsDefaultFocusTree, Mode=TwoWay}" />
         </StackPanel>
     </Grid>

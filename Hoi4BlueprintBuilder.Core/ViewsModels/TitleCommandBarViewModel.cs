@@ -97,7 +97,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
 
         var dialog = new ContentDialog
         {
-            Title = Resources.CreateNewFocusTreeFileView_Title,
+            Title = LangResources.CreateNewFocusTreeFileView_Title,
             Content = content,
             PrimaryButtonText = "创建",
             CloseButtonText = "取消",
