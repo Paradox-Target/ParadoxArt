@@ -19,7 +19,7 @@ public sealed partial class MainWindow : AppWindow
         notificationService.Initialize(this);
 
         TitleCommandBar
-            .GetPropertyChangedObservable(IsVisibleProperty)
+            .GetPropertyChangedObservable(BoundsProperty)
             .AddClassHandler<TitleCommandBarView>((_, _) => SetDragRectangles());
         Loaded += OnLoaded;
     }
