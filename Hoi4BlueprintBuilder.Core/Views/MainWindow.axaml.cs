@@ -27,7 +27,7 @@ public sealed partial class MainWindow : AppWindow
             .GetPropertyChangedObservable(BoundsProperty)
             .AddClassHandler<TitleCommandBarView>((_, _) => SetDragRectangles());
         Loaded += OnLoaded;
-        Closed += (s, e) =>
+        Closed += (_, _) =>
         {
             windowSettingsService.SaveWindow(this);
             windowSettingsService.SaveSettings();

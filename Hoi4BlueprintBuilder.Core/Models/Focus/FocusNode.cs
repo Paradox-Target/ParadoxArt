@@ -131,6 +131,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
     }
 
+    // TODO: 实现 AllowBranch
     /// <summary>
     /// 当为 false 时整个分支都不显示
     /// </summary>

@@ -45,6 +45,7 @@ public sealed partial class FocusInfoView : UserControl
     {
         InitializeComponent();
 
+        CompletionRewardEditor.SetGrammar(".txt");
         // 设置 DataContext 防止运行时提示绑定错误
         _viewModel = new FocusInfoViewModel(new FocusNode(string.Empty, FocusType.Unknown));
         DataContext = _viewModel;
@@ -59,8 +60,7 @@ public sealed partial class FocusInfoView : UserControl
         // 设置拖放事件
         AddHandler(DragDrop.DropEvent, FocusIcon_OnDrop);
 
-        // 绑定 CompletionRewardEditor 文本变更
-        // CompletionRewardEditor.GetObservable(TextBox.TextProperty).Subscribe(OnCompletionRewardTextChanged);
+        CompletionRewardEditor.TextChanged += OnCompletionRewardTextChanged;
 
         // 绑定 LostFocus 事件以模拟 UpdateSourceTrigger=LostFocus
         IdTextBox.LostFocus += IdTextBox_OnLostFocus;
@@ -92,11 +92,11 @@ public sealed partial class FocusInfoView : UserControl
         }
     }
 
-    private void OnCompletionRewardTextChanged(string? text)
+    private void OnCompletionRewardTextChanged(object? sender, EventArgs e)
     {
         if (_viewModel is not null)
         {
-            _viewModel.FocusNode.CompletionReward = text ?? string.Empty;
+            _viewModel.FocusNode.CompletionReward = CompletionRewardEditor.Text;
         }
     }
 

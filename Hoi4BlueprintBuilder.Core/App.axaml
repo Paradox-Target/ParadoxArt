@@ -9,6 +9,7 @@
 
     <Application.Styles>
         <styling:FluentAvaloniaTheme PreferUserAccentColor="True" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
         <StyleInclude Source="/Styles/DefaultStyles.axaml" />
         <StyleInclude Source="/Styles/SettingsStyle.axaml" />
     </Application.Styles>
