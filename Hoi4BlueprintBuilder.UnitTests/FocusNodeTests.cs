@@ -479,4 +479,275 @@ public sealed class FocusNodeTests
             Assert.That(nodeC.RawPosition.Y, Is.EqualTo(15)); // 25 - 10
         }
     }
+    
+    [Test]
+    public void AddOffset_AddsToCollection()
+    {
+        var node = new FocusNode("path", default);
+        var offset = new FocusOffset(new FocusPoint(5, 10), null);
+
+        node.AddOffset(offset);
+
+        Assert.That(node.Offsets, Has.Count.EqualTo(1));
+        Assert.That(node.Offsets, Contains.Item(offset));
+    }
+
+    [Test]
+    public void AddOffset_CanAddMultipleOffsets()
+    {
+        var node = new FocusNode("path", default);
+        var offset1 = new FocusOffset(new FocusPoint(5, 10), null);
+        var offset2 = new FocusOffset(new FocusPoint(-2, 3), null);
+        var offset3 = new FocusOffset(new FocusPoint(1, 1), null);
+
+        node.AddOffset(offset1);
+        node.AddOffset(offset2);
+        node.AddOffset(offset3);
+
+        Assert.That(node.Offsets, Has.Count.EqualTo(3));
+        Assert.That(node.Offsets, Is.EquivalentTo(new[] { offset1, offset2, offset3 }));
+    }
+
+    [Test]
+    public void Offsets_WhenDisabled_DoNotAffectPosition()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        node.AddOffset(offset);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(10));
+            Assert.That(node.Y, Is.EqualTo(20));
+        }
+    }
+
+    [Test]
+    public void Offsets_WhenEnabled_AffectPosition()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = true };
+        node.AddOffset(offset);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(15)); // 10 + 5
+            Assert.That(node.Y, Is.EqualTo(30)); // 20 + 10
+        }
+    }
+
+    [Test]
+    public void Offsets_MultipleEnabled_AddsCumulatively()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset1 = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = true };
+        var offset2 = new FocusOffset(new FocusPoint(3, -2), null) { Enabled = true };
+        var offset3 = new FocusOffset(new FocusPoint(-1, 4), null) { Enabled = true };
+
+        node.AddOffset(offset1);
+        node.AddOffset(offset2);
+        node.AddOffset(offset3);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(17)); // 10 + 5 + 3 - 1
+            Assert.That(node.Y, Is.EqualTo(32)); // 20 + 10 - 2 + 4
+        }
+    }
+
+    [Test]
+    public void Offsets_MixedEnabledDisabled_OnlyCountsEnabled()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset1 = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = true };
+        var offset2 = new FocusOffset(new FocusPoint(100, 100), null) { Enabled = false };
+        var offset3 = new FocusOffset(new FocusPoint(3, -2), null) { Enabled = true };
+
+        node.AddOffset(offset1);
+        node.AddOffset(offset2);
+        node.AddOffset(offset3);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(18)); // 10 + 5 + 3 (ignores 100)
+            Assert.That(node.Y, Is.EqualTo(28)); // 20 + 10 - 2 (ignores 100)
+        }
+    }
+
+    [Test]
+    public void Offsets_TogglingEnabled_UpdatesPosition()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        node.AddOffset(offset);
+
+        // Initially disabled
+        Assert.That(node.X, Is.EqualTo(10));
+        Assert.That(node.Y, Is.EqualTo(20));
+
+        // Enable offset
+        offset.Enabled = true;
+        Assert.That(node.X, Is.EqualTo(15));
+        Assert.That(node.Y, Is.EqualTo(30));
+
+        // Disable offset again
+        offset.Enabled = false;
+        Assert.That(node.X, Is.EqualTo(10));
+        Assert.That(node.Y, Is.EqualTo(20));
+    }
+
+    [Test]
+    public void Offsets_TogglingEnabled_RaisesPropertyChangedEvents()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        node.AddOffset(offset);
+
+        var xChangedCount = 0;
+        var yChangedCount = 0;
+
+        node.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(FocusNode.X))
+            {
+                xChangedCount++;
+            }
+            else if (e.PropertyName == nameof(FocusNode.Y))
+            {
+                yChangedCount++;
+            }
+        };
+
+        offset.Enabled = true;
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(xChangedCount, Is.GreaterThanOrEqualTo(1));
+            Assert.That(yChangedCount, Is.GreaterThanOrEqualTo(1));
+        }
+    }
+
+    [Test]
+    public void Offsets_WorksWithRelativePosition()
+    {
+        var parent = new FocusNode("path", default);
+        parent.RawPosition = new FocusPoint(10, 10);
+
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(5, 5); // Relative offset
+        node.RelativePosition = parent;
+
+        var offset = new FocusOffset(new FocusPoint(2, 3), null) { Enabled = true };
+        node.AddOffset(offset);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(17)); // 10 + 5 + 2
+            Assert.That(node.Y, Is.EqualTo(18)); // 10 + 5 + 3
+        }
+    }
+
+    [Test]
+    public void Offsets_WithRelativePosition_OffsetAppliesAfterRelativeCalculation()
+    {
+        var parent = new FocusNode("path", default);
+        parent.RawPosition = new FocusPoint(100, 200);
+
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+        node.RelativePosition = parent;
+
+        var offset1 = new FocusOffset(new FocusPoint(5, 5), null) { Enabled = true };
+        var offset2 = new FocusOffset(new FocusPoint(-2, -3), null) { Enabled = true };
+
+        node.AddOffset(offset1);
+        node.AddOffset(offset2);
+
+        using (Assert.EnterMultipleScope())
+        {
+            // Raw: 10, 20
+            // After relative: 100 + 10, 200 + 20 = 110, 220
+            // After offsets: 110 + 5 - 2, 220 + 5 - 3 = 113, 222
+            Assert.That(node.X, Is.EqualTo(113));
+            Assert.That(node.Y, Is.EqualTo(222));
+        }
+    }
+
+    [Test]
+    public void Dispose_UnsubscribesFromOffsetPropertyChanged()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        node.AddOffset(offset);
+
+        int propertyChangedCount = 0;
+        node.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName is nameof(FocusNode.X) or nameof(FocusNode.Y))
+            {
+                propertyChangedCount++;
+            }
+        };
+
+        // Enable offset should trigger property change
+        offset.Enabled = true;
+        int countAfterEnable = propertyChangedCount;
+        Assert.That(countAfterEnable, Is.GreaterThan(0));
+
+        // Dispose node
+        node.Dispose();
+
+        // Toggle offset after dispose should NOT trigger property change
+        offset.Enabled = false;
+        offset.Enabled = true;
+
+        Assert.That(propertyChangedCount, Is.EqualTo(countAfterEnable));
+    }
+
+    [Test]
+    public void Offsets_WithNegativeValues_WorksCorrectly()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset = new FocusOffset(new FocusPoint(-5, -10), null) { Enabled = true };
+        node.AddOffset(offset);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(5)); // 10 - 5
+            Assert.That(node.Y, Is.EqualTo(10)); // 20 - 10
+        }
+    }
+
+    [Test]
+    public void Offsets_WithZeroValues_DoesNotChangePosition()
+    {
+        var node = new FocusNode("path", default);
+        node.RawPosition = new FocusPoint(10, 20);
+
+        var offset = new FocusOffset(new FocusPoint(0, 0), null) { Enabled = true };
+        node.AddOffset(offset);
+
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(node.X, Is.EqualTo(10));
+            Assert.That(node.Y, Is.EqualTo(20));
+        }
+    }
+
 }

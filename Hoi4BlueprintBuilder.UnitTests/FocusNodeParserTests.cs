@@ -69,6 +69,9 @@ public sealed class FocusNodeParserTests
             Assert.That(focus1.RelativePosition, Is.Null, "节点相对位置不正确");
             Assert.That(focus1.MutuallyExclusive, Is.Empty, "节点互斥关系不正确");
             Assert.That(focus1.CompletionReward, Does.Contain("add_political_power = 100"), "节点完成奖励不正确");
+            Assert.That(focus1.Offsets, Has.Count.EqualTo(2));
+            Assert.That(focus1.Offsets.First().DisplayContent, Is.EqualTo("tag = tst"));
+            Assert.That(focus1.Offsets.First().Offset, Is.EqualTo(new FocusPoint(1, 2)));
         }
     }
 

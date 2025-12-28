@@ -18,6 +18,20 @@
         icon = GFX_goal_generic_intelligence_exchange
         x = 2
         y = 0
+        offset = { 
+            x = 1
+            y = 2
+            trigger = {
+                tag = tst
+            }
+        }
+        offset = { 
+            x = 2
+            y = 3
+            trigger = {
+                tag = tet
+            }
+        }
         cost = 10
         cancel_if_invalid = yes
         continue_if_invalid = no
