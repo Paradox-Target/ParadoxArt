@@ -10,11 +10,16 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 [RegisterSingleton<MainWindow>]
 public sealed partial class MainWindow : AppWindow
 {
-    public MainWindow(MainWindowViewModel mainWindowViewModel, NotificationService notificationService)
+    public MainWindow(
+        MainWindowViewModel mainWindowViewModel,
+        NotificationService notificationService,
+        WindowSettingsService windowSettingsService
+    )
     {
         InitializeComponent();
         TitleBar.ExtendsContentIntoTitleBar = true;
 
+        windowSettingsService.SetWindow(this);
         DataContext = mainWindowViewModel;
         notificationService.Initialize(this);
 
@@ -22,6 +27,11 @@ public sealed partial class MainWindow : AppWindow
             .GetPropertyChangedObservable(BoundsProperty)
             .AddClassHandler<TitleCommandBarView>((_, _) => SetDragRectangles());
         Loaded += OnLoaded;
+        Closed += (s, e) =>
+        {
+            windowSettingsService.SaveWindow(this);
+            windowSettingsService.SaveSettings();
+        };
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
@@ -45,6 +55,7 @@ public sealed partial class MainWindow : AppWindow
     public MainWindow()
         : this(
             new MainWindowViewModel(new NavigationService(new ServiceContainer()), new SettingsService()),
-            new NotificationService()
+            new NotificationService(),
+            WindowSettingsService.LoadSettings()
         ) { }
 }

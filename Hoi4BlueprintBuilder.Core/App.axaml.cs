@@ -50,7 +50,7 @@ public sealed class App : Application
         _serviceCollection = [];
 
         _serviceCollection.AddSingleton(static _ => SettingsService.LoadSettings());
-        // services.AddSingleton(static _ => WindowSettingsService.LoadSettings());
+        _serviceCollection.AddSingleton(static _ => WindowSettingsService.LoadSettings());
         _serviceCollection.AddHoi4BlueprintBuilderCore();
     }
 
