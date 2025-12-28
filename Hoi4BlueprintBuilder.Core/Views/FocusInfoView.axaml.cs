@@ -57,6 +57,12 @@ public sealed partial class FocusInfoView : UserControl
             args.Handled = true;
         };
 
+        // 阻止鼠标滚轮事件, 避免触发鼠标滚轮缩放画布
+        PointerWheelChanged += (_, args) =>
+        {
+            args.Handled = true;
+        };
+
         // 设置拖放事件
         AddHandler(DragDrop.DropEvent, FocusIcon_OnDrop);
 
