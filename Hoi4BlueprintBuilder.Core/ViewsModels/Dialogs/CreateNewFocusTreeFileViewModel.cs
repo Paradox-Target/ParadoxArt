@@ -93,6 +93,10 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
 
     partial void OnIsDefaultFocusTreeChanged(bool value)
     {
-        CountryTag = string.Empty;
+        // 关闭时不需要清空 Country Tag
+        if (value)
+        {
+            CountryTag = string.Empty;
+        }
     }
 }
