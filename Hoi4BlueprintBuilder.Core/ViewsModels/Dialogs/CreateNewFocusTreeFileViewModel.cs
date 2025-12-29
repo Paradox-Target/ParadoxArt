@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Cysharp.Text;
+using Hoi4BlueprintBuilder.Core.Services.GameResources;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 
@@ -16,8 +18,9 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
     [NotifyDataErrorInfo]
     private string _fileName = string.Empty;
 
-    // TODO: 应该检查
     [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [CustomValidation(typeof(CreateNewFocusTreeFileViewModel), nameof(CountryTagShouldExist))]
     private string _countryTag = string.Empty;
 
     [ObservableProperty]
@@ -35,6 +38,9 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
         && (!string.IsNullOrWhiteSpace(CountryTag) || IsDefaultFocusTree)
         && !string.IsNullOrWhiteSpace(Id)
         && !HasErrors;
+
+    private readonly CountryTagService _countryTagService =
+        App.Current.Services.GetRequiredService<CountryTagService>();
 
     public CreateNewFocusTreeFileViewModel(string focusTreeDirectory)
     {
@@ -60,6 +66,20 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
             : ValidationResult.Success;
     }
 
+    public static ValidationResult? CountryTagShouldExist(string countryTag, ValidationContext context)
+    {
+        var viewModel = (CreateNewFocusTreeFileViewModel)context.ObjectInstance;
+
+        if (viewModel.IsDefaultFocusTree)
+        {
+            return ValidationResult.Success;
+        }
+
+        return viewModel._countryTagService.Contains(countryTag)
+            ? ValidationResult.Success
+            : new ValidationResult(LangResources.CreateNewFocusTreeFileView_CountryTagIsNotExist);
+    }
+
     private string GetFinalFilePath()
     {
         string filePath = FileName;
@@ -69,5 +89,10 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
         }
 
         return Path.Combine(_focusTreeDirectory, filePath);
+    }
+
+    partial void OnIsDefaultFocusTreeChanged(bool value)
+    {
+        CountryTag = string.Empty;
     }
 }

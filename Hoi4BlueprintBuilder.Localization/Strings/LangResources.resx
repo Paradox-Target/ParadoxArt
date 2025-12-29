@@ -162,4 +162,7 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="CreateNewFocusTreeFileView_CountryTagIsNotExist" xml:space="preserve">
+    <value>CreateNewFocusTreeFileView_CountryTagNotExist</value>
+  </data>
 </root>
