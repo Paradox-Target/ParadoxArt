@@ -48,7 +48,7 @@
                     <TextBox
                         Classes="SettingsPathTextBox"
                         IsReadOnly="True"
-                        Text="{Binding ModPath, Mode=TwoWay}" />
+                        Text="{Binding ModPath, Mode=OneWay}" />
                     <Button
                         Grid.Column="1"
                         Classes="SettingsPickButton"
