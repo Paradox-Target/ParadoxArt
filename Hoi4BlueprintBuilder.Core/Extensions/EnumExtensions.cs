@@ -1,4 +1,5 @@
-﻿using Hoi4BlueprintBuilder.Core.Models;
+﻿using Avalonia.Styling;
+using Hoi4BlueprintBuilder.Core.Models;
 
 namespace Hoi4BlueprintBuilder.Core.Extensions;
 
@@ -24,6 +25,16 @@ public static class EnumExtensions
             GameLanguage.Portuguese => "braz_por",
             GameLanguage.Polish => "polish",
             _ => throw new ArgumentOutOfRangeException(nameof(language), language, null)
+        };
+    }
+
+    public static ThemeVariant ToThemeVariant(this ThemeMode type)
+    {
+        return type switch
+        {
+            ThemeMode.Light => ThemeVariant.Light,
+            ThemeMode.Dark => ThemeVariant.Dark,
+            _ => ThemeVariant.Default
         };
     }
 }

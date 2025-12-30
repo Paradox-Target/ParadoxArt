@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
@@ -12,6 +13,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
 {
     public LanguageInfo[] AppLanguages { get; } = LanguageHelper.AppLanguages;
     public GameLanguage[] GameLanguages { get; } = Enum.GetValues<GameLanguage>();
+    public ThemeMode[] ThemeModes { get; } = Enum.GetValues<ThemeMode>();
 
     public bool IsAutoFocusPngConvertToDds
     {
@@ -61,6 +63,9 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     [ObservableProperty]
     private int _selectedGameLanguagesIndex;
 
+    [ObservableProperty]
+    private int _selectedThemeModeIndex;
+
     private readonly SettingsService _settings;
     private readonly FileService _fileService;
     private bool _isChanged;
@@ -87,6 +92,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
             GameLanguages,
             language => language == settings.GameLanguage
         );
+        _selectedThemeModeIndex = Array.FindIndex(ThemeModes, mode => mode == settings.ThemeMode);
     }
 
     [RelayCommand]
@@ -129,6 +135,18 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         var language = GameLanguages[value];
         _settings.GameLanguage = language;
         Log.Info("游戏语言切换到: {Code}", language);
+    }
+
+    partial void OnSelectedThemeModeIndexChanged(int value)
+    {
+        if (value < 0 || value >= ThemeModes.Length)
+        {
+            return;
+        }
+
+        var theme = ThemeModes[value];
+        _settings.ThemeMode = theme;
+        App.Current.RequestedThemeVariant = theme.ToThemeVariant();
     }
 
     public void SaveIfChange()

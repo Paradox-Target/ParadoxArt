@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
@@ -71,6 +72,8 @@ public sealed class App : Application
             _serviceCollection?.BuildServiceProvider()
             ?? throw new ArgumentException("serviceCollection未初始化");
         IsActivated = Services.GetRequiredService<AuthService>().IsActivatedAsync();
+        var settingsService = Services.GetRequiredService<SettingsService>();
+        RequestedThemeVariant = settingsService.ThemeMode.ToThemeVariant();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

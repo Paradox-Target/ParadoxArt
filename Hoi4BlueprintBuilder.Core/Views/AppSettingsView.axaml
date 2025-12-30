@@ -57,6 +57,15 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
+            <fa:SettingsExpander Header="主题模式">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE790;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ComboBox ItemsSource="{Binding ThemeModes, Mode=OneTime}" SelectedIndex="{Binding SelectedThemeModeIndex, Mode=TwoWay}" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
             <fa:SettingsExpander Description="*重启App后生效" Header="App 语言">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
