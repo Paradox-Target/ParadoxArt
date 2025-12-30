@@ -46,7 +46,7 @@ public static class NLogSetupHelper
         };
 
         var asyncFileTarget = new NLog.Targets.Wrappers.AsyncTargetWrapper(fileTarget) { Name = "asyncFile" };
-        config.AddRule(LogLevel.Info, LogLevel.Fatal, asyncFileTarget);
+        config.AddRule(LogLevel.Debug, LogLevel.Fatal, asyncFileTarget);
 #endif
         LogManager.Configuration = config;
     }

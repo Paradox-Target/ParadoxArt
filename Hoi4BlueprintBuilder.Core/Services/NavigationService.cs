@@ -37,6 +37,7 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
         {
             CurrentView = serviceProvider.GetRequiredService(type);
         });
+        Log.Info("导航到 {Name}", type.Name);
     }
 
     public void NavigateBasedOnDeviceStatus()
