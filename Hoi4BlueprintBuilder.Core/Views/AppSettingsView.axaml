@@ -103,7 +103,7 @@
 
             <fa:SettingsExpander
                 Description="© Paradox Target 2025. All rights reserved."
-                Footer="v0.1.0"
+                Footer="{x:Static local:App.Version}"
                 Header="Focus Editor">
                 <fa:SettingsExpanderItem Content=".NET Version" Footer="{Binding DotNetVersion, Mode=OneTime}" />
                 <fa:SettingsExpanderItem>
