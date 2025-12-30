@@ -44,12 +44,13 @@ public sealed class LocalizationService
                     ((string focusFilePath, var gameLanguage), var userLocalisation) in _filesLocalisations
                 )
                 {
+                    string languageKey = $"l_{gameLanguage.ToGameLocalizationLanguage()}";
                     // userLocalisation => Key: 本地化键, Value: 本地化文本
                     string filePath = Path.Combine(
                         settingsService.ModRootFolderPath,
                         "localisation",
                         gameLanguage.ToGameLocalizationLanguage(),
-                        $"{Path.GetFileNameWithoutExtension(focusFilePath)}.yml"
+                        $"{Path.GetFileNameWithoutExtension(focusFilePath)}_{languageKey}.yml"
                     );
                     Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
 
@@ -65,12 +66,11 @@ public sealed class LocalizationService
                         {
                             currentLocalisation[content.Key] = content.Value;
                         }
-                        WriteLocalisationToFile(filePath, $"{result.Key}:", currentLocalisation);
+                        WriteLocalisationToFile(filePath, $"{languageKey}:", currentLocalisation);
                     }
                     else
                     {
-                        string key = GameLanguageToGameLocalizationKey(settingsService.GameLanguage);
-                        WriteLocalisationToFile(filePath, key, userLocalisation);
+                        WriteLocalisationToFile(filePath, $"{languageKey}:", userLocalisation);
                     }
 
                     Log.Info("成功保存本地化文件: {FilePath}", filePath);
@@ -98,23 +98,6 @@ public sealed class LocalizationService
             string text = content.Value.Replace("\r\n", "\\n").Replace("\n", "\\n");
             localisationFile.WriteLine($" {content.Key}: \"{text}\"");
         }
-    }
-
-    private static string GameLanguageToGameLocalizationKey(GameLanguage language)
-    {
-        return language switch
-        {
-            GameLanguage.English => "l_english:",
-            GameLanguage.German => "l_german:",
-            GameLanguage.French => "l_french:",
-            GameLanguage.Spanish => "l_spanish:",
-            GameLanguage.Russian => "l_russian:",
-            GameLanguage.Chinese => "l_simp_chinese:",
-            GameLanguage.Japanese => "l_japanese:",
-            GameLanguage.Portuguese => "l_braz_por:",
-            GameLanguage.Polish => "l_polish:",
-            _ => throw new ArgumentOutOfRangeException(nameof(language))
-        };
     }
 
     /// <summary>

@@ -36,7 +36,7 @@ public class LocalizationServiceTests
         Directory.CreateDirectory(locDir);
 
         // 3. 复制测试数据文件到临时目录
-        File.Copy(_sourceTestDataPath, Path.Combine(locDir, "test.yml"));
+        File.Copy(_sourceTestDataPath, Path.Combine(locDir, "test_l_simp_chinese.yml"));
 
         // 4. 初始化 SettingsService，指向临时目录
         var settingsService = new SettingsService
@@ -137,7 +137,7 @@ public class LocalizationServiceTests
             _testRunDirectory,
             "localisation",
             "simp_chinese",
-            $"{focusFileName}.yml"
+            $"{focusFileName}_l_simp_chinese.yml"
         );
 
         Assert.That(File.Exists(expectedLocPath), Is.True, "本地化文件未创建");
@@ -165,7 +165,7 @@ public class LocalizationServiceTests
             _testRunDirectory,
             "localisation",
             "simp_chinese",
-            $"{focusFileName}.yml"
+            $"{focusFileName}_l_simp_chinese.yml"
         );
         Assert.That(File.Exists(existingLocPath), Is.True);
 
