@@ -43,6 +43,16 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         }
     }
 
+    public string ModRootFolderPath
+    {
+        get => _settings.ModRootFolderPath;
+        private set
+        {
+            _settings.ModRootFolderPath = value;
+            OnPropertyChanged();
+        }
+    }
+
     public string DotNetVersion => Environment.Version.ToString();
 
     [ObservableProperty]
@@ -87,6 +97,16 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         if (dialog is not null)
         {
             GameRootFolderPath = dialog.Path.LocalPath;
+        }
+    }
+
+    [RelayCommand]
+    private async Task PickModRootFolderPath()
+    {
+        var dialog = await _fileService.OpenFileAsync();
+        if (dialog is not null)
+        {
+            ModRootFolderPath = dialog.Path.LocalPath;
         }
     }
 
