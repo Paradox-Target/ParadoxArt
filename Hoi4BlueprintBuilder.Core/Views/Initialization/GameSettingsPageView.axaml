@@ -30,7 +30,10 @@
             <StackPanel Margin="0,16">
                 <TextBlock Classes="SettingsTitleTextBlock" Text="游戏根目录" />
                 <Grid ColumnDefinitions="*,Auto">
-                    <TextBox Classes="SettingsPathTextBox" Text="{Binding GamePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Classes="SettingsPathTextBox"
+                        IsReadOnly="True"
+                        Text="{Binding GamePath, Mode=OneWay}" />
                     <Button
                         Grid.Column="1"
                         Classes="SettingsPickButton"
@@ -42,7 +45,10 @@
             <StackPanel>
                 <TextBlock Classes="SettingsTitleTextBlock" Text="MOD 根目录" />
                 <Grid ColumnDefinitions="*,Auto">
-                    <TextBox Classes="SettingsPathTextBox" Text="{Binding ModPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Classes="SettingsPathTextBox"
+                        IsReadOnly="True"
+                        Text="{Binding ModPath, Mode=TwoWay}" />
                     <Button
                         Grid.Column="1"
                         Classes="SettingsPickButton"
