@@ -327,9 +327,13 @@ public static class FocusNodeHelper
             ChildHelper.LeafString("id", editorModel.Id),
             ChildHelper.Leaf("x", editorModel.RawPosition.X),
             ChildHelper.Leaf("y", editorModel.RawPosition.Y),
-            ChildHelper.LeafString(Keywords.Icon, editorModel.Icon),
             ChildHelper.Leaf(Keywords.Cost, editorModel.Cost)
         };
+
+        if (!string.IsNullOrWhiteSpace(editorModel.Icon))
+        {
+            children.Add(ChildHelper.LeafString(Keywords.Icon, editorModel.Icon));
+        }
 
         if (editorModel.RelativePosition is not null)
         {
