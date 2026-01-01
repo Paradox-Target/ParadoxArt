@@ -9,8 +9,7 @@
         <CETCompat>false</CETCompat>
         <ApplicationIcon>..\Hoi4BlueprintBuilder.Core\Assets\logo.ico</ApplicationIcon>
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
-<!--        <PublishTrimmed>true</PublishTrimmed>-->
-<!--        <TrimMode>partial</TrimMode>-->
+        <PublishTrimmed>true</PublishTrimmed>
     </PropertyGroup>
 
     <PropertyGroup>

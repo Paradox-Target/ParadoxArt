@@ -1,22 +1,24 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Avalonia;
 using Avalonia.Controls;
 using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(WindowSettingsService))]
+internal partial class WindowSettingsServiceContext : JsonSerializerContext;
+
 public sealed class WindowSettingsService
 {
     [JsonInclude]
     [JsonPropertyName("windowInfo")]
-    private Dictionary<string, WindowSettings> _windowSettings = [];
+    internal Dictionary<string, WindowSettings> _windowSettings = [];
 
     private bool _isChanged;
 
     private const string SettingsFileName = "windowSettings.json";
-    private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
     private static readonly string SettingsFilePath = Path.Combine(App.ConfigFolder, SettingsFileName);
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -61,7 +63,7 @@ public sealed class WindowSettingsService
         return $"{window.GetType().FullName}";
     }
 
-    private sealed record WindowSettings
+    internal sealed record WindowSettings
     {
         public double Width { get; set; }
         public double Height { get; set; }
@@ -80,7 +82,10 @@ public sealed class WindowSettingsService
         try
         {
             string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
-            var result = JsonSerializer.Deserialize<WindowSettingsService>(json);
+            var result = JsonSerializer.Deserialize<WindowSettingsService>(
+                json,
+                WindowSettingsServiceContext.Default.WindowSettingsService
+            );
             if (result is null)
             {
                 result = new WindowSettingsService();
@@ -102,9 +107,13 @@ public sealed class WindowSettingsService
             Log.Info("窗口设置未更改，跳过保存");
             return;
         }
+
         try
         {
-            string json = JsonSerializer.Serialize(this, Options);
+            string json = JsonSerializer.Serialize(
+                this,
+                WindowSettingsServiceContext.Default.WindowSettingsService
+            );
             File.WriteAllText(SettingsFilePath, json, Encoding.UTF8);
             _isChanged = false;
             Log.Info("已成功保存窗口配置文件: {SettingsFilePath}", SettingsFilePath);

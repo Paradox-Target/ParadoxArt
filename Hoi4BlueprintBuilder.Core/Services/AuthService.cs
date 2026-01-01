@@ -47,9 +47,15 @@ public sealed class AuthService : IDisposable
         string id = _deviceService.GetDeviceId();
         Log.Info("User ID: {Id}", id);
         var body = new DeviceCheckRequest { DeviceId = id };
-        using var result = await _client.PostAsJsonAsync("device/check", body);
+        using var result = await _client.PostAsJsonAsync(
+            "device/check",
+            body,
+            DeviceCheckRequestContext.Default.DeviceCheckRequest
+        );
         result.EnsureSuccessStatusCode();
-        var response = await result.Content.ReadFromJsonAsync<DeviceStatusResponse>();
+        var response = await result.Content.ReadFromJsonAsync<DeviceStatusResponse>(
+            DeviceStatusResponseContext.Default.DeviceStatusResponse
+        );
         Log.Debug("IsActivated 服务器查询结果: {@}", response);
 
         return response is not null && response.IsActivated;
@@ -62,9 +68,15 @@ public sealed class AuthService : IDisposable
             DeviceId = _deviceService.GetDeviceId(),
             ActivationCode = activationCode
         };
-        using var result = await _client.PostAsJsonAsync("device/activate", body);
+        using var result = await _client.PostAsJsonAsync(
+            "device/activate",
+            body,
+            DeviceActivateRequestContext.Default.DeviceActivateRequest
+        );
         result.EnsureSuccessStatusCode();
-        return await result.Content.ReadFromJsonAsync<DeviceStatusResponse>();
+        return await result.Content.ReadFromJsonAsync<DeviceStatusResponse>(
+            DeviceStatusResponseContext.Default.DeviceStatusResponse
+        );
     }
 
     public void Dispose()

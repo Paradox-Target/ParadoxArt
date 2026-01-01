@@ -7,6 +7,10 @@ using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(SettingsService))]
+internal partial class SettingsServiceContext : JsonSerializerContext;
+
 public sealed class SettingsService
 {
     public string AppLanguage { get; set; } = string.Empty;
@@ -29,7 +33,6 @@ public sealed class SettingsService
     public bool IsFirstRun { get; private init; }
 
     private const string SettingsFileName = "settings.json";
-    private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
     private static readonly string SettingsFilePath = Path.Combine(App.ConfigFolder, SettingsFileName);
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -45,7 +48,10 @@ public sealed class SettingsService
         try
         {
             string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
-            var settings = JsonSerializer.Deserialize<SettingsService>(json);
+            var settings = JsonSerializer.Deserialize<SettingsService>(
+                json,
+                SettingsServiceContext.Default.SettingsService
+            );
             if (settings is null)
             {
                 settings = new SettingsService { IsFirstRun = true };
@@ -74,7 +80,7 @@ public sealed class SettingsService
     {
         try
         {
-            string json = JsonSerializer.Serialize(this, Options);
+            string json = JsonSerializer.Serialize(this, SettingsServiceContext.Default.SettingsService);
             File.WriteAllText(SettingsFilePath, json, Encoding.UTF8);
             Log.Info("已成功保存配置文件: {SettingsFilePath}", SettingsFilePath);
         }
