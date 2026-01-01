@@ -1,0 +1,24 @@
+<Application
+    x:Class="Hoi4BlueprintBuilder.Core.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Hoi4BlueprintBuilder"
+    xmlns:styling="using:FluentAvalonia.Styling">
+
+    <Application.Styles>
+        <styling:FluentAvaloniaTheme PreferUserAccentColor="True" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <StyleInclude Source="/Styles/DefaultStyles.axaml" />
+        <StyleInclude Source="/Styles/SettingsStyle.axaml" />
+    </Application.Styles>
+    <Application.Resources>
+        <ResourceDictionary>
+            <FontFamily x:Key="FluentIconFontFamily">Segoe Fluent Icons</FontFamily>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Assets/ConstantDictionary.axaml" />
+                <ResourceInclude Source="/Assets/Icons/IconsDictionary.axaml" />
+                <ResourceInclude Source="/Styles/AppThemeResource.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

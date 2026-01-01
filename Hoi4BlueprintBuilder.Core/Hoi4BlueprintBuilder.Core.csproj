@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <TargetFramework>net10.0</TargetFramework>
+        <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+        <PublishTrimmed>true</PublishTrimmed>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Fonts.Inter" />
+        <PackageReference Include="AvaloniaEdit.TextMate" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport">
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="BCnEncoder.Net" />
+        <PackageReference Include="BCnEncoder.Net.ImageSharp" />
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="DeviceId.Linux" />
+        <PackageReference Include="DeviceId.Windows" />
+        <PackageReference Include="DotNet.Glob" />
+        <PackageReference Include="FluentAvaloniaUI" />
+        <PackageReference Include="JetBrains.Annotations" />
+        <PackageReference Include="MessageBox.Avalonia" />
+        <PackageReference Include="NaturalSort.Extension" />
+        <PackageReference Include="NLog" />
+        <PackageReference Include="ObservableCollections" />
+
+        <PackageReference Include="ParadoxPower" />
+        <PackageReference Include="ParadoxPower.CSharpExtensions" />
+        <PackageReference Include="Pfim" />
+        <PackageReference Include="Pidgin" />
+        <PackageReference Include="SixLabors.ImageSharp" />
+        <PackageReference Include="ZLinq" />
+        <PackageReference Include="Ardalis.SmartEnum" />
+        <PackageReference Include="Enums.NET" />
+        <PackageReference Include="NLua" />
+        <PackageReference Include="Injectio" />
+        <PackageReference Include="Fody">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="MethodTimer.Fody">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True" />
+        <PackageReference Include="ZString" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hoi4BlueprintBuilder.Localization\Hoi4BlueprintBuilder.Localization.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Infrastructure\CodeEditor\" />
+    </ItemGroup>
+</Project>

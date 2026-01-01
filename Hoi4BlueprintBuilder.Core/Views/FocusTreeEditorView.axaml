@@ -1,0 +1,125 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.FocusTreeEditorView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:const="clr-namespace:Hoi4BlueprintBuilder.Core.Constants"
+    xmlns:controls="using:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:converters="using:Hoi4BlueprintBuilder.Core.Infrastructure.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
+    x:DataType="vms:FocusTreeEditorViewModel"
+    Background="#333333"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
+    </UserControl.Resources>
+
+    <Grid x:Name="MainGrid" ClipToBounds="True">
+        <Grid.ContextFlyout>
+            <fa:FAMenuFlyout x:DataType="views:FocusTreeEditorView" Opening="ContextMenu_OnOpening">
+                <fa:MenuFlyoutItem Command="{Binding CreateNewFocusCommand}" Text="新建国策">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Add" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Text="设置互斥国策">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Cancel" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding SetPrerequisiteFocusCommand}" Text="设置前置国策">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Link" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding DeleteFocusNodeCommand}" Text="删除">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Delete" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding ConvertToAbsolutePositionCommand}" Text="转换为绝对位置">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="MapPin" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+                <fa:MenuFlyoutItem Command="{Binding SetRelativePositionCommand}" Text="设置相对位置">
+                    <fa:MenuFlyoutItem.IconSource>
+                        <fa:SymbolIconSource Symbol="Previous" />
+                    </fa:MenuFlyoutItem.IconSource>
+                </fa:MenuFlyoutItem>
+            </fa:FAMenuFlyout>
+        </Grid.ContextFlyout>
+
+        <controls:GridRulerControl
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}"
+            ZIndex="{x:Static const:FocusMapConstants.GridRulerZIndex}" />
+
+        <controls:GridBackgroundControl
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}"
+            ZIndex="{x:Static const:FocusMapConstants.GridBackgroundZIndex}" />
+
+        <ItemsControl
+            ClipToBounds="False"
+            ItemsSource="{Binding Nodes}"
+            RenderTransformOrigin="0,0"
+            ZIndex="{x:Static const:FocusMapConstants.FocusMapZIndex}">
+
+            <ItemsControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                    <TranslateTransform X="{Binding TranslateX}" Y="{Binding TranslateY}" />
+                </TransformGroup>
+            </ItemsControl.RenderTransform>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vms:FocusNodeViewModel">
+                    <views:FocusNodeView />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.Styles>
+                <Style x:DataType="vms:FocusNodeViewModel" Selector="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding Node.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellWidth}}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Node.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellHeight}}" />
+                </Style>
+            </ItemsControl.Styles>
+        </ItemsControl>
+
+        <controls:ConnectionPreviewOverlayControl
+            x:Name="ConnectionPreviewOverlay"
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}"
+            ZIndex="1" />
+
+        <controls:FocusConnectionLinesControl
+            Nodes="{Binding Nodes}"
+            Scale="{Binding Scale}"
+            TranslateX="{Binding TranslateX}"
+            TranslateY="{Binding TranslateY}" />
+
+        <!--  框选矩形控件  -->
+        <!--  <controls:SelectionRectangleControl  -->
+        <!--  x:Name="SelectionRectangle"  -->
+        <!--  IsVisible="False"  -->
+        <!--  ZIndex="100" />  -->
+
+        <views:FocusInfoView x:Name="FocusInfoViewControl" />
+    </Grid>
+</UserControl>

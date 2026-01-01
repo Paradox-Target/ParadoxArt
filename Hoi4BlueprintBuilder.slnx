@@ -1,0 +1,14 @@
+﻿<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".csharpierrc" />
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/dotnet-test.yml" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="Hoi4BlueprintBuilder.Localization/Hoi4BlueprintBuilder.Localization.csproj" />
+  <Project Path="Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj" />
+  <Project Path="Hoi4BlueprintBuilder.Windows/Hoi4BlueprintBuilder.Windows.csproj" />
+  <Project Path="Hoi4BlueprintBuilder.Core/Hoi4BlueprintBuilder.Core.csproj" />
+</Solution>

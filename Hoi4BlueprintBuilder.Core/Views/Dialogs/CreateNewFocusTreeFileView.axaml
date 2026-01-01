@@ -1,0 +1,52 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.Dialogs.CreateNewFocusTreeFileView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    x:DataType="vms:CreateNewFocusTreeFileViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="StackPanel">
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="Spacing" Value="4" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="*,*,*,*">
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_FileName}" />
+            <TextBox
+                MinWidth="200"
+                VerticalAlignment="Center"
+                Text="{Binding FileName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_FocusTreeId}" />
+            <TextBox
+                MinWidth="200"
+                VerticalAlignment="Center"
+                Text="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="2">
+            <TextBlock Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_CountryTag}" />
+            <TextBox
+                MinWidth="200"
+                VerticalAlignment="Center"
+                Text="{Binding CountryTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <TextBlock VerticalAlignment="Center" Text="{x:Static lang:LangResources.CreateNewFocusTreeFileView_DefaultFocusTree}" />
+            <ToggleSwitch IsChecked="{Binding IsDefaultFocusTree, Mode=TwoWay}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

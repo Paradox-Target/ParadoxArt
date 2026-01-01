@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <!--If you are willing to use platform-specific APIs, use conditional compilation.
+        See https://docs.avaloniaui.net/docs/guides/platforms/platform-specific-code/dotnet for more details.-->
+        <Nullable>enable</Nullable>
+        <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+        <!--在较老版本的Windows上运行，需要设置CETCompat为false,见 https://github.com/dotnet/runtime/issues/110000 -->
+        <CETCompat>false</CETCompat>
+        <ApplicationIcon>..\Hoi4BlueprintBuilder.Core\Assets\logo.ico</ApplicationIcon>
+        <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+        <PublishTrimmed>true</PublishTrimmed>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True" />
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Vanara.Windows.Shell" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Hoi4BlueprintBuilder.Core\Hoi4BlueprintBuilder.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\Hoi4BlueprintBuilder.Core\Assets\logo.ico">
+        <Link>logo.ico</Link>
+      </None>
+    </ItemGroup>
+</Project>

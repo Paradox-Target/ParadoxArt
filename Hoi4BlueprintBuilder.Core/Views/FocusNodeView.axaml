@@ -1,0 +1,50 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.FocusNodeView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:const="clr-namespace:Hoi4BlueprintBuilder.Core.Constants"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="70"
+    d:DesignWidth="50"
+    x:DataType="vms:FocusNodeViewModel"
+    mc:Ignorable="d">
+
+    <Grid
+        Width="{x:Static const:FocusMapConstants.CellWidth}"
+        Height="{x:Static const:FocusMapConstants.CellHeight}"
+        ClipToBounds="True">
+
+        <!-- 选中状态边框 -->
+        <Border
+            BorderBrush="#0078D7"
+            BorderThickness="2"
+            CornerRadius="4"
+            IsVisible="{Binding IsSelected}">
+            <Border.Background>
+                <SolidColorBrush Color="#280078D7" />
+            </Border.Background>
+        </Border>
+
+        <Image
+            Width="{Binding Width}"
+            Height="{Binding Height}"
+            Source="{Binding Bitmap}" />
+
+        <TextBlock
+            Margin="2,0"
+            HorizontalAlignment="Center"
+            FontSize="12"
+            Foreground="White"
+            Text="{Binding LocalizedName}"
+            TextTrimming="CharacterEllipsis">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform Y="{x:Static const:FocusMapConstants.FocusHeight}" />
+                    <TranslateTransform Y="{x:Static const:FocusMapConstants.FocusNameUpOffset}" />
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+    </Grid>
+</UserControl>

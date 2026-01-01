@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.MainView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:MainViewModel"
+    mc:Ignorable="d">
+    <UserControl.Styles>
+        <Style Selector=":is(Button).SideButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="FontSize" Value="30" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid x:Name="MainGrid" ColumnDefinitions="40,*">
+
+        <DockPanel x:Name="SidePanel" Grid.Column="0">
+            <ToggleButton
+                x:Name="FileTreeToggleButton"
+                Classes="SideButton"
+                DockPanel.Dock="Top">
+                <ToggleButton.Content>
+                    <fa:SymbolIcon Symbol="Folder" />
+                </ToggleButton.Content>
+            </ToggleButton>
+            <Button
+                x:Name="SettingsButton"
+                Classes="SideButton"
+                DockPanel.Dock="Bottom">
+                <Button.Content>
+                    <fa:SymbolIcon x:Name="SettingsIcon" Symbol="Settings" />
+                </Button.Content>
+            </Button>
+            <Border Background="Transparent" />
+        </DockPanel>
+
+        <Grid
+            x:Name="ContentGrid"
+            Grid.Column="1"
+            ColumnDefinitions="Auto,Auto,*">
+            <ContentControl x:Name="FileTreeView" Grid.Column="0" />
+            <GridSplitter x:Name="MainGridSplitter" Grid.Column="1" />
+            <fa:TabView
+                x:Name="MainTabView"
+                Grid.Column="2"
+                IsAddTabButtonVisible="False"
+                TabCloseRequested="MainTabView_OnTabCloseRequested" />
+        </Grid>
+    </Grid>
+</UserControl>

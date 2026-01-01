@@ -1,0 +1,38 @@
+﻿<faWindow:AppWindow
+    x:Class="Hoi4BlueprintBuilder.Core.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:faWindow="using:FluentAvalonia.UI.Windowing"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    Title="Hoi4BlueprintBuilder"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:MainWindowViewModel"
+    Icon="/Assets/logo.ico"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel
+            Grid.Row="0"
+            Margin="0,0,0,4"
+            Orientation="Horizontal"
+            Spacing="4">
+            <Image
+                x:Name="LogoImage"
+                Width="32"
+                Height="32"
+                Margin="2"
+                Source="../Assets/logo.ico" />
+            <views:TitleCommandBarView x:Name="TitleCommandBar" />
+        </StackPanel>
+        <ContentControl
+            x:Name="MainContent"
+            Grid.Row="1"
+            Content="{Binding CurrentView, Mode=OneWay}" />
+    </Grid>
+
+</faWindow:AppWindow>

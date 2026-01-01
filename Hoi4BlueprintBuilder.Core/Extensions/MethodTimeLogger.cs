@@ -1,0 +1,19 @@
+﻿using System.Reflection;
+using NLog;
+
+namespace Hoi4BlueprintBuilder.Core.Extensions;
+
+public static class MethodTimeLogger
+{
+    private static readonly Logger Logger = LogManager.GetLogger("MethodTime");
+
+    public static void Log(MethodBase methodBase, TimeSpan elapsed, string message)
+    {
+        Logger.Debug(
+            "{Name} {Message} 耗时: {Time:F2} ms",
+            methodBase.Name,
+            message,
+            elapsed.TotalMilliseconds
+        );
+    }
+}

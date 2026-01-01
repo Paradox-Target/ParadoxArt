@@ -1,0 +1,185 @@
+using System.ComponentModel;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
+using Hoi4BlueprintBuilder.Core.Constants;
+using Hoi4BlueprintBuilder.Core.Helpers;
+using Hoi4BlueprintBuilder.Core.Models.Focus;
+using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
+using Microsoft.Extensions.DependencyInjection;
+using NLog;
+
+namespace Hoi4BlueprintBuilder.Core.Views;
+
+public sealed partial class FocusInfoView : UserControl
+{
+    public static readonly StyledProperty<bool> IsOpenProperty = AvaloniaProperty.Register<
+        FocusInfoView,
+        bool
+    >(nameof(IsOpen), false);
+
+    public bool IsOpen
+    {
+        get => GetValue(IsOpenProperty);
+        set => SetValue(IsOpenProperty, value);
+    }
+
+    private FocusInfoViewModel? _viewModel;
+
+    private readonly ImageService _imageService = App.Current.Services.GetRequiredService<ImageService>();
+    private readonly FileResourceService _fileResourceService =
+        App.Current.Services.GetRequiredService<FileResourceService>();
+    private readonly NotificationService _notificationService =
+        App.Current.Services.GetRequiredService<NotificationService>();
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    static FocusInfoView()
+    {
+        IsOpenProperty.Changed.AddClassHandler<FocusInfoView>(OnIsOpenChanged);
+    }
+
+    public FocusInfoView()
+    {
+        InitializeComponent();
+
+        CompletionRewardEditor.SetGrammar(".txt");
+        // 设置 DataContext 防止运行时提示绑定错误
+        _viewModel = new FocusInfoViewModel(new FocusNode(string.Empty, FocusType.Unknown));
+        DataContext = _viewModel;
+        DataContextChanged += FocusInfoView_DataContextChanged;
+
+        // 点击信息面板时阻止事件冒泡, 导致点击FocusInfoView时关闭面板
+        PointerPressed += (_, args) =>
+        {
+            args.Handled = true;
+        };
+
+        // 阻止鼠标滚轮事件, 避免触发鼠标滚轮缩放画布
+        PointerWheelChanged += (_, args) =>
+        {
+            args.Handled = true;
+        };
+
+        // 设置拖放事件
+        AddHandler(DragDrop.DropEvent, FocusIcon_OnDrop);
+
+        CompletionRewardEditor.TextChanged += OnCompletionRewardTextChanged;
+
+        // 绑定 LostFocus 事件以模拟 UpdateSourceTrigger=LostFocus
+        IdTextBox.LostFocus += IdTextBox_OnLostFocus;
+        DescriptionTextBox.LostFocus += DescriptionTextBox_OnLostFocus;
+    }
+
+    private void FocusInfoView_DataContextChanged(object? sender, EventArgs e)
+    {
+        // 清理原来的 ViewModel 资源
+        if (_viewModel is not null)
+        {
+            _viewModel.Dispose();
+            _viewModel.FocusNode.PropertyChanged -= FocusNodeOnPropertyChanged;
+            _viewModel = null;
+        }
+
+        if (DataContext is not FocusInfoViewModel newViewModel)
+        {
+            return;
+        }
+
+        _viewModel = newViewModel;
+        newViewModel.FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
+        CompletionRewardEditor.Text = newViewModel.FocusNode.CompletionReward;
+
+        if (!string.IsNullOrEmpty(newViewModel.FocusNode.Icon))
+        {
+            SetImage(_imageService.GetFocusIconByName(newViewModel.FocusNode.Icon));
+        }
+    }
+
+    private void OnCompletionRewardTextChanged(object? sender, EventArgs e)
+    {
+        if (_viewModel is not null)
+        {
+            _viewModel.FocusNode.CompletionReward = CompletionRewardEditor.Text;
+        }
+    }
+
+    private void IdTextBox_OnLostFocus(object? sender, RoutedEventArgs e)
+    {
+        // Avalonia 的 TextBox 绑定默认是 PropertyChanged 模式
+        // 这里手动触发 ViewModel 更新以模拟 LostFocus 行为
+        if (_viewModel is not null && sender is TextBox textBox)
+        {
+            _viewModel.IdText = textBox.Text ?? string.Empty;
+        }
+    }
+
+    private void DescriptionTextBox_OnLostFocus(object? sender, RoutedEventArgs e)
+    {
+        if (_viewModel is not null && sender is TextBox textBox)
+        {
+            _viewModel.DescriptionText = textBox.Text ?? string.Empty;
+        }
+    }
+
+    private void FocusNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(FocusNode.Icon))
+        {
+            var focusNode = (FocusNode?)sender;
+            SetImage(_imageService.GetFocusIconByName(focusNode!.Icon));
+        }
+    }
+
+    private static void OnIsOpenChanged(FocusInfoView view, AvaloniaPropertyChangedEventArgs e)
+    {
+        bool isOpen = e.GetNewValue<bool>();
+        view.IsVisible = isOpen;
+        int zIndex = isOpen ? FocusMapConstants.FocusInfoZIndex : -1;
+        view.ZIndex = zIndex;
+    }
+
+    private void FocusIcon_OnDrop(object? sender, DragEventArgs e)
+    {
+        var files = e.DataTransfer.TryGetFiles();
+        if (files is null)
+        {
+            return;
+        }
+
+        // 当有多个文件时, 只使用第一个文件
+        string? filePath = files.FirstOrDefault()?.Path.LocalPath;
+        if (string.IsNullOrEmpty(filePath))
+        {
+            return;
+        }
+
+        if (ImageHelper.IsValidFocusImageFormat(filePath))
+        {
+            var result = _fileResourceService.RegisterFocusIcon(filePath);
+            if (string.IsNullOrEmpty(result.SpriteName) || string.IsNullOrEmpty(result.DestFilePath))
+            {
+                _notificationService.Show("添加图标失败");
+                return;
+            }
+
+            SetImage(_imageService.GetImageSource(result.SpriteName, result.DestFilePath));
+            if (_viewModel is not null)
+            {
+                _viewModel.FocusNode.Icon = result.SpriteName;
+            }
+
+            Log.Info("添加图标成功: {Name}", result.SpriteName);
+            _notificationService.Show(result.IsConvertToDds ? "添加图标成功, 图片已自动转换为 DDS 格式" : "添加图标成功");
+        }
+    }
+
+    private void SetImage(Bitmap? bitmap)
+    {
+        FocusIcon.Source = bitmap;
+        FocusIcon.Width = bitmap?.PixelSize.Width ?? 0;
+        FocusIcon.Height = bitmap?.PixelSize.Height ?? 0;
+    }
+}

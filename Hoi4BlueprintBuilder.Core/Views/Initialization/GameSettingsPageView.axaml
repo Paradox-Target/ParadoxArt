@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.Initialization.GameSettingsPageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Initialization"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:GameSettingsPageViewModel"
+    mc:Ignorable="d">
+    <Grid
+        VerticalAlignment="Center"
+        ColumnDefinitions="*,*,*"
+        RowDefinitions="*,*,*,*">
+
+        <StackPanel
+            Grid.RowSpan="3"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <Image Classes="SettingsIconImage" Source="{StaticResource GameSettingsMainIcon}" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="20">
+            <StackPanel Margin="0,16">
+                <TextBlock Classes="SettingsTitleTextBlock" Text="游戏根目录" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBox
+                        Classes="SettingsPathTextBox"
+                        IsReadOnly="True"
+                        Text="{Binding GamePath, Mode=OneWay}" />
+                    <Button
+                        Grid.Column="1"
+                        Classes="SettingsPickButton"
+                        Command="{Binding PickGamePathCommand}"
+                        Content="..." />
+                </Grid>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Classes="SettingsTitleTextBlock" Text="MOD 根目录" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBox
+                        Classes="SettingsPathTextBox"
+                        IsReadOnly="True"
+                        Text="{Binding ModPath, Mode=OneWay}" />
+                    <Button
+                        Grid.Column="1"
+                        Classes="SettingsPickButton"
+                        Command="{Binding PickModPathCommand}"
+                        Content="..." />
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="2"
+            Margin="0,28"
+            HorizontalAlignment="Center">
+            <Button
+                HorizontalAlignment="Right"
+                Classes="SettingsStepButton accent"
+                Command="{Binding GoToNextPageCommand, Mode=Default}"
+                Content="下一步" />
+        </StackPanel>
+    </Grid>
+</UserControl>

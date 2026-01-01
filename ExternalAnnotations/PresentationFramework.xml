@@ -1,5 +1,0 @@
-<assembly name="PresentationFramework">
-    <member name="P:System.Windows.FrameworkElement.DataContext">
-        <attribute ctor="M:JetBrains.Annotations.CanBeNullAttribute.#ctor" />
-    </member>
-</assembly>

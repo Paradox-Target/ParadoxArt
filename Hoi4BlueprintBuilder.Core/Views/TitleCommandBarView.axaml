@@ -1,0 +1,90 @@
+<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.TitleCommandBarView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Hoi4BlueprintBuilder.Core.Models.Focus"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="400"
+    d:DesignWidth="400"
+    x:DataType="vms:TitleCommandBarViewModel"
+    IsVisible="{Binding IsVisibleForTitleCommandBar, Mode=OneWay}"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="Border.ConditionCard">
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+        <Style Selector="Border.ConditionCard:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+        </Style>
+    </UserControl.Styles>
+
+    <fa:CommandBar DefaultLabelPosition="Right">
+        <fa:CommandBar.PrimaryCommands>
+            <fa:CommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:LangResources.Menu_CreateNewFocusTree}">
+                <fa:CommandBarButton.IconSource>
+                    <control:FontIconSource Glyph="&#xECC8;" />
+                </fa:CommandBarButton.IconSource>
+            </fa:CommandBarButton>
+            <fa:CommandBarButton
+                Command="{Binding SaveFocusTreeCommand}"
+                IconSource="Save"
+                IsEnabled="{Binding IsFocusTreeEditorAtCurrent}"
+                Label="{x:Static lang:LangResources.Menu_Save}" />
+
+            <fa:CommandBarSeparator Margin="4,0" />
+
+            <fa:CommandBarElementContainer VerticalContentAlignment="Center" IsEnabled="{Binding IsFocusTreeEditorAtCurrent}">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock VerticalAlignment="Center" Text="条件:" />
+                    <Button Content="当前内容">
+                        <Button.Flyout>
+                            <Flyout>
+                                <ScrollViewer MaxHeight="220">
+                                    <ItemsControl
+                                        MinWidth="200"
+                                        Padding="4"
+                                        ItemsSource="{Binding OffsetTriggers}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="models:FocusOffset">
+                                                <Border Classes="ConditionCard" PointerReleased="InputElement_OnPointerReleased">
+                                                    <Grid ColumnDefinitions="Auto,*">
+                                                        <CheckBox
+                                                            Grid.Column="0"
+                                                            MinWidth="0"
+                                                            Padding="0"
+                                                            VerticalAlignment="Center"
+                                                            IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                                                        <TextBlock
+                                                            Grid.Column="1"
+                                                            Margin="8,0,0,0"
+                                                            VerticalAlignment="Center"
+                                                            Text="{Binding DisplayContent, Mode=OneTime}"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
+
+            </fa:CommandBarElementContainer>
+        </fa:CommandBar.PrimaryCommands>
+    </fa:CommandBar>
+
+</UserControl>
