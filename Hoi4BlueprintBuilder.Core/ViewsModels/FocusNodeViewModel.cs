@@ -51,6 +51,10 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
         {
             LoadBitmapSource();
         }
+        else if (args.PropertyName == nameof(LocalizedName))
+        {
+            OnPropertyChanged(nameof(LocalizedName));
+        }
     }
 
     private void LoadBitmapSource()

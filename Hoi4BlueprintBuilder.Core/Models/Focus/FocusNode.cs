@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Messages;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
 using R3;
 using ZLinq;
 
@@ -420,6 +421,11 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
 
         return false;
+    }
+
+    public void RefreshLocalizedName()
+    {
+        OnPropertyChanged(nameof(FocusNodeViewModel.LocalizedName));
     }
 
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)

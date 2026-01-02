@@ -132,17 +132,14 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 
     partial void OnIdTextChanged(string value)
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            return;
-        }
-
         LocalizationService.AddOrUpdateLocalisation(
             FocusNode.Path,
             Languages[SelectedLanguageIndex],
             FocusNode.Id,
             value
         );
+
+        FocusNode.RefreshLocalizedName();
     }
 
     partial void OnDescriptionTextChanged(string value)
