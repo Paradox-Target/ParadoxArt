@@ -28,19 +28,9 @@ public sealed partial class FileTreeViewModel : ObservableObject
         _fileWatcher.IncludeSubdirectories = true;
         _fileWatcher.EnableRaisingEvents = true;
 
-        var root = new Models.SystemFileItem(settingService.ModRootFolderPath, false, null);
+        var root = new SystemFileItem(settingService.ModRootFolderPath, false, null);
         LoadFileSystem(settingService.ModRootFolderPath, root);
         Items = root.Children;
-        //WeakReferenceMessenger.Default.Register<CompleteAppSettingsMessage>(
-        //    this,
-        //    (_, _) =>
-        //    {
-        //        _fileWatcher.Path = settingService.ModRootFolderPath;
-        //        root = new SystemFileItem(settingService.ModRootFolderPath, false, null);
-        //        LoadFileSystem(settingService.ModRootFolderPath, root);
-        //        Items = root.Children;
-        //    }
-        //);
     }
 
     private void ContentOnChanged(object sender, FileSystemEventArgs e)
@@ -210,7 +200,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
 
         foreach (var directoryPath in directories)
         {
-            var item = new Models.SystemFileItem(directoryPath, false, parent);
+            var item = new SystemFileItem(directoryPath, false, parent);
             parent.AddChild(item);
             LoadFileSystem(directoryPath, item);
         }
