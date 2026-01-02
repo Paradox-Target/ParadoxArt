@@ -126,7 +126,7 @@ public sealed class FocusConnectionLinesControl : Control
             {
                 continue;
             }
-            
+
             if (node.Prerequisite.Count > 0)
             {
                 DrawPrerequisite(context, node);

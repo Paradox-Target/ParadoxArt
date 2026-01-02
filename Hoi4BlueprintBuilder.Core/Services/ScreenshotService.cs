@@ -5,16 +5,14 @@ using Avalonia.Media.Imaging;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Controls;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<ScreenshotService>]
 public sealed class ScreenshotService
 {
-    public void SaveFocusTreeScreenshot(
-        IReadOnlyCollection<FocusNodeViewModel> nodes,
-        string filePath
-    )
+    public void SaveFocusTreeScreenshot(IReadOnlyCollection<FocusNodeViewModel> nodes, string filePath)
     {
         (double minX, double minY, double maxX, double maxY) = CalculateBounds(nodes);
         const double padding = 1.0;
@@ -43,7 +41,11 @@ public sealed class ScreenshotService
             FocusConnectionLinesControl.DrawNodeConnectionsLines(dc, nodes);
 
             // Draw Nodes
-            foreach (var viewModel in nodes)
+            foreach (
+                var viewModel in nodes
+                    .AsValueEnumerable()
+                    .Where(nodeViewModel => nodeViewModel.Node.IsVisible)
+            )
             {
                 DrawNode(dc, viewModel);
             }

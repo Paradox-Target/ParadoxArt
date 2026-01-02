@@ -42,6 +42,14 @@
                 IconSource="Save"
                 IsEnabled="{Binding IsFocusTreeEditorAtCurrent}"
                 Label="{x:Static lang:LangResources.Menu_Save}" />
+            <fa:CommandBarButton
+                Command="{Binding ExportFocusTreeScreenshotCommand}"
+                IsEnabled="{Binding IsFocusTreeEditorAtCurrent}"
+                Label="导出截图">
+                <fa:CommandBarButton.IconSource>
+                    <control:FontIconSource Glyph="&#xEE71;" />
+                </fa:CommandBarButton.IconSource>
+            </fa:CommandBarButton>
 
             <fa:CommandBarSeparator Margin="4,0" />
 

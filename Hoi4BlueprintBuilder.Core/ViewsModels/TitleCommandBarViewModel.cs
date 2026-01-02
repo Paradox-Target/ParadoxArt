@@ -84,6 +84,12 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ExportFocusTreeScreenshot()
+    {
+        StrongReferenceMessenger.Default.Send(new SaveFocusTreeToPngMessage());
+    }
+
+    [RelayCommand]
     private async Task CreateNewFocusTreeFile()
     {
         string focusTreeDirectory = Path.Combine(

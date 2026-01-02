@@ -101,13 +101,13 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
 
     private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
+        StrongReferenceMessenger.Default.UnregisterAll(this);
         ViewModel.OnUnLoaded();
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+        StrongReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
         ViewModel.OnLoaded();
     }
 
