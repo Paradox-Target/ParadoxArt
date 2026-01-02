@@ -70,8 +70,13 @@ public sealed class FocusNodeParserTests
             Assert.That(focus1.MutuallyExclusive, Is.Empty, "节点互斥关系不正确");
             Assert.That(focus1.CompletionReward, Does.Contain("add_political_power = 100"), "节点完成奖励不正确");
             Assert.That(focus1.Offsets, Has.Count.EqualTo(2));
-            Assert.That(focus1.Offsets.First().DisplayContent, Is.EqualTo("tag = tst"));
+            Assert.That(((IFocusTrigger)focus1.Offsets.First()).DisplayContent, Is.EqualTo("tag = tst"));
             Assert.That(focus1.Offsets.First().Offset, Is.EqualTo(new FocusPoint(1, 2)));
+            Assert.That(focus1.AllowBranch, Is.Not.Null);
+            Assert.That(
+                ((IFocusTrigger)focus1.AllowBranch!).DisplayContent,
+                Is.EqualTo("has_dlc = \"test\"")
+            );
         }
     }
 
@@ -98,12 +103,18 @@ public sealed class FocusNodeParserTests
         Assert.That(focus2.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_3"), "互斥节点ID不正确");
         Assert.That(focus2.CompletionReward, Is.Empty);
 
+        // 验证其他属性
+        Assert.That(focus2.Offsets, Is.Empty);
+        Assert.That(focus2.AllowBranch, Is.Null);
+
         // 验证focus3的互斥关系
         var focus3 = nodes["test_focus_3"];
         Assert.That(focus3.MutuallyExclusive, Is.Not.Null, "focus3互斥节点集合为空");
         Assert.That(focus3.MutuallyExclusive.Count, Is.EqualTo(1), "focus3互斥节点数量不正确");
         Assert.That(focus3.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_2"), "focus3互斥节点ID不正确");
         Assert.That(focus3.CompletionReward, Is.Empty);
+        Assert.That(focus3.Offsets, Is.Empty);
+        Assert.That(focus3.AllowBranch, Is.Null);
     }
 
     [Test]

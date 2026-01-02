@@ -57,7 +57,7 @@
                                         Padding="4"
                                         ItemsSource="{Binding OffsetTriggers}">
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate DataType="models:FocusOffset">
+                                            <DataTemplate DataType="models:IFocusTrigger">
                                                 <Border Classes="ConditionCard" PointerReleased="InputElement_OnPointerReleased">
                                                     <Grid ColumnDefinitions="Auto,*">
                                                         <CheckBox
@@ -65,7 +65,7 @@
                                                             MinWidth="0"
                                                             Padding="0"
                                                             VerticalAlignment="Center"
-                                                            IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                                                            IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
                                                         <TextBlock
                                                             Grid.Column="1"
                                                             Margin="8,0,0,0"

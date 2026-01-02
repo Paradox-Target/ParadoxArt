@@ -9,6 +9,7 @@
     d:DesignHeight="70"
     d:DesignWidth="50"
     x:DataType="vms:FocusNodeViewModel"
+    IsVisible="{Binding Node.IsVisible, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid
@@ -16,7 +17,7 @@
         Height="{x:Static const:FocusMapConstants.CellHeight}"
         ClipToBounds="True">
 
-        <!-- 选中状态边框 -->
+        <!--  选中状态边框  -->
         <Border
             BorderBrush="#0078D7"
             BorderThickness="2"

@@ -121,6 +121,12 @@ public sealed class FocusConnectionLinesControl : Control
         foreach (var viewModel in nodes)
         {
             var node = viewModel.Node;
+
+            if (!node.IsVisible)
+            {
+                continue;
+            }
+            
             if (node.Prerequisite.Count > 0)
             {
                 DrawPrerequisite(context, node);

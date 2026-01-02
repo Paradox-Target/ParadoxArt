@@ -99,6 +99,10 @@ public static class FocusNodeHelper
         return nodes;
     }
 
+    /// <summary>
+    /// 建立国策之间的连接关系
+    /// </summary>
+    /// <param name="focusMap"></param>
     private static void ProcessFocusNodes(Dictionary<string, FocusNode> focusMap)
     {
         foreach (var focusNode in focusMap.Values)
@@ -118,6 +122,14 @@ public static class FocusNodeHelper
             {
                 ProcessPrerequisite(focusNode, focusMap);
             }
+        }
+
+        // 当有 AllowBranch 时, 需要在解析完成后设置 IsVisible
+        // 否则会导致只有设置 AllowBranch 的节点会隐藏
+        // TODO: 建造器模式应该可以优化
+        foreach (var focusNode in focusMap.Values)
+        {
+            focusNode.EndInitialization();
         }
     }
 
@@ -307,6 +319,10 @@ public static class FocusNodeHelper
             }
 
             model.AddOffset(new FocusOffset(new FocusPoint(x, y), trigger));
+        }
+        else if (node.Key.EqualsIgnoreCase("allow_branch") && node.AllArray.Length != 0)
+        {
+            model.AllowBranch = new FocusAllowBranch(node.Clone());
         }
     }
 

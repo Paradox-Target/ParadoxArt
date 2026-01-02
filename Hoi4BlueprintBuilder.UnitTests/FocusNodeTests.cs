@@ -514,7 +514,7 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = false };
         node.AddOffset(offset);
 
         using (Assert.EnterMultipleScope())
@@ -530,7 +530,7 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = true };
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = true };
         node.AddOffset(offset);
 
         using (Assert.EnterMultipleScope())
@@ -546,9 +546,9 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset1 = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = true };
-        var offset2 = new FocusOffset(new FocusPoint(3, -2), null) { Enabled = true };
-        var offset3 = new FocusOffset(new FocusPoint(-1, 4), null) { Enabled = true };
+        var offset1 = new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = true };
+        var offset2 = new FocusOffset(new FocusPoint(3, -2), null) { IsEnabled = true };
+        var offset3 = new FocusOffset(new FocusPoint(-1, 4), null) { IsEnabled = true };
 
         node.AddOffset(offset1);
         node.AddOffset(offset2);
@@ -567,9 +567,9 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset1 = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = true };
-        var offset2 = new FocusOffset(new FocusPoint(100, 100), null) { Enabled = false };
-        var offset3 = new FocusOffset(new FocusPoint(3, -2), null) { Enabled = true };
+        var offset1 = new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = true };
+        var offset2 = new FocusOffset(new FocusPoint(100, 100), null) { IsEnabled = false };
+        var offset3 = new FocusOffset(new FocusPoint(3, -2), null) { IsEnabled = true };
 
         node.AddOffset(offset1);
         node.AddOffset(offset2);
@@ -588,7 +588,7 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = false };
         node.AddOffset(offset);
 
         // Initially disabled
@@ -596,12 +596,12 @@ public sealed class FocusNodeTests
         Assert.That(node.Y, Is.EqualTo(20));
 
         // Enable offset
-        offset.Enabled = true;
+        offset.IsEnabled = true;
         Assert.That(node.X, Is.EqualTo(15));
         Assert.That(node.Y, Is.EqualTo(30));
 
         // Disable offset again
-        offset.Enabled = false;
+        offset.IsEnabled = false;
         Assert.That(node.X, Is.EqualTo(10));
         Assert.That(node.Y, Is.EqualTo(20));
     }
@@ -612,7 +612,7 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = false };
         node.AddOffset(offset);
 
         var xChangedCount = 0;
@@ -630,7 +630,7 @@ public sealed class FocusNodeTests
             }
         };
 
-        offset.Enabled = true;
+        offset.IsEnabled = true;
 
         using (Assert.EnterMultipleScope())
         {
@@ -649,7 +649,7 @@ public sealed class FocusNodeTests
         node.RawPosition = new FocusPoint(5, 5); // Relative offset
         node.RelativePosition = parent;
 
-        var offset = new FocusOffset(new FocusPoint(2, 3), null) { Enabled = true };
+        var offset = new FocusOffset(new FocusPoint(2, 3), null) { IsEnabled = true };
         node.AddOffset(offset);
 
         using (Assert.EnterMultipleScope())
@@ -669,8 +669,8 @@ public sealed class FocusNodeTests
         node.RawPosition = new FocusPoint(10, 20);
         node.RelativePosition = parent;
 
-        var offset1 = new FocusOffset(new FocusPoint(5, 5), null) { Enabled = true };
-        var offset2 = new FocusOffset(new FocusPoint(-2, -3), null) { Enabled = true };
+        var offset1 = new FocusOffset(new FocusPoint(5, 5), null) { IsEnabled = true };
+        var offset2 = new FocusOffset(new FocusPoint(-2, -3), null) { IsEnabled = true };
 
         node.AddOffset(offset1);
         node.AddOffset(offset2);
@@ -691,7 +691,7 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset = new FocusOffset(new FocusPoint(5, 10), null) { Enabled = false };
+        var offset = new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = false };
         node.AddOffset(offset);
 
         int propertyChangedCount = 0;
@@ -704,7 +704,7 @@ public sealed class FocusNodeTests
         };
 
         // Enable offset should trigger property change
-        offset.Enabled = true;
+        offset.IsEnabled = true;
         int countAfterEnable = propertyChangedCount;
         Assert.That(countAfterEnable, Is.GreaterThan(0));
 
@@ -712,8 +712,8 @@ public sealed class FocusNodeTests
         node.Dispose();
 
         // Toggle offset after dispose should NOT trigger property change
-        offset.Enabled = false;
-        offset.Enabled = true;
+        offset.IsEnabled = false;
+        offset.IsEnabled = true;
 
         Assert.That(propertyChangedCount, Is.EqualTo(countAfterEnable));
     }
@@ -724,7 +724,7 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset = new FocusOffset(new FocusPoint(-5, -10), null) { Enabled = true };
+        var offset = new FocusOffset(new FocusPoint(-5, -10), null) { IsEnabled = true };
         node.AddOffset(offset);
 
         using (Assert.EnterMultipleScope())
@@ -740,7 +740,7 @@ public sealed class FocusNodeTests
         var node = new FocusNode("path", default);
         node.RawPosition = new FocusPoint(10, 20);
 
-        var offset = new FocusOffset(new FocusPoint(0, 0), null) { Enabled = true };
+        var offset = new FocusOffset(new FocusPoint(0, 0), null) { IsEnabled = true };
         node.AddOffset(offset);
 
         using (Assert.EnterMultipleScope())
@@ -750,4 +750,92 @@ public sealed class FocusNodeTests
         }
     }
 
+    [Test]
+    public void AllowBranch_ShouldUpdateVisibility_WhenIsEnabledChanges()
+    {
+        // Arrange
+        var node = new FocusNode("test_path", default);
+        var allowBranch = new FocusAllowBranch(null) { IsEnabled = true };
+
+        // Act
+        node.AllowBranch = allowBranch;
+        
+        // Assert initial state
+        Assert.That(node.IsVisible, Is.True, "Node should be visible initially");
+
+        // Act - Change to false
+        allowBranch.IsEnabled = false;
+        Assert.That(node.IsVisible, Is.False, "Node should be hidden when AllowBranch is disabled");
+
+        // Act - Change back to true
+        allowBranch.IsEnabled = true;
+        Assert.That(node.IsVisible, Is.True, "Node should be visible when AllowBranch is enabled");
+    }
+
+    [Test]
+    public void AllowBranch_ShouldUpdateChildrenVisibility_WhenIsEnabledChanges()
+    {
+        // Arrange
+        var parentNode = new FocusNode("parent", default);
+        var childNode = new FocusNode("child", default);
+        
+        // Setup parent-child relationship: child depends on parent
+        // AddPrerequisite adds 'parent' to 'child.Prerequisite' and adds 'child' to 'parent.Children'
+        childNode.AddPrerequisite([parentNode]);
+
+        var allowBranch = new FocusAllowBranch(null) { IsEnabled = true };
+        parentNode.AllowBranch = allowBranch;
+
+        // Act - Disable branch on parent
+        allowBranch.IsEnabled = false;
+
+        // Assert
+        Assert.That(parentNode.IsVisible, Is.False, "Parent should be hidden");
+        Assert.That(childNode.IsVisible, Is.False, "Child should be hidden recursively");
+
+        // Act - Enable branch on parent
+        allowBranch.IsEnabled = true;
+
+        // Assert
+        Assert.That(parentNode.IsVisible, Is.True, "Parent should be visible");
+        Assert.That(childNode.IsVisible, Is.True, "Child should be visible recursively");
+    }
+
+    [Test]
+    public void AllowBranch_ShouldStopUpdating_WhenSetToNull()
+    {
+        // Arrange
+        var node = new FocusNode("test_path", default);
+        var allowBranch = new FocusAllowBranch(null) { IsEnabled = true };
+        node.AllowBranch = allowBranch;
+
+        // Act
+        node.AllowBranch = null;
+        allowBranch.IsEnabled = false;
+
+        // Assert
+        Assert.That(node.IsVisible, Is.True, "Visibility should not change after AllowBranch is removed");
+    }
+
+    [Test]
+    public void AllowBranch_ShouldSwitchSubscription_WhenReplaced()
+    {
+        // Arrange
+        var node = new FocusNode("test_path", default);
+        var oldBranch = new FocusAllowBranch(null) { IsEnabled = true };
+        var newBranch = new FocusAllowBranch(null) { IsEnabled = true };
+        
+        node.AllowBranch = oldBranch;
+
+        // Act
+        node.AllowBranch = newBranch;
+        
+        // Change old branch - should have no effect
+        oldBranch.IsEnabled = false;
+        Assert.That(node.IsVisible, Is.True, "Should ignore changes from the old branch object");
+
+        // Change new branch - should have effect
+        newBranch.IsEnabled = false;
+        Assert.That(node.IsVisible, Is.False, "Should react to changes from the new branch object");
+    }
 }

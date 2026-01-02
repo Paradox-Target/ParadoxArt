@@ -28,7 +28,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     /// </summary>
     public IReadOnlyCollection<string> FocusTreeFiles => _focusTreeFiles;
 
-    public IReadOnlyCollection<FocusOffset> Offsets => _offsets;
+    public IReadOnlyCollection<IFocusTrigger> FocusTriggers => _focusTriggers;
 
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
 
@@ -41,7 +41,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     /// 国策来源文件路径
     /// </summary>
     private readonly List<string> _focusTreeFiles = [];
-    private readonly List<FocusOffset> _offsets = [];
+    private readonly List<IFocusTrigger> _focusTriggers = [];
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
     private readonly NotificationService _notificationService;
@@ -125,7 +125,12 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _editorNodesMap = focusNodes;
         _focusTreeFiles.AddRange(filePaths);
         _nodes.AddRange(_editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode)));
-        _offsets.AddRange(_editorNodesMap.Values.SelectMany(node => node.Offsets));
+        _focusTriggers.AddRange(_editorNodesMap.Values.SelectMany(node => node.Offsets));
+        _focusTriggers.AddRange(
+            _editorNodesMap
+                .Values.Where(node => node.AllowBranch is not null)
+                .Select(node => node.AllowBranch!)
+        );
 
         Log.Info("已加载国策树文件: {FilePath}", filePath);
         Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
@@ -170,7 +175,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _nodes.Clear();
         _editorNodesMap.Clear();
         _focusTreeFiles.Clear();
-        _offsets.Clear();
+        _focusTriggers.Clear();
     }
 
     [Time]

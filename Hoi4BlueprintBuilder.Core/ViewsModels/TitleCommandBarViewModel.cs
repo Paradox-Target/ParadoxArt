@@ -19,7 +19,7 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 [RegisterSingleton<TitleCommandBarViewModel>]
 public sealed partial class TitleCommandBarViewModel : ObservableObject
 {
-    public IEnumerable<FocusOffset> OffsetTriggers => GetOffsetTriggers();
+    public IEnumerable<IFocusTrigger> OffsetTriggers => GetOffsetTriggers();
 
     [ObservableProperty]
     private bool _isVisibleForTitleCommandBar;
@@ -27,14 +27,14 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     [ObservableProperty]
     private bool _isFocusTreeEditorAtCurrent;
 
-    private IEnumerable<FocusOffset> GetOffsetTriggers()
+    private IEnumerable<IFocusTrigger> GetOffsetTriggers()
     {
         if (_tabViewService.CurrentItem is not FocusTreeEditorView focusTreeEditorView)
         {
             return [];
         }
 
-        var result = focusTreeEditorView.ViewModel.Offsets.Where(offset => offset.Trigger is not null);
+        var result = focusTreeEditorView.ViewModel.FocusTriggers.Where(offset => offset.Trigger is not null);
 
         return result;
     }

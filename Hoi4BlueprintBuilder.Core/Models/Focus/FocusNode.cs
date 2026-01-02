@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Messages;
+using R3;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Models.Focus;
@@ -76,7 +77,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         int x = RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
         foreach (var offset in Offsets)
         {
-            if (offset.Enabled)
+            if (offset.IsEnabled)
             {
                 x += offset.Offset.X;
             }
@@ -89,7 +90,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         int y = RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
         foreach (var offset in Offsets)
         {
-            if (offset.Enabled)
+            if (offset.IsEnabled)
             {
                 y += offset.Offset.Y;
             }
@@ -104,8 +105,13 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public string CompletionReward { get; set; } = string.Empty;
 
+    [ObservableProperty]
+    private bool _isVisible = true;
+
     public IReadOnlyCollection<FocusOffset> Offsets => _offsets;
     private readonly List<FocusOffset> _offsets = [];
+
+    private IDisposable? _allowBranchDisposable;
 
     public void AddOffset(FocusOffset offset)
     {
@@ -123,7 +129,7 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     private void OnFocusOffsetPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(FocusOffset.Enabled))
+        if (e.PropertyName == nameof(FocusOffset.IsEnabled))
         {
             OnPropertyChanged(nameof(X));
             OnPropertyChanged(nameof(Y));
@@ -131,14 +137,53 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
     }
 
-    // TODO: 实现 AllowBranch
     /// <summary>
     /// 当为 false 时整个分支都不显示
     /// </summary>
     /// <remarks>
     /// 不写入到国策树文件中
     /// </remarks>
-    public object? AllowBranch { get; set; }
+    public FocusAllowBranch? AllowBranch
+    {
+        get;
+        set
+        {
+            _allowBranchDisposable?.Dispose();
+            field = value;
+            _allowBranchDisposable = field
+                ?.ObservePropertyChanged(x => x.IsEnabled)
+                .Subscribe(
+                    this,
+                    static (isEnabled, self) =>
+                    {
+                        self.SetVisible(isEnabled);
+                    }
+                );
+        }
+    }
+
+    private void SetVisible(bool isVisible)
+    {
+        SetVisibleCore(isVisible);
+        RedrawFocusConnectionLinesIfNeed();
+    }
+
+    private void SetVisibleCore(bool isVisible)
+    {
+        IsVisible = isVisible;
+        foreach (var focusNode in Children)
+        {
+            focusNode.SetVisibleCore(isVisible);
+        }
+    }
+
+    public void EndInitialization()
+    {
+        if (AllowBranch is not null)
+        {
+            SetVisibleCore(AllowBranch.IsEnabled);
+        }
+    }
 
     /// <summary>
     /// 添加互斥节点关系, 双向添加

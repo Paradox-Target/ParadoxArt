@@ -38,6 +38,7 @@
         <PackageReference Include="ParadoxPower.CSharpExtensions" />
         <PackageReference Include="Pfim" />
         <PackageReference Include="Pidgin" />
+        <PackageReference Include="R3Extensions.Avalonia" />
         <PackageReference Include="SixLabors.ImageSharp" />
         <PackageReference Include="ZLinq" />
         <PackageReference Include="Ardalis.SmartEnum" />

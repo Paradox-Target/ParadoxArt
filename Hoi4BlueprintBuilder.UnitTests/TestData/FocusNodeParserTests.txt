@@ -32,6 +32,9 @@
                 tag = tet
             }
         }
+        allow_branch = {
+            has_dlc = "test"
+        }
         cost = 10
         cancel_if_invalid = yes
         continue_if_invalid = no
