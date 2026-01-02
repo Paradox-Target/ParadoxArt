@@ -9,6 +9,7 @@ using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using NLog;
 using ObservableCollections;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
 
@@ -24,6 +25,8 @@ public sealed class FocusConnectionLinesControl : Control
     public static readonly Pen PrerequisiteLinePen =
         new(new SolidColorBrush(Colors.PaleGoldenrod), LinePenWidth);
     private static readonly Pen ExclusiveLinePen = new(new SolidColorBrush(Colors.OrangeRed), LinePenWidth);
+
+    /// 虚线
     private static readonly Pen PrerequisiteDashPen =
         new(new SolidColorBrush(Colors.LightGray), LinePenWidth, new DashStyle([1, 2], 0));
 
@@ -159,6 +162,11 @@ public sealed class FocusConnectionLinesControl : Control
 
     public static void DrawPrerequisiteLine(DrawingContext dc, FocusNode node, FocusNode pre, IPen pen)
     {
+        if (!pre.IsVisible || !node.IsVisible)
+        {
+            return;
+        }
+
         var offset = new Vector(0, CellHeight / 2);
 
         var nodeJoint = GetNodeCenter(node);
@@ -177,7 +185,7 @@ public sealed class FocusConnectionLinesControl : Control
 
     private static void DrawMutuallyExclusive(DrawingContext dc, FocusNode node)
     {
-        foreach (var ex in node.MutuallyExclusive)
+        foreach (var ex in node.MutuallyExclusive.AsValueEnumerable().Where(focusNode => focusNode.IsVisible))
         {
             DrawMutuallyExclusive(dc, node, ex);
         }
