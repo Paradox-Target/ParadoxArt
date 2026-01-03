@@ -23,12 +23,10 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 {
     public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
 
-    /// <summary>
-    /// 国策来源文件路径
-    /// </summary>
-    public IReadOnlyCollection<string> FocusTreeFiles => _focusTreeFiles;
-
     public IReadOnlyCollection<IFocusTrigger> FocusTriggers => _focusTriggers;
+
+    [ObservableProperty]
+    private bool _isLoading;
 
     private readonly ObservableList<FocusNodeViewModel> _nodes = [];
 
@@ -112,28 +110,51 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         );
     }
 
-    public void LoadFocusTreeFile(string filePath)
+    public async Task LoadFocusTreeFileAsync(string filePath)
     {
-        if (!TextParser.TryParse(filePath, out var rootNode, out _))
+        IsLoading = true;
+        try
         {
-            return;
+            var result = await Task.Run<(
+                Dictionary<string, FocusNode> Nodes,
+                IEnumerable<string> FilePaths
+            )?>(() =>
+            {
+                if (!TextParser.TryParse(filePath, out var rootNode, out _))
+                {
+                    return null;
+                }
+                return FocusNodeHelper.GetAllNodesFromAst(filePath, rootNode);
+            });
+
+            ClearResources();
+
+            if (result is null)
+            {
+                _notificationService.Show("加载国策树文件失败", "请检查文件格式是否正确");
+                return;
+            }
+
+            var (focusNodes, filePaths) = result.Value;
+            _editorNodesMap = focusNodes;
+            _focusTreeFiles.AddRange(filePaths);
+            _nodes.AddRange(
+                _editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode))
+            );
+            _focusTriggers.AddRange(_editorNodesMap.Values.SelectMany(node => node.Offsets));
+            _focusTriggers.AddRange(
+                _editorNodesMap
+                    .Values.Where(node => node.AllowBranch is not null)
+                    .Select(node => node.AllowBranch!)
+            );
+
+            Log.Info("已加载国策树文件: {FilePath}", filePath);
+            Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
         }
-
-        ClearResources();
-
-        var (focusNodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(filePath, rootNode);
-        _editorNodesMap = focusNodes;
-        _focusTreeFiles.AddRange(filePaths);
-        _nodes.AddRange(_editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode)));
-        _focusTriggers.AddRange(_editorNodesMap.Values.SelectMany(node => node.Offsets));
-        _focusTriggers.AddRange(
-            _editorNodesMap
-                .Values.Where(node => node.AllowBranch is not null)
-                .Select(node => node.AllowBranch!)
-        );
-
-        Log.Info("已加载国策树文件: {FilePath}", filePath);
-        Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     public bool ContainsFocus(string focusId)

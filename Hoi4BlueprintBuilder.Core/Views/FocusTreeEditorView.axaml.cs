@@ -59,6 +59,8 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
     private bool CanConvertToAbsolutePosition =>
         _interactionManager?.RightClickedNode?.RelativePosition is not null;
 
+    private bool _isFirstLoaded;
+
     public FocusTreeEditorView(
         FocusTreeEditorViewModel viewModel,
         ScreenshotService screenshotService,
@@ -92,7 +94,6 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         {
             throw new InvalidOperationException("当前没有选中的国策文件");
         }
-        ViewModel.LoadFocusTreeFile(userStatusService.CurrentSelectedFile.FullPath);
 
         FilePath = userStatusService.CurrentSelectedFile.FullPath;
         Header = userStatusService.CurrentSelectedFile.Name;
@@ -105,10 +106,15 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         ViewModel.OnUnLoaded();
     }
 
-    private void OnLoaded(object? sender, RoutedEventArgs e)
+    private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         StrongReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
         ViewModel.OnLoaded();
+        if (!_isFirstLoaded)
+        {
+            await ViewModel.LoadFocusTreeFileAsync(FilePath);
+        }
+        _isFirstLoaded = true;
     }
 
     private void OnConnectionRequested(FocusNode from, FocusNode to, ConnectionType type)

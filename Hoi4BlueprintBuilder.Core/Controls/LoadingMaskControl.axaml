@@ -1,0 +1,28 @@
+<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Controls.LoadingMaskControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="Root"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Background="#80000000">
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="20">
+            <TextBlock
+                HorizontalAlignment="Center"
+                FontSize="20"
+                Foreground="White"
+                Text="{Binding #Root.Message}" />
+            <fa:ProgressRing
+                Width="60"
+                Height="60"
+                IsActive="{Binding #Root.IsVisible}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

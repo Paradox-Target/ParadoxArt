@@ -121,5 +121,10 @@
         <!--  ZIndex="100" />  -->
 
         <views:FocusInfoView x:Name="FocusInfoViewControl" />
+
+        <controls:LoadingMaskControl
+            IsVisible="{Binding IsLoading}"
+            Message="正在解析国策文件..."
+            ZIndex="1000" />
     </Grid>
 </UserControl>

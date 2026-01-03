@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Messages;
@@ -223,6 +224,13 @@ public sealed class FocusConnectionLinesControl : Control
 
     private void Handler(object o, RedrawFocusConnectionLinesMessage redrawFocusConnectionLinesMessage)
     {
-        InvalidateVisual();
+        if (Dispatcher.UIThread.CheckAccess())
+        {
+            InvalidateVisual();
+        }
+        else
+        {
+            Dispatcher.UIThread.Post(InvalidateVisual);
+        }
     }
 }
