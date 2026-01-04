@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
@@ -36,6 +37,8 @@ public sealed class App : Application
     /// </summary>
     public static readonly Encoding Utf8Encoding = new UTF8Encoding(false);
 
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -46,6 +49,15 @@ public sealed class App : Application
 #if DEBUG
         this.AttachDeveloperTools();
 #endif
+
+        TaskScheduler.UnobservedTaskException += (_, args) =>
+        {
+            Log.Error(args.Exception, "Task线程中有未被处理的异常");
+        };
+        Dispatcher.UIThread.UnhandledException += (_, e) =>
+        {
+            Log.Error(e.Exception, "UI线程中有未被处理的异常");
+        };
     }
 
     [MemberNotNull(nameof(_serviceCollection))]
