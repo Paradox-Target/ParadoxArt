@@ -8,11 +8,13 @@
 
 ### 目录
 
-- [功能特性](#功能特性)
-- [项目愿景](#项目愿景)
-- [软件截图](#软件截图)
-- [快速上手](#快速上手)
-- [技术栈](#技术栈)
+- [《钢铁雄心IV》：蓝图编辑器](#钢铁雄心iv蓝图编辑器)
+    - [目录](#目录)
+    - [功能特性](#功能特性)
+    - [项目愿景](#项目愿景)
+    - [软件截图](#软件截图)
+    - [快速上手](#快速上手)
+    - [技术栈](#技术栈)
 
 ---
 
@@ -51,7 +53,7 @@
 ### 技术栈
 
 - **平台**：.NET 10
-- **UI框架**：Windows Presentation Foundation (WPF)
+- **UI框架**：Avalonia
 - **核心架构**：Model-View-ViewModel (MVVM)
 - **依赖**：
     - [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet)

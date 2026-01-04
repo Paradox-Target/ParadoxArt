@@ -8,11 +8,13 @@ The Blueprint Editor is designed to provide a powerful desktop application for t
 
 ### Table of Contents
 
-- [Features](#features)
-- [Project Vision](#project-vision)
-- [Screenshots](#screenshots)
-- [Getting Started](#getting-started)
-- [Technology Stack](#technology-stack)
+- [Hearts of Iron IV: Blueprint Editor](#hearts-of-iron-iv-blueprint-editor)
+    - [Table of Contents](#table-of-contents)
+    - [Features](#features)
+    - [Project Vision](#project-vision)
+    - [Screenshots](#screenshots)
+    - [Getting Started](#getting-started)
+    - [Technology Stack](#technology-stack)
 
 ---
 
@@ -51,7 +53,7 @@ This project began with a simple goal: to eliminate the tedious and error-prone 
 ### Technology Stack
 
 - **Platform**：.NET 10
-- **UI Framework**：Windows Presentation Foundation (WPF)
+- **UI Framework**：Avalonia
 - **Core Architecture**：Model-View-ViewModel (MVVM)
 - **Dependency**：
     - [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet)
