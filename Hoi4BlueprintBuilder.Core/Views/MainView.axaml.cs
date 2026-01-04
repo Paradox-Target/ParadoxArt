@@ -28,15 +28,26 @@ public sealed partial class MainView : UserControl
     /// 设计器使用
     /// </summary>
     public MainView()
-        : this(new FileTreeView(), new TabViewService(new ServiceContainer()), new MainViewModel()) { }
+        : this(
+            new FileTreeView(),
+            new TabViewService(new ServiceContainer()),
+            new MainViewModel(),
+            new SettingsService()
+        ) { }
 
-    public MainView(FileTreeView fileTree, TabViewService tabViewService, MainViewModel mainViewModel)
+    public MainView(
+        FileTreeView fileTree,
+        TabViewService tabViewService,
+        MainViewModel mainViewModel,
+        SettingsService settingsService
+    )
     {
         InitializeComponent();
         DataContext = mainViewModel;
         _tabViewService = tabViewService;
         _settingsButtonAnimation = InitializeSettingsButtonAnimation();
         FileTreeView.Content = fileTree;
+        SetupFileTreeColumnWidth(settingsService);
 
         _tabViewService.Initialize(
             MainTabView,
@@ -52,6 +63,21 @@ public sealed partial class MainView : UserControl
         {
             _tabViewService.AddSingleTabFromIoc<AppSettingsView>();
             _settingsButtonAnimation.RunAsync(SettingsIcon);
+        };
+    }
+
+    private void SetupFileTreeColumnWidth(SettingsService settingsService)
+    {
+        var initialTreeWidth = new GridLength(settingsService.FileTreeWidth, GridUnitType.Pixel);
+        ContentGrid.ColumnDefinitions[0].Width = initialTreeWidth;
+        _rawFileTreeColumnWidth = initialTreeWidth;
+        FileTreeView.SizeChanged += (_, args) =>
+        {
+            // 避免折叠时将 0 写入配置
+            if (FileTreeToggleButton.IsChecked == true && args.NewSize.Width > 1)
+            {
+                settingsService.FileTreeWidth = args.NewSize.Width;
+            }
         };
     }
 

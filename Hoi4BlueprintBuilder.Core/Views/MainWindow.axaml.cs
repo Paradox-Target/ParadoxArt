@@ -13,7 +13,8 @@ public sealed partial class MainWindow : AppWindow
     public MainWindow(
         MainWindowViewModel mainWindowViewModel,
         NotificationService notificationService,
-        WindowSettingsService windowSettingsService
+        WindowSettingsService windowSettingsService,
+        SettingsService settingsService
     )
     {
         InitializeComponent();
@@ -31,6 +32,7 @@ public sealed partial class MainWindow : AppWindow
         {
             windowSettingsService.SaveWindow(this);
             windowSettingsService.SaveSettings();
+            settingsService.SaveSettings();
         };
     }
 
@@ -56,6 +58,7 @@ public sealed partial class MainWindow : AppWindow
         : this(
             new MainWindowViewModel(new NavigationService(new ServiceContainer()), new SettingsService()),
             new NotificationService(),
-            WindowSettingsService.LoadSettings()
+            WindowSettingsService.LoadSettings(),
+            SettingsService.LoadSettings()
         ) { }
 }

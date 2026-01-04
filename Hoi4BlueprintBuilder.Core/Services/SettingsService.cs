@@ -29,6 +29,11 @@ public sealed class SettingsService
     /// </summary>
     public bool IsAutoOpenFocusInfoCard { get; set; } = true;
 
+    /// <summary>
+    /// 文件树侧边栏宽度
+    /// </summary>
+    public double FileTreeWidth { get; set; } = 250;
+
     [JsonIgnore]
     public bool IsFirstRun { get; private init; }
 
