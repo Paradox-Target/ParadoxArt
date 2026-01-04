@@ -17,7 +17,7 @@ namespace Hoi4BlueprintBuilder.Core;
 
 public sealed class App : Application
 {
-    public static readonly Version Version = new(0, 1, 2);
+    public static readonly Version Version = new(0, 2, 0);
     public static new App Current => (App)Application.Current!;
     public Task<bool>? IsActivated { get; private set; }
     public ServiceProvider Services { get; private set; } = null!;
