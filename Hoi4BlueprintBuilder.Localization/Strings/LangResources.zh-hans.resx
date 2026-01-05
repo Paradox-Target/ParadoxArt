@@ -156,13 +156,55 @@
   <data name="CreateNewFocusView_FocusIdAlreadyExist" xml:space="preserve">
     <value>国策 {0} 已存在</value>
   </data>
-  <data name="CreateNewFocusTreeFileView_FileNameAlreadyExist" xml:space="preserve">
-    <value>文件 {0} 存在同名文件</value>
-  </data>
-  <data name="Error" xml:space="preserve">
+  <data name="Common_Error" xml:space="preserve">
     <value>错误</value>
   </data>
   <data name="CreateNewFocusTreeFileView_CountryTagIsNotExist" xml:space="preserve">
     <value>国家Tag不存在</value>
+  </data>
+  <data name="RenameFile_ErrorOccurs" xml:space="preserve">
+    <value>重命名文件或文件夹时发生错误</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="DeleteFile_EnsureFile" xml:space="preserve">
+    <value>确认删除 '{0}' 吗？</value>
+  </data>
+  <data name="Common_Ok" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Common_Rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DeleteFile_CanFindBack" xml:space="preserve">
+    <value>您可以从回收站还原此文件</value>
+  </data>
+  <data name="DeleteFile_EnsureFolder" xml:space="preserve">
+    <value>确认删除 '{0}' 及其内容吗？</value>
+  </data>
+  <data name="DeleteFile_Failed" xml:space="preserve">
+    <value>删除失败，原因：</value>
+  </data>
+  <data name="RenameFile_NameContainInvalidChar" xml:space="preserve">
+    <value>文件或文件夹名称包含非法字符</value>
+  </data>
+  <data name="File_NameAlreadyExists" xml:space="preserve">
+    <value>此位置已存在同名文件或文件夹 {0}, 请重新命名</value>
+  </data>
+  <data name="RenameFile_InvalidFileOrFolderName" xml:space="preserve">
+    <value>无效的文件或文件夹名称</value>
+  </data>
+  <data name="Menu_CopyRelativePath" xml:space="preserve">
+    <value>复制相对路径</value>
+  </data>
+  <data name="Menu_CopyFullPath" xml:space="preserve">
+    <value>复制路径</value>
+  </data>
+  <data name="File_OpenInExplorer" xml:space="preserve">
+    <value>在资源管理器中打开</value>
   </data>
 </root>

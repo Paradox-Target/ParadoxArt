@@ -1,11 +1,17 @@
+using System.Diagnostics;
 using Avalonia.Platform.Storage;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Views;
+using Microsoft.VisualBasic.FileIO;
+using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<FileService>]
 public sealed class FileService(MainWindow mainWindow)
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     public async Task<IStorageFile?> OpenFileAsync(string title = "Open File")
     {
         var files = await mainWindow.StorageProvider.OpenFilePickerAsync(
@@ -39,5 +45,90 @@ public sealed class FileService(MainWindow mainWindow)
     public Task<bool> LaunchUriAsync(string path)
     {
         return mainWindow.Launcher.LaunchUriAsync(new Uri(path));
+    }
+
+    public void OpenInExplorer(string path)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            var startInfo = new ProcessStartInfo("explorer.exe")
+            {
+                UseShellExecute = true,
+                Arguments = $"/select, \"{path}\""
+            };
+            using var process = Process.Start(startInfo);
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            bool isFile = File.Exists(path);
+            if (isFile)
+            {
+                // 不打开文件, 只打开文件所属文件夹
+                // TODO: 可以使用 Dolphin 或 Nautilus 直接打开文件夹并选中对应文件
+                path = Path.GetDirectoryName(path) ?? path;
+            }
+            var startInfo = new ProcessStartInfo("xdg-open") { Arguments = path };
+
+            using var process = Process.Start(startInfo);
+        }
+        else
+        {
+            Log.Error("无法在资源管理器中打开, 不支持的操作系统");
+        }
+    }
+
+    public bool TryMoveToRecycleBin(string path, out string? message)
+    {
+        try
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return TryMoveToRecycleBinForWindows(path, out message);
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                return LinuxFileHelper.TryMoveToRecycleBin(path, out message);
+            }
+
+            message = "平台不支持移动至回收站操作";
+            return false;
+        }
+        catch (Exception e)
+        {
+            message = e.Message;
+            Log.Error(e, "移动文件或文件夹到回收站时发生错误");
+            return false;
+        }
+    }
+
+    private static bool TryMoveToRecycleBinForWindows(string path, out string? message)
+    {
+        if (File.Exists(path))
+        {
+            FileSystem.DeleteFile(
+                path,
+                UIOption.OnlyErrorDialogs,
+                RecycleOption.SendToRecycleBin,
+                UICancelOption.DoNothing
+            );
+        }
+        else if (Directory.Exists(path))
+        {
+            FileSystem.DeleteDirectory(
+                path,
+                UIOption.OnlyErrorDialogs,
+                RecycleOption.SendToRecycleBin,
+                UICancelOption.DoNothing
+            );
+        }
+        else
+        {
+            message = "文件或文件夹不存在";
+            return false;
+        }
+
+        message = null;
+        return true;
     }
 }

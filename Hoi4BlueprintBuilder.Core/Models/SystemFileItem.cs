@@ -1,8 +1,11 @@
 using System.Collections.ObjectModel;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using Cysharp.Text;
+using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Core.Views.Dialogs;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
@@ -10,7 +13,7 @@ namespace Hoi4BlueprintBuilder.Core.Models;
 
 public sealed partial class SystemFileItem
 {
-        /// <summary>
+    /// <summary>
     /// 当是文件时是文件名, 文件夹时是文件夹名
     /// </summary>
     public string Name { get; }
@@ -26,10 +29,13 @@ public sealed partial class SystemFileItem
 
     private static readonly MessageBoxService MessageBoxService =
         App.Current.Services.GetRequiredService<MessageBoxService>();
-    //private static readonly IFileNativeService FileNativeService =
-    //    App.Current.Services.GetRequiredService<IFileNativeService>();
+    private static readonly ClipboardService ClipboardService =
+        App.Current.Services.GetRequiredService<ClipboardService>();
+    private static readonly FileService FileService = App.Current.Services.GetRequiredService<FileService>();
     private static readonly SettingsService AppSettingService =
         App.Current.Services.GetRequiredService<SettingsService>();
+    private static readonly NotificationService NotificationService =
+        App.Current.Services.GetRequiredService<NotificationService>();
 
     public SystemFileItem(string fullPath, bool isFile, SystemFileItem? parent)
     {
@@ -79,61 +85,61 @@ public sealed partial class SystemFileItem
         return $"{nameof(Name)}: {Name}, {nameof(FullPath)}: {FullPath}, {nameof(IsFile)}: {IsFile}, {nameof(Children)}: {Children}";
     }
 
-    //[RelayCommand]
-    //private void ShowInExplorer()
-    //{
-    //    _ = FileNativeService.TryShowInExplorer(FullPath, IsFile, out _);
-    //}
+    [RelayCommand]
+    private void ShowInExplorer()
+    {
+        FileService.OpenInExplorer(FullPath);
+    }
 
-    //[RelayCommand]
-    //private async Task RenameAsync()
-    //{
-    //    var dialog = new ContentDialog
-    //    {
-    //        Title = Resource.Common_Rename,
-    //        PrimaryButtonText = Resource.Common_Ok,
-    //        CloseButtonText = Resource.Common_Cancel,
-    //    };
+    [RelayCommand]
+    private async Task RenameAsync()
+    {
+        var dialog = new ContentDialog
+        {
+            Title = LangResources.Common_Rename,
+            PrimaryButtonText = LangResources.Common_Ok,
+            CloseButtonText = LangResources.Common_Cancel,
+        };
 
-    //    var view = new RenameFileControlView(dialog, this);
-    //    dialog.Content = view;
+        var view = new RenameFileView(dialog, this);
+        dialog.Content = view;
 
-    //    var result = await dialog.ShowAsync();
-    //    if (result != ContentDialogResult.Primary)
-    //    {
-    //        Log.Debug("取消重命名");
-    //        return;
-    //    }
+        var result = await dialog.ShowAsync();
+        if (result != ContentDialogResult.Primary)
+        {
+            Log.Debug("取消重命名");
+            return;
+        }
 
-    //    if (view.IsInvalid || view.NewName == Name)
-    //    {
-    //        return;
-    //    }
+        if (view.IsInvalid || view.NewName == Name)
+        {
+            return;
+        }
 
-    //    var parentDir = Path.GetDirectoryName(FullPath);
-    //    if (parentDir is null)
-    //    {
-    //        Log.Warn("重命名文件失败，无法获取路径：{FullPath}", FullPath);
-    //        return;
-    //    }
+        string? parentDir = Path.GetDirectoryName(FullPath);
+        if (parentDir is null)
+        {
+            Log.Warn("重命名文件失败，无法获取路径：{FullPath}", FullPath);
+            return;
+        }
 
-    //    var newPath = Path.Combine(parentDir, view.NewName);
-    //    if (Path.Exists(newPath))
-    //    {
-    //        Log.Warn("重命名失败，目标文件或文件夹已存在：{FullPath}", FullPath);
-    //        return;
-    //    }
+        string newPath = Path.Combine(parentDir, view.NewName);
+        if (Path.Exists(newPath))
+        {
+            Log.Warn("重命名失败，目标文件或文件夹已存在：{FullPath}", FullPath);
+            return;
+        }
 
-    //    try
-    //    {
-    //        Rename(newPath);
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Log.Error(e, "重命名文件或文件夹时发生错误");
-    //        await MessageBoxService.ErrorAsync(Resource.RenameFile_ErrorOccurs);
-    //    }
-    //}
+        try
+        {
+            Rename(newPath);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "重命名文件或文件夹时发生错误");
+            await MessageBoxService.ShowAsync(LangResources.RenameFile_ErrorOccurs);
+        }
+    }
 
     private void Rename(string newPath)
     {
@@ -151,54 +157,52 @@ public sealed partial class SystemFileItem
     private async Task CopyPath()
     {
         await CopyToClipboard(FullPath).ConfigureAwait(false);
+        NotificationService.Show("已复制到剪切板", "成功");
     }
 
     [RelayCommand]
     private async Task CopyAsRelativePath()
     {
-        var relativePath = Path.GetRelativePath(AppSettingService.ModRootFolderPath, FullPath);
+        string relativePath = Path.GetRelativePath(AppSettingService.ModRootFolderPath, FullPath);
         await CopyToClipboard(relativePath).ConfigureAwait(false);
+        NotificationService.Show("已复制到剪切板", "成功");
     }
 
-    private static async Task CopyToClipboard(string path)
+    private static Task CopyToClipboard(string path)
     {
-        //TODO: 跨平台
-        var app = (ClassicDesktopStyleApplicationLifetime?)App.Current.ApplicationLifetime;
-        if (app?.MainWindow?.Clipboard is null)
-        {
-            Log.Warn("无法复制文件路径，剪切板不可用");
-            return;
-        }
-
-        await app.MainWindow.Clipboard.SetTextAsync(path);
+        return ClipboardService.SetTextAsync(path);
     }
 
-    //[RelayCommand]
-    //private async Task DeleteFile()
-    //{
-    //    var text = IsFile
-    //        ? string.Format(Resource.DeleteFile_EnsureFile, Name)
-    //        : string.Format(Resource.DeleteFile_EnsureFolder, Name);
-    //    text += $"\n\n{Resource.DeleteFile_CanFindBack}";
-    //    var dialog = MessageBoxManager.GetMessageBoxStandard(Resource.Common_Delete, text, ButtonEnum.YesNo);
+    [RelayCommand]
+    private async Task DeleteFile()
+    {
+        string text = IsFile
+            ? ZString.Format(LangResources.DeleteFile_EnsureFile, Name)
+            : ZString.Format(LangResources.DeleteFile_EnsureFolder, Name);
+        text += $"\n\n{LangResources.DeleteFile_CanFindBack}";
 
-    //    var result = await dialog.ShowAsync();
-    //    if (result == ButtonResult.Yes)
-    //    {
-    //        if (FileNativeService.TryMoveToRecycleBin(FullPath, out var errorMessage, out var errorCode))
-    //        {
-    //            Parent?._children.Remove(this);
-    //        }
-    //        else
-    //        {
-    //            await MessageBoxService.ErrorAsync($"{Resource.DeleteFile_Failed}{errorMessage}");
-    //            Log.Warn(
-    //                "删除文件或文件夹失败：{FullPath}, 错误信息: {ErrorMessage} 错误代码: {Code}",
-    //                FullPath,
-    //                errorMessage,
-    //                errorCode
-    //            );
-    //        }
-    //    }
-    //}
+        var result = await MessageBoxService.ShowAsync(
+            text,
+            LangResources.Common_Delete,
+            MessageBoxIcon.Info,
+            MessageBoxButtons.YesNo
+        );
+
+        if (result == MessageBoxResult.Yes)
+        {
+            if (FileService.TryMoveToRecycleBin(FullPath, out string? errorMessage))
+            {
+                Parent?._children.Remove(this);
+            }
+            else
+            {
+                await MessageBoxService.ShowAsync(
+                    $"{LangResources.DeleteFile_Failed}{errorMessage}",
+                    LangResources.Common_Error,
+                    MessageBoxIcon.Error
+                );
+                Log.Warn("删除文件或文件夹失败：{FullPath}, 错误信息: {ErrorMessage}", FullPath, errorMessage);
+            }
+        }
+    }
 }

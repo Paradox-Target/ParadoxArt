@@ -60,9 +60,7 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
 
         string filePath = viewModel.FinalFilePath;
         return File.Exists(filePath)
-            ? new ValidationResult(
-                ZString.Format(LangResources.CreateNewFocusTreeFileView_FileNameAlreadyExist, fileName)
-            )
+            ? new ValidationResult(ZString.Format(LangResources.File_NameAlreadyExists, fileName))
             : ValidationResult.Success;
     }
 

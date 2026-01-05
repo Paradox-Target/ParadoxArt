@@ -19,7 +19,7 @@ public sealed partial class LoadingView : UserControl
             if (task.Exception is not null)
             {
                 Log.Error(task.Exception, "查询设备激活状态失败");
-                await messageBox.ShowAsync("查询设备激活状态失败，请检查网络并稍后重试, 软件将自动关闭.", LangResources.Error, MessageBoxIcon.Error);
+                await messageBox.ShowAsync("查询设备激活状态失败，请检查网络并稍后重试, 软件将自动关闭.", LangResources.Common_Error, MessageBoxIcon.Error);
                 ExitApplication();
                 return;
             }

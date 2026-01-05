@@ -63,4 +63,10 @@
     <ItemGroup>
       <Folder Include="Infrastructure\CodeEditor\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\Dialogs\RenameFileView.axaml.cs">
+        <DependentUpon>RenameFileView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

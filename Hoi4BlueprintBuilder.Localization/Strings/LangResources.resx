@@ -156,13 +156,55 @@
   <data name="CreateNewFocusView_FocusIdAlreadyExist" xml:space="preserve">
     <value>CreateNewFocusView_FocusIdAlreadyExist</value>
   </data>
-  <data name="CreateNewFocusTreeFileView_FileNameAlreadyExist" xml:space="preserve">
-    <value>CreateNewFocusTreeFileView_FileNameAlreadyExist</value>
-  </data>
-  <data name="Error" xml:space="preserve">
+  <data name="Common_Error" xml:space="preserve">
     <value>Error</value>
   </data>
   <data name="CreateNewFocusTreeFileView_CountryTagIsNotExist" xml:space="preserve">
     <value>CreateNewFocusTreeFileView_CountryTagNotExist</value>
+  </data>
+  <data name="RenameFile_ErrorOccurs" xml:space="preserve">
+    <value>RenameFile_ErrorOccurs</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>Common_Delete</value>
+  </data>
+  <data name="DeleteFile_EnsureFile" xml:space="preserve">
+    <value>DeleteFile_EnsureFile</value>
+  </data>
+  <data name="DeleteFile_EnsureFolder" xml:space="preserve">
+    <value>DeleteFile_EnsureFolder</value>
+  </data>
+  <data name="DeleteFile_CanFindBack" xml:space="preserve">
+    <value>DeleteFile_CanFindBack</value>
+  </data>
+  <data name="Common_Rename" xml:space="preserve">
+    <value>Common_Rename</value>
+  </data>
+  <data name="Common_Ok" xml:space="preserve">
+    <value>Common_Ok</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Common_Cancel</value>
+  </data>
+  <data name="DeleteFile_Failed" xml:space="preserve">
+    <value>DeleteFile_Failed</value>
+  </data>
+  <data name="RenameFile_InvalidFileOrFolderName" xml:space="preserve">
+    <value>RenameFile_InvalidFileOrFolderName</value>
+  </data>
+  <data name="RenameFile_NameContainInvalidChar" xml:space="preserve">
+    <value>RenameFile_NameContainInvalidChar</value>
+  </data>
+  <data name="File_NameAlreadyExists" xml:space="preserve">
+    <value>File_NameAlreadyExists</value>
+  </data>
+  <data name="Menu_CopyRelativePath" xml:space="preserve">
+    <value>Menu_CopyRelativePath</value>
+  </data>
+  <data name="Menu_CopyFullPath" xml:space="preserve">
+    <value>Menu_CopyFullPath</value>
+  </data>
+  <data name="File_OpenInExplorer" xml:space="preserve">
+    <value>OpenInExplorer</value>
   </data>
 </root>

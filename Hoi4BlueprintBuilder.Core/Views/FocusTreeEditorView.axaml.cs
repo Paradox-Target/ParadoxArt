@@ -158,7 +158,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         var nodes = ViewModel.Nodes;
         if (nodes.Count == 0)
         {
-            await _messageBox.ShowAsync("没有可显示的国策", LangResources.Error, MessageBoxIcon.Error);
+            await _messageBox.ShowAsync("没有可显示的国策", LangResources.Common_Error, MessageBoxIcon.Error);
             return;
         }
 
@@ -192,7 +192,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         catch (Exception ex)
         {
             Log.Error(ex, "导出国策树图片失败");
-            await _messageBox.ShowAsync("导出图片失败", LangResources.Error, MessageBoxIcon.Error);
+            await _messageBox.ShowAsync("导出图片失败", LangResources.Common_Error, MessageBoxIcon.Error);
         }
     }
 
