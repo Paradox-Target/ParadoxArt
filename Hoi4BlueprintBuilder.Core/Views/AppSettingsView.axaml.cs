@@ -16,7 +16,7 @@ public sealed partial class AppSettingsView : UserControl, ITabViewItem
 
     private readonly AppSettingsViewModel _viewModel;
 
-    public AppSettingsView(AppSettingsViewModel viewModel)
+    public AppSettingsView(AppSettingsViewModel viewModel, TelemetryService telemetryService)
     {
         InitializeComponent();
 
@@ -24,6 +24,7 @@ public sealed partial class AppSettingsView : UserControl, ITabViewItem
         DataContext = viewModel;
 
         Unloaded += OnUnloaded;
+        telemetryService.TrackEvent("Open_AppSettingsView");
     }
 
     private void OnUnloaded(object? sender, EventArgs e)

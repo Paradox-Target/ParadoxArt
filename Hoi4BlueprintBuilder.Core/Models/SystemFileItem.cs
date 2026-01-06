@@ -36,6 +36,8 @@ public sealed partial class SystemFileItem
         App.Current.Services.GetRequiredService<SettingsService>();
     private static readonly NotificationService NotificationService =
         App.Current.Services.GetRequiredService<NotificationService>();
+    private static readonly TelemetryService TelemetryService =
+        App.Current.Services.GetRequiredService<TelemetryService>();
 
     public SystemFileItem(string fullPath, bool isFile, SystemFileItem? parent)
     {
@@ -94,6 +96,8 @@ public sealed partial class SystemFileItem
     [RelayCommand]
     private async Task RenameAsync()
     {
+        TelemetryService.TrackEvent("FileTree_ContextMenu_Rename");
+
         var dialog = new ContentDialog
         {
             Title = LangResources.Common_Rename,
@@ -170,6 +174,7 @@ public sealed partial class SystemFileItem
 
     private static Task CopyToClipboard(string path)
     {
+        TelemetryService.TrackEvent("FileTree_ContextMenu_CopyToClipboard");
         return ClipboardService.SetTextAsync(path);
     }
 
@@ -204,5 +209,7 @@ public sealed partial class SystemFileItem
                 Log.Warn("删除文件或文件夹失败：{FullPath}, 错误信息: {ErrorMessage}", FullPath, errorMessage);
             }
         }
+
+        TelemetryService.TrackEvent("FileTree_ContextMenu_DeleteFile");
     }
 }

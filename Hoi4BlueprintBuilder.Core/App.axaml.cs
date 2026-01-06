@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Avalonia;
@@ -31,6 +32,7 @@ public sealed class App : Application
     public event Action<IServiceCollection>? ConfiguringServices;
 
     private ServiceCollection? _serviceCollection;
+    private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
     /// <summary>
     /// 不带 BOM 的 UTF-8
@@ -87,25 +89,50 @@ public sealed class App : Application
         var settingsService = Services.GetRequiredService<SettingsService>();
         RequestedThemeVariant = settingsService.ThemeMode.ToThemeVariant();
 
+        var telemetryService = Services.GetRequiredService<TelemetryService>();
+
+        telemetryService.TrackEvent("AppStart");
+
+        string? screenSize = null;
+        string? screenScaling = null;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit.
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = Services.GetRequiredService<MainWindow>();
-            desktop.Exit += (_, _) =>
+            desktop.Exit += OnDesktopExit;
+
+            if (desktop.MainWindow.Screens.Primary is not null)
             {
-                // TODO: 安卓平台的资源清理
-                Services.Dispose();
-                LogManager.Flush();
-            };
+                var size = desktop.MainWindow.Screens.Primary.Bounds.Size;
+                screenSize = $"{size.Width}x{size.Height}";
+                screenScaling = $"{desktop.MainWindow.Screens.Primary.Scaling:P0}";
+            }
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
             singleViewPlatform.MainView = Services.GetRequiredService<MainWindow>();
         }
 
+        Task.Run(() => telemetryService.TrackSystemEnvironment(screenSize, screenScaling));
+
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void OnDesktopExit(
+        object? o,
+        ControlledApplicationLifetimeExitEventArgs controlledApplicationLifetimeExitEventArgs
+    )
+    {
+        _stopwatch.Stop();
+        var telemetryService = Services.GetRequiredService<TelemetryService>();
+        telemetryService.TrackMetric("AppDurationSeconds", _stopwatch.Elapsed.TotalSeconds);
+        telemetryService.TrackAppMemoryUsage();
+
+        // TODO: 安卓平台的资源清理
+        Services.Dispose();
+        LogManager.Flush();
     }
 
     private static void DisableAvaloniaDataAnnotationValidation()

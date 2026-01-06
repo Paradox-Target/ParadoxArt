@@ -8,7 +8,7 @@ using NLog;
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<FileService>]
-public sealed class FileService(MainWindow mainWindow)
+public sealed class FileService(MainWindow mainWindow, TelemetryService telemetryService)
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -75,10 +75,14 @@ public sealed class FileService(MainWindow mainWindow)
         {
             Log.Error("无法在资源管理器中打开, 不支持的操作系统");
         }
+
+        telemetryService.TrackEvent("OpenInExplorer");
     }
 
     public bool TryMoveToRecycleBin(string path, out string? message)
     {
+        telemetryService.TrackEvent("TryMoveToRecycleBin");
+
         try
         {
             if (OperatingSystem.IsWindows())

@@ -23,6 +23,7 @@
         </PackageReference>
         <PackageReference Include="BCnEncoder.Net" />
         <PackageReference Include="BCnEncoder.Net.ImageSharp" />
+        <PackageReference Include="ByteSize" />
         <PackageReference Include="CommunityToolkit.Mvvm" />
         <PackageReference Include="DeviceId.Linux" />
         <PackageReference Include="DeviceId.Windows" />
@@ -30,6 +31,7 @@
         <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="MessageBox.Avalonia" />
+        <PackageReference Include="Microsoft.ApplicationInsights" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
         <PackageReference Include="ObservableCollections" />

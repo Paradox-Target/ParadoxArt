@@ -43,7 +43,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private readonly MessageBoxService _messageBoxService;
     private readonly TabViewService _tabViewService;
     private readonly UserStatusService _userStatusService;
-    private readonly NavigationService _navigationService;
+    private readonly TelemetryService _telemetryService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -52,14 +52,15 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         MessageBoxService messageBoxService,
         TabViewService tabViewService,
         UserStatusService userStatusService,
-        NavigationService navigationService
+        NavigationService navigationService,
+        TelemetryService telemetryService
     )
     {
         _settingsService = settingsService;
         _messageBoxService = messageBoxService;
         _tabViewService = tabViewService;
         _userStatusService = userStatusService;
-        _navigationService = navigationService;
+        _telemetryService = telemetryService;
 
         _tabViewService.CurrentItemChanged += () =>
         {
@@ -87,6 +88,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private void ExportFocusTreeScreenshot()
     {
         StrongReferenceMessenger.Default.Send(new SaveFocusTreeToPngMessage());
+        _telemetryService.TrackEvent("ExportFocusTreeScreenshot");
     }
 
     [RelayCommand]
