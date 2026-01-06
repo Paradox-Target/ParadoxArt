@@ -45,6 +45,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
             if (!map.TryGetValue(focusTrigger.DisplayContent, out var group))
             {
                 group = new FocusTriggerGroup(focusTrigger.DisplayContent);
+                group.IsEnabled = focusTrigger.IsEnabled;
                 map.Add(focusTrigger.DisplayContent, group);
             }
 
