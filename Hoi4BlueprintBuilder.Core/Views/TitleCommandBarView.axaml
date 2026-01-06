@@ -64,9 +64,9 @@
                                     <ItemsControl
                                         MinWidth="200"
                                         Padding="4"
-                                        ItemsSource="{Binding OffsetTriggers}">
+                                        ItemsSource="{Binding FocusTriggers}">
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate DataType="models:IFocusTrigger">
+                                            <DataTemplate DataType="models:FocusTriggerGroup">
                                                 <Border Classes="ConditionCard" PointerReleased="InputElement_OnPointerReleased">
                                                     <Grid ColumnDefinitions="Auto,*">
                                                         <CheckBox

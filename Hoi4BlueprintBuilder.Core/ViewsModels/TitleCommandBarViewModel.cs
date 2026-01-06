@@ -13,13 +13,14 @@ using Hoi4BlueprintBuilder.Localization.Strings;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
 [RegisterSingleton<TitleCommandBarViewModel>]
 public sealed partial class TitleCommandBarViewModel : ObservableObject
 {
-    public IEnumerable<IFocusTrigger> OffsetTriggers => GetOffsetTriggers();
+    public IEnumerable<FocusTriggerGroup> FocusTriggers => GetOffsetTriggers();
 
     [ObservableProperty]
     private bool _isVisibleForTitleCommandBar;
@@ -27,16 +28,30 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     [ObservableProperty]
     private bool _isFocusTreeEditorAtCurrent;
 
-    private IEnumerable<IFocusTrigger> GetOffsetTriggers()
+    private IEnumerable<FocusTriggerGroup> GetOffsetTriggers()
     {
         if (_tabViewService.CurrentItem is not FocusTreeEditorView focusTreeEditorView)
         {
             return [];
         }
 
-        var result = focusTreeEditorView.ViewModel.FocusTriggers.Where(offset => offset.Trigger is not null);
+        var map = new Dictionary<string, FocusTriggerGroup>();
+        foreach (
+            var focusTrigger in focusTreeEditorView
+                .ViewModel.FocusTriggers.AsValueEnumerable()
+                .Where(offset => offset.Trigger is not null)
+        )
+        {
+            if (!map.TryGetValue(focusTrigger.DisplayContent, out var group))
+            {
+                group = new FocusTriggerGroup(focusTrigger.DisplayContent);
+                map.Add(focusTrigger.DisplayContent, group);
+            }
 
-        return result;
+            group.AddTrigger(focusTrigger);
+        }
+
+        return map.Values;
     }
 
     private readonly SettingsService _settingsService;
@@ -66,7 +81,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         {
             if (IsVisibleForTitleCommandBar)
             {
-                OnPropertyChanged(nameof(OffsetTriggers));
+                OnPropertyChanged(nameof(FocusTriggers));
             }
 
             IsFocusTreeEditorAtCurrent = _tabViewService.CurrentItem is FocusTreeEditorView;
