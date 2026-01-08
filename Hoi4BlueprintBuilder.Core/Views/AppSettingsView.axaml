@@ -145,6 +145,7 @@
                     <HyperlinkButton Content="BCnEncoder.Net" NavigateUri="https://github.com/Nominom/BCnEncoder.NET" />
                     <HyperlinkButton Content="Enums.NET" NavigateUri="https://github.com/TylerBrinkley/Enums.NET" />
                     <HyperlinkButton Content="Injectio" NavigateUri="https://github.com/loresoft/Injectio" />
+                    <HyperlinkButton Content="Hardware.Info" NavigateUri="https://github.com/Jinjinov/Hardware.Info" />
                     <HyperlinkButton Content="JetBrains.Annotations" NavigateUri="https://www.jetbrains.com/" />
                     <HyperlinkButton Content="DeviceId" NavigateUri="https://github.com/MatthewKing/DeviceId" />
                     <HyperlinkButton Content="DotNet.Glob" NavigateUri="https://github.com/dazinator/DotNet.Glob" />

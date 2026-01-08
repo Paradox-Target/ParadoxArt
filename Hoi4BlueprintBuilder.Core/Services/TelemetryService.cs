@@ -1,8 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using ByteSizeLib;
+using Hardware.Info;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -76,17 +79,12 @@ public sealed class TelemetryService : IDisposable
     {
         try
         {
-            var deviceMemory = ByteSize.FromBytes(GC.GetGCMemoryInfo().TotalAvailableMemoryBytes);
             var properties = new Dictionary<string, string>
             {
                 { "App_Version", App.Version.ToString() },
                 { "OS_Version", Environment.OSVersion.ToString() },
                 { "Culture", CultureInfo.CurrentUICulture.Name },
                 { "Processor_Count", Environment.ProcessorCount.ToString() },
-                {
-                    "Memory_Size",
-                    $"{deviceMemory.GigaBytes.ToString("F1", CultureInfo.InvariantCulture)} GB"
-                },
                 { "Screen_Size", screenSize ?? "Unknown" },
                 { "Screen_Scaling", screenScaling ?? "Unknown" }
             };
@@ -98,7 +96,52 @@ public sealed class TelemetryService : IDisposable
                 properties["Game_Language"] = _settingsService.GameLanguage.ToString();
             }
 
+            Task.Run(TrackHardwareInfo);
+
             TrackEvent("App_Environment_Snapshop", properties);
+        }
+        catch (Exception)
+        {
+            // 忽略
+        }
+    }
+
+    private void TrackHardwareInfo()
+    {
+        if (OperatingSystem.IsMobile)
+        {
+            return;
+        }
+
+        try
+        {
+            var hardwareInfo = new HardwareInfo();
+            hardwareInfo.RefreshCPUList();
+            hardwareInfo.RefreshVideoControllerList();
+            hardwareInfo.RefreshMemoryList();
+            hardwareInfo.RefreshOperatingSystem();
+
+            double totalMemory = ByteSize
+                .FromBytes(hardwareInfo.MemoryList.AsValueEnumerable().Sum(memory => memory.Capacity))
+                .GibiBytes;
+
+            var properties = new Dictionary<string, string>
+            {
+                {
+                    "CPU_Names",
+                    hardwareInfo.CpuList.AsValueEnumerable().Select(cpu => cpu.Name).JoinToString(',')
+                },
+                {
+                    "GPU_Names",
+                    hardwareInfo
+                        .VideoControllerList.AsValueEnumerable()
+                        .Select(gpu => gpu.Name)
+                        .JoinToString(',')
+                },
+                { "Memory_Total_GB", $"{totalMemory.ToString("F1", CultureInfo.InvariantCulture)} GB" },
+                { "OS_Name", hardwareInfo.OperatingSystem.Name }
+            };
+            TrackEvent("Hardware_Snapshop", properties);
         }
         catch (Exception)
         {

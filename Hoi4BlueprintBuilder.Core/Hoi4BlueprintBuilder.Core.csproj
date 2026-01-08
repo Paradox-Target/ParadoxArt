@@ -28,6 +28,7 @@
         <PackageReference Include="DeviceId.Windows" />
         <PackageReference Include="DotNet.Glob" />
         <PackageReference Include="FluentAvaloniaUI" />
+        <PackageReference Include="Hardware.Info" />
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="LiveMarkdown.Avalonia" />
         <PackageReference Include="MessageBox.Avalonia" />
