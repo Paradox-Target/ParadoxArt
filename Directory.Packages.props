@@ -26,7 +26,6 @@
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.23.0" />
     <PackageVersion Include="NaturalSort.Extension" Version="4.4.1" />
     <PackageVersion Include="NLog" Version="6.0.7" />
-    <PackageVersion Include="ObservableCollections" Version="3.3.4" />
     <PackageVersion Include="ParadoxPower" Version="0.12.2-beta" />
     <PackageVersion Include="ParadoxPower.CSharpExtensions" Version="0.8.1-beta" />
     <PackageVersion Include="Pfim" Version="0.11.4" />

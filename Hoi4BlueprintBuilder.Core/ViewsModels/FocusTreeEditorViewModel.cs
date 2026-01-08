@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -11,7 +12,6 @@ using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using MethodTimer;
 using NLog;
-using ObservableCollections;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 using ZLinq;
@@ -21,14 +21,14 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 [RegisterTransient<FocusTreeEditorViewModel>]
 public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 {
-    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> Nodes { get; }
+    public IAvaloniaList<FocusNodeViewModel> Nodes => _nodes;
 
     public IReadOnlyCollection<IFocusTrigger> FocusTriggers => _focusTriggers;
 
     [ObservableProperty]
     private bool _isLoading;
 
-    private readonly ObservableList<FocusNodeViewModel> _nodes = [];
+    private readonly AvaloniaList<FocusNodeViewModel> _nodes = [];
 
     /// <summary>
     /// Key: FocusNode.Id, Value: FocusNode
@@ -58,8 +58,8 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _settingsService = settingsService;
         _notificationService = notificationService;
         _statusBarService = statusBarService;
-        Nodes = _nodes.ToNotifyCollectionChanged();
-        _nodes.CollectionChanged += OnNodeChanged;
+
+        // _nodes.CollectionChanged += OnNodeChanged;
     }
 
     public void OnLoaded()
@@ -83,11 +83,6 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         {
             focus.Node.RefreshIcon();
         }
-    }
-
-    private void OnNodeChanged(in NotifyCollectionChangedEventArgs<FocusNodeViewModel> e)
-    {
-        _statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
 
     private void CreateNewFocus(object sender, CreateNewFocusMessage message)

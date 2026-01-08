@@ -131,7 +131,6 @@
                     <HyperlinkButton Content="MethodTimer" NavigateUri="https://github.com/Fody/MethodTimer" />
                     <HyperlinkButton Content="Microsoft.Extensions.DependencyInjection" NavigateUri="https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection" />
                     <HyperlinkButton Content="NLog" NavigateUri="https://nlog-project.org/" />
-                    <HyperlinkButton Content="ObservableCollections" NavigateUri="https://github.com/Cysharp/ObservableCollections" />
                     <HyperlinkButton Content="ParadoxPower" NavigateUri="https://github.com/textGamex/ParadoxPower" />
                     <HyperlinkButton Content="ZLinq" NavigateUri="https://github.com/Cysharp/ZLinq" />
                     <HyperlinkButton Content="ZString" NavigateUri="https://github.com/Cysharp/ZString" />

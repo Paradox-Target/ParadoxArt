@@ -35,7 +35,6 @@
         <PackageReference Include="Microsoft.ApplicationInsights" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
-        <PackageReference Include="ObservableCollections" />
         <PackageReference Include="Velopack" />
         <PackageReference Include="ParadoxPower" />
         <PackageReference Include="ParadoxPower.CSharpExtensions" />

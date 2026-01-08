@@ -1,3 +1,5 @@
+using System.Collections.Specialized;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -9,7 +11,6 @@ using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using NLog;
-using ObservableCollections;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
@@ -35,13 +36,10 @@ public sealed class FocusConnectionLinesControl : Control
 
     #region Styled Properties
 
-    public static readonly StyledProperty<NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel>?> NodesProperty =
-        AvaloniaProperty.Register<
-            FocusConnectionLinesControl,
-            NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel>?
-        >(nameof(Nodes));
+    public static readonly StyledProperty<IList<FocusNodeViewModel>?> NodesProperty =
+        AvaloniaProperty.Register<FocusConnectionLinesControl, IList<FocusNodeViewModel>?>(nameof(Nodes));
 
-    public NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel>? Nodes
+    public IList<FocusNodeViewModel>? Nodes
     {
         get => GetValue(NodesProperty);
         set => SetValue(NodesProperty, value);
@@ -96,13 +94,30 @@ public sealed class FocusConnectionLinesControl : Control
     {
         base.OnPropertyChanged(change);
 
-        if (
-            change.Property == NodesProperty
-            && change.NewValue is NotifyCollectionChangedSynchronizedViewList<FocusNodeViewModel> nodes
-        )
+        if (change.Property != NodesProperty)
         {
-            nodes.CollectionChanged += (_, _) => InvalidateVisual();
+            return;
         }
+
+        Debug.Assert(change.NewValue is INotifyCollectionChanged);
+
+        if (change.OldValue is INotifyCollectionChanged oldNodes)
+        {
+            oldNodes.CollectionChanged -= OnCollectionChanged;
+        }
+
+        if (change.NewValue is INotifyCollectionChanged nodes)
+        {
+            nodes.CollectionChanged += OnCollectionChanged;
+        }
+    }
+
+    private void OnCollectionChanged(
+        object? o,
+        NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs
+    )
+    {
+        InvalidateVisual();
     }
 
     public override void Render(DrawingContext context)
