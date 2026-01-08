@@ -154,6 +154,7 @@
                     <HyperlinkButton Content="ByteSize" NavigateUri="https://github.com/omar/ByteSize" />
                     <HyperlinkButton Content="Vanara" NavigateUri="https://github.com/dahall/vanara" />
                     <HyperlinkButton Content="Velopack" NavigateUri="https://github.com/velopack/velopack" />
+                    <HyperlinkButton Content="LiveMarkdown.Avalonia" NavigateUri="https://github.com/DearVa/LiveMarkdown.Avalonia" />
                 </UniformGrid>
             </fa:SettingsExpander>
         </StackPanel>
