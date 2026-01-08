@@ -12,7 +12,7 @@ public sealed class TelemetryService : IDisposable
     private readonly SettingsService _settingsService;
     private readonly TelemetryClient _client;
     private readonly Timer _memoryMonitorTimer;
-    private readonly Process _currrntProcess = Process.GetCurrentProcess();
+    private readonly Process _currentProcess = Process.GetCurrentProcess();
 
     public TelemetryService(DeviceService deviceService, SettingsService settingsService)
     {
@@ -40,8 +40,8 @@ public sealed class TelemetryService : IDisposable
     {
         try
         {
-            _currrntProcess.Refresh();
-            long currentMemory = _currrntProcess.PrivateMemorySize64;
+            _currentProcess.Refresh();
+            long currentMemory = _currentProcess.PrivateMemorySize64;
             double memoryInMB = ByteSize.FromBytes(currentMemory).MegaBytes;
 
             GetMetric("App_Memory_Usage_MB").TrackValue(memoryInMB);
@@ -60,6 +60,11 @@ public sealed class TelemetryService : IDisposable
     public void TrackMetric(string name, double value)
     {
         _client.TrackMetric(name, value);
+    }
+
+    public void TrackException(Exception exception, IDictionary<string, string>? properties = null)
+    {
+        _client.TrackException(exception, properties);
     }
 
     private Metric GetMetric(string name)
@@ -105,9 +110,9 @@ public sealed class TelemetryService : IDisposable
     {
         try
         {
-            _currrntProcess.Refresh();
+            _currentProcess.Refresh();
             // 记录退出时的瞬时内存，作为单独的数据点
-            var finalMemory = ByteSize.FromBytes(_currrntProcess.PrivateMemorySize64);
+            var finalMemory = ByteSize.FromBytes(_currentProcess.PrivateMemorySize64);
             TrackMetric("App_Memory_Final_MB", finalMemory.MegaBytes);
         }
         catch (Exception)
@@ -119,7 +124,7 @@ public sealed class TelemetryService : IDisposable
     public void Dispose()
     {
         _memoryMonitorTimer.Dispose();
-        _currrntProcess.Dispose();
+        _currentProcess.Dispose();
         _client.Flush();
     }
 }

@@ -5,7 +5,6 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <TargetFramework>net10.0</TargetFramework>
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
-        <PublishTrimmed>true</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
@@ -30,12 +29,13 @@
         <PackageReference Include="DotNet.Glob" />
         <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="JetBrains.Annotations" />
+        <PackageReference Include="LiveMarkdown.Avalonia" />
         <PackageReference Include="MessageBox.Avalonia" />
         <PackageReference Include="Microsoft.ApplicationInsights" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
         <PackageReference Include="ObservableCollections" />
-
+        <PackageReference Include="Velopack" />
         <PackageReference Include="ParadoxPower" />
         <PackageReference Include="ParadoxPower.CSharpExtensions" />
         <PackageReference Include="Pfim" />

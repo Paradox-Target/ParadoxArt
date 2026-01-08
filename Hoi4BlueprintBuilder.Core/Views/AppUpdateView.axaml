@@ -1,0 +1,81 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.AppUpdateView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:AppUpdateViewModel"
+    mc:Ignorable="d">
+
+    <Panel>
+        <Grid IsVisible="{Binding !HasUpdates}" RowDefinitions="*,*">
+            <TextBlock
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                FontSize="24"
+                Text="正在检查更新中..." />
+            <fa:ProgressRing
+                Grid.Row="1"
+                Width="80"
+                Height="80"
+                IsActive="True" />
+        </Grid>
+
+        <Grid IsVisible="{Binding ShowUpdateLog}" RowDefinitions="Auto,*,Auto,Auto">
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,4"
+                HorizontalAlignment="Center"
+                FontSize="16"
+                Text="{Binding NewVersionText}" />
+            <md:MarkdownRenderer
+                x:Name="MarkdownRenderer"
+                Grid.Row="1"
+                Margin="16. 4"
+                MarkdownBuilder="{Binding UpdateLog}" />
+
+            <Button
+                Grid.Row="2"
+                Margin="0,0,0,4"
+                HorizontalAlignment="Center"
+                Command="{Binding StartUpdateAppCommand}"
+                Content="开始更新" />
+
+            <TextBlock
+                Grid.Row="3"
+                Margin="0,0,0,12"
+                HorizontalAlignment="Center"
+                FontSize="18"
+                Text="{Binding TotalPackagesSize}" />
+        </Grid>
+
+        <Grid IsVisible="{Binding IsDownloading}" RowDefinitions="*,*">
+            <TextBlock
+                Grid.Row="0"
+                Margin="0,0,0,24"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                FontSize="18"
+                Text="下载中..." />
+            <StackPanel Grid.Row="1">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="18"
+                    Text="{Binding ProgressText, Mode=OneWay}" />
+                <ProgressBar
+                    Width="300"
+                    MinWidth="150"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Value="{Binding Progress}" />
+            </StackPanel>
+        </Grid>
+    </Panel>
+</UserControl>

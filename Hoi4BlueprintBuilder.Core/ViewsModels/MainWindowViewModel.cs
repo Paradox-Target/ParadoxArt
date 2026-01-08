@@ -28,14 +28,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
             navigationService.NavigateTo<MainView>();
         }
 #else
-        if (App.Current.IsActivated?.IsCompleted is true)
-        {
-            navigationService.NavigateBasedOnDeviceStatus();
-        }
-        else
-        {
-            navigationService.NavigateTo<LoadingView>();
-        }
+        navigationService.NavigateTo<AppUpdateView>();
 #endif
     }
 

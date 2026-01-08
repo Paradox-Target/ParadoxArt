@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -7,7 +8,6 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Extensions;
-using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +18,7 @@ namespace Hoi4BlueprintBuilder.Core;
 
 public sealed class App : Application
 {
-    public static readonly Version Version = new(0, 3, 0);
+    public static readonly Version Version = Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
     public static new App Current => (App)Application.Current!;
     public Task<bool>? IsActivated { get; private set; }
     public ServiceProvider Services { get; private set; } = null!;
@@ -28,6 +28,8 @@ public sealed class App : Application
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Hoi4BlueprintEditor"
         );
+
+    public const string UpdatePackageDownloadUrl = "https://packages.paradoxtarget.top";
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
     public event Action<IServiceCollection>? ConfiguringServices;
 
@@ -44,7 +46,7 @@ public sealed class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-        NLogSetupHelper.Setup();
+
         InitializeServices();
 
         Directory.CreateDirectory(ConfigFolder);

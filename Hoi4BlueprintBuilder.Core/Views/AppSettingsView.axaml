@@ -153,6 +153,7 @@
                     <HyperlinkButton Content="SixLabors.ImageSharp" NavigateUri="https://github.com/SixLabors/ImageSharp" />
                     <HyperlinkButton Content="ByteSize" NavigateUri="https://github.com/omar/ByteSize" />
                     <HyperlinkButton Content="Vanara" NavigateUri="https://github.com/dahall/vanara" />
+                    <HyperlinkButton Content="Velopack" NavigateUri="https://github.com/velopack/velopack" />
                 </UniformGrid>
             </fa:SettingsExpander>
         </StackPanel>

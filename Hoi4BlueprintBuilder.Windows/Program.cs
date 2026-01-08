@@ -1,9 +1,11 @@
 using Avalonia;
 using Hoi4BlueprintBuilder.Core;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Windows.Services;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using Velopack;
 
 namespace Hoi4BlueprintBuilder.Windows;
 
@@ -17,6 +19,9 @@ public sealed class Program
     {
         try
         {
+            NLogSetupHelper.Setup();
+            VelopackApp.Build().Run();
+
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
         catch (Exception e)
@@ -28,8 +33,9 @@ public sealed class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    public static AppBuilder BuildAvaloniaApp() =>
-        AppBuilder
+    public static AppBuilder BuildAvaloniaApp()
+    {
+        return AppBuilder
             .Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
@@ -42,4 +48,5 @@ public sealed class Program
                     serviceCollection.AddSingleton<IFileSortComparer, WindowsFileSortComparer>();
                 };
             });
+    }
 }
