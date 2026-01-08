@@ -55,9 +55,13 @@ public sealed class TelemetryService : IDisposable
         }
     }
 
-    public void TrackEvent(string eventName, IDictionary<string, string>? properties = null)
+    public void TrackEvent(
+        string eventName,
+        IDictionary<string, string>? properties = null,
+        IDictionary<string, double>? metrics = null
+    )
     {
-        _client.TrackEvent(eventName, properties);
+        _client.TrackEvent(eventName, properties, metrics);
     }
 
     public void TrackMetric(string name, double value)
