@@ -1,4 +1,6 @@
-﻿using Hoi4BlueprintBuilder.Core.Helpers;
+﻿using Hoi4BlueprintBuilder.Core;
+using Hoi4BlueprintBuilder.Core.Extensions;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
@@ -77,6 +79,18 @@ public sealed class FocusNodeParserTests
                 ((IFocusTrigger)focus1.AllowBranch!).DisplayContent,
                 Is.EqualTo("has_dlc = \"test\"")
             );
+            Assert.That(focus1.CancelIfInvalid, Is.False);
+            Assert.That(focus1.ContinueIfInvalid, Is.True);
+        }
+
+        var focus3 = nodes["test_focus_3"];
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(focus3.CancelIfInvalid, Is.True);
+            Assert.That(focus3.ContinueIfInvalid, Is.False);
+            Assert.That(focus3.CompletionReward, Is.Empty);
+            Assert.That(focus3.Offsets, Is.Empty);
+            Assert.That(focus3.AllowBranch, Is.Null);
         }
     }
 
@@ -112,9 +126,6 @@ public sealed class FocusNodeParserTests
         Assert.That(focus3.MutuallyExclusive, Is.Not.Null, "focus3互斥节点集合为空");
         Assert.That(focus3.MutuallyExclusive.Count, Is.EqualTo(1), "focus3互斥节点数量不正确");
         Assert.That(focus3.MutuallyExclusive[0].Id, Is.EqualTo("test_focus_2"), "focus3互斥节点ID不正确");
-        Assert.That(focus3.CompletionReward, Is.Empty);
-        Assert.That(focus3.Offsets, Is.Empty);
-        Assert.That(focus3.AllowBranch, Is.Null);
     }
 
     [Test]
@@ -122,14 +133,38 @@ public sealed class FocusNodeParserTests
     {
         // 首先获取解析后的节点
         var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
-        var originalNode = nodes["test_focus_1"];
 
         // 使用模型创建AST节点
-        var generatedNode = FocusNodeHelper.CreateAstNodeFromEditorModel(originalNode);
+        var generatedNode1 = FocusNodeHelper.CreateAstNodeFromEditorModel(nodes["test_focus_1"]);
+        var generatedNode3 = FocusNodeHelper.CreateAstNodeFromEditorModel(nodes["test_focus_3"]);
 
         // 验证生成的AST节点
-        Assert.That(generatedNode, Is.Not.Null, "生成的AST节点为空");
-        Assert.That(generatedNode.Key, Is.EqualTo("focus"), "AST节点键不正确");
+        Assert.That(generatedNode1, Is.Not.Null, "生成的AST节点为空");
+        Assert.That(generatedNode1.Key, Is.EqualTo("focus"), "AST节点键不正确");
+        Assert.That(
+            generatedNode1
+                .Leaves.First(leaf => leaf.Key.EqualsIgnoreCase(Keywords.CancelIfInvalid))
+                .ValueText,
+            Is.EqualTo("no")
+        );
+        Assert.That(
+            generatedNode1
+                .Leaves.First(leaf => leaf.Key.EqualsIgnoreCase(Keywords.ContinueIfInvalid))
+                .ValueText,
+            Is.EqualTo("yes")
+        );
+        Assert.That(
+            generatedNode3
+                .Leaves.First(leaf => leaf.Key.EqualsIgnoreCase(Keywords.CancelIfInvalid))
+                .ValueText,
+            Is.EqualTo("yes")
+        );
+        Assert.That(
+            generatedNode3
+                .Leaves.First(leaf => leaf.Key.EqualsIgnoreCase(Keywords.ContinueIfInvalid))
+                .ValueText,
+            Is.EqualTo("no")
+        );
     }
 
     [Test]

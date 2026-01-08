@@ -11,4 +11,6 @@ public static class Keywords
     public const string Cost = "cost";
     public const string Common = "common";
     public const string CompletionReward = "completion_reward";
+    public const string CancelIfInvalid = "cancel_if_invalid";
+    public const string ContinueIfInvalid = "continue_if_invalid";
 }

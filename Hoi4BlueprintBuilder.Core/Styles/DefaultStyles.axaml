@@ -29,4 +29,37 @@
     <Style Selector="Button">
         <Setter Property="FontFamily" Value="Sarasa UI SC" />
     </Style>-->
+
+    <Style Selector="TextBlock.BodyTextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="LineHeight" Value="20" />
+    </Style>
+
+    <Style Selector="TextBlock.BodyLargeTextBlock">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="LineHeight" Value="24" />
+    </Style>
+
+    <Style Selector="TextBlock.BodyStrongTextBlock">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="TextBlock.SubtitleTextBlock">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="LineHeight" Value="28" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="TextBlock.TitleTextBlock">
+        <Setter Property="FontSize" Value="28" />
+        <Setter Property="LineHeight" Value="36" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style Selector="ToggleSwitch.CleanToggleSwitch">
+        <Setter Property="OffContent" Value="" />
+        <Setter Property="OnContent" Value="" />
+    </Style>
 </Styles>

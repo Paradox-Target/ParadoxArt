@@ -263,6 +263,20 @@ public static class FocusNodeHelper
         {
             model.RelativePosition = new FocusNode(string.Empty, FocusType.Normal) { Id = leaf.ValueText };
         }
+        else if (
+            leaf.Key.EqualsIgnoreCase(Keywords.CancelIfInvalid)
+            && leaf.Value.TryGetBool(out bool cancelIfInvalid)
+        )
+        {
+            model.CancelIfInvalid = cancelIfInvalid;
+        }
+        else if (
+            leaf.Key.EqualsIgnoreCase(Keywords.ContinueIfInvalid)
+            && leaf.Value.TryGetBool(out bool continueIfInvalid)
+        )
+        {
+            model.ContinueIfInvalid = continueIfInvalid;
+        }
     }
 
     private static void ProcessNode(Node node, FocusNode model)
@@ -343,7 +357,9 @@ public static class FocusNodeHelper
             ChildHelper.LeafString("id", editorModel.Id),
             ChildHelper.Leaf("x", editorModel.RawPosition.X),
             ChildHelper.Leaf("y", editorModel.RawPosition.Y),
-            ChildHelper.Leaf(Keywords.Cost, editorModel.Cost)
+            ChildHelper.Leaf(Keywords.Cost, editorModel.Cost),
+            ChildHelper.Leaf(Keywords.CancelIfInvalid, editorModel.CancelIfInvalid),
+            ChildHelper.Leaf(Keywords.ContinueIfInvalid, editorModel.ContinueIfInvalid)
         };
 
         if (!string.IsNullOrWhiteSpace(editorModel.Icon))

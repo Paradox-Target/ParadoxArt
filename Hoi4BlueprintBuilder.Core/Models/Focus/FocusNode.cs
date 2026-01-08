@@ -109,6 +109,24 @@ public sealed partial class FocusNode(string path, FocusType type)
     [ObservableProperty]
     private bool _isVisible = true;
 
+    /// <summary>
+    /// 如果 <c>available</c> 块不满足则取消进行中的 Focus, 默认值为 <c>true</c>
+    /// </summary>
+    /// <remarks>
+    /// 如果 <see cref="CancelIfInvalid"/> 和 <see cref="ContinueIfInvalid"/> 都设置为 <c>false</c>，则当 <c>available</c> 代码块变为 <c>false</c> 时，焦点操作会暂停.
+    /// </remarks>
+    [ObservableProperty]
+    private bool _cancelIfInvalid = true;
+
+    /// <summary>
+    /// 无视 <c>available</c> 块, 无论如何都进行 Focus, 默认值为 <c>false</c>
+    /// </summary>
+    /// <remarks>
+    /// 如果 <see cref="CancelIfInvalid"/> 和 <see cref="ContinueIfInvalid"/> 都设置为 <c>false</c>，则当 <c>available</c> 代码块变为 <c>false</c> 时，焦点操作会暂停.
+    /// </remarks>
+    [ObservableProperty]
+    private bool _continueIfInvalid;
+
     public IReadOnlyCollection<FocusOffset> Offsets => _offsets;
     private readonly List<FocusOffset> _offsets = [];
 

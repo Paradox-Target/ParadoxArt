@@ -50,10 +50,7 @@
                     <control:FontIconSource Glyph="&#xE70B;" />
                 </fa:SettingsExpander.IconSource>
                 <fa:SettingsExpander.Footer>
-                    <ToggleSwitch
-                        IsChecked="{Binding IsAutoOpenFocusInfoCard, Mode=TwoWay}"
-                        OffContent=""
-                        OnContent="" />
+                    <ToggleSwitch Classes="CleanToggleSwitch" IsChecked="{Binding IsAutoOpenFocusInfoCard, Mode=TwoWay}" />
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 

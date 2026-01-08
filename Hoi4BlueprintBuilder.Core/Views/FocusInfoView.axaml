@@ -23,12 +23,9 @@
         BorderThickness="1"
         CornerRadius="4">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid Margin="0,0,8,0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+            <StackPanel Margin="0,0,8,0" Spacing="4">
 
-                <StackPanel
-                    Grid.Row="0"
-                    Margin="0,0,0,8"
-                    DragDrop.AllowDrop="True">
+                <StackPanel DragDrop.AllowDrop="True">
                     <TextBlock Text="Icon" />
                     <Image
                         x:Name="FocusIcon"
@@ -37,26 +34,19 @@
                     <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="1">
-                    <TextBlock Margin="0,8,0,0" Text="ID" />
+                <StackPanel>
+                    <TextBlock Text="ID" />
                     <TextBox Margin="0,4,0,0" Text="{Binding FocusNode.Id, Mode=TwoWay}" />
                 </StackPanel>
 
-                <StackPanel
-                    Grid.Row="2"
-                    Margin="0,8,0,0"
-                    Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="定位系统: " />
                     <Border Background="#71afe5" CornerRadius="4">
                         <TextBlock Margin="4" Text="{Binding LocationSystemText, Mode=OneWay}" />
                     </Border>
                 </StackPanel>
 
-                <StackPanel
-                    Grid.Row="3"
-                    Margin="0,8,0,0"
-                    IsVisible="{Binding IsRelativePositionVisible}"
-                    Orientation="Horizontal">
+                <StackPanel IsVisible="{Binding IsRelativePositionVisible}" Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Bottom" Text="位置相对于: " />
                     <TextBlock
                         Margin="0,4,0,0"
@@ -64,10 +54,7 @@
                         Text="{Binding RelativePositionFocusName, Mode=OneWay}" />
                 </StackPanel>
 
-                <StackPanel
-                    Grid.Row="4"
-                    Margin="0,8,0,0"
-                    Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <TextBlock VerticalAlignment="Center" Text="X: " />
                     <fa:NumberBox Value="{Binding X, Mode=TwoWay}" />
                     <TextBlock
@@ -77,15 +64,8 @@
                     <fa:NumberBox Value="{Binding Y, Mode=TwoWay}" />
                 </StackPanel>
 
-                <TextBlock
-                    Grid.Row="5"
-                    Margin="0,8,0,0"
-                    Text="Cost" />
-
-                <StackPanel
-                    Grid.Row="6"
-                    Margin="0,4,0,0"
-                    Orientation="Horizontal">
+                <TextBlock Text="Cost" />
+                <StackPanel Orientation="Horizontal">
                     <fa:NumberBox
                         Minimum="0"
                         SpinButtonPlacementMode="Inline"
@@ -97,9 +77,32 @@
                         Text="{Binding FocusDaysTip}" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="7" Margin="0,8,0,0">
-                    <TextBlock FontSize="22" Text="完成效果" />
+                <!--  cancel_if_invalid  -->
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Classes="BodyTextBlock"
+                        Text="条件不满足时取消" />
+                    <ToggleSwitch
+                        VerticalAlignment="Center"
+                        Classes="CleanToggleSwitch"
+                        IsChecked="{Binding FocusNode.CancelIfInvalid, Mode=TwoWay}" />
+                </StackPanel>
 
+                <!--  continue_if_invalid  -->
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Classes="BodyTextBlock"
+                        Text="条件不满足时仍然继续" />
+                    <ToggleSwitch
+                        VerticalAlignment="Center"
+                        Classes="CleanToggleSwitch"
+                        IsChecked="{Binding FocusNode.ContinueIfInvalid, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock FontSize="22" Text="完成效果" />
                     <Border
                         Margin="0,4,0,0"
                         BorderBrush="Gray"
@@ -115,10 +118,7 @@
                     </Border>
                 </StackPanel>
 
-                <StackPanel
-                    Grid.Row="8"
-                    Margin="0,8,0,0"
-                    Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="22"
@@ -129,16 +129,16 @@
                         SelectedIndex="{Binding SelectedLanguageIndex, Mode=TwoWay}" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="9">
-                    <TextBlock Margin="0,4,0,0" Text="Text" />
+                <StackPanel>
+                    <TextBlock Text="Text" />
                     <TextBox
                         x:Name="IdTextBox"
                         Margin="0,4,0,0"
                         Text="{Binding IdText, Mode=TwoWay}" />
                 </StackPanel>
 
-                <StackPanel Grid.Row="10">
-                    <TextBlock Margin="0,4,0,0" Text="描述" />
+                <StackPanel>
+                    <TextBlock Text="描述" />
 
                     <TextBox
                         x:Name="DescriptionTextBox"
@@ -149,7 +149,7 @@
                         Text="{Binding DescriptionText, Mode=TwoWay}"
                         TextWrapping="Wrap" />
                 </StackPanel>
-            </Grid>
+            </StackPanel>
         </ScrollViewer>
     </Border>
 </UserControl>
