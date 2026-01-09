@@ -35,6 +35,10 @@
         <PackageReference Include="Microsoft.ApplicationInsights" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
+        <PackageReference Include="SonarAnalyzer.CSharp">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Velopack" />
         <PackageReference Include="ParadoxPower" />
         <PackageReference Include="ParadoxPower.CSharpExtensions" />

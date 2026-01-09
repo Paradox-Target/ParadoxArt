@@ -33,7 +33,6 @@ public sealed class ParadoxRegistryOptions(ThemeVariant? themeVariant) : IRegist
 
     public IRawGrammar GetGrammar(string scopeName)
     {
-        // TODO: 补全语法格式文件
         string path;
         if (scopeName == ScopeNameTypes.Yml)
         {
