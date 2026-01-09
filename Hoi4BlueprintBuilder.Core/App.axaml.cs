@@ -39,7 +39,7 @@ public sealed class App : Application
     /// <summary>
     /// 不带 BOM 的 UTF-8
     /// </summary>
-    public static readonly Encoding Utf8Encoding = new UTF8Encoding(false);
+    public static readonly Encoding Utf8EncodingWithoutBom = new UTF8Encoding(false);
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

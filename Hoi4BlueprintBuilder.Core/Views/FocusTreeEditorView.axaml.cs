@@ -22,7 +22,7 @@ using ZLinq;
 namespace Hoi4BlueprintBuilder.Core.Views;
 
 [RegisterTransient<FocusTreeEditorView>]
-public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, IClosed
+public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, IClosed, ISave
 {
     public string Header { get; }
     public string FilePath { get; }
@@ -413,5 +413,10 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
     public void Close()
     {
         ViewModel.Close();
+    }
+
+    public void Save()
+    {
+        ViewModel.SaveFocusTree();
     }
 }

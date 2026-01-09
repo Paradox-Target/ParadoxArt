@@ -64,7 +64,6 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 
     public void OnLoaded()
     {
-        StrongReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveFocusTree);
         WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
         StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(this, DeleteImageResource);
     }
@@ -195,13 +194,16 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     }
 
     [Time]
-    private void SaveFocusTree(object recipient, SaveFocusTreeMessage message)
+    public void SaveFocusTree()
     {
         if (_editorNodesMap.Count == 0)
         {
             Log.Info("没有国策树数据可供保存");
             return;
         }
+
+        // 通知本地化服务保存本地化文本
+        StrongReferenceMessenger.Default.Send(this, new SaveFocusTreeMessage());
 
         // 将编辑器中的 FocusNode 按照文件路径分组
         var maps = _editorNodesMap
@@ -269,13 +271,13 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         var fileOrigin = _pathService.GetFileOrigin(filePath);
         if (fileOrigin == FileOrigin.Mod)
         {
-            File.WriteAllText(filePath, rootNode.ToScript(), App.Utf8Encoding);
+            File.WriteAllText(filePath, rootNode.ToScript(), App.Utf8EncodingWithoutBom);
         }
         else if (fileOrigin == FileOrigin.Game)
         {
             string relativePath = Path.GetRelativePath(_settingsService.GameRootFolderPath, filePath);
             string modFilePath = Path.Combine(_settingsService.ModRootFolderPath, relativePath);
-            File.WriteAllText(modFilePath, rootNode.ToScript(), App.Utf8Encoding);
+            File.WriteAllText(modFilePath, rootNode.ToScript(), App.Utf8EncodingWithoutBom);
         }
         else
         {

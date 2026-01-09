@@ -102,7 +102,7 @@ public sealed class FileResourceService(SettingsService settingsService)
         File.WriteAllText(
             focusIconShineRegistrationFilePath,
             rootNode.ToScript(),
-            App.Utf8Encoding
+            App.Utf8EncodingWithoutBom
         );
     }
 
@@ -132,7 +132,7 @@ public sealed class FileResourceService(SettingsService settingsService)
             rootNode.AllArray = [spriteTypesNode];
         }
         spriteTypesNode.AddChild(spriteType);
-        File.WriteAllText(focusIconRegistrationFilePath, rootNode.ToScript(), App.Utf8Encoding);
+        File.WriteAllText(focusIconRegistrationFilePath, rootNode.ToScript(), App.Utf8EncodingWithoutBom);
     }
 
     private static Node CreateFocusSpriteTypeNode(string name, string relativePath)

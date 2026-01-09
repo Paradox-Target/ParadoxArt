@@ -28,6 +28,9 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     [ObservableProperty]
     private bool _isFocusTreeEditorAtCurrent;
 
+    [ObservableProperty]
+    private bool _enableSaveButton;
+
     private IEnumerable<FocusTriggerGroup> GetFocusTriggers()
     {
         if (_tabViewService.CurrentItem is not FocusTreeEditorView focusTreeEditorView)
@@ -86,6 +89,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
             }
 
             IsFocusTreeEditorAtCurrent = _tabViewService.CurrentItem is FocusTreeEditorView;
+            EnableSaveButton = _tabViewService.CurrentItem is ISave;
         };
 
         navigationService.ViewChanged += currentView =>
@@ -95,9 +99,14 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void SaveFocusTree()
+    private void SaveFile()
     {
-        StrongReferenceMessenger.Default.Send(new SaveFocusTreeMessage());
+        if (_tabViewService.CurrentItem is not ISave save)
+        {
+            return;
+        }
+
+        save.Save();
     }
 
     [RelayCommand]
@@ -151,7 +160,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
             await File.WriteAllTextAsync(
                 filePath,
                 CreateNewFocusTree(viewModel.Id, viewModel.CountryTag, viewModel.IsDefaultFocusTree),
-                App.Utf8Encoding
+                App.Utf8EncodingWithoutBom
             );
 
             _userStatusService.CurrentSelectedFile = new SystemFileItem(filePath, true, null);

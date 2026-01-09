@@ -64,11 +64,11 @@ public static class LinuxFileHelper
 
     private static void CreateTrashInfoFile(string infoFilePath, string originalPath)
     {
-        string path = HttpUtility.UrlEncode(originalPath, App.Utf8Encoding);
+        string path = HttpUtility.UrlEncode(originalPath, App.Utf8EncodingWithoutBom);
         // 不转也能正常工作, Ubuntu 是转了的
         path = path.Replace("%2f", "/");
 
-        using StreamWriter writer = new(infoFilePath, false, App.Utf8Encoding);
+        using StreamWriter writer = new(infoFilePath, false, App.Utf8EncodingWithoutBom);
         writer.WriteLine("[Trash Info]");
         writer.WriteLine($"Path={path}");
         writer.WriteLine($"DeletionDate={DateTime.Now:s}");

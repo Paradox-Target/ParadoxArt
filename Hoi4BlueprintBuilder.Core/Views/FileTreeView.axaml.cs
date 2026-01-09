@@ -10,6 +10,7 @@ using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
@@ -111,11 +112,30 @@ public sealed partial class FileTreeView : UserControl
 
         _userStatusService.CurrentSelectedFile = item;
 
-        if (!FocusGlob.IsMatch(item.FullPath))
+        string extension = Path.GetExtension(item.FullPath);
+        if (FocusGlob.IsMatch(item.FullPath))
+        {
+            _tabView.AddTabFromIoc<FocusTreeEditorView>(item.FullPath);
+        }
+        else if (TextExtensions.AsValueEnumerable().Contains(extension, StringComparer.OrdinalIgnoreCase))
+        {
+            _tabView.AddTabFromIoc<TextEditorView>(item.FullPath);
+        }
+        else
         {
             _tabView.AddTabFromIoc<NotSupportInfoControlView>(item.FullPath);
-            return;
         }
-        _tabView.AddTabFromIoc<FocusTreeEditorView>(item.FullPath);
     }
+
+    private static readonly string[] TextExtensions =
+    [
+        ".txt",
+        ".md",
+        ".json",
+        ".mod",
+        ".gui",
+        ".gfx",
+        ".lua",
+        ".yml"
+    ];
 }
