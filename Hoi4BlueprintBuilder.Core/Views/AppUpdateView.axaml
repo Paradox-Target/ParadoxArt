@@ -34,11 +34,12 @@
                 HorizontalAlignment="Center"
                 FontSize="16"
                 Text="{Binding NewVersionText}" />
-            <md:MarkdownRenderer
-                x:Name="MarkdownRenderer"
-                Grid.Row="1"
-                Margin="16. 4"
-                MarkdownBuilder="{Binding UpdateLog}" />
+            <ScrollViewer Grid.Row="1">
+                <md:MarkdownRenderer
+                    x:Name="MarkdownRenderer"
+                    Margin="16. 4"
+                    MarkdownBuilder="{Binding UpdateLog}" />
+            </ScrollViewer>
 
             <Button
                 Grid.Row="2"
