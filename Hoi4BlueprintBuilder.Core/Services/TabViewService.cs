@@ -35,6 +35,18 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
             ResizeSelectionTab();
             CurrentItemChanged?.Invoke();
         };
+        var project = serviceProvider.GetRequiredService<ProjectConfigService>();
+        var pathService = serviceProvider.GetRequiredService<ProjectPathService>();
+        App.Current.OnExitBefore += (_, _) =>
+        {
+            project.OpenedFiles.Clear();
+
+            foreach (var tabViewItem in _openedTabFileItems)
+            {
+                var item = (ITabViewItem?)tabViewItem.Content!;
+                project.OpenedFiles.Add(pathService.GetRelativeModPath(item.FilePath));
+            }
+        };
     }
 
     public void AddTab(ITabViewItem content)

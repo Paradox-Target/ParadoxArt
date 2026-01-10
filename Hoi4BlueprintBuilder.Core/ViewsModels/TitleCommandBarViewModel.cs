@@ -163,7 +163,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
                 App.Utf8EncodingWithoutBom
             );
 
-            _userStatusService.CurrentSelectedFile = new SystemFileItem(filePath, true, null);
+            _userStatusService.CurrentSelectedFile = SystemFileItem.FromFilePath(filePath);
             _tabViewService.AddTabFromIoc<FocusTreeEditorView>(filePath);
         }
         catch (Exception e)

@@ -55,6 +55,11 @@
         ItemsSource="{Binding Items}"
         SelectionChanged="TreeView_OnSelectionChanged"
         SelectionMode="Single">
+        <TreeView.Styles>
+            <Style Selector="TreeViewItem" x:DataType="models:SystemFileItem">
+                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+            </Style>
+        </TreeView.Styles>
         <TreeView.ItemTemplate>
             <TreeDataTemplate x:DataType="models:SystemFileItem" ItemsSource="{Binding Children}">
                 <TextBlock Text="{Binding Name}" />

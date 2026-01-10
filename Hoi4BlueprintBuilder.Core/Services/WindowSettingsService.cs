@@ -1,6 +1,5 @@
-﻿using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Avalonia.Controls;
 using NLog;
 
@@ -10,7 +9,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [JsonSerializable(typeof(WindowSettingsService))]
 internal partial class WindowSettingsServiceContext : JsonSerializerContext;
 
-public sealed class WindowSettingsService
+public sealed class WindowSettingsService : BaseSettingsService<WindowSettingsService>
 {
     [JsonInclude]
     [JsonPropertyName("windowInfo")]
@@ -18,9 +17,12 @@ public sealed class WindowSettingsService
 
     private bool _isChanged;
 
+    private static new readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    protected override string FileName => SettingsFileName;
+    protected override JsonTypeInfo<WindowSettingsService> JsonTypeInfo =>
+        WindowSettingsServiceContext.Default.WindowSettingsService;
     private const string SettingsFileName = "windowSettings.json";
-    private static readonly string SettingsFilePath = Path.Combine(App.ConfigFolder, SettingsFileName);
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public void SetWindow(Window window)
     {
@@ -72,35 +74,13 @@ public sealed class WindowSettingsService
 
     public static WindowSettingsService LoadSettings()
     {
-        Log.Info("尝试加载配置文件: {SettingsFilePath}", SettingsFilePath);
-        if (!File.Exists(SettingsFilePath))
-        {
-            Log.Info("未找到配置文件，使用默认设置");
-            return new WindowSettingsService();
-        }
-
-        try
-        {
-            string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
-            var result = JsonSerializer.Deserialize<WindowSettingsService>(
-                json,
-                WindowSettingsServiceContext.Default.WindowSettingsService
-            );
-            if (result is null)
-            {
-                result = new WindowSettingsService();
-                Log.Warn("配置文件解析失败，使用默认设置");
-            }
-            return result;
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "加载配置文件失败，使用默认设置");
-            return new WindowSettingsService();
-        }
+        return LoadInternal(
+            Path.Combine(App.ConfigFolder, SettingsFileName),
+            WindowSettingsServiceContext.Default.WindowSettingsService
+        );
     }
 
-    public void SaveSettings()
+    public override void SaveSettings()
     {
         if (!_isChanged)
         {
@@ -108,19 +88,7 @@ public sealed class WindowSettingsService
             return;
         }
 
-        try
-        {
-            string json = JsonSerializer.Serialize(
-                this,
-                WindowSettingsServiceContext.Default.WindowSettingsService
-            );
-            File.WriteAllText(SettingsFilePath, json, Encoding.UTF8);
-            _isChanged = false;
-            Log.Info("已成功保存窗口配置文件: {SettingsFilePath}", SettingsFilePath);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "保存窗口配置文件失败");
-        }
+        base.SaveSettings();
+        _isChanged = false;
     }
 }

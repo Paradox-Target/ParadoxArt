@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Cysharp.Text;
 using FluentAvalonia.UI.Controls;
@@ -11,7 +12,7 @@ using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Models;
 
-public sealed partial class SystemFileItem
+public sealed partial class SystemFileItem : ObservableObject
 {
     /// <summary>
     /// 当是文件时是文件名, 文件夹时是文件夹名
@@ -24,6 +25,9 @@ public sealed partial class SystemFileItem
     public SystemFileItem? Parent { get; }
     public IReadOnlyList<SystemFileItem> Children => _children;
     private readonly ObservableCollection<SystemFileItem> _children = [];
+
+    [ObservableProperty]
+    private bool _isExpanded;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -45,6 +49,16 @@ public sealed partial class SystemFileItem
         FullPath = fullPath;
         IsFile = isFile;
         Parent = parent;
+    }
+
+    /// <summary>
+    /// 从文件路径创建一个文件节点
+    /// </summary>
+    /// <param name="fullPath">文件路径</param>
+    /// <returns></returns>
+    public static SystemFileItem FromFilePath(string fullPath)
+    {
+        return new SystemFileItem(fullPath, true, null);
     }
 
     /// <summary>

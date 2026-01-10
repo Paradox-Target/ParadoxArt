@@ -1,9 +1,7 @@
-using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
-using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -11,7 +9,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [JsonSerializable(typeof(SettingsService))]
 internal partial class SettingsServiceContext : JsonSerializerContext;
 
-public sealed class SettingsService
+public sealed class SettingsService : BaseSettingsService<SettingsService>
 {
     public string AppLanguage { get; set; } = string.Empty;
     public GameLanguage GameLanguage { get; set; } = LanguageHelper.GetGameLanguageBySystemLanguage();
@@ -38,60 +36,29 @@ public sealed class SettingsService
     public bool IsFirstRun { get; private init; }
 
     private const string SettingsFileName = "settings.json";
-    private static readonly string SettingsFilePath = Path.Combine(App.ConfigFolder, SettingsFileName);
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    protected override string FileName => SettingsFileName;
+    protected override JsonTypeInfo<SettingsService> JsonTypeInfo =>
+        SettingsServiceContext.Default.SettingsService;
 
     public static SettingsService LoadSettings()
     {
-        Log.Info("尝试加载配置文件: {SettingsFilePath}", SettingsFilePath);
-        if (!File.Exists(SettingsFilePath))
-        {
-            Log.Info("配置文件不存在, 使用默认设置.");
-            return new SettingsService { IsFirstRun = true };
-        }
-
-        try
-        {
-            string json = File.ReadAllText(SettingsFilePath, Encoding.UTF8);
-            var settings = JsonSerializer.Deserialize<SettingsService>(
-                json,
-                SettingsServiceContext.Default.SettingsService
-            );
-            if (settings is null)
+        return LoadInternal(
+            Path.Combine(App.ConfigFolder, SettingsFileName),
+            SettingsServiceContext.Default.SettingsService,
+            afterLoadAction: settings =>
             {
-                settings = new SettingsService { IsFirstRun = true };
-                Log.Warn("反序列化设置失败, 设置为默认值.");
-            }
-            else
-            {
-                Log.Info(
-                    "游戏根目录: {GamePath}, 存在: {GamePathExist}, MOD根目录: {ModPath}, 存在: {ModPathExist}",
-                    settings.GameRootFolderPath,
-                    Directory.Exists(settings.GameRootFolderPath),
-                    settings.ModRootFolderPath,
-                    Directory.Exists(settings.ModRootFolderPath)
-                );
-            }
-            return settings;
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "加载配置文件失败，使用默认设置");
-            return new SettingsService { IsFirstRun = true };
-        }
-    }
-
-    public void SaveSettings()
-    {
-        try
-        {
-            string json = JsonSerializer.Serialize(this, SettingsServiceContext.Default.SettingsService);
-            File.WriteAllText(SettingsFilePath, json, Encoding.UTF8);
-            Log.Info("已成功保存配置文件: {SettingsFilePath}", SettingsFilePath);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "保存配置文件失败");
-        }
+                if (!settings.IsFirstRun)
+                {
+                    Log.Info(
+                        "游戏根目录: {GamePath}, 存在: {GamePathExist}, MOD根目录: {ModPath}, 存在: {ModPathExist}",
+                        settings.GameRootFolderPath,
+                        Directory.Exists(settings.GameRootFolderPath),
+                        settings.ModRootFolderPath,
+                        Directory.Exists(settings.ModRootFolderPath)
+                    );
+                }
+            },
+            defaultFactory: () => new SettingsService { IsFirstRun = true }
+        );
     }
 }

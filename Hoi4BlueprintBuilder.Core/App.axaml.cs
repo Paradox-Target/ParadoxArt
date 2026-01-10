@@ -22,6 +22,7 @@ public sealed class App : Application
     public static new App Current => (App)Application.Current!;
     public Task<bool>? IsActivated { get; private set; }
     public ServiceProvider Services { get; private set; } = null!;
+    public event EventHandler? OnExitBefore;
 
     public static string AppFolder { get; } =
         Path.Combine(
@@ -29,6 +30,7 @@ public sealed class App : Application
             "Hoi4BlueprintEditor"
         );
 
+    public const string ProjectConfigDirectoryName = ".paradoxtarget";
     public const string UpdatePackageDownloadUrl = "https://packages.paradoxtarget.top";
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
     public event Action<IServiceCollection>? ConfiguringServices;
@@ -71,6 +73,11 @@ public sealed class App : Application
 
         _serviceCollection.AddSingleton(static _ => SettingsService.LoadSettings());
         _serviceCollection.AddSingleton(static _ => WindowSettingsService.LoadSettings());
+        _serviceCollection.AddSingleton(static sp =>
+        {
+            var settings = sp.GetRequiredService<SettingsService>();
+            return ProjectConfigService.Load(settings);
+        });
         _serviceCollection.AddHoi4BlueprintBuilderCore();
     }
 
@@ -127,10 +134,12 @@ public sealed class App : Application
         ControlledApplicationLifetimeExitEventArgs controlledApplicationLifetimeExitEventArgs
     )
     {
+        OnExitBefore?.Invoke(o, controlledApplicationLifetimeExitEventArgs);
+
         _stopwatch.Stop();
-        var telemetryService = Services.GetRequiredService<TelemetryService>();
-        telemetryService.TrackMetric("AppDurationSeconds", _stopwatch.Elapsed.TotalSeconds);
-        telemetryService.TrackAppMemoryUsage();
+        var telemetry = Services.GetRequiredService<TelemetryService>();
+        telemetry.TrackMetric("AppDurationSeconds", _stopwatch.Elapsed.TotalSeconds);
+        telemetry.TrackAppMemoryUsage();
 
         // TODO: 安卓平台的资源清理
         Services.Dispose();
