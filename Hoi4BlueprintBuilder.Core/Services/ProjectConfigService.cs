@@ -21,12 +21,18 @@ public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigServ
     private SettingsService? _settingsService;
 
     private const string ConfigFileName = "project.json";
-    protected override string FileName => ConfigFileName;
-
-    protected override string FilePath => GetFilePath(_settingsService?.ModRootFolderPath);
 
     protected override JsonTypeInfo<ProjectConfigService> JsonTypeInfo =>
         ProjectConfigServiceContext.Default.ProjectConfigService;
+
+    public static ProjectConfigService Load(SettingsService settingsService)
+    {
+        string filePath = GetFilePath(settingsService.ModRootFolderPath);
+
+        var service = LoadInternal(filePath, ProjectConfigServiceContext.Default.ProjectConfigService);
+        service._settingsService = settingsService;
+        return service;
+    }
 
     private static string GetFilePath(string? modRootFolderPath)
     {
@@ -36,15 +42,6 @@ public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigServ
         }
 
         return Path.Combine(modRootFolderPath, App.ProjectConfigDirectoryName, ConfigFileName);
-    }
-
-    public static ProjectConfigService Load(SettingsService settingsService)
-    {
-        string filePath = GetFilePath(settingsService.ModRootFolderPath);
-
-        var service = LoadInternal(filePath, ProjectConfigServiceContext.Default.ProjectConfigService);
-        service._settingsService = settingsService;
-        return service;
     }
 
     public override void SaveSettings()

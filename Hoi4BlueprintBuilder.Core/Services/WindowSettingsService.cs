@@ -19,7 +19,6 @@ public sealed class WindowSettingsService : BaseSettingsService<WindowSettingsSe
 
     private static new readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    protected override string FileName => SettingsFileName;
     protected override JsonTypeInfo<WindowSettingsService> JsonTypeInfo =>
         WindowSettingsServiceContext.Default.WindowSettingsService;
     private const string SettingsFileName = "windowSettings.json";

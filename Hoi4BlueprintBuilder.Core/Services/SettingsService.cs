@@ -36,7 +36,7 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
     public bool IsFirstRun { get; private init; }
 
     private const string SettingsFileName = "settings.json";
-    protected override string FileName => SettingsFileName;
+
     protected override JsonTypeInfo<SettingsService> JsonTypeInfo =>
         SettingsServiceContext.Default.SettingsService;
 

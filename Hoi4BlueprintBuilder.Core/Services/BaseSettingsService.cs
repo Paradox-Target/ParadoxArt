@@ -16,11 +16,6 @@ public abstract class BaseSettingsService<T>
     protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    /// 获取设置文件的名称（例如 "settings.json"）
-    /// </summary>
-    protected abstract string FileName { get; }
-
-    /// <summary>
     /// 获取用于序列化的 JsonTypeInfo
     /// </summary>
     protected abstract JsonTypeInfo<T> JsonTypeInfo { get; }
@@ -28,7 +23,7 @@ public abstract class BaseSettingsService<T>
     /// <summary>
     /// 获取配置文件的完整路径
     /// </summary>
-    protected virtual string FilePath => Path.Combine(App.ConfigFolder, FileName);
+    private string FilePath { get; set; } = string.Empty;
 
     /// <summary>
     /// 通用的加载逻辑
@@ -79,6 +74,7 @@ public abstract class BaseSettingsService<T>
             }
         }
 
+        result.FilePath = filePath;
         afterLoadAction?.Invoke(result);
         return result;
     }
