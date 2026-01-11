@@ -63,6 +63,32 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
+            <fa:SettingsExpander Header="应用字体">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE8D2;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ComboBox
+                        MinWidth="150"
+                        ItemsSource="{Binding InstalledFonts, Mode=OneTime}"
+                        MaxDropDownHeight="300"
+                        SelectedItem="{Binding SelectedFontFamily, Mode=TwoWay}" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
+            <fa:SettingsExpander Header="代码编辑器字体">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE8D2;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ComboBox
+                        MinWidth="150"
+                        ItemsSource="{Binding InstalledFonts, Mode=OneTime}"
+                        MaxDropDownHeight="300"
+                        SelectedItem="{Binding SelectedCodeFontFamily, Mode=TwoWay}" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
             <fa:SettingsExpander Description="*重启App后生效" Header="App 语言">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />

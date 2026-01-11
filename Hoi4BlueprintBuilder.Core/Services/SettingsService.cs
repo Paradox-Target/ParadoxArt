@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 
@@ -32,6 +33,12 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
     /// </summary>
     public double FileTreeWidth { get; set; } = 250;
 
+    /// <summary>
+    /// 应用程序字体
+    /// </summary>
+    public string MainFontFamily { get; set; }
+    public string CodeFontFamily { get; set; }
+
     [JsonIgnore]
     public bool IsFirstRun { get; private init; }
 
@@ -39,6 +46,30 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
 
     protected override JsonTypeInfo<SettingsService> JsonTypeInfo =>
         SettingsServiceContext.Default.SettingsService;
+
+    public SettingsService()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            MainFontFamily = "Microsoft YaHei UI";
+            CodeFontFamily = "Cascadia Code";
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            MainFontFamily = "Noto Sans CJK SC";
+            CodeFontFamily = "Ubuntu Mono";
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            MainFontFamily = "PingFang SC";
+            CodeFontFamily = "Menlo";
+        }
+        else
+        {
+            MainFontFamily = FontFamily.DefaultFontFamilyName;
+            CodeFontFamily = FontFamily.DefaultFontFamilyName;
+        }
+    }
 
     public static SettingsService LoadSettings()
     {

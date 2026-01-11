@@ -6,6 +6,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Services;
@@ -98,6 +99,9 @@ public sealed class App : Application
         var settingsService = Services.GetRequiredService<SettingsService>();
         RequestedThemeVariant = settingsService.ThemeMode.ToThemeVariant();
 
+        UpdateApplicationFont(settingsService.MainFontFamily);
+        UpdateApplicationCodeFont(settingsService.CodeFontFamily);
+
         var telemetryService = Services.GetRequiredService<TelemetryService>();
 
         telemetryService.TrackEvent("AppStart");
@@ -127,6 +131,40 @@ public sealed class App : Application
         Task.Run(() => telemetryService.TrackSystemEnvironment(screenSize, screenScaling));
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    public void UpdateApplicationFont(string? fontName)
+    {
+        if (string.IsNullOrWhiteSpace(fontName))
+        {
+            return;
+        }
+
+        try
+        {
+            Resources["MainFontFamily"] = new FontFamily(fontName);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "无法设置字体: {FontName}", fontName);
+        }
+    }
+
+    public void UpdateApplicationCodeFont(string? fontName)
+    {
+        if (string.IsNullOrWhiteSpace(fontName))
+        {
+            return;
+        }
+
+        try
+        {
+            Resources["CodeFontFamily"] = new FontFamily(fontName);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "无法设置字体: {FontName}", fontName);
+        }
     }
 
     private void OnDesktopExit(

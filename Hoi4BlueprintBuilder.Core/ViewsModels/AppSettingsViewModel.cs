@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hoi4BlueprintBuilder.Core.Extensions;
@@ -5,6 +6,7 @@ using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using NLog;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
@@ -14,6 +16,38 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     public LanguageInfo[] AppLanguages { get; } = LanguageHelper.AppLanguages;
     public GameLanguage[] GameLanguages { get; } = Enum.GetValues<GameLanguage>();
     public ThemeMode[] ThemeModes { get; } = Enum.GetValues<ThemeMode>();
+    public string[] InstalledFonts => InstalledFontsLazy.Value;
+
+    private static readonly Lazy<string[]> InstalledFontsLazy =
+        new(() => FontManager.Current.SystemFonts.AsValueEnumerable().Select(x => x.Name).Order().ToArray());
+
+    public string SelectedFontFamily
+    {
+        get => _settings.MainFontFamily;
+        set
+        {
+            if (_settings.MainFontFamily != value)
+            {
+                _settings.MainFontFamily = value;
+                OnPropertyChanged();
+                App.Current.UpdateApplicationFont(value);
+            }
+        }
+    }
+
+    public string SelectedCodeFontFamily
+    {
+        get => _settings.CodeFontFamily;
+        set
+        {
+            if (_settings.CodeFontFamily != value)
+            {
+                _settings.CodeFontFamily = value;
+                OnPropertyChanged();
+                App.Current.UpdateApplicationCodeFont(value);
+            }
+        }
+    }
 
     public bool IsAutoFocusPngConvertToDds
     {
