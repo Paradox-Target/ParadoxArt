@@ -14,10 +14,12 @@ public sealed class TelemetryService : IDisposable
 {
     private readonly SettingsService _settingsService;
     private readonly TelemetryClient _client;
-    private readonly Timer _memoryMonitorTimer;
-    private readonly Process _currentProcess = Process.GetCurrentProcess();
 
-    public TelemetryService(DeviceService deviceService, SettingsService settingsService)
+    public TelemetryService(
+        DeviceService deviceService,
+        SettingsService settingsService,
+        StatusBarService statusBarService
+    )
     {
         _settingsService = settingsService;
         var config = TelemetryConfiguration.CreateDefault();
@@ -30,29 +32,12 @@ public sealed class TelemetryService : IDisposable
 
         _client.Context.Session.Id = Guid.NewGuid().ToString();
         _client.Context.Session.IsFirst = settingsService.IsFirstRun;
-
-        _memoryMonitorTimer = new Timer(
-            _ => MemoryUsage(),
-            null,
-            TimeSpan.FromSeconds(0),
-            TimeSpan.FromSeconds(20)
-        );
-    }
-
-    private void MemoryUsage()
-    {
-        try
+        statusBarService.UpdateRamBytesUsage += ram =>
         {
-            _currentProcess.Refresh();
-            long currentMemory = _currentProcess.PrivateMemorySize64;
-            double memoryInMB = ByteSize.FromBytes(currentMemory).MegaBytes;
-
-            GetMetric("App_Memory_Usage_MB").TrackValue(memoryInMB);
-        }
-        catch (Exception)
-        {
-            // 忽略采样错误
-        }
+            double mb = ByteSize.FromBytes(ram).MebiBytes;
+            var metric = GetMetric("App_Memory_Usage_MB");
+            metric.TrackValue(mb);
+        };
     }
 
     public void TrackEvent(
@@ -157,9 +142,9 @@ public sealed class TelemetryService : IDisposable
     {
         try
         {
-            _currentProcess.Refresh();
+            using var currentProcess = Process.GetCurrentProcess();
             // 记录退出时的瞬时内存，作为单独的数据点
-            var finalMemory = ByteSize.FromBytes(_currentProcess.PrivateMemorySize64);
+            var finalMemory = ByteSize.FromBytes(currentProcess.PrivateMemorySize64);
             TrackMetric("App_Memory_Final_MB", finalMemory.MegaBytes);
         }
         catch (Exception)
@@ -170,8 +155,6 @@ public sealed class TelemetryService : IDisposable
 
     public void Dispose()
     {
-        _memoryMonitorTimer.Dispose();
-        _currentProcess.Dispose();
         _client.Flush();
     }
 }
