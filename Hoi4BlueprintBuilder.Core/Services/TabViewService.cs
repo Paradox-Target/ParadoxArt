@@ -11,7 +11,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 public sealed class TabViewService(IServiceProvider serviceProvider)
 {
     public ITabViewItem? CurrentItem => ((TabViewItem?)_tabView?.SelectedItem)?.Content as ITabViewItem;
-    public event Action? CurrentItemChanged;
+    public event Action<ITabViewItem>? CurrentItemChanged;
 
     private TabView TabView => _tabView ?? throw new InvalidOperationException("TabViewService 未初始化");
     private TabView? _tabView;
@@ -33,7 +33,9 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
         _tabView.SelectionChanged += (_, _) =>
         {
             ResizeSelectionTab();
-            CurrentItemChanged?.Invoke();
+            CurrentItemChanged?.Invoke(
+                CurrentItem ?? throw new InvalidOperationException("当前选中的 TabViewItem 内容为空")
+            );
         };
         var project = serviceProvider.GetRequiredService<ProjectConfigService>();
         var pathService = serviceProvider.GetRequiredService<ProjectPathService>();

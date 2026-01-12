@@ -19,40 +19,51 @@
         </Style>
     </UserControl.Styles>
 
-    <Grid x:Name="MainGrid" ColumnDefinitions="40,*">
-
-        <DockPanel x:Name="SidePanel" Grid.Column="0">
-            <ToggleButton
-                x:Name="FileTreeToggleButton"
-                Classes="SideButton"
-                DockPanel.Dock="Top">
-                <ToggleButton.Content>
-                    <fa:SymbolIcon Symbol="Folder" />
-                </ToggleButton.Content>
-            </ToggleButton>
-            <Button
-                x:Name="SettingsButton"
-                Classes="SideButton"
-                DockPanel.Dock="Bottom">
-                <Button.Content>
-                    <fa:SymbolIcon x:Name="SettingsIcon" Symbol="Settings" />
-                </Button.Content>
-            </Button>
-            <Border Background="Transparent" />
-        </DockPanel>
+    <Grid RowDefinitions="*,Auto">
 
         <Grid
-            x:Name="ContentGrid"
-            Grid.Column="1"
-            ColumnDefinitions="Auto,Auto,*">
+            x:Name="MainGrid"
+            ColumnDefinitions="40,*"
+            Row="0">
 
-            <ContentControl x:Name="FileTreeView" Grid.Column="0" />
-            <GridSplitter x:Name="MainGridSplitter" Grid.Column="1" />
-            <fa:TabView
-                x:Name="MainTabView"
-                Grid.Column="2"
-                IsAddTabButtonVisible="False"
-                TabCloseRequested="MainTabView_OnTabCloseRequested" />
+            <DockPanel x:Name="SidePanel" Grid.Column="0">
+                <ToggleButton
+                    x:Name="FileTreeToggleButton"
+                    Classes="SideButton"
+                    DockPanel.Dock="Top">
+                    <ToggleButton.Content>
+                        <fa:SymbolIcon Symbol="Folder" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+                <Button
+                    x:Name="SettingsButton"
+                    Classes="SideButton"
+                    DockPanel.Dock="Bottom">
+                    <Button.Content>
+                        <fa:SymbolIcon x:Name="SettingsIcon" Symbol="Settings" />
+                    </Button.Content>
+                </Button>
+                <Border Background="Transparent" />
+            </DockPanel>
+
+            <Grid
+                x:Name="ContentGrid"
+                Grid.Column="1"
+                ColumnDefinitions="Auto,Auto,*">
+
+                <ContentControl x:Name="FileTreeView" Grid.Column="0" />
+                <GridSplitter x:Name="MainGridSplitter" Grid.Column="1" />
+                <fa:TabView
+                    x:Name="MainTabView"
+                    Grid.Column="2"
+                    IsAddTabButtonVisible="False"
+                    TabCloseRequested="MainTabView_OnTabCloseRequested" />
+            </Grid>
         </Grid>
+
+        <ContentControl
+            x:Name="StatusBar"
+            Grid.Row="1"
+            Margin="4" />
     </Grid>
 </UserControl>

@@ -5,8 +5,8 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<StatusBarService>]
 public sealed class StatusBarService : IDisposable
 {
-    public event Action<string>? UpdateRamUsage;
-    public event Action<string>? UpdateFocusCount;
+    public event Action<long>? UpdateRamBytesUsage;
+    public event Action<int>? UpdateFocusCount;
 
     private readonly Timer _ramUsageTimer;
     private readonly Process _currentProcess = Process.GetCurrentProcess();
@@ -14,7 +14,7 @@ public sealed class StatusBarService : IDisposable
     public StatusBarService()
     {
         _ramUsageTimer = new Timer(OnRamUsageTimerTick);
-        _ramUsageTimer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(2));
+        _ramUsageTimer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(3));
     }
 
     private void OnRamUsageTimerTick(object? state)
@@ -22,8 +22,7 @@ public sealed class StatusBarService : IDisposable
         try
         {
             _currentProcess.Refresh();
-            long memoryUsageInMB = _currentProcess.WorkingSet64 / (1024 * 1024);
-            UpdateRamUsage?.Invoke($"内存使用: {memoryUsageInMB} MB");
+            UpdateRamBytesUsage?.Invoke(_currentProcess.WorkingSet64);
         }
         catch
         {
@@ -33,7 +32,7 @@ public sealed class StatusBarService : IDisposable
 
     public void SetCurrentFocusCount(int count)
     {
-        UpdateFocusCount?.Invoke($"国策数量: {count}");
+        UpdateFocusCount?.Invoke(count);
     }
 
     public void Dispose()

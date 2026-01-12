@@ -81,14 +81,14 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         _userStatusService = userStatusService;
         _telemetryService = telemetryService;
 
-        _tabViewService.CurrentItemChanged += () =>
+        _tabViewService.CurrentItemChanged += currentItem =>
         {
             if (IsVisibleForTitleCommandBar)
             {
                 OnPropertyChanged(nameof(FocusTriggers));
             }
 
-            IsFocusTreeEditorAtCurrent = _tabViewService.CurrentItem is FocusTreeEditorView;
+            IsFocusTreeEditorAtCurrent = currentItem is FocusTreeEditorView;
             EnableSaveButton = _tabViewService.CurrentItem is ISave;
         };
 

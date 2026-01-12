@@ -53,11 +53,11 @@ public sealed partial class FileTreeView : UserControl
     /// </summary>
     public FileTreeView()
         : this(
-            new FileTreeViewModel(new SettingsService(), new DefaultFileSortComparer()),
+            new FileTreeViewModel(SettingsService.LoadSettings(), new DefaultFileSortComparer()),
             new TabViewService(new ServiceContainer()),
             new UserStatusService(),
             ProjectConfigService.Load(SettingsService.LoadSettings()),
-            new ProjectPathService(null!)
+            new ProjectPathService(SettingsService.LoadSettings())
         ) { }
 
     public FileTreeView(

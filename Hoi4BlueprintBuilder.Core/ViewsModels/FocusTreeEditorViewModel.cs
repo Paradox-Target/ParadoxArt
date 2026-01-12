@@ -59,7 +59,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _notificationService = notificationService;
         _statusBarService = statusBarService;
 
-        // _nodes.CollectionChanged += OnNodeChanged;
+        _nodes.CollectionChanged += (_, _) => _statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
 
     public void OnLoaded()

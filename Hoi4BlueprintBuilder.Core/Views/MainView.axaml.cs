@@ -32,14 +32,16 @@ public sealed partial class MainView : UserControl
             new FileTreeView(),
             new TabViewService(new ServiceContainer()),
             new MainViewModel(),
-            new SettingsService()
+            SettingsService.LoadSettings(),
+            null!
         ) { }
 
     public MainView(
         FileTreeView fileTree,
         TabViewService tabViewService,
         MainViewModel mainViewModel,
-        SettingsService settingsService
+        SettingsService settingsService,
+        StatusBarView statusBarView
     )
     {
         InitializeComponent();
@@ -47,12 +49,14 @@ public sealed partial class MainView : UserControl
         _tabViewService = tabViewService;
         _settingsButtonAnimation = InitializeSettingsButtonAnimation();
         FileTreeView.Content = fileTree;
+        StatusBar.Content = statusBarView;
         SetupFileTreeColumnWidth(settingsService);
 
+        double marginHeight = StatusBar.Margin.Top + StatusBar.Margin.Bottom;
         _tabViewService.Initialize(
             MainTabView,
             () => ContentGrid.ColumnDefinitions[2].ActualWidth,
-            () => Bounds.Height
+            () => Bounds.Height - StatusBar.Bounds.Height - marginHeight
         );
         SizeChanged += MainTabViewOnSizeChanged;
         MainTabView.SizeChanged += MainTabViewOnSizeChanged;
