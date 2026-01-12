@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -102,15 +103,21 @@ public sealed partial class AppSettingsViewModel : ObservableObject
 
     private readonly SettingsService _settings;
     private readonly FileService _fileService;
+    private readonly TelemetryService _telemetryService;
     private bool _isChanged;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public AppSettingsViewModel(SettingsService settings, FileService fileService)
+    public AppSettingsViewModel(
+        SettingsService settings,
+        FileService fileService,
+        TelemetryService telemetryService
+    )
     {
         _settings = settings;
         _fileService = fileService;
-        PropertyChanged += (_, _) => _isChanged = true;
+        _telemetryService = telemetryService;
+        PropertyChanged += OnPropertyChangedEventHandler;
 
         _selectedAppLanguagesIndex = Array.FindIndex(
             AppLanguages,
@@ -127,6 +134,19 @@ public sealed partial class AppSettingsViewModel : ObservableObject
             language => language == settings.GameLanguage
         );
         _selectedThemeModeIndex = Array.FindIndex(ThemeModes, mode => mode == settings.ThemeMode);
+    }
+
+    private void OnPropertyChangedEventHandler(object? o, PropertyChangedEventArgs eventArgs)
+    {
+        _isChanged = true;
+        if (eventArgs.PropertyName is nameof(SelectedCodeFontFamily))
+        {
+            _telemetryService.TrackEvent("App_CodeFontFamily_Changed");
+        }
+        else if (eventArgs.PropertyName is nameof(SelectedFontFamily))
+        {
+            _telemetryService.TrackEvent("App_MainFontFamily_Changed");
+        }
     }
 
     [RelayCommand]
