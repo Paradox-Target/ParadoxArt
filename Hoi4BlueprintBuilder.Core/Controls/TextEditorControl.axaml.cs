@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using AvaloniaEdit.TextMate;
 using Hoi4BlueprintBuilder.Core.Infrastructure.CodeEditor;
+using TextMateSharp.Grammars;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
 
@@ -17,6 +18,7 @@ public sealed partial class TextEditorControl : UserControl
 
     private TextMate.Installation _installation;
     private ParadoxRegistryOptions _options;
+    private readonly RegistryOptions _rawOptions = new(ThemeName.Dark);
 
     public TextEditorControl()
     {
@@ -36,6 +38,10 @@ public sealed partial class TextEditorControl : UserControl
         {
             _installation.SetGrammar(ScopeNameTypes.Yml);
         }
+        else if (extensionName is ".json" or ".lua" or ".py")
+        {
+            _installation.SetGrammar(_rawOptions.GetScopeByExtension(extensionName));
+        }
         else
         {
             _installation.SetGrammar(ScopeNameTypes.Hoi4);
@@ -47,7 +53,7 @@ public sealed partial class TextEditorControl : UserControl
     [MemberNotNull(nameof(_options))]
     private void InitializeTextEditor()
     {
-        _options = new ParadoxRegistryOptions(App.Current.ActualThemeVariant);
+        _options = new ParadoxRegistryOptions(App.Current.ActualThemeVariant, _rawOptions);
         TextEditor.Options.HighlightCurrentLine = true;
         TextEditor.Options.EnableTextDragDrop = true;
         TextEditor.TextArea.RightClickMovesCaret = true;
