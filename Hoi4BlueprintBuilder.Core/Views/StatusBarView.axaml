@@ -16,9 +16,13 @@
             Spacing="4">
             <TextBlock IsVisible="{Binding IsVisibleFocusCountText}" Text="{Binding FocusCountText}" />
         </StackPanel>
-        <TextBlock
+        <StackPanel
             Grid.Column="1"
             HorizontalAlignment="Right"
-            Text="{Binding RamUsage}" />
+            Orientation="Horizontal"
+            Spacing="4">
+            <TextBlock Text="{Binding TextEncoding}" />
+            <TextBlock Text="{Binding RamUsage}" />
+        </StackPanel>
     </Grid>
 </UserControl>

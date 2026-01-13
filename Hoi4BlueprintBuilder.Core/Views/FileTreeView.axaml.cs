@@ -1,4 +1,3 @@
-using System.Collections.Frozen;
 using System.ComponentModel.Design;
 using Avalonia;
 using Avalonia.Controls;
@@ -8,6 +7,7 @@ using Avalonia.Media;
 using Avalonia.VisualTree;
 using DotNet.Globbing;
 using FluentAvalonia.UI.Controls;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -30,23 +30,6 @@ public sealed partial class FileTreeView : UserControl
         "**/common/national_focus/*.txt",
         new GlobOptions { Evaluation = new EvaluationOptions { CaseInsensitive = false } }
     );
-
-    private static readonly FrozenSet<string> TextExtensionNames = new HashSet<string>
-    {
-        ".txt",
-        ".md",
-        ".json",
-        ".mod",
-        ".gui",
-        ".gfx",
-        ".lua",
-        ".yml",
-        ".py",
-        ".ini"
-    }.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
-
-    private static readonly FrozenSet<string>.AlternateLookup<ReadOnlySpan<char>> TextExtensionNamesLookup =
-        TextExtensionNames.GetAlternateLookup<ReadOnlySpan<char>>();
 
     /// <summary>
     /// 设计器使用
@@ -227,12 +210,11 @@ public sealed partial class FileTreeView : UserControl
 
     private void AddNewTabViewByFilePath(string filePath)
     {
-        var extension = Path.GetExtension(filePath.AsSpan());
         if (FocusGlob.IsMatch(filePath))
         {
             _tabView.AddTabFromIoc<FocusTreeEditorView>(filePath);
         }
-        else if (TextExtensionNamesLookup.Contains(extension))
+        else if (FileCheckHelper.IsTextFile(filePath))
         {
             _tabView.AddTabFromIoc<TextEditorView>(filePath);
         }

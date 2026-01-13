@@ -149,8 +149,6 @@
                 </fa:SettingsExpander.IconSource>
                 <UniformGrid>
                     <HyperlinkButton Content="Avalonia" NavigateUri="https://avaloniaui.net/" />
-                    <HyperlinkButton Content="Sarasa-Gothic" NavigateUri="https://github.com/be5invis/Sarasa-Gothic" />
-                    <HyperlinkButton Content="cascadia-code" NavigateUri="https://github.com/microsoft/cascadia-code" />
                     <HyperlinkButton Content="FluentAvaloniaUI" NavigateUri="https://github.com/amwx/FluentAvalonia" />
                     <HyperlinkButton Content="CommunityToolkit.Mvvm" NavigateUri="https://github.com/CommunityToolkit/dotnet" />
                     <HyperlinkButton Content="Fody" NavigateUri="https://github.com/Fody/Fody" />
@@ -175,6 +173,7 @@
                     <HyperlinkButton Content="NaturalSort.Extension" NavigateUri="https://github.com/tompazourek/NaturalSort.Extension" />
                     <HyperlinkButton Content="SixLabors.ImageSharp" NavigateUri="https://github.com/SixLabors/ImageSharp" />
                     <HyperlinkButton Content="ByteSize" NavigateUri="https://github.com/omar/ByteSize" />
+                    <HyperlinkButton Content="UTF.Unknown" NavigateUri="https://github.com/CharsetDetector/UTF-unknown" />
                     <HyperlinkButton Content="Vanara" NavigateUri="https://github.com/dahall/vanara" />
                     <HyperlinkButton Content="Velopack" NavigateUri="https://github.com/velopack/velopack" />
                     <HyperlinkButton Content="LiveMarkdown.Avalonia" NavigateUri="https://github.com/DearVa/LiveMarkdown.Avalonia" />

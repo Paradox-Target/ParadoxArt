@@ -12,6 +12,9 @@ public interface ITabViewItem
     /// <summary>
     /// 文件路径, 用来在 TabView 中判断是否存在
     /// </summary>
+    /// <remarks>
+    /// 设置UI会使用一个不存在的路径
+    /// </remarks>
     string FilePath { get; }
 
     string ToolTip { get; }
