@@ -1,34 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Cysharp.Text;
 using FluentAvalonia.UI.Controls;
+using Hoi4BlueprintBuilder.Core.Infrastructure;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 
-public sealed class RenameFileViewModel : ObservableValidator
+public sealed partial class RenameFileViewModel : ObservableValidator
 {
-    public bool IsValid => IsValidValue();
-
-    private string _errorMessage = LangResources.RenameFile_InvalidFileOrFolderName;
-
     [CustomValidation(typeof(RenameFileViewModel), nameof(ValidateName))]
-    public string NewName
-    {
-        get;
-        set
-        {
-            SetProperty(ref field, value, true);
-            _dialog.IsPrimaryButtonEnabled = IsValid;
-        }
-    }
+    [ValidFileName]
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    private string _newName;
 
     public int SelectionEnd { get; }
 
     private readonly ContentDialog _dialog;
     private readonly SystemFileItem _fileItem;
-    private readonly char[] _invalidFileNameChars = Path.GetInvalidFileNameChars();
-    private readonly char[] _invalidChars = Path.GetInvalidPathChars();
 
     public RenameFileViewModel(ContentDialog dialog, SystemFileItem fileItem)
     {
@@ -37,50 +29,25 @@ public sealed class RenameFileViewModel : ObservableValidator
         NewName = fileItem.Name;
         if (fileItem.IsFile)
         {
-            var length = fileItem.Name.IndexOf('.');
+            int length = fileItem.Name.IndexOf('.');
             SelectionEnd = length == -1 ? 0 : length;
         }
+
+        ErrorsChanged += (_, _) => _dialog.IsPrimaryButtonEnabled = !HasErrors;
     }
 
     public static ValidationResult? ValidateName(string name, ValidationContext context)
     {
         var instance = (RenameFileViewModel)context.ObjectInstance;
 
-        if (instance.IsValid)
+        if (instance.HasEqualsNameItem())
         {
-            return ValidationResult.Success;
+            return new ValidationResult(
+                ZString.Format(LangResources.File_NameAlreadyExists, instance.NewName)
+            );
         }
 
-        return new ValidationResult(instance._errorMessage);
-    }
-
-    private bool IsValidValue()
-    {
-        var isValid = !string.IsNullOrWhiteSpace(NewName);
-        _errorMessage = LangResources.RenameFile_InvalidFileOrFolderName;
-
-        if (isValid && NewName.Length != 0)
-        {
-            isValid = NewName[0] != ' ' && NewName[^1] != ' ';
-        }
-        if (isValid)
-        {
-            if (_fileItem.IsFile)
-            {
-                isValid = NewName.IndexOfAny(_invalidFileNameChars) == -1;
-            }
-            else
-            {
-                isValid = NewName.IndexOfAny(_invalidChars) == -1;
-            }
-            _errorMessage = LangResources.RenameFile_NameContainInvalidChar;
-        }
-        if (isValid && HasEqualsNameItem())
-        {
-            isValid = false;
-            _errorMessage = string.Format(LangResources.File_NameAlreadyExists, NewName);
-        }
-        return isValid;
+        return ValidationResult.Success;
     }
 
     private bool HasEqualsNameItem()
@@ -90,8 +57,8 @@ public sealed class RenameFileViewModel : ObservableValidator
             return false;
         }
 
-        return _fileItem.Parent.Children.Any(item =>
-            !ReferenceEquals(item, _fileItem) && item.Name == NewName
-        );
+        return _fileItem
+            .Parent.Children.AsValueEnumerable()
+            .Any(item => !ReferenceEquals(item, _fileItem) && item.Name == NewName);
     }
 }

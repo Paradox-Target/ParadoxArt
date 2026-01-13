@@ -8,7 +8,7 @@ namespace Hoi4BlueprintBuilder.Core.Views.Dialogs;
 public sealed partial class RenameFileView : UserControl
 {
     public string NewName => ViewModel.NewName;
-    public bool IsInvalid => !ViewModel.IsValid;
+    public bool IsInvalid => ViewModel.HasErrors;
     private RenameFileViewModel ViewModel { get; }
 
     public RenameFileView(ContentDialog dialog, SystemFileItem fileItem)

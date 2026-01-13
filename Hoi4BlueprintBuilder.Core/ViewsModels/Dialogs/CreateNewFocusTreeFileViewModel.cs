@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Cysharp.Text;
+using Hoi4BlueprintBuilder.Core.Infrastructure;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
 using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
     [ObservableProperty]
     [Required]
     [CustomValidation(typeof(CreateNewFocusTreeFileViewModel), nameof(FileShouldNotExist))]
+    [ValidFileName]
     [NotifyDataErrorInfo]
     private string _fileName = string.Empty;
 
