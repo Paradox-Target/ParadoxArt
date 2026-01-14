@@ -55,8 +55,8 @@ public sealed class CountryTagService : CommonResourcesService<CountryTagService
                 .AsValueEnumerable()
                 .Any(leaf =>
                     leaf.Key.EqualsIgnoreCase("dynamic_tags")
-                    && leaf.Value.TryGetBool(out bool value)
-                    && value
+                    && leaf.Value.TryGetBool(out bool isDynamicTags)
+                    && isDynamicTags
                 )
         )
         {

@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Infrastructure;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
+using NLog;
 using Pfim;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
@@ -17,6 +18,8 @@ public sealed class ImageService : IDisposable
     private readonly Dictionary<string, DdsMeta> _ddsHandles = [];
     private readonly SpriteService _spriteService;
     private readonly FileSystemSafeWatcher _fileSystemWatcher;
+
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public ImageService(SpriteService spriteService, SettingsService settingsService)
     {
@@ -68,19 +71,27 @@ public sealed class ImageService : IDisposable
     /// <returns>如果是不支持的图像格式, 返回 <c>null</c></returns>
     public Bitmap? GetImageSource(string spriteId, string filePath)
     {
-        var extension = Path.GetExtension(filePath.AsSpan());
-        Bitmap? bitmap = null;
-        if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
+        try
         {
-            bitmap = new Bitmap(filePath);
-        }
+            var extension = Path.GetExtension(filePath.AsSpan());
+            Bitmap? bitmap = null;
+            if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
+            {
+                bitmap = new Bitmap(filePath);
+            }
 
-        if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))
+            if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))
+            {
+                bitmap = GetImageSourceFromDds(spriteId, filePath);
+            }
+
+            return bitmap;
+        }
+        catch (Exception e)
         {
-            bitmap = GetImageSourceFromDds(spriteId, filePath);
+            Log.Error(e, "加载图像失败: {FilePath}, spriteId: {SpriteId}", filePath, spriteId);
+            return null;
         }
-
-        return bitmap;
     }
 
     private Bitmap GetImageSourceFromDds(string spriteName, string filePath)
@@ -122,10 +133,7 @@ public sealed class ImageService : IDisposable
             ImageFormat.Rgb8 => PixelFormats.Gray8,
             ImageFormat.R5g5b5a1 or ImageFormat.R5g5b5 => PixelFormats.Bgr555,
             ImageFormat.R5g6b5 => PixelFormats.Bgr565,
-            _
-                => throw new NotSupportedException(
-                    $"Unable to convert {image.Format} to WPF PixelFormat"
-                )
+            _ => throw new NotSupportedException($"Unable to convert {image.Format} to WPF PixelFormat")
         };
     }
 
