@@ -3,8 +3,10 @@ using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.Messaging;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Infrastructure;
 using Hoi4BlueprintBuilder.Core.Messages;
+using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
 using NLog;
 using Pfim;
@@ -73,16 +75,20 @@ public sealed class ImageService : IDisposable
     {
         try
         {
-            var extension = Path.GetExtension(filePath.AsSpan());
+            var format = ImageFormatHelper.GetImageFormat(filePath);
+
             Bitmap? bitmap = null;
-            if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
+            if (format == ImageFormatType.Png)
             {
                 bitmap = new Bitmap(filePath);
             }
-
-            if (extension.Equals(".dds", StringComparison.OrdinalIgnoreCase))
+            else if (format == ImageFormatType.Dds)
             {
                 bitmap = GetImageSourceFromDds(spriteId, filePath);
+            }
+            else
+            {
+                Log.Warn("Unknown image format: {FilePath}", filePath);
             }
 
             return bitmap;
