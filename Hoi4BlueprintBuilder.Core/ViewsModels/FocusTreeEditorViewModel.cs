@@ -64,13 +64,12 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 
     public void OnLoaded()
     {
-        WeakReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
+        StrongReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
         StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(this, DeleteImageResource);
     }
 
     public void OnUnLoaded()
     {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
         StrongReferenceMessenger.Default.UnregisterAll(this);
     }
 
@@ -336,7 +335,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 
         if (changed)
         {
-            WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+            StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
         }
     }
 
@@ -370,12 +369,11 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             return;
         }
 
-        WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+        StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
     }
 
     public void Close()
     {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
         StrongReferenceMessenger.Default.UnregisterAll(this);
         ClearResources();
     }

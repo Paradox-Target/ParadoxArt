@@ -32,7 +32,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject { }
 ### 消息传递 (CommunityToolkit.Mvvm)
 
 - **StrongReferenceMessenger**: 用于必须送达的消息（如 `SaveFocusTreeMessage`）
-- **WeakReferenceMessenger**: 用于可选监听的消息（如 `RedrawFocusConnectionLinesMessage`）
+- **WeakReferenceMessenger**: 弱引用消息
 
 消息定义在 `Messages/` 目录，通常为 `record` 类型。
 

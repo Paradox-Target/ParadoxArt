@@ -67,7 +67,7 @@ public class LocalizationServiceTests
         _serviceProvider?.Dispose();
 
         // 清理消息订阅
-        WeakReferenceMessenger.Default.UnregisterAll(_localizationService);
+        StrongReferenceMessenger.Default.UnregisterAll(_localizationService);
 
         // 清理临时文件
         if (Directory.Exists(_testRunDirectory))

@@ -225,7 +225,7 @@ public sealed class FocusConnectionLinesControl : Control
 
     protected override void OnUnloaded(RoutedEventArgs e)
     {
-        WeakReferenceMessenger.Default.UnregisterAll(this);
+        StrongReferenceMessenger.Default.UnregisterAll(this);
 
         base.OnUnloaded(e);
     }
@@ -234,7 +234,7 @@ public sealed class FocusConnectionLinesControl : Control
     {
         base.OnLoaded(e);
 
-        WeakReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(this, Handler);
+        StrongReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(this, Handler);
     }
 
     private void Handler(object o, RedrawFocusConnectionLinesMessage redrawFocusConnectionLinesMessage)

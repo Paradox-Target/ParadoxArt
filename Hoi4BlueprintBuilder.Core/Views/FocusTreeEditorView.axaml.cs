@@ -367,7 +367,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         if (result == ContentDialogResult.Primary)
         {
             var position = _interactionManager?.GetRightClickGridPosition() ?? (0, 0);
-            var newFocusNode = await WeakReferenceMessenger.Default.Send(
+            var newFocusNode = await StrongReferenceMessenger.Default.Send(
                 new CreateNewFocusMessage(
                     new FocusPoint(position.X, position.Y),
                     viewModel.FocusId,

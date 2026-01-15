@@ -355,7 +355,7 @@ public sealed partial class FocusNode(string path, FocusType type)
             || Children.IsNotEmpty
         )
         {
-            WeakReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+            StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
         }
     }
 
