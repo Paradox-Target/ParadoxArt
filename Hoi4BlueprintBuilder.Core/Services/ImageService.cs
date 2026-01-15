@@ -16,7 +16,6 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<ImageService>]
 public sealed class ImageService : IDisposable
 {
-    // TODO: 文件变更监控，变更时释放缓存
     private readonly Dictionary<string, DdsMeta> _ddsHandles = [];
     private readonly SpriteService _spriteService;
     private readonly FileSystemSafeWatcher _fileSystemWatcher;
