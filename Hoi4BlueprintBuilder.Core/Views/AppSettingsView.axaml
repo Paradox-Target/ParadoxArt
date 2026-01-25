@@ -118,6 +118,20 @@
                 </fa:SettingsExpander.ActionIconSource>
             </fa:SettingsExpander>
 
+            <fa:SettingsExpander
+                Command="{Binding OpenLogsFolderInExplorerCommand}"
+                CommandParameter="{Binding Description, RelativeSource={RelativeSource Self}}"
+                Description="{x:Static local:App.LogsFolder}"
+                Header="打开日志文件夹"
+                IsClickEnabled="True">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE8DA;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.ActionIconSource>
+                    <control:FontIconSource Glyph="&#xE8A7;" />
+                </fa:SettingsExpander.ActionIconSource>
+            </fa:SettingsExpander>
+
             <TextBlock
                 Margin="4,4,0,4"
                 FontSize="18"

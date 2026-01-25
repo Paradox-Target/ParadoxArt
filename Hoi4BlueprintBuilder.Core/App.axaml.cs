@@ -34,6 +34,8 @@ public sealed class App : Application
     public const string ProjectConfigDirectoryName = ".paradoxtarget";
     public const string UpdatePackageDownloadUrl = "https://packages.paradoxtarget.top";
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
+    public static string LogsFolder { get; } = Path.Combine(Environment.CurrentDirectory, "Logs");
+
     public event Action<IServiceCollection>? ConfiguringServices;
 
     private ServiceCollection? _serviceCollection;

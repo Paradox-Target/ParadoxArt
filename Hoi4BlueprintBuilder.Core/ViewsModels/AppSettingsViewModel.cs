@@ -94,6 +94,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     private readonly SettingsService _settings;
     private readonly FileService _fileService;
     private readonly TelemetryService _telemetryService;
+    private readonly MessageBoxService _messageBoxService;
     private bool _isChanged;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -101,12 +102,14 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     public AppSettingsViewModel(
         SettingsService settings,
         FileService fileService,
-        TelemetryService telemetryService
+        TelemetryService telemetryService,
+        MessageBoxService messageBoxService
     )
     {
         _settings = settings;
         _fileService = fileService;
         _telemetryService = telemetryService;
+        _messageBoxService = messageBoxService;
         PropertyChanged += OnPropertyChangedEventHandler;
 
         _selectedAppLanguagesIndex = Array.FindIndex(
@@ -154,7 +157,30 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     private async Task OpenConfigFolderInExplorer(string configFolder)
     {
         Log.Debug("尝试打开配置文件夹: {ConfigFolder}", configFolder);
-        await _fileService.LaunchUriAsync(configFolder);
+        try
+        {
+            await _fileService.LaunchUriAsync(configFolder).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            await _messageBoxService.ShowErrorAsync("无法打开配置文件夹，可能文件夹不存在。", "打开配置文件夹失败").ConfigureAwait(false);
+            Log.Error(e, "打开配置文件夹失败: {ConfigFolder}", configFolder);
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenLogsFolderInExplorer(string logsFolder)
+    {
+        Log.Debug("尝试打开日志文件夹: {LogsFolder}", logsFolder);
+        try
+        {
+            await _fileService.LaunchUriAsync(logsFolder).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            await _messageBoxService.ShowErrorAsync("无法打开日志文件夹，可能文件夹不存在。", "打开日志文件夹失败").ConfigureAwait(false);
+            Log.Error(e, "打开日志文件夹失败: {LogsFolder}", logsFolder);
+        }
     }
 
     partial void OnSelectedAppLanguagesIndexChanged(int value)
