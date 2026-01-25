@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Cysharp.Text;
-using Hoi4BlueprintBuilder.Core.Infrastructure;
+using Hoi4BlueprintBuilder.Core.Infrastructure.Attributes;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
 using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;

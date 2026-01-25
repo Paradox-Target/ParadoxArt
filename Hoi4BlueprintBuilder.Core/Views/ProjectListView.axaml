@@ -1,0 +1,83 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.ProjectListView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Hoi4BlueprintBuilder.Core.Models"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:ProjectListViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="Border.ProjectItem">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Border.ProjectItem:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
+        </Style>
+        <Style Selector="Border.ProjectDirectoryNotExist">
+
+            <Setter Property="Background" Value="LightGray" />
+        </Style>
+        <Style Selector="Border.ProjectDirectoryNotExist TextBlock">
+            <Setter Property="TextDecorations" Value="Strikethrough" />
+            <Setter Property="Foreground" Value="DarkGray" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+            <TextBox
+                Grid.Column="0"
+                Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}"
+                Watermark="搜索项目">
+                <TextBox.InnerLeftContent>
+                    <controls:FontIcon Glyph="&#xE721;" />
+                </TextBox.InnerLeftContent>
+            </TextBox>
+            <StackPanel
+                Grid.Column="1"
+                Orientation="Horizontal"
+                Spacing="4">
+                <Button Command="{Binding CreateNewProjectCommand}" Content="新建Mod" />
+                <Button Command="{Binding OpenProjectCommand}" Content="打开Mod" />
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" Margin="0,8,0,0">
+            <ItemsControl x:Name="ProjectListBox" ItemsSource="{Binding Projects}">
+                <Interaction.Behaviors>
+                    <PointerPressedEventTrigger>
+                        <InvokeCommandAction Command="{Binding OpenProjectItemCommand}" PassEventArgsToCommand="True" />
+                    </PointerPressedEventTrigger>
+                </Interaction.Behaviors>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="models:ProjectItem">
+                        <Border
+                            Margin="0,0,0,8"
+                            Padding="8"
+                            Classes="ProjectItem"
+                            Classes.ProjectDirectoryNotExist="{Binding !IsPathExist}">
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="{Binding Name}" />
+                                <TextBlock
+                                    Margin="0,4,0,0"
+                                    Text="{Binding Path=DirectoryPath}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

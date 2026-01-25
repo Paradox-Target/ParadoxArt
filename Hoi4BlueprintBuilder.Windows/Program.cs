@@ -40,6 +40,7 @@ public sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
+            .UseR3()
             .AfterSetup(appBuilder =>
             {
                 var app = (App?)appBuilder.Instance ?? throw new ArgumentException();

@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Cysharp.Text;
 using FluentAvalonia.UI.Controls;
-using Hoi4BlueprintBuilder.Core.Infrastructure;
+using Hoi4BlueprintBuilder.Core.Infrastructure.Attributes;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Localization.Strings;
 using ZLinq;

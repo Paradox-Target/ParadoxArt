@@ -8,6 +8,11 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<MessageBoxService>]
 public sealed class MessageBoxService
 {
+    public Task ShowErrorAsync(string message, string title = "")
+    {
+        return ShowAsync(message, title, MessageBoxIcon.Error);
+    }
+
     public Task<MessageBoxResult> ShowAsync(
         string message,
         string title = "",

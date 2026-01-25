@@ -24,15 +24,6 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
-            <fa:SettingsExpander Description="{Binding ModRootFolderPath, Mode=OneWay}" Header="Mod根目录">
-                <fa:SettingsExpander.IconSource>
-                    <control:FontIconSource Glyph="&#xE756;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
-                    <Button Command="{Binding PickModRootFolderPathCommand}" Content="重新选择(需重启App)" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
-
             <fa:SettingsExpander Description="使用 DDS 格式有助于加快游戏载入速度" Header="导入 PNG 时自动转换成 DDS 格式">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xEB9F;" />
@@ -178,6 +169,7 @@
                     <HyperlinkButton Content="Vanara" NavigateUri="https://github.com/dahall/vanara" />
                     <HyperlinkButton Content="Velopack" NavigateUri="https://github.com/velopack/velopack" />
                     <HyperlinkButton Content="LiveMarkdown.Avalonia" NavigateUri="https://github.com/DearVa/LiveMarkdown.Avalonia" />
+                    <HyperlinkButton Content="Xaml.Behaviors.Avalonia" NavigateUri="https://github.com/wieslawsoltes/Xaml.Behaviors" />
                 </UniformGrid>
             </fa:SettingsExpander>
         </StackPanel>

@@ -2,7 +2,7 @@
 
 namespace Hoi4BlueprintBuilder.Core.Views.Dialogs;
 
-public partial class CreateNewFocusTreeFileView : UserControl
+public sealed partial class CreateNewFocusTreeFileView : UserControl
 {
     public CreateNewFocusTreeFileView()
     {

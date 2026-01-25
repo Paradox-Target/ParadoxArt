@@ -47,6 +47,7 @@
         <PackageReference Include="Pidgin" />
         <PackageReference Include="R3Extensions.Avalonia" />
         <PackageReference Include="SixLabors.ImageSharp" />
+        <PackageReference Include="Xaml.Behaviors.Avalonia" />
         <PackageReference Include="ZLinq" />
         <PackageReference Include="Ardalis.SmartEnum" />
         <PackageReference Include="Enums.NET" />

@@ -41,21 +41,6 @@
                         Content="..." />
                 </Grid>
             </StackPanel>
-
-            <StackPanel>
-                <TextBlock Classes="SettingsTitleTextBlock" Text="MOD 根目录" />
-                <Grid ColumnDefinitions="*,Auto">
-                    <TextBox
-                        Classes="SettingsPathTextBox"
-                        IsReadOnly="True"
-                        Text="{Binding ModPath, Mode=OneWay}" />
-                    <Button
-                        Grid.Column="1"
-                        Classes="SettingsPickButton"
-                        Command="{Binding PickModPathCommand}"
-                        Content="..." />
-                </Grid>
-            </StackPanel>
         </StackPanel>
 
         <StackPanel

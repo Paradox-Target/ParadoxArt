@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using Avalonia.Collections;
 using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
@@ -15,8 +16,11 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
     public string AppLanguage { get; set; } = string.Empty;
     public GameLanguage GameLanguage { get; set; } = LanguageHelper.GetGameLanguageBySystemLanguage();
     public string GameRootFolderPath { get; set; } = string.Empty;
+
+    [JsonIgnore]
     public string ModRootFolderPath { get; set; } = string.Empty;
     public ThemeMode ThemeMode { get; set; } = ThemeMode.Default;
+    public AvaloniaList<ProjectItem> Projects { get; set; } = [];
 
     /// <summary>
     /// 导入国策图片时是否自动将 png 转换为 dds 格式

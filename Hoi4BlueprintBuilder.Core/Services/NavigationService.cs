@@ -66,12 +66,9 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
             }
             else
             {
-                if (
-                    Directory.Exists(settingsService.GameRootFolderPath)
-                    && Directory.Exists(settingsService.ModRootFolderPath)
-                )
+                if (Directory.Exists(settingsService.GameRootFolderPath))
                 {
-                    NavigateTo<MainView>();
+                    NavigateTo<ProjectListView>();
                 }
                 else
                 {

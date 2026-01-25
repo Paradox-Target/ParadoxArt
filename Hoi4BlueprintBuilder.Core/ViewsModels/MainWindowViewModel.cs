@@ -25,7 +25,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
         }
         else
         {
-            navigationService.NavigateTo<MainView>();
+            navigationService.NavigateTo<ProjectListView>();
         }
 #else
         navigationService.NavigateTo<AppUpdateView>();

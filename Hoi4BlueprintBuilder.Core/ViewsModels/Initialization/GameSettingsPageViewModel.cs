@@ -9,27 +9,16 @@ using Hoi4BlueprintBuilder.Core.Views.Initialization;
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Initialization;
 
 [RegisterTransient<GameSettingsPageViewModel>]
-public sealed partial class GameSettingsPageViewModel(
-    SettingsService settings,
-    FileService fileService
-) : ObservableObject
+public sealed partial class GameSettingsPageViewModel(SettingsService settings, FileService fileService)
+    : ObservableObject
 {
     public Frame? Frame { get; set; }
 
-    private bool IsCompleted =>
-        !string.IsNullOrEmpty(GamePath)
-        && !string.IsNullOrEmpty(ModPath)
-        && GamePath != ModPath
-        && Directory.Exists(GamePath)
-        && Directory.Exists(ModPath);
+    private bool IsCompleted => !string.IsNullOrEmpty(GamePath) && Directory.Exists(GamePath);
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
     private string _gamePath = string.Empty;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
-    private string _modPath = string.Empty;
 
     [RelayCommand]
     private async Task PickGamePath()
@@ -40,19 +29,6 @@ public sealed partial class GameSettingsPageViewModel(
         {
             GamePath = storageFolder.TryGetLocalPath() ?? throw new NullReferenceException();
             settings.GameRootFolderPath = GamePath;
-        }
-    }
-
-    [RelayCommand]
-    private async Task PickModPath()
-    {
-        var storageFolder = await fileService.OpenFolderAsync();
-
-        if (storageFolder is not null)
-        {
-            // TODO: 也许需要改成 Uri
-            ModPath = storageFolder.TryGetLocalPath() ?? throw new NullReferenceException();
-            settings.ModRootFolderPath = ModPath;
         }
     }
 

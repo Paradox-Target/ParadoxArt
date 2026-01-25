@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Hoi4BlueprintBuilder.Localization.Strings;
 
-namespace Hoi4BlueprintBuilder.Core.Infrastructure;
+namespace Hoi4BlueprintBuilder.Core.Infrastructure.Attributes;
 
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class ValidFileNameAttribute : ValidationAttribute
@@ -46,7 +46,7 @@ public sealed class ValidFileNameAttribute : ValidationAttribute
             {
                 return new ValidationResult(LangResources.RenameFile_InvalidFileOrFolderName);
             }
-            if (str.IndexOfAny(InvalidCharsSearch) != -1 || IsReservedFileNames(str))
+            if (str.ContainsAny(InvalidCharsSearch) || IsReservedFileNames(str))
             {
                 return new ValidationResult(LangResources.RenameFile_NameContainInvalidChar);
             }

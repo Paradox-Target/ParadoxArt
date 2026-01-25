@@ -1,0 +1,37 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.Dialogs.CreateNewProjectView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs"
+    MinWidth="500"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:CreateNewProjectViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="TextBox">
+            <Setter Property="MinWidth" Value="250" />
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel VerticalAlignment="Center" Spacing="16">
+        <StackPanel HorizontalAlignment="Center" Spacing="4">
+            <TextBlock VerticalAlignment="Center" Text="Mod 名称" />
+            <TextBox VerticalAlignment="Center" Text="{Binding ModName}" />
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" Spacing="4">
+            <TextBlock VerticalAlignment="Center" Text="Mod 文件夹名称" />
+            <TextBox VerticalAlignment="Center" Text="{Binding FolderName, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="{Binding FinalFolder}" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" Spacing="4">
+            <TextBlock VerticalAlignment="Center" Text="支持版本" />
+            <TextBox VerticalAlignment="Center" Text="{Binding SupportedVersion}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>
