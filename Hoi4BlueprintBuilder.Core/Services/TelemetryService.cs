@@ -97,7 +97,8 @@ public sealed class TelemetryService : IDisposable
 
     private void TrackHardwareInfo()
     {
-        if (OperatingSystem.IsMobile)
+        // 我们只在第一次运行时记录硬件信息
+        if (OperatingSystem.IsMobile || !_settingsService.IsFirstRun)
         {
             return;
         }
