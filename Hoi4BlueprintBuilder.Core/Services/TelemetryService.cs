@@ -73,9 +73,7 @@ public sealed class TelemetryService : IDisposable
                 { "App_Version", App.Version.ToString() },
                 { "OS_Version", Environment.OSVersion.ToString() },
                 { "Culture", CultureInfo.CurrentUICulture.Name },
-                { "Processor_Count", Environment.ProcessorCount.ToString() },
-                { "Screen_Size", screenSize ?? "Unknown" },
-                { "Screen_Scaling", screenScaling ?? "Unknown" }
+                { "Processor_Count", Environment.ProcessorCount.ToString() }
             };
             // 第一次运行时用户还没有选择主题模式，所以这里不记录
             if (!_settingsService.IsFirstRun)
@@ -85,7 +83,7 @@ public sealed class TelemetryService : IDisposable
                 properties["Game_Language"] = _settingsService.GameLanguage.ToString();
             }
 
-            Task.Run(TrackHardwareInfo);
+            Task.Run(() => TrackHardwareInfo(screenSize, screenScaling));
 
             TrackEvent("App_Environment_Snapshop", properties);
         }
@@ -95,7 +93,7 @@ public sealed class TelemetryService : IDisposable
         }
     }
 
-    private void TrackHardwareInfo()
+    private void TrackHardwareInfo(string? screenSize, string? screenScaling)
     {
         // 我们只在第一次运行时记录硬件信息
         if (OperatingSystem.IsMobile || !_settingsService.IsFirstRun)
@@ -129,7 +127,9 @@ public sealed class TelemetryService : IDisposable
                         .JoinToString(',')
                 },
                 { "Memory_Total_GB", $"{totalMemory.ToString("F1", CultureInfo.InvariantCulture)} GB" },
-                { "OS_Name", hardwareInfo.OperatingSystem.Name }
+                { "OS_Name", hardwareInfo.OperatingSystem.Name },
+                { "Screen_Size", screenSize ?? "Unknown" },
+                { "Screen_Scaling", screenScaling ?? "Unknown" }
             };
             TrackEvent("Hardware_Snapshop", properties);
         }
