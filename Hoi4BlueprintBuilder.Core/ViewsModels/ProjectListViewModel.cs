@@ -32,19 +32,22 @@ public sealed partial class ProjectListViewModel : ObservableObject
     private readonly FileService _fileService;
     private readonly MessageBoxService _messageBoxService;
     private readonly NavigationService _navigationService;
+    private readonly TelemetryService _telemetryService;
     private readonly IDisposable _disposable;
 
     public ProjectListViewModel(
         SettingsService settingsService,
         FileService fileService,
         MessageBoxService messageBoxService,
-        NavigationService navigationService
+        NavigationService navigationService,
+        TelemetryService telemetryService
     )
     {
         _settingsService = settingsService;
         _fileService = fileService;
         _messageBoxService = messageBoxService;
         _navigationService = navigationService;
+        _telemetryService = telemetryService;
         Projects = _settingsService.Projects;
 
         _disposable = SearchText
@@ -92,6 +95,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
         }
 
         await CreateProjectAsync(viewModel).ConfigureAwait(false);
+        _telemetryService.TrackEvent("Project_Created");
     }
 
     private async Task CreateProjectAsync(CreateNewProjectViewModel viewModel)
