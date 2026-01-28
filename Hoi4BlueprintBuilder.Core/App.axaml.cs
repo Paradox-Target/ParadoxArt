@@ -32,7 +32,21 @@ public sealed class App : Application
     public const string ProjectConfigDirectoryName = ".paradoxart";
     public const string UpdatePackageDownloadUrl = "https://packages.paradoxtarget.top";
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
-    public static string LogsFolder { get; } = Path.Combine(Environment.CurrentDirectory, "Logs");
+    public static string LogsFolder { get; } = GetLogsFolder();
+
+    private static string GetLogsFolder()
+    {
+        if (OperatingSystem.IsMobile)
+        {
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                AppName,
+                "Logs"
+            );
+        }
+
+        return Path.Combine(Environment.CurrentDirectory, "Logs");
+    }
 
     public event Action<IServiceCollection>? ConfiguringServices;
 
