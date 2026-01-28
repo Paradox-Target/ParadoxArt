@@ -20,34 +20,45 @@ public sealed class MessageBoxService
         MessageBoxButtons buttons = MessageBoxButtons.Ok
     )
     {
-        return Dispatcher.UIThread.InvokeAsync(async () =>
+        if (Dispatcher.UIThread.CheckAccess())
         {
-            var buttonType = ToMsBoxButtons(buttons);
-            var box = MessageBoxManager.GetMessageBoxStandard(
-                title,
-                message,
-                @enum: buttonType,
-                icon: ToMsBoxIcon(icon)
-            );
+            return ShowAsyncCore(message, title, icon, buttons);
+        }
+        return Dispatcher.UIThread.InvokeAsync(() => ShowAsyncCore(message, title, icon, buttons));
+    }
 
-            var lifetime = App.Current.ApplicationLifetime;
-            Task<ButtonResult> showTask;
+    private async Task<MessageBoxResult> ShowAsyncCore(
+        string message,
+        string title = "",
+        MessageBoxIcon icon = MessageBoxIcon.Info,
+        MessageBoxButtons buttons = MessageBoxButtons.Ok
+    )
+    {
+        var buttonType = ToMsBoxButtons(buttons);
+        var box = MessageBoxManager.GetMessageBoxStandard(
+            title,
+            message,
+            @enum: buttonType,
+            icon: ToMsBoxIcon(icon)
+        );
 
-            if (lifetime is ISingleViewApplicationLifetime)
-            {
-                showTask = box.ShowAsync();
-            }
-            else if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
-            {
-                showTask = box.ShowWindowDialogAsync(desktop.MainWindow);
-            }
-            else
-            {
-                showTask = box.ShowAsync();
-            }
+        var lifetime = App.Current.ApplicationLifetime;
+        Task<ButtonResult> showTask;
 
-            return GetButtonResult(await showTask);
-        });
+        if (lifetime is ISingleViewApplicationLifetime)
+        {
+            showTask = box.ShowAsync();
+        }
+        else if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
+        {
+            showTask = box.ShowWindowDialogAsync(desktop.MainWindow);
+        }
+        else
+        {
+            showTask = box.ShowAsync();
+        }
+
+        return GetButtonResult(await showTask);
     }
 
     private static MessageBoxResult GetButtonResult(ButtonResult result)
