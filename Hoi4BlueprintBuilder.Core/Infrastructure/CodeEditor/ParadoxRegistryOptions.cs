@@ -15,7 +15,7 @@ public sealed class ParadoxRegistryOptions(ThemeVariant? themeVariant, RegistryO
     private static string ThemesFolderPath => string.Join('/', AssetsFolder, "CodeEditor", "Themes");
     private static string GrammarsFolderPath => string.Join('/', AssetsFolder, "CodeEditor", "Grammars");
     private static string AssetsFolder { get; } =
-        string.Join('/', "avares://Hoi4BlueprintBuilder.Core", "Assets");
+        string.Join('/', $"avares://{typeof(ParadoxRegistryOptions).Assembly.GetName().Name}", "Assets");
 
     private readonly RegistryOptions _rawOptions = rawOptions;
 

@@ -3,5 +3,9 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <WarningsAsErrors>nullable</WarningsAsErrors>
+        <Company>Paradox Target</Company>
+        <Authors>Paradox Target</Authors>
+        <Copyright>Copyright © 2026 Paradox Target</Copyright>
+        <Product>ParadoxArt</Product>
     </PropertyGroup>
 </Project>

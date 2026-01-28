@@ -5,6 +5,7 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <TargetFramework>net10.0</TargetFramework>
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+        <AssemblyName>ParadoxArt.Core</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

@@ -19,6 +19,7 @@ namespace Hoi4BlueprintBuilder.Core;
 
 public sealed class App : Application
 {
+    public const string AppName = "ParadoxArt";
     public static readonly Version Version = Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
     public static new App Current => (App)Application.Current!;
     public Task<bool>? IsActivated { get; private set; }
@@ -26,12 +27,9 @@ public sealed class App : Application
     public event EventHandler? OnExitBefore;
 
     public static string AppFolder { get; } =
-        Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "Hoi4BlueprintEditor"
-        );
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppName);
 
-    public const string ProjectConfigDirectoryName = ".paradoxtarget";
+    public const string ProjectConfigDirectoryName = ".paradoxart";
     public const string UpdatePackageDownloadUrl = "https://packages.paradoxtarget.top";
     public static string ConfigFolder { get; } = Path.Combine(AppFolder, "Config");
     public static string LogsFolder { get; } = Path.Combine(Environment.CurrentDirectory, "Logs");
@@ -81,7 +79,7 @@ public sealed class App : Application
             var settings = sp.GetRequiredService<SettingsService>();
             return ProjectConfigService.Load(settings);
         });
-        _serviceCollection.AddHoi4BlueprintBuilderCore();
+        _serviceCollection.AddParadoxArtCore();
     }
 
     public override void OnFrameworkInitializationCompleted()
