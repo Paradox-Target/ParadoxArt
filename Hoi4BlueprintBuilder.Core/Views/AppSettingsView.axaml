@@ -141,7 +141,7 @@
             <fa:SettingsExpander
                 Description="© Paradox Target 2026. All rights reserved."
                 Footer="{x:Static local:App.Version}"
-                Header="Focus Editor">
+                Header="{x:Static local:App.AppName}">
                 <fa:SettingsExpanderItem Content=".NET Version" Footer="{x:Static vms:AppSettingsViewModel.DotNetVersion}" />
                 <fa:SettingsExpanderItem>
                     <HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
