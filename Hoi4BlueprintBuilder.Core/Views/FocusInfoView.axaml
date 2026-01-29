@@ -101,8 +101,7 @@
                         IsChecked="{Binding FocusNode.ContinueIfInvalid, Mode=TwoWay}" />
                 </StackPanel>
 
-                <StackPanel>
-                    <TextBlock FontSize="22" Text="完成效果" />
+                <Expander Header="完成效果">
                     <Border
                         Margin="0,4,0,0"
                         BorderBrush="Gray"
@@ -116,7 +115,7 @@
                             FontFamily="Cascadia Code"
                             FontSize="12" />
                     </Border>
-                </StackPanel>
+                </Expander>
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using AvaloniaEdit.TextMate;
 using Hoi4BlueprintBuilder.Core.Infrastructure.CodeEditor;
@@ -30,6 +31,9 @@ public sealed partial class TextEditorControl : UserControl
             _installation.SetTheme(_options.LoadTheme(ActualThemeVariant));
         };
         TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
+
+        // 阻止 RequestBringIntoView 事件, 避免滚动条跳动
+        AddHandler(RequestBringIntoViewEvent, (_, args) => args.Handled = true, RoutingStrategies.Bubble);
     }
 
     public void SetGrammar(string extensionName)
