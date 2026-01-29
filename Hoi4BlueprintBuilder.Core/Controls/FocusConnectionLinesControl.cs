@@ -1,5 +1,3 @@
-using System.Collections.Specialized;
-using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -10,7 +8,6 @@ using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
-using NLog;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
@@ -31,8 +28,6 @@ public sealed class FocusConnectionLinesControl : Control
     /// 虚线
     private static readonly Pen PrerequisiteDashPen =
         new(new SolidColorBrush(Colors.LightGray), LinePenWidth, new DashStyle([1, 2], 0));
-
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     #region Styled Properties
 
@@ -99,24 +94,6 @@ public sealed class FocusConnectionLinesControl : Control
             return;
         }
 
-        Debug.Assert(change.NewValue is INotifyCollectionChanged);
-
-        if (change.OldValue is INotifyCollectionChanged oldNodes)
-        {
-            oldNodes.CollectionChanged -= OnCollectionChanged;
-        }
-
-        if (change.NewValue is INotifyCollectionChanged nodes)
-        {
-            nodes.CollectionChanged += OnCollectionChanged;
-        }
-    }
-
-    private void OnCollectionChanged(
-        object? o,
-        NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs
-    )
-    {
         InvalidateVisual();
     }
 

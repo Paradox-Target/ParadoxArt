@@ -141,6 +141,8 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
                     .Select(node => node.AllowBranch!)
             );
 
+            StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+
             Log.Info("已加载国策树文件: {FilePath}", filePath);
             Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
         }
