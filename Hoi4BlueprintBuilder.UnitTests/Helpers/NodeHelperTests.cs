@@ -160,11 +160,10 @@ focus_tree = {
 
         editorModel.AddPrerequisite([new FocusNode("path", FocusType.Normal) { Id = "pre1" }]);
         editorModel.AddPrerequisite(
-            new List<FocusNode>
-            {
+            [
                 new FocusNode("path", FocusType.Normal) { Id = "pre2" },
                 new FocusNode("path", FocusType.Normal) { Id = "pre3" }
-            }
+            ]
         );
 
         // Act
@@ -216,7 +215,10 @@ focus_tree = {
         // Assert
         var rewardNode = focusNode.Nodes.FirstOrDefault(n => n.Key == "completion_reward");
         Assert.That(rewardNode, Is.Not.Null);
-        Assert.That(rewardNode.Leaves.Any(l => l.Key == "add_political_power" && l.ValueText == "100"), Is.True);
+        Assert.That(
+            rewardNode.Leaves.Any(l => l.Key == "add_political_power" && l.ValueText == "100"),
+            Is.True
+        );
     }
 
     [Test]
@@ -224,10 +226,7 @@ focus_tree = {
     {
         // Arrange
         var children = new List<Child>();
-        var editorModel = new FocusNode("path", FocusType.Normal)
-        {
-            CompletionReward = "invalid { syntax"
-        };
+        var editorModel = new FocusNode("path", FocusType.Normal) { CompletionReward = "invalid { syntax" };
 
         // Act
         NodeHelper.AddCompletionRewardToChildrenIfExist(children, editorModel);

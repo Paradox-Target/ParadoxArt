@@ -21,18 +21,19 @@ public sealed class CanvasInteractionManager
     private readonly ConnectionPreviewOverlayControl _connectionPreview;
     private readonly Func<FocusNode, bool> _openFocusInfoView;
     private readonly Action _closeFocusInfoView;
+    private readonly Func<bool> _isOpenedFocusInfoView;
 
     // 交互状态
-    private CanvasInteractionMode _mode = CanvasInteractionMode.None;
     private Point _lastMousePosition;
     private Point _rightButtonDownPosition;
+    private Point _leftButtonDownPosition;
     private FocusNode? _draggedNode;
     private ConnectionType _connectionType = ConnectionType.None;
 
     /// <summary>
     /// 获取当前交互模式
     /// </summary>
-    public CanvasInteractionMode Mode => _mode;
+    public CanvasInteractionMode Mode { get; private set; } = CanvasInteractionMode.None;
 
     /// <summary>
     /// 获取或设置连接类型
@@ -47,11 +48,11 @@ public sealed class CanvasInteractionManager
 
             if (value != ConnectionType.None)
             {
-                _mode = CanvasInteractionMode.Connecting;
+                Mode = CanvasInteractionMode.Connecting;
             }
-            else if (_mode == CanvasInteractionMode.Connecting)
+            else if (Mode == CanvasInteractionMode.Connecting)
             {
-                _mode = CanvasInteractionMode.None;
+                Mode = CanvasInteractionMode.None;
             }
         }
     }
@@ -68,16 +69,6 @@ public sealed class CanvasInteractionManager
     public bool CursorOverFocus => RightClickedNodeViewModel is not null;
 
     /// <summary>
-    /// 右键点击位置是否不在某个国策节点上
-    /// </summary>
-    public bool CursorNotOverFocus => !CursorOverFocus;
-
-    /// <summary>
-    /// 当选中节点变化时触发
-    /// </summary>
-    public event Action? SelectionChanged;
-
-    /// <summary>
     /// 当连接建立时触发
     /// </summary>
     public event Action<FocusNode, FocusNode, ConnectionType>? ConnectionRequested;
@@ -87,7 +78,8 @@ public sealed class CanvasInteractionManager
         Control canvas,
         ConnectionPreviewOverlayControl connectionPreview,
         Func<FocusNode, bool> openFocusInfoView,
-        Action closeFocusInfoView
+        Action closeFocusInfoView,
+        Func<bool> isOpenedFocusInfoView
     )
     {
         _viewModel = viewModel;
@@ -95,6 +87,7 @@ public sealed class CanvasInteractionManager
         _connectionPreview = connectionPreview;
         _openFocusInfoView = openFocusInfoView;
         _closeFocusInfoView = closeFocusInfoView;
+        _isOpenedFocusInfoView = isOpenedFocusInfoView;
     }
 
     /// <summary>
@@ -152,7 +145,7 @@ public sealed class CanvasInteractionManager
         var props = e.GetCurrentPoint(_canvas).Properties;
 
         // 连接模式下更新预览
-        if (_mode == CanvasInteractionMode.Connecting)
+        if (Mode == CanvasInteractionMode.Connecting)
         {
             var hitViewModel = GetHitFocusNodeViewModel(position);
             _connectionPreview.To = hitViewModel?.Node;
@@ -160,9 +153,9 @@ public sealed class CanvasInteractionManager
         }
 
         // 画布平移
-        if (_mode == CanvasInteractionMode.Panning || props.IsMiddleButtonPressed)
+        if (Mode == CanvasInteractionMode.Panning || props.IsMiddleButtonPressed)
         {
-            _mode = CanvasInteractionMode.Panning;
+            Mode = CanvasInteractionMode.Panning;
 
             var delta = position - _lastMousePosition;
             _viewModel.TranslateX += delta.X;
@@ -172,8 +165,25 @@ public sealed class CanvasInteractionManager
             return StandardCursorType.Hand;
         }
 
+        // 待定拖动判定
+        if (Mode == CanvasInteractionMode.PendingDrag && _draggedNode is not null)
+        {
+            var delta = position - _leftButtonDownPosition;
+            if (Math.Abs(delta.X) > 3 || Math.Abs(delta.Y) > 3)
+            {
+                if (_isOpenedFocusInfoView())
+                {
+                    Mode = CanvasInteractionMode.DraggingNodeForConnecting;
+                }
+                else
+                {
+                    Mode = CanvasInteractionMode.DraggingNode;
+                }
+            }
+        }
+
         // 拖动节点
-        if (_mode == CanvasInteractionMode.DraggingNode && _draggedNode is not null)
+        if (Mode == CanvasInteractionMode.DraggingNode && _draggedNode is not null)
         {
             var gridPosition = GetMousePositionOnGrid(position);
 
@@ -199,6 +209,17 @@ public sealed class CanvasInteractionManager
             return StandardCursorType.SizeAll;
         }
 
+        if (Mode == CanvasInteractionMode.DraggingNodeForConnecting && _draggedNode is not null)
+        {
+            var dragData = new DataTransfer();
+
+            var item = new DataTransferItem();
+            item.Set(DataFormat.Text, _draggedNode.Id);
+            dragData.Add(item);
+            DragDrop.DoDragDropAsync(e, dragData, DragDropEffects.Copy);
+            Mode = CanvasInteractionMode.None;
+        }
+
         _lastMousePosition = position;
         return StandardCursorType.Arrow;
     }
@@ -210,9 +231,9 @@ public sealed class CanvasInteractionManager
     {
         // 鼠标离开时只重置平移状态
         // 框选和右键等待状态保留，等待鼠标释放事件来处理
-        if (_mode == CanvasInteractionMode.Panning)
+        if (Mode == CanvasInteractionMode.Panning)
         {
-            _mode = CanvasInteractionMode.None;
+            Mode = CanvasInteractionMode.None;
         }
     }
 
@@ -247,29 +268,17 @@ public sealed class CanvasInteractionManager
     /// <summary>
     /// 取消连接模式
     /// </summary>
-    public void CancelConnection()
+    private void CancelConnection()
     {
         ConnectionType = ConnectionType.None;
         _connectionPreview.ClearPreview();
-        _mode = CanvasInteractionMode.None;
-    }
-
-    /// <summary>
-    /// 清除所有选中状态
-    /// </summary>
-    public void ClearSelection()
-    {
-        foreach (var node in _viewModel.Nodes)
-        {
-            node.IsSelected = false;
-        }
-        SelectionChanged?.Invoke();
+        Mode = CanvasInteractionMode.None;
     }
 
     /// <summary>
     /// 获取所有选中的节点
     /// </summary>
-    public List<FocusNode> GetSelectedNodes()
+    private List<FocusNode> GetSelectedNodes()
     {
         return _viewModel.Nodes.AsValueEnumerable().Where(vm => vm.IsSelected).Select(vm => vm.Node).ToList();
     }
@@ -286,27 +295,27 @@ public sealed class CanvasInteractionManager
         RightClickedNodeViewModel = hitViewModel;
 
         // 连接模式时右键取消
-        if (_mode == CanvasInteractionMode.Connecting)
+        if (Mode == CanvasInteractionMode.Connecting)
         {
             CancelConnection();
             return;
         }
 
         // 进入右键等待状态
-        _mode = CanvasInteractionMode.RightButtonPending;
+        Mode = CanvasInteractionMode.RightButtonPending;
     }
 
     private void HandleMiddleButtonDown(Point position)
     {
-        _mode = CanvasInteractionMode.Panning;
+        Mode = CanvasInteractionMode.Panning;
         _lastMousePosition = position;
     }
 
     private void HandleMiddleButtonUp()
     {
-        if (_mode == CanvasInteractionMode.Panning)
+        if (Mode == CanvasInteractionMode.Panning)
         {
-            _mode = CanvasInteractionMode.None;
+            Mode = CanvasInteractionMode.None;
         }
     }
 
@@ -318,7 +327,7 @@ public sealed class CanvasInteractionManager
     {
         // 连接模式下点击节点建立连接
         if (
-            _mode == CanvasInteractionMode.Connecting
+            Mode == CanvasInteractionMode.Connecting
             && hitViewModel is not null
             && RightClickedNodeViewModel is not null
         )
@@ -344,34 +353,38 @@ public sealed class CanvasInteractionManager
             }
             else
             {
-                // 单击开始拖动
+                // 单击开始拖动检测
                 _draggedNode = hitViewModel.Node;
-                _mode = CanvasInteractionMode.DraggingNode;
-                _closeFocusInfoView();
+                _leftButtonDownPosition = position;
+                Mode = CanvasInteractionMode.PendingDrag;
+
+                if (!_isOpenedFocusInfoView())
+                {
+                    _closeFocusInfoView();
+                }
 
                 // 如果点击的节点未选中，清除其他选中并选中此节点
                 if (!hitViewModel.IsSelected)
                 {
-                    ClearSelection();
+                    _viewModel.ClearSelection();
                     hitViewModel.IsSelected = true;
-                    SelectionChanged?.Invoke();
                 }
             }
         }
         else
         {
             // 点击空白处
-            ClearSelection();
+            _viewModel.ClearSelection();
             _closeFocusInfoView();
         }
     }
 
     private void HandleLeftButtonUp()
     {
-        if (_mode == CanvasInteractionMode.DraggingNode)
+        if (Mode == CanvasInteractionMode.DraggingNode || Mode == CanvasInteractionMode.PendingDrag)
         {
             _draggedNode = null;
-            _mode = CanvasInteractionMode.None;
+            Mode = CanvasInteractionMode.None;
         }
     }
 
@@ -414,7 +427,7 @@ public sealed class CanvasInteractionManager
     /// </summary>
     public bool ShouldShowContextMenu()
     {
-        return _mode == CanvasInteractionMode.RightButtonPending;
+        return Mode == CanvasInteractionMode.RightButtonPending;
     }
 
     #endregion

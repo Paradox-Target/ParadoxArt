@@ -3,7 +3,7 @@ namespace Hoi4BlueprintBuilder.Core.Models;
 /// <summary>
 /// 画布交互模式枚举
 /// </summary>
-public enum CanvasInteractionMode
+public enum CanvasInteractionMode : byte
 {
     /// <summary>
     /// 空闲状态
@@ -21,9 +21,19 @@ public enum CanvasInteractionMode
     DraggingNode,
 
     /// <summary>
+    /// 拖动节点以建立连接
+    /// </summary>
+    DraggingNodeForConnecting,
+
+    /// <summary>
     /// 框选节点
     /// </summary>
     BoxSelecting,
+
+    /// <summary>
+    /// 左键按下等待判定（移动则拖动，不移动则点击）
+    /// </summary>
+    PendingDrag,
 
     /// <summary>
     /// 连接模式（设置前置、互斥、相对位置）

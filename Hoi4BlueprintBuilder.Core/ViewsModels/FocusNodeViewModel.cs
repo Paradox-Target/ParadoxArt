@@ -3,7 +3,6 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
-using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -11,7 +10,6 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 {
     public FocusNode Node { get; }
-    public string LocalizedName => LocalizationFormatService.GetFormatText(Node.Id);
 
     [ObservableProperty]
     private Bitmap? _bitmap;
@@ -28,8 +26,6 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool _isSelected;
 
-    private static readonly LocalizationFormatService LocalizationFormatService =
-        App.Current.Services.GetRequiredService<LocalizationFormatService>();
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
 
@@ -43,17 +39,9 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 
     private void OnNodePropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
-        if (args.PropertyName == nameof(Node.Id))
-        {
-            OnPropertyChanged(nameof(LocalizedName));
-        }
-        else if (args.PropertyName == nameof(Node.Icon))
+        if (args.PropertyName == nameof(Node.Icon))
         {
             LoadBitmapSource();
-        }
-        else if (args.PropertyName == nameof(LocalizedName))
-        {
-            OnPropertyChanged(nameof(LocalizedName));
         }
     }
 

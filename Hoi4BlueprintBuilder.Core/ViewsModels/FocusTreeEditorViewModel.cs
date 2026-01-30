@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -43,7 +44,6 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
     private readonly NotificationService _notificationService;
-    private readonly StatusBarService _statusBarService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -57,9 +57,8 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _pathService = pathService;
         _settingsService = settingsService;
         _notificationService = notificationService;
-        _statusBarService = statusBarService;
 
-        _nodes.CollectionChanged += (_, _) => _statusBarService.SetCurrentFocusCount(_nodes.Count);
+        _nodes.CollectionChanged += (_, _) => statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
 
     public void OnLoaded()
@@ -155,6 +154,37 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     public bool ContainsFocus(string focusId)
     {
         return _editorNodesMap.ContainsKey(focusId);
+    }
+
+    public bool TryGetFocus(string focusId, [NotNullWhen(true)] out FocusNode? focusNode)
+    {
+        return _editorNodesMap.TryGetValue(focusId, out focusNode);
+    }
+
+    public bool TryGetFocusNodeViewModel(
+        string focusId,
+        [NotNullWhen(true)] out FocusNodeViewModel? viewModel
+    )
+    {
+        foreach (var node in _nodes)
+        {
+            if (node.Node.Id == focusId)
+            {
+                viewModel = node;
+                return true;
+            }
+        }
+
+        viewModel = null;
+        return false;
+    }
+
+    public void ClearSelection()
+    {
+        foreach (var node in _nodes)
+        {
+            node.IsSelected = false;
+        }
     }
 
     // 从 2 开始, 但先检查 1 是否被使用
@@ -300,8 +330,25 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         return _focusTreeFiles;
     }
 
-    public void CreateConnection(FocusNode source, FocusNode target, ConnectionType addType)
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <param name="addType"></param>
+    /// <param name="indexOfPrerequisite">添加到指定的前提条件组中</param>
+    public void CreateConnection(
+        FocusNode source,
+        FocusNode target,
+        ConnectionType addType,
+        int indexOfPrerequisite = -1
+    )
     {
+        if (ReferenceEquals(source, target))
+        {
+            return;
+        }
+
         bool changed = false;
 
         if (
@@ -322,7 +369,14 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             && !source.MutuallyExclusive.Contains(target)
         )
         {
-            source.AddPrerequisite([target]);
+            if (indexOfPrerequisite != -1)
+            {
+                source.AddPrerequisite(indexOfPrerequisite, target);
+            }
+            else
+            {
+                source.AddPrerequisite([target]);
+            }
             changed = true;
         }
         else if (addType == ConnectionType.RelativePosition)

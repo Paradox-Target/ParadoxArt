@@ -15,6 +15,17 @@
     IsVisible="False"
     mc:Ignorable="d">
 
+    <UserControl.Styles>
+        <Style Selector="Border.FocusConditionBorder">
+            <Setter Property="Margin" Value="0,0,4,4" />
+            <Setter Property="Padding">4,2</Setter>
+            <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ExpanderHeaderBorderBrush}" />
+            <Setter Property="BorderThickness">1</Setter>
+            <Setter Property="CornerRadius">4</Setter>
+        </Style>
+    </UserControl.Styles>
+
     <Border
         MinWidth="200"
         Padding="10"
@@ -76,6 +87,99 @@
                         FontSize="18"
                         Text="{Binding FocusDaysTip}" />
                 </StackPanel>
+
+                <Expander
+                    DragDrop.AllowDrop="True"
+                    DragDrop.Drop="AddPrerequisiteDragHandler"
+                    Header="前提条件"
+                    Theme="{StaticResource ExpanderWinUIAnimationStyle}">
+
+                    <ItemsControl x:Name="PrerequisiteItemsControl" ItemsSource="{Binding FocusNode.Prerequisite}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- 外层每项是一个 List<FocusNode>，用 Border 包裹 -->
+                                <Border
+                                    Padding="8"
+                                    Classes="FocusConditionBorder"
+                                    DragDrop.AllowDrop="True"
+                                    DragDrop.Drop="AddPrerequisiteDragHandler">
+
+                                    <!--  设置 Background 是为了整个 Border 都能响应 DragDrop  -->
+                                    <StackPanel Background="Transparent">
+                                        <StackPanel
+                                            Margin="0,0,0,8"
+                                            Orientation="Horizontal"
+                                            Spacing="4">
+                                            <fa:FontIcon
+                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                FontSize="12"
+                                                Glyph="&#xE71D;" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                Text="前置条件组 (任意达成)" />
+                                        </StackPanel>
+
+                                        <!-- 内层 ItemsControl 显示 List<FocusNode> 中的元素 -->
+                                        <!-- ItemsSource="{Binding}" 指向当前的 List<FocusNode> -->
+                                        <ItemsControl ItemsSource="{Binding}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <!--  这里显示单个 FocusNode  -->
+                                                    <Border Classes="FocusConditionBorder" ToolTip.Tip="{Binding Id}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                                            <TextBlock
+                                                                VerticalAlignment="Center"
+                                                                FontSize="12"
+                                                                Text="{Binding LocalizedName}" />
+                                                            <Button Click="RemovePrerequisite">
+                                                                <Button.Content>
+                                                                    <fa:SymbolIcon Symbol="Cancel" />
+                                                                </Button.Content>
+                                                            </Button>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Expander>
+
+                <Expander
+                    DragDrop.AllowDrop="True"
+                    DragDrop.Drop="AddMutuallyExclusiveDragHandler"
+                    Header="互斥条件"
+                    Theme="{StaticResource ExpanderWinUIAnimationStyle}">
+                    <ItemsControl ItemsSource="{Binding FocusNode.MutuallyExclusive}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Classes="FocusConditionBorder" ToolTip.Tip="{Binding Id}">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            FontSize="12"
+                                            Text="{Binding LocalizedName}" />
+                                        <Button Click="RemoveMutuallyExclusive">
+                                            <Button.Content>
+                                                <fa:SymbolIcon Symbol="Cancel" />
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Expander>
 
                 <!--  cancel_if_invalid  -->
                 <StackPanel Orientation="Horizontal" Spacing="4">

@@ -1,11 +1,15 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Helpers;
+using Hoi4BlueprintBuilder.Core.Messages;
+using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -28,6 +32,7 @@ public sealed partial class FocusInfoView : UserControl
     }
 
     private FocusInfoViewModel? _viewModel;
+    private FocusNode? focusNode => _viewModel?.FocusNode;
 
     private readonly ImageService _imageService = App.Current.Services.GetRequiredService<ImageService>();
     private readonly FileResourceService _fileResourceService =
@@ -71,6 +76,149 @@ public sealed partial class FocusInfoView : UserControl
         // 绑定 LostFocus 事件以模拟 UpdateSourceTrigger=LostFocus
         IdTextBox.LostFocus += IdTextBox_OnLostFocus;
         DescriptionTextBox.LostFocus += DescriptionTextBox_OnLostFocus;
+    }
+
+    private FocusTreeEditorView? _focusTreeEditorView;
+
+    public void Initialize(FocusTreeEditorView focusTreeEditorView)
+    {
+        _focusTreeEditorView = focusTreeEditorView;
+    }
+
+    // 通过前端绑定
+    // ReSharper disable once UnusedMember.Local
+    private void AddMutuallyExclusiveDragHandler(object? sender, DragEventArgs e)
+    {
+        e.Handled = true;
+        string? focusId = e.DataTransfer.TryGetText();
+
+        if (focusId is null || _focusTreeEditorView is null || focusNode is null)
+        {
+            Debug.Assert(false, "数据错误或未初始化");
+            return;
+        }
+
+        if (!_focusTreeEditorView.ViewModel.TryGetFocus(focusId, out var targetNode))
+        {
+            return;
+        }
+
+        _focusTreeEditorView.ViewModel.CreateConnection(
+            focusNode,
+            targetNode,
+            ConnectionType.MutuallyExclusive
+        );
+
+        ResetFocusNodeSelection();
+    }
+
+    private void RemoveMutuallyExclusive(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: FocusNode node })
+        {
+            return;
+        }
+
+        Debug.Assert(focusNode is not null);
+        focusNode?.RemoveMutuallyExclusive(node);
+
+        StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+    }
+
+    // 通过前端绑定
+    // ReSharper disable once UnusedMember.Local
+    private void AddPrerequisiteDragHandler(object? sender, DragEventArgs e)
+    {
+        e.Handled = true;
+        string? focusId = e.DataTransfer.TryGetText();
+        if (focusId is null || _focusTreeEditorView is null || focusNode is null)
+        {
+            Debug.Assert(false, "数据错误或未初始化");
+            return;
+        }
+
+        if (!_focusTreeEditorView.ViewModel.TryGetFocus(focusId, out var targetNode))
+        {
+            return;
+        }
+
+        if (sender is Border { DataContext: IReadOnlyList<FocusNode> targetGroup })
+        {
+            // 在父集合中查找该数据对象的索引
+            int index = FindTargetPrerequisiteGroupIndex(targetGroup);
+
+            if (index == -1)
+            {
+                return;
+            }
+
+            Log.Debug("Drop target group index: {Index}", index);
+
+            _focusTreeEditorView.ViewModel.CreateConnection(
+                focusNode,
+                targetNode,
+                ConnectionType.Prerequisite,
+                index
+            );
+        }
+        else if (sender is Expander)
+        {
+            _focusTreeEditorView.ViewModel.CreateConnection(
+                focusNode,
+                targetNode,
+                ConnectionType.Prerequisite
+            );
+        }
+
+        ResetFocusNodeSelection();
+    }
+
+    private int FindTargetPrerequisiteGroupIndex(IReadOnlyList<FocusNode> targetGroup)
+    {
+        Debug.Assert(focusNode is not null);
+
+        var allGroups = focusNode.Prerequisite;
+        int index = -1;
+
+        for (int i = 0; i < allGroups.Count; i++)
+        {
+            // 使用 ReferenceEquals 确保是同一个 List 对象
+            if (ReferenceEquals(allGroups[i], targetGroup))
+            {
+                index = i;
+                break;
+            }
+        }
+
+        return index;
+    }
+
+    private void RemovePrerequisite(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: FocusNode node })
+        {
+            return;
+        }
+
+        Debug.Assert(focusNode is not null);
+        focusNode?.RemovePrerequisite(node);
+    }
+
+    /// <summary>
+    /// 在连接关系建立后, 重置 FocusNode 的选中状态
+    /// </summary>
+    private void ResetFocusNodeSelection()
+    {
+        Debug.Assert(_focusTreeEditorView is not null);
+        Debug.Assert(focusNode is not null);
+
+        if (
+            _focusTreeEditorView.ViewModel.TryGetFocusNodeViewModel(focusNode.Id, out var targetNodeViewModel)
+        )
+        {
+            _focusTreeEditorView.ViewModel.ClearSelection();
+            targetNodeViewModel.IsSelected = true;
+        }
     }
 
     private void FocusInfoView_DataContextChanged(object? sender, EventArgs e)

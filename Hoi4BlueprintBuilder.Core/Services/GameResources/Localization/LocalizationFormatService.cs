@@ -2,16 +2,27 @@
 using System.Drawing;
 using Hoi4BlueprintBuilder.Core.Infrastructure.Parser;
 using Hoi4BlueprintBuilder.Core.Models;
+using Hoi4BlueprintBuilder.Core.Models.Focus;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 
 [RegisterSingleton<LocalizationFormatService>]
-public sealed class LocalizationFormatService(
-    LocalizationTextColorsService localizationTextColorsService,
-    LocalizationService localizationService
-)
+public sealed class LocalizationFormatService
 {
+    private readonly LocalizationTextColorsService _localizationTextColorsService;
+    private readonly LocalizationService _localizationService;
+
+    public LocalizationFormatService(
+        LocalizationTextColorsService localizationTextColorsService,
+        LocalizationService localizationService
+    )
+    {
+        _localizationTextColorsService = localizationTextColorsService;
+        _localizationService = localizationService;
+        FocusNode.SetLocalizationFormatService(this);
+    }
+
     /// <summary>
     /// 根据 <c>key</c> 获取格式化后的文本
     /// </summary>
@@ -20,7 +31,7 @@ public sealed class LocalizationFormatService(
     /// <returns>格式化后的文本, 如果找到值, 返回<c>true</c>, 反之返回<c>false</c></returns>
     public bool TryGetFormatText(string key, [NotNullWhen(true)] out string? value)
     {
-        if (localizationService.TryGetValue(key, out value))
+        if (_localizationService.TryGetValue(key, out value))
         {
             value = GetFormatTextByText(value);
             return true;
@@ -72,10 +83,7 @@ public sealed class LocalizationFormatService(
         return result;
     }
 
-    private void ParseFormatToList(
-        IEnumerable<LocalizationFormatInfo> formats,
-        List<TextFormatInfo> result
-    )
+    private void ParseFormatToList(IEnumerable<LocalizationFormatInfo> formats, List<TextFormatInfo> result)
     {
         foreach (var format in formats)
         {
@@ -88,7 +96,7 @@ public sealed class LocalizationFormatService(
                 }
 
                 // 递归处理所有本地化引用
-                string text = localizationService.GetValue(format.Text);
+                string text = _localizationService.GetValue(format.Text);
                 ParseFormat(text, result);
             }
             else if (format.Type == LocalizationFormatType.Icon)
@@ -130,7 +138,7 @@ public sealed class LocalizationFormatService(
                 return [new TextFormatInfo(string.Empty, Color.Black)];
             }
 
-            if (localizationTextColorsService.TryGetColor(format.Text[0], out var colorInfo))
+            if (_localizationTextColorsService.TryGetColor(format.Text[0], out var colorInfo))
             {
                 color = colorInfo.Color;
                 text = format.Text[1..];

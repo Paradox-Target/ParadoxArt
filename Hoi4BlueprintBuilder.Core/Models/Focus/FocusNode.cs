@@ -1,9 +1,11 @@
 using System.ComponentModel;
+using System.Diagnostics;
+using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Messages;
-using Hoi4BlueprintBuilder.Core.ViewsModels;
+using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using R3;
 using ZLinq;
 
@@ -21,6 +23,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         IDisposable
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(LocalizedName))]
     private string _id = string.Empty;
     public FocusType Type { get; } = type;
 
@@ -28,9 +31,21 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// 国策来源文件的绝对路径
     /// </summary>
     public string Path { get; } = path;
+    public string LocalizedName =>
+        _localizationFormatService is null ? Id : _localizationFormatService.GetFormatText(Id);
+
+    private static LocalizationFormatService? _localizationFormatService;
+
+    public static void SetLocalizationFormatService(LocalizationFormatService service)
+    {
+        Debug.Assert(_localizationFormatService is null);
+
+        // 仅设置一次
+        _localizationFormatService ??= service;
+    }
 
     public IReadOnlyList<FocusNode> MutuallyExclusive => _mutuallyExclusive;
-    private readonly List<FocusNode> _mutuallyExclusive = [];
+    private readonly AvaloniaList<FocusNode> _mutuallyExclusive = [];
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]
@@ -53,7 +68,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// </remarks>
     public IReadOnlyList<IReadOnlyList<FocusNode>> Prerequisite => _prerequisite;
 
-    private readonly List<List<FocusNode>> _prerequisite = [];
+    private readonly AvaloniaList<AvaloniaList<FocusNode>> _prerequisite = [];
 
     /// <summary>
     /// 将本节点当作前提条件的 <see cref="FocusNode"/> 集合
@@ -219,8 +234,16 @@ public sealed partial class FocusNode(string path, FocusType type)
             focusNode._mutuallyExclusive.Add(this);
         }
     }
+    
+    public void RemoveMutuallyExclusive(FocusNode focusNode)
+    {
+        if (_mutuallyExclusive.Remove(focusNode))
+        {
+            focusNode._mutuallyExclusive.Remove(this);
+        }
+    }
 
-    public void AddPrerequisite(List<FocusNode> prerequisiteNodes)
+    public void AddPrerequisite(AvaloniaList<FocusNode> prerequisiteNodes)
     {
         _prerequisite.Add(prerequisiteNodes);
         foreach (
@@ -231,9 +254,22 @@ public sealed partial class FocusNode(string path, FocusType type)
         }
     }
 
+    public void AddPrerequisite(int prerequisiteIndex, FocusNode prerequisiteNode)
+    {
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(prerequisiteIndex, _prerequisite.Count);
+
+        var prerequisiteGroup = _prerequisite[prerequisiteIndex];
+        if (!prerequisiteGroup.Contains(prerequisiteNode))
+        {
+            prerequisiteGroup.Add(prerequisiteNode);
+        }
+        prerequisiteNode._children.Add(this);
+    }
+
     public void RemovePrerequisite(FocusNode focusNode)
     {
         InternalRemovePrerequisite(focusNode, true);
+        StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
     }
 
     public void ClearChildren()
@@ -443,7 +479,7 @@ public sealed partial class FocusNode(string path, FocusType type)
 
     public void RefreshLocalizedName()
     {
-        OnPropertyChanged(nameof(FocusNodeViewModel.LocalizedName));
+        OnPropertyChanged(nameof(LocalizedName));
     }
 
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)

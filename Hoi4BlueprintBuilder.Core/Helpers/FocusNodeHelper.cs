@@ -1,3 +1,4 @@
+using Avalonia.Collections;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
@@ -185,11 +186,11 @@ public static class FocusNodeHelper
 
     private static void ProcessPrerequisite(FocusNode focusNode, Dictionary<string, FocusNode> focusMap)
     {
-        var newPrerequisites = new List<List<FocusNode>>();
+        var newPrerequisites = new AvaloniaList<AvaloniaList<FocusNode>>();
 
         foreach (var prerequisiteList in focusNode.Prerequisite)
         {
-            var newGroup = new List<FocusNode>(prerequisiteList.Count);
+            var newGroup = new AvaloniaList<FocusNode>(prerequisiteList.Count);
             foreach (var prerequisiteNode in prerequisiteList)
             {
                 if (focusMap.TryGetValue(prerequisiteNode.Id, out var node))
@@ -292,16 +293,17 @@ public static class FocusNodeHelper
         }
         else if (node.Key.EqualsIgnoreCase(Keywords.Prerequisite))
         {
-            var prerequisite = node
-                .Leaves.AsValueEnumerable()
-                .Select(static nodeLeaf => new FocusNode(string.Empty, FocusType.Normal)
-                {
-                    Id = nodeLeaf.ValueText
-                })
-                .ToList();
-            if (prerequisite.Count != 0)
+            var prerequisite = node.Leaves.Select(static nodeLeaf => new FocusNode(
+                string.Empty,
+                FocusType.Normal
+            )
             {
-                model.AddPrerequisite(prerequisite);
+                Id = nodeLeaf.ValueText
+            });
+            var prerequisiteList = new AvaloniaList<FocusNode>(prerequisite);
+            if (prerequisiteList.Count != 0)
+            {
+                model.AddPrerequisite(prerequisiteList);
             }
         }
         else if (node.Key.EqualsIgnoreCase(Keywords.CompletionReward))

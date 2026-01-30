@@ -147,10 +147,12 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
             this,
             ConnectionPreviewOverlay,
             OpenFocusInfoViewInternal,
-            CloseFocusInfoView
+            CloseFocusInfoView,
+            () => FocusInfoViewControl.IsOpen
         );
 
         _interactionManager.ConnectionRequested += OnConnectionRequested;
+        FocusInfoViewControl.Initialize(this);
     }
 
     private async void SaveToPng(object o, SaveFocusTreeToPngMessage saveFocusTreeToPngMessage)
@@ -220,7 +222,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         if (shouldShowMenu && props.PointerUpdateKind == PointerUpdateKind.RightButtonReleased)
         {
             // 右键打开菜单时，先清除已有选择，再选中被指向的节点以便展示
-            _interactionManager.ClearSelection();
+            ViewModel.ClearSelection();
 
             var focus = _interactionManager?.RightClickedNodeViewModel;
             focus?.IsSelected = true;

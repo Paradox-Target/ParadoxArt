@@ -38,7 +38,7 @@
             HorizontalAlignment="Center"
             FontSize="12"
             Foreground="White"
-            Text="{Binding LocalizedName}"
+            Text="{Binding Node.LocalizedName}"
             TextTrimming="CharacterEllipsis">
             <TextBlock.RenderTransform>
                 <TransformGroup>

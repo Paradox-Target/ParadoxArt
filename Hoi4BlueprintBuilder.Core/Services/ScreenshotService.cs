@@ -122,10 +122,10 @@ public sealed class ScreenshotService
         }
 
         // Draw Text
-        if (!string.IsNullOrEmpty(viewModel.LocalizedName))
+        if (!string.IsNullOrEmpty(viewModel.Node.LocalizedName))
         {
             var formattedText = new FormattedText(
-                viewModel.LocalizedName,
+                viewModel.Node.LocalizedName,
                 CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight,
                 new Typeface("Microsoft YaHei"),
