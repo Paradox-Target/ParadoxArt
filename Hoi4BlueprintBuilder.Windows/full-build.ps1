@@ -23,4 +23,4 @@ if ($LASTEXITCODE -ne 0) {
 }
 else { Write-Host "开始打包" -ForegroundColor Cyan }
 
-vpk pack --delta BestSize --packId Hoi4BlueprintBuilder -v $version --packDir $outputDir --mainExe Hoi4BlueprintBuilder.Windows.exe --icon ..\Hoi4BlueprintBuilder.Core\Assets\logo.ico --releaseNotes .\releasenotes.md
+vpk pack --delta BestSize --packId ParadoxArt -v $version --packDir $outputDir --mainExe ParadoxArt.exe --icon ..\Hoi4BlueprintBuilder.Core\Assets\logo.ico --releaseNotes .\releasenotes.md
