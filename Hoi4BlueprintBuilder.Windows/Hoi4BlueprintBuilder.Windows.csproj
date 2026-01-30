@@ -9,7 +9,7 @@
         <CETCompat>false</CETCompat>
         <ApplicationIcon>..\Hoi4BlueprintBuilder.Core\Assets\logo.ico</ApplicationIcon>
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
-        <Version>0.6.0</Version>
+        <Version>0.7.0</Version>
         <SelfContained>true</SelfContained>
         <AssemblyName>ParadoxArt</AssemblyName>
     </PropertyGroup>
