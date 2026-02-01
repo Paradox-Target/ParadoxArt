@@ -16,7 +16,10 @@ public sealed partial class AppSettingsPageView : UserControl
     /// 设计器使用
     /// </summary>
     public AppSettingsPageView()
-        : this(new Frame()) { }
+    {
+        InitializeComponent();
+        _frame = new Frame();
+    }
 
     public AppSettingsPageView(Frame frame)
     {

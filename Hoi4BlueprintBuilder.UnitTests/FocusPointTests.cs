@@ -3,7 +3,7 @@ using Hoi4BlueprintBuilder.Core.Models.Focus;
 namespace Hoi4BlueprintBuilder.UnitTests;
 
 [TestFixture(TestOf = typeof(FocusPoint))]
-public class FocusPointTests
+public sealed class FocusPointTests
 {
     [Test]
     public void Constructor_ShouldSetProperties()

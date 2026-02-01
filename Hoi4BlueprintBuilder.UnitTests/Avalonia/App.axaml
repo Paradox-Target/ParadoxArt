@@ -1,0 +1,23 @@
+<Application
+    x:Class="Hoi4BlueprintBuilder.UnitTests.Avalonia.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:styling="using:FluentAvalonia.Styling">
+
+    <Application.Styles>
+        <styling:FluentAvaloniaTheme PreferUserAccentColor="True" />
+        <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+        <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml" />
+    </Application.Styles>
+    <Application.Resources>
+        <ResourceDictionary>
+            <FontFamily x:Key="FluentIconFontFamily">Segoe Fluent Icons</FontFamily>
+            <FontFamily x:Key="MainFontFamily">$Default</FontFamily>
+            <FontFamily x:Key="CodeFontFamily">$Default</FontFamily>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://ParadoxArt.Core/Assets/Icons/IconsDictionary.axaml" />
+                <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
