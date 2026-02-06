@@ -5,7 +5,7 @@ using Hoi4BlueprintBuilder.Core.Views.Initialization;
 
 namespace Hoi4BlueprintBuilder.UnitTests.Services;
 
-[TestFixture(typeof(NavigationService))]
+[TestFixture(TestOf = typeof(NavigationService))]
 public class NavigationServiceTests
 {
     private MockServiceProvider _serviceProviderMock;
@@ -41,7 +41,7 @@ public class NavigationServiceTests
         }
     }
 
-    private class MockServiceProvider : IServiceProvider
+    private sealed class MockServiceProvider : IServiceProvider
     {
         private readonly Dictionary<Type, object> _services = new();
 
