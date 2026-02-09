@@ -36,7 +36,7 @@
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.19.0.132793" />
     <PackageVersion Include="UTF.Unknown" Version="2.6.0" />
     <PackageVersion Include="Velopack" Version="0.0.1298" />
-    <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="11.3.9.3" />
+    <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="11.3.9.4" />
     <PackageVersion Include="ZLinq" Version="1.5.4" />
     <PackageVersion Include="Ardalis.SmartEnum" Version="8.2.0" />
     <PackageVersion Include="Enums.NET" Version="5.0.0" />
