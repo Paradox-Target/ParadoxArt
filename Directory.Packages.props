@@ -9,7 +9,7 @@
     <PackageVersion Include="Avalonia" Version="11.3.11" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.11" />
     <PackageVersion Include="Avalonia.Desktop" Version="11.3.11" />
-    <PackageVersion Include="Avalonia.Headless.NUnit" Version="11.3.11" />
+    <PackageVersion Include="Avalonia.Headless.NUnit" Version="11.3.12" />
     <PackageVersion Include="AvaloniaEdit.TextMate" Version="11.4.1" />
     <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.0-beta2" />
     <PackageVersion Include="BCnEncoder.Net" Version="2.2.1" />
