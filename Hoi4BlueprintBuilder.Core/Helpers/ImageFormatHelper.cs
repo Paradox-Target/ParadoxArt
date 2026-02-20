@@ -1,4 +1,5 @@
 ﻿using Hoi4BlueprintBuilder.Core.Models;
+using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Helpers;
 
@@ -6,6 +7,8 @@ public static class ImageFormatHelper
 {
     private static readonly byte[] PngSignature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
     private static readonly byte[] DdsSignature = "DDS "u8.ToArray();
+
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     /// 读取文件头判断图像格式 (支持 PNG, DDS)
@@ -43,8 +46,9 @@ public static class ImageFormatHelper
 
             return ImageFormatType.Unknown;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Error(ex, "读取图像文件失败: {FilePath}", filePath);
             return ImageFormatType.Unknown;
         }
     }
