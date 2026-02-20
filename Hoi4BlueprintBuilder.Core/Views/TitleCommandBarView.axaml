@@ -41,7 +41,6 @@
                 Command="{Binding SaveFileCommand}"
                 HotKey="Ctrl+S"
                 IconSource="Save"
-                IsEnabled="{Binding EnableSaveButton}"
                 Label="{x:Static lang:LangResources.Menu_Save}" />
             <fa:CommandBarButton
                 Command="{Binding ExportFocusTreeScreenshotCommand}"

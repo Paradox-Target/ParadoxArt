@@ -28,9 +28,12 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     [ObservableProperty]
     private bool _isFocusTreeEditorAtCurrent;
 
-    [ObservableProperty]
-    private bool _enableSaveButton;
+    private bool CanSave => _tabViewService.CurrentItem is ISave;
 
+    /// <summary>
+    /// 获取当前国策树中的国策可见性条件列表
+    /// </summary>
+    /// <returns></returns>
     private IEnumerable<FocusTriggerGroup> GetFocusTriggers()
     {
         if (_tabViewService.CurrentItem is not FocusTreeEditorView focusTreeEditorView)
@@ -91,7 +94,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
             }
 
             IsFocusTreeEditorAtCurrent = currentItem is FocusTreeEditorView;
-            EnableSaveButton = _tabViewService.CurrentItem is ISave;
+            SaveFileCommand.NotifyCanExecuteChanged();
         };
 
         navigationService.ViewChanged += currentView =>
@@ -100,7 +103,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         };
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanSave))]
     private void SaveFile()
     {
         if (_tabViewService.CurrentItem is not ISave save)
