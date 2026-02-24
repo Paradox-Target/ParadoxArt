@@ -45,6 +45,15 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
+            <fa:SettingsExpander Description="发送匿名的应用使用数据以帮助我们改进应用" Header="启用遥测">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xEADF;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ToggleSwitch Classes="CleanToggleSwitch" IsChecked="{Binding EnableTelemetry, Mode=TwoWay}" />
+                </fa:SettingsExpander.Footer>
+            </fa:SettingsExpander>
+
             <fa:SettingsExpander Header="主题模式">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE790;" />

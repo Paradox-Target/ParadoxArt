@@ -23,9 +23,9 @@ public sealed class TelemetryService : IDisposable
     {
         _settingsService = settingsService;
         var config = TelemetryConfiguration.CreateDefault();
-#if DEBUG
-        config.DisableTelemetry = true;
-#endif
+
+        config.DisableTelemetry = !_settingsService.EnableTelemetry;
+
         config.ConnectionString = Private.ApplicationInsightsConnectionString;
         _client = new TelemetryClient(config);
         _client.Context.User.Id = deviceService.GetDeviceId();

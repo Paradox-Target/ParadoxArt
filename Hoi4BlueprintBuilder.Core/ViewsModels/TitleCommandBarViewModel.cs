@@ -61,6 +61,33 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         return map.Values;
     }
 
+    private static readonly string[] ConditionsKeywords = ["OR", "AND", "NOT", "limit", "if"];
+
+    private IEnumerable<Child> GetConditions(Node trigger)
+    {
+        var conditions = new List<Child>();
+        foreach (var child in trigger.AllArray)
+        {
+            if (child.TryGetNode(out var triggerNode))
+            {
+                if (ConditionsKeywords.Contains(triggerNode.Key, StringComparer.OrdinalIgnoreCase))
+                {
+                    conditions.AddRange(GetConditions(triggerNode));
+                }
+                else
+                {
+                    conditions.Add(child);
+                }
+            }
+            else if (child.TryGetLeaf(out _))
+            {
+                conditions.Add(child);
+            }
+        }
+
+        return conditions;
+    }
+
     private readonly SettingsService _settingsService;
     private readonly MessageBoxService _messageBoxService;
     private readonly TabViewService _tabViewService;

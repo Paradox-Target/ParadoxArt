@@ -70,6 +70,16 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         get => _settings.IsAutoOpenFocusInfoCard;
     }
 
+    public bool EnableTelemetry
+    {
+        set
+        {
+            _settings.EnableTelemetry = value;
+            OnPropertyChanged();
+        }
+        get => _settings.EnableTelemetry;
+    }
+
     public string GameRootFolderPath
     {
         get => _settings.GameRootFolderPath;

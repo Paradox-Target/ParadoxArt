@@ -32,6 +32,8 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
     /// </summary>
     public bool IsAutoOpenFocusInfoCard { get; set; } = true;
 
+    public bool EnableTelemetry { get; set; } = true;
+
     /// <summary>
     /// 文件树侧边栏宽度
     /// </summary>
