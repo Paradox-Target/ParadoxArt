@@ -71,6 +71,7 @@ public sealed class TelemetryService : IDisposable
             var properties = new Dictionary<string, string>
             {
                 { "App_Version", App.Version.ToString() },
+                { "App_Update_Channel", _settingsService.AppUpdateChannel },
                 { "OS_Version", Environment.OSVersion.ToString() },
                 { "Culture", CultureInfo.CurrentUICulture.Name },
                 { "Processor_Count", Environment.ProcessorCount.ToString() }
