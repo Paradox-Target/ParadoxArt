@@ -1,4 +1,4 @@
-& .\full-build.ps1
+. .\full-build.ps1
 
 if ($LASTEXITCODE -ne 0)
 {
@@ -17,5 +17,5 @@ if ([string]::IsNullOrWhiteSpace($ossSecret) -or [string]::IsNullOrWhiteSpace($o
 }
 
 Write-Host "开始上传到 OSS" -ForegroundColor Cyan
-vpk upload s3 --bucket app-update-packages --endpoint https://b7a7a340981df6606c000f71c361c854.r2.cloudflarestorage.com --keyId $ossKey --secret $ossSecret
+vpk upload s3 --bucket app-update-packages --channel $fullChannel --endpoint https://b7a7a340981df6606c000f71c361c854.r2.cloudflarestorage.com --keyId $ossKey --secret $ossSecret
 Write-Host "上传完成." -ForegroundColor Green

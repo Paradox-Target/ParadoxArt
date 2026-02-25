@@ -25,6 +25,7 @@ public sealed class App : Application
     public Task<bool>? IsActivated { get; private set; }
     public ServiceProvider Services { get; private set; } = null!;
     public event EventHandler? OnExitBefore;
+    public static readonly string[] AppUpdateChannels = ["stable", "beta"];
 
     public static string AppFolder { get; } =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppName);

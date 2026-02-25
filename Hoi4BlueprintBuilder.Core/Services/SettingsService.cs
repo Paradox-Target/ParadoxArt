@@ -45,6 +45,8 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
     public string MainFontFamily { get; set; }
     public string CodeFontFamily { get; set; }
 
+    public string AppUpdateChannel { get; set; } = App.AppUpdateChannels[0];
+
     [JsonIgnore]
     public bool IsFirstRun { get; private init; }
 

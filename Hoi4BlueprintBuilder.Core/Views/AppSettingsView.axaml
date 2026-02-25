@@ -29,10 +29,7 @@
                     <control:FontIconSource Glyph="&#xEB9F;" />
                 </fa:SettingsExpander.IconSource>
                 <fa:SettingsExpander.Footer>
-                    <ToggleSwitch
-                        IsChecked="{Binding IsAutoFocusPngConvertToDds, Mode=TwoWay}"
-                        OffContent=""
-                        OnContent="" />
+                    <ToggleSwitch Classes="CleanToggleSwitch" IsChecked="{Binding IsAutoFocusPngConvertToDds, Mode=TwoWay}" />
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
@@ -139,6 +136,15 @@
                 <fa:SettingsExpander.ActionIconSource>
                     <control:FontIconSource Glyph="&#xE8A7;" />
                 </fa:SettingsExpander.ActionIconSource>
+            </fa:SettingsExpander>
+
+            <fa:SettingsExpander Header="应用更新通道">
+                <fa:SettingsExpander.IconSource>
+                    <control:FontIconSource Glyph="&#xE895;" />
+                </fa:SettingsExpander.IconSource>
+                <fa:SettingsExpander.Footer>
+                    <ComboBox ItemsSource="{x:Static local:App.AppUpdateChannels}" SelectedItem="{Binding SelectedUpdateChannel, Mode=TwoWay}" />
+                </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
             <TextBlock

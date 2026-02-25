@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using ByteSizeLib;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -49,7 +50,8 @@ public sealed partial class AppUpdateViewModel : ObservableObject
     public AppUpdateViewModel(
         MessageBoxService messageBoxService,
         NavigationService navigationService,
-        TelemetryService telemetryService
+        TelemetryService telemetryService,
+        SettingsService settingsService
     )
     {
         _messageBoxService = messageBoxService;
@@ -61,8 +63,36 @@ public sealed partial class AppUpdateViewModel : ObservableObject
             return;
         }
 
-        _updateManager = new UpdateManager(App.UpdatePackageDownloadUrl);
+        string platform = GetPlatformName();
+        _updateManager = new UpdateManager(
+            App.UpdatePackageDownloadUrl,
+            new UpdateOptions
+            {
+                AllowVersionDowngrade = true,
+                ExplicitChannel = $"{platform}-{settingsService.AppUpdateChannel}"
+            }
+        );
         _ = CheckUpdateAsync();
+    }
+
+    private static string GetPlatformName()
+    {
+        // 注意: 返回的名称应和脚本的一致
+        if (OperatingSystem.IsWindows() && RuntimeInformation.OSArchitecture == Architecture.X64)
+        {
+            return "win-x64";
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            if (RuntimeInformation.OSArchitecture == Architecture.Arm64)
+            {
+                return "linux-arm64";
+            }
+            return "linux";
+        }
+
+        return "unknown";
     }
 
     private async Task CheckUpdateAsync()
@@ -86,14 +116,22 @@ public sealed partial class AppUpdateViewModel : ObservableObject
             HasUpdates = true;
             long totalBytes = 0;
 
-            foreach (var asset in _updateInfo.DeltasToTarget)
+            if (_updateInfo.DeltasToTarget.Length != 0)
             {
-                UpdateLog.AppendLine(asset.NotesMarkdown);
-                if (_updateInfo.DeltasToTarget.Length > 1)
+                foreach (var asset in _updateInfo.DeltasToTarget)
                 {
-                    UpdateLog.AppendLine("---");
+                    UpdateLog.AppendLine(asset.NotesMarkdown);
+                    if (_updateInfo.DeltasToTarget.Length > 1)
+                    {
+                        UpdateLog.AppendLine("---");
+                    }
+                    totalBytes += asset.Size;
                 }
-                totalBytes += asset.Size;
+            }
+            else
+            {
+                totalBytes = _updateInfo.TargetFullRelease.Size;
+                UpdateLog.AppendLine(_updateInfo.TargetFullRelease.NotesMarkdown);
             }
             TotalPackagesSize =
                 $"升级包体积: {ByteSize
@@ -103,6 +141,10 @@ public sealed partial class AppUpdateViewModel : ObservableObject
             if (_updateInfo.DeltasToTarget.Length != 0)
             {
                 NewVersionText = $"新版本: {_updateInfo.DeltasToTarget[^1].Version}, 当前版本: {App.Version}";
+            }
+            else
+            {
+                NewVersionText = $"新版本: {_updateInfo.TargetFullRelease.Version}, 当前版本: {App.Version}";
             }
             Log.Info("需要更新, 更新包数量: {Count}", _updateInfo.DeltasToTarget.Length);
         }

@@ -7,6 +7,8 @@
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="Hoi4BlueprintBuilder.Windows/full-build.ps1" />
+    <File Path="Hoi4BlueprintBuilder.Windows/publish.ps1" />
   </Folder>
   <Project Path="Hoi4BlueprintBuilder.Localization/Hoi4BlueprintBuilder.Localization.csproj" />
   <Project Path="Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj" />

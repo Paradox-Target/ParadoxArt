@@ -101,6 +101,9 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     [ObservableProperty]
     private int _selectedThemeModeIndex;
 
+    [ObservableProperty]
+    private string _selectedUpdateChannel;
+
     private readonly SettingsService _settings;
     private readonly FileService _fileService;
     private readonly TelemetryService _telemetryService;
@@ -137,6 +140,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
             language => language == settings.GameLanguage
         );
         _selectedThemeModeIndex = Array.FindIndex(ThemeModes, mode => mode == settings.ThemeMode);
+        _selectedUpdateChannel = _settings.AppUpdateChannel;
     }
 
     private void OnPropertyChangedEventHandler(object? o, PropertyChangedEventArgs eventArgs)
@@ -217,6 +221,12 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         var theme = ThemeModes[value];
         _settings.ThemeMode = theme;
         App.Current.RequestedThemeVariant = theme.ToThemeVariant();
+    }
+
+    partial void OnSelectedUpdateChannelChanged(string value)
+    {
+        _settings.AppUpdateChannel = value;
+        Log.Info("应用更新频道切换到: {Channel}", value);
     }
 
     public void SaveIfChange()
