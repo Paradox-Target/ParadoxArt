@@ -127,25 +127,19 @@ public sealed partial class AppUpdateViewModel : ObservableObject
                     }
                     totalBytes += asset.Size;
                 }
+                NewVersionText = $"新版本: {_updateInfo.DeltasToTarget[^1].Version}, 当前版本: {App.Version}";
             }
             else
             {
                 totalBytes = _updateInfo.TargetFullRelease.Size;
                 UpdateLog.AppendLine(_updateInfo.TargetFullRelease.NotesMarkdown);
+                NewVersionText = $"新版本: {_updateInfo.TargetFullRelease.Version}, 当前版本: {App.Version}";
             }
             TotalPackagesSize =
                 $"升级包体积: {ByteSize
                 .FromBytes(totalBytes)
                 .MebiBytes.ToString("F2", CultureInfo.InvariantCulture)} MB";
 
-            if (_updateInfo.DeltasToTarget.Length != 0)
-            {
-                NewVersionText = $"新版本: {_updateInfo.DeltasToTarget[^1].Version}, 当前版本: {App.Version}";
-            }
-            else
-            {
-                NewVersionText = $"新版本: {_updateInfo.TargetFullRelease.Version}, 当前版本: {App.Version}";
-            }
             Log.Info("需要更新, 更新包数量: {Count}", _updateInfo.DeltasToTarget.Length);
         }
         catch (Exception e)
