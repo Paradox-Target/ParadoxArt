@@ -30,8 +30,23 @@ public sealed class WindowSettingsService : BaseSettingsService<WindowSettingsSe
             return;
         }
 
-        window.Width = windowSettings.Width;
-        window.Height = windowSettings.Height;
+        if (window.Screens.Primary is { } primaryScreen)
+        {
+            var workingArea = primaryScreen.WorkingArea;
+            double scaling = primaryScreen.Scaling;
+
+            // Convert pixel dimensions to DIPs
+            double maxWidth = workingArea.Width / scaling;
+            double maxHeight = (workingArea.Height / scaling) - 10;
+
+            window.Width = Math.Min(windowSettings.Width, maxWidth);
+            window.Height = Math.Min(windowSettings.Height, maxHeight);
+        }
+        else
+        {
+            window.Width = windowSettings.Width;
+            window.Height = windowSettings.Height;
+        }
 
         if (windowSettings.IsMaximized)
         {
