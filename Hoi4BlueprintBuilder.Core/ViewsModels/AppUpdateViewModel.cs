@@ -6,7 +6,6 @@ using ByteSizeLib;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hoi4BlueprintBuilder.Core.Services;
-using Hoi4BlueprintBuilder.Core.Views;
 using LiveMarkdown.Avalonia;
 using NLog;
 using Velopack;
@@ -194,13 +193,6 @@ public sealed partial class AppUpdateViewModel : ObservableObject
 
     private void NavigateIfDoNotUpdate()
     {
-        if (App.Current.IsActivated?.IsCompleted is true)
-        {
-            _navigationService.NavigateBasedOnDeviceStatus();
-        }
-        else
-        {
-            _navigationService.NavigateTo<LoadingView>();
-        }
+        _navigationService.NavigateBasedOnDeviceStatus();
     }
 }

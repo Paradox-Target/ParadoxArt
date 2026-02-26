@@ -10,16 +10,15 @@ public static class NLogSetupHelper
     {
         var config = new LoggingConfiguration();
 
-        const string fileLayout =
-            @"${date:format=HH\:mm\:ss} | ${level} | ${message:exceptionSeparator=\r\n:withException=true}";
+#if DEBUG
         const string consoleLayout =
             @"${date:format=HH\:mm\:ss} ${callsite:includeNamespace=False} | ${level} | ${message:exceptionSeparator=\r\n:withException=true}";
-
         var consoleTarget = new DebugSystemTarget("logconsole") { Layout = consoleLayout };
-
-        // TODO: 移除授权系统后再在发布构造中移除 consoleTarget
         config.AddRule(LogLevel.Trace, LogLevel.Fatal, consoleTarget);
+#endif
 #if RELEASE
+        const string fileLayout =
+            @"${date:format=HH\:mm\:ss} | ${level} | ${message:exceptionSeparator=\r\n:withException=true}";
         var fileTarget = new FileTarget("logfile")
         {
             FileName = Path.Combine(App.LogsFolder, "${shortdate}.log"), // 每天一个文件

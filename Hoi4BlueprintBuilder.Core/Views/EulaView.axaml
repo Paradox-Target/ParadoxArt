@@ -1,0 +1,33 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.EulaView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Margin="0,0,0,8" RowDefinitions="Auto,*,Auto">
+        <TextBlock
+            Margin="0,8,0,0"
+            HorizontalAlignment="Center"
+            Classes="SubtitleTextBlock"
+            Text="用户协议" />
+        <ScrollViewer Grid.Row="1">
+            <md:MarkdownRenderer x:Name="MarkdownRenderer" Margin="16,4" />
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*">
+            <Button
+                HorizontalAlignment="Center"
+                Click="ExitApp"
+                Content="拒绝" />
+            <Button
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                Click="NextStep"
+                Content="同意" />
+        </Grid>
+    </Grid>
+</UserControl>

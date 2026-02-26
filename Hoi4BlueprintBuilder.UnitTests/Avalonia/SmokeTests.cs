@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.Design;
-using Avalonia.Headless.NUnit;
+﻿using Avalonia.Headless.NUnit;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.Views.Initialization;
-using Hoi4BlueprintBuilder.Core.ViewsModels;
 
 namespace Hoi4BlueprintBuilder.UnitTests.Avalonia;
 
@@ -27,13 +25,7 @@ public sealed class SmokeTests
             _ = new CreateNewFocusTreeFileView();
             _ = new CreateNewFocusView();
             _ = new NotSupportInfoControlView(new UserStatusService { CurrentSelectedFile = file });
-            _ = new ActivateView(
-                new ActivateViewModel(
-                    new AuthService(new DeviceService()),
-                    new NavigationService(new ServiceContainer()),
-                    new NotificationService()
-                )
-            );
+            _ = new EulaView();
         });
     }
 }

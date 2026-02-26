@@ -47,6 +47,8 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
 
     public string AppUpdateChannel { get; set; } = App.AppUpdateChannels[0];
 
+    public bool IsAgreedEula { get; set; }
+
     [JsonIgnore]
     public bool IsFirstRun { get; private init; }
 

@@ -22,7 +22,7 @@ public sealed class App : Application
     public const string AppName = "ParadoxArt";
     public static readonly Version Version = Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
     public static new App Current => (App)Application.Current!;
-    public Task<bool>? IsActivated { get; private set; }
+
     public ServiceProvider Services { get; private set; } = null!;
     public event EventHandler? OnExitBefore;
     public static readonly string[] AppUpdateChannels = ["stable", "beta"];
@@ -110,7 +110,7 @@ public sealed class App : Application
         Services =
             _serviceCollection?.BuildServiceProvider()
             ?? throw new ArgumentException("serviceCollection未初始化");
-        IsActivated = Services.GetRequiredService<AuthService>().IsActivatedAsync();
+
         var settingsService = Services.GetRequiredService<SettingsService>();
         RequestedThemeVariant = settingsService.ThemeMode.ToThemeVariant();
 
