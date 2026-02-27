@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
 using Avalonia.Platform;
 using Hoi4BlueprintBuilder.Core.Services;
-using Hoi4BlueprintBuilder.Core.Views.Initialization;
 using LiveMarkdown.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,7 +45,8 @@ public sealed partial class EulaView : UserControl
     private void NextStep(object? sender, RoutedEventArgs e)
     {
         var navigationService = App.Current.Services.GetRequiredService<NavigationService>();
-        App.Current.Services.GetRequiredService<SettingsService>().IsAgreedEula = true;
-        navigationService.NavigateTo<MainWelcomeView>();
+        var settings = App.Current.Services.GetRequiredService<SettingsService>();
+        settings.IsAgreedEula = true;
+        navigationService.NavigateBasedOnDeviceStatus();
     }
 }

@@ -45,9 +45,13 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
         var settingsService = serviceProvider.GetRequiredService<SettingsService>();
         var messageBox = serviceProvider.GetRequiredService<MessageBoxService>();
 
-        if (settingsService.IsFirstRun || !settingsService.IsAgreedEula)
+        if (!settingsService.IsAgreedEula)
         {
             NavigateTo<EulaView>();
+        }
+        else if (settingsService.IsFirstRun)
+        {
+            NavigateTo<MainWelcomeView>();
         }
         else
         {
