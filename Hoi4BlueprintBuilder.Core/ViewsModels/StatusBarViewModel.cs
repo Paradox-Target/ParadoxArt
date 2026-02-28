@@ -37,11 +37,11 @@ public sealed partial class StatusBarViewModel : ObservableObject
         tabViewService.CurrentItemChanged += currentItem =>
         {
             IsVisibleFocusCountText = currentItem is FocusTreeEditorView;
-            Task.Run(() => DetectEncodingAsync(currentItem.FilePath));
+            Task.Run(() => DetectEncodingAsync(currentItem?.FilePath));
         };
     }
 
-    private async Task DetectEncodingAsync(string filePath)
+    private async Task DetectEncodingAsync(string? filePath)
     {
         if (File.Exists(filePath) && FileCheckHelper.IsTextFile(filePath))
         {
