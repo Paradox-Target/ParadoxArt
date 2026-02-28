@@ -48,12 +48,21 @@ function Show-Menu {
 }
 # --channel 参数的值格式为 "平台-通道"，例如 "win-x64-stable" 或 "win-x64-beta"
 # 需要更改时需要同步修改程序中的相关代码
-$channel = Show-Menu -Title "请选择打包通道 (使用上下方向键选择，回车确认):" -Options @("stable", "beta")
+$channel = Show-Menu -Title "请选择打包通道 (使用上下方向键选择，回车确认):" -Options @("stable", "beta", "all")
 $platform = "win-x64"
-$fullChannel = "$platform-$channel"
+
+if ($channel -eq "all") {
+    $channelsToProcess = @("stable", "beta")
+    $channelDisplay = "所有渠道 (stable, beta)"
+}
+else {
+    $channelsToProcess = @($channel)
+    $channelDisplay = "$platform-$channel"
+}
+
 Write-Host "开始构建并打包项目..." -ForegroundColor Cyan
 Write-Host "打包通道: " -ForegroundColor Cyan -NoNewline
-Write-Host $fullChannel -ForegroundColor Magenta
+Write-Host $channelDisplay -ForegroundColor Magenta
 
 # 从 .csproj 提取版本号
 # 查找 <Version>...</Version> 标签
@@ -75,4 +84,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 else { Write-Host "开始打包" -ForegroundColor Cyan }
 
-vpk pack --delta BestSize --channel $fullChannel --packId ParadoxArt -v $version --packDir $outputDir --mainExe ParadoxArt.exe --icon ..\Hoi4BlueprintBuilder.Core\Assets\logo.ico --releaseNotes .\releasenotes.md
+foreach ($c in $channelsToProcess) {
+    $fullChannel = "$platform-$c"
+    Write-Host ">>> 正在生成打包文件: $fullChannel" -ForegroundColor Cyan
+    vpk pack --delta BestSize --channel $fullChannel --packId ParadoxArt -v $version --packDir $outputDir --mainExe ParadoxArt.exe --icon ..\Hoi4BlueprintBuilder.Core\Assets\logo.ico --releaseNotes .\releasenotes.md
+}

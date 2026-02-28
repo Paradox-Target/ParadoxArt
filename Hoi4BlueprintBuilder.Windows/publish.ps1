@@ -17,5 +17,9 @@ if ([string]::IsNullOrWhiteSpace($ossSecret) -or [string]::IsNullOrWhiteSpace($o
 }
 
 Write-Host "开始上传到 OSS" -ForegroundColor Cyan
-vpk upload s3 --bucket app-update-packages --channel $fullChannel --endpoint https://b7a7a340981df6606c000f71c361c854.r2.cloudflarestorage.com --keyId $ossKey --secret $ossSecret
+foreach ($c in $channelsToProcess) {
+    $fullChannel = "$platform-$c"
+    Write-Host ">>> 正在上传通道: $fullChannel" -ForegroundColor Cyan
+    vpk upload s3 --bucket app-update-packages --channel $fullChannel --endpoint https://b7a7a340981df6606c000f71c361c854.r2.cloudflarestorage.com --keyId $ossKey --secret $ossSecret
+}
 Write-Host "上传完成." -ForegroundColor Green
