@@ -11,6 +11,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
 {
     private readonly FileSystemSafeWatcher _fileWatcher;
     private readonly IFileSortComparer _fileSortComparer;
+    private readonly SystemFileItem _root;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     [ObservableProperty]
@@ -28,9 +29,9 @@ public sealed partial class FileTreeViewModel : ObservableObject
         _fileWatcher.IncludeSubdirectories = true;
         _fileWatcher.EnableRaisingEvents = true;
 
-        var root = new SystemFileItem(settingService.ModRootFolderPath, false, null);
-        LoadFileSystem(settingService.ModRootFolderPath, root);
-        Items = root.Children;
+        _root = new SystemFileItem(settingService.ModRootFolderPath, false, null);
+        LoadFileSystem(settingService.ModRootFolderPath, _root);
+        Items = _root.Children;
     }
 
     private void ContentOnChanged(object sender, FileSystemEventArgs e)
@@ -87,8 +88,8 @@ public sealed partial class FileTreeViewModel : ObservableObject
             return;
         }
 
-        var isFile = !Directory.Exists(e.FullPath);
-        var parent = FindFileItemByPath(directoryPath, Items);
+        bool isFile = !Directory.Exists(e.FullPath);
+        var parent = FindFileItemByPath(directoryPath, [_root]);
         if (parent is null)
         {
             Log.Warn("找不到插入的位置: {FullPath}", directoryPath);
@@ -96,19 +97,19 @@ public sealed partial class FileTreeViewModel : ObservableObject
         }
 
         var item = new SystemFileItem(e.FullPath, isFile, parent);
-        var insertIndex = FindInsertIndex(item);
+        int insertIndex = FindInsertIndex(item);
         parent.InsertChild(insertIndex, item);
     }
 
     /// <summary>
-    /// 查找系统文件夹或文件对应的 <see cref="Models.SystemFileItem"/>
+    /// 查找系统文件夹或文件对应的 <see cref="SystemFileItem"/>
     /// </summary>
     /// <param name="fullPath">文件或文件夹的路径</param>
     /// <param name="items"></param>
     /// <returns></returns>
     private static SystemFileItem? FindFileItemByPath(string fullPath, IReadOnlyList<SystemFileItem> items)
     {
-        for (var index = 0; index < items.Count; index++)
+        for (int index = 0; index < items.Count; index++)
         {
             var fileItem = items[index];
             if (fileItem.FullPath == fullPath)
@@ -146,10 +147,10 @@ public sealed partial class FileTreeViewModel : ObservableObject
         }
 
         //  如果是文件, 添加到最后一个文件之后
-        var insertIndex = parentChildren.Count;
-        var maxIndex = parentChildren.Count;
-        var lastFolderIndex = FindLastFolderIndex(parentChildren);
-        var index = 0;
+        int insertIndex = parentChildren.Count;
+        int maxIndex = parentChildren.Count;
+        int lastFolderIndex = FindLastFolderIndex(parentChildren);
+        int index = 0;
 
         // 当新增的是文件夹时，只与文件夹比较, 如果是文件，则只与文件比较
         if (newItem.IsFolder)
@@ -181,7 +182,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
 
     private static int FindLastFolderIndex(IReadOnlyList<SystemFileItem> items)
     {
-        var i = 0;
+        int i = 0;
         while (i < items.Count && items[i].IsFolder)
         {
             ++i;
@@ -192,20 +193,20 @@ public sealed partial class FileTreeViewModel : ObservableObject
 
     private void LoadFileSystem(string path, SystemFileItem parent)
     {
-        var directories = Directory.GetDirectories(path);
-        var files = Directory.GetFiles(path);
+        string[] directories = Directory.GetDirectories(path);
+        string[] files = Directory.GetFiles(path);
 
         Array.Sort(directories, _fileSortComparer);
         Array.Sort(files, _fileSortComparer);
 
-        foreach (var directoryPath in directories)
+        foreach (string directoryPath in directories)
         {
             var item = new SystemFileItem(directoryPath, false, parent);
             parent.AddChild(item);
             LoadFileSystem(directoryPath, item);
         }
 
-        foreach (var filePath in files)
+        foreach (string filePath in files)
         {
             parent.AddChild(filePath, true);
         }
