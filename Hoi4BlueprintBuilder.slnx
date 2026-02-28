@@ -14,5 +14,6 @@
   <Project Path="Hoi4BlueprintBuilder.Localization/Hoi4BlueprintBuilder.Localization.csproj" />
   <Project Path="Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj" />
   <Project Path="Hoi4BlueprintBuilder.Windows/Hoi4BlueprintBuilder.Windows.csproj" />
+  <Project Path="Hoi4BlueprintBuilder.Benchmark/Hoi4BlueprintBuilder.Benchmark.csproj" />
   <Project Path="Hoi4BlueprintBuilder.Core/Hoi4BlueprintBuilder.Core.csproj" />
 </Solution>
