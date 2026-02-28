@@ -201,14 +201,10 @@ public sealed partial class FileTreeViewModel : ObservableObject
 
         foreach (string directoryPath in directories)
         {
-            var item = new SystemFileItem(directoryPath, false, parent);
-            parent.AddChild(item);
+            var item = parent.AddChild(directoryPath, false);
             LoadFileSystem(directoryPath, item);
         }
 
-        foreach (string filePath in files)
-        {
-            parent.AddChild(filePath, true);
-        }
+        parent.AddFileChildren(files);
     }
 }

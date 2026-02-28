@@ -1,4 +1,5 @@
-using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,7 +25,7 @@ public sealed partial class SystemFileItem : ObservableObject
     public bool IsFolder => !IsFile;
     public SystemFileItem? Parent { get; }
     public IReadOnlyList<SystemFileItem> Children => _children;
-    private readonly ObservableCollection<SystemFileItem> _children = [];
+    private readonly AvaloniaList<SystemFileItem> _children = [];
 
     [ObservableProperty]
     private bool _isExpanded;
@@ -69,19 +70,23 @@ public sealed partial class SystemFileItem : ObservableObject
     /// </summary>
     /// <param name="child">添加的子节点</param>
     /// <exception cref="ArgumentException">如果子节点的父节点不是当前节点, 则抛出此异常</exception>
-    public void AddChild(SystemFileItem child)
+    private void AddChild(SystemFileItem child)
     {
-        if (!ReferenceEquals(child.Parent, this))
-        {
-            throw new ArgumentException("Child's parent should be this");
-        }
+        Debug.Assert(ReferenceEquals(child.Parent, this));
 
         _children.Add(child);
     }
 
-    public void AddChild(string fullPath, bool isFile)
+    public SystemFileItem AddChild(string fullPath, bool isFile)
     {
-        AddChild(new SystemFileItem(fullPath, isFile, this));
+        var item = new SystemFileItem(fullPath, isFile, this);
+        AddChild(item);
+        return item;
+    }
+
+    public void AddFileChildren(IEnumerable<string> files)
+    {
+        _children.AddRange(files.Select(child => new SystemFileItem(child, true, this)));
     }
 
     public void InsertChild(int index, SystemFileItem child)
