@@ -207,4 +207,13 @@
   <data name="File_OpenInExplorer" xml:space="preserve">
     <value>在资源管理器中打开</value>
   </data>
+  <data name="Menu_NewFile" xml:space="preserve">
+    <value>新建文件</value>
+  </data>
+  <data name="Menu_NewFolder" xml:space="preserve">
+    <value>新建文件夹</value>
+  </data>
+  <data name="NewFile_ErrorOccurs" xml:space="preserve">
+    <value>新建文件或文件夹时发生错误</value>
+  </data>
 </root>

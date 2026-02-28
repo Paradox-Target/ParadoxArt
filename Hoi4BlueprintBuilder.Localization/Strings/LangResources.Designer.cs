@@ -294,6 +294,24 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Menu_NewFile.
+        /// </summary>
+        public static string Menu_NewFile {
+            get {
+                return ResourceManager.GetString("Menu_NewFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Menu_NewFolder.
+        /// </summary>
+        public static string Menu_NewFolder {
+            get {
+                return ResourceManager.GetString("Menu_NewFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Menu_Save.
         /// </summary>
         public static string Menu_Save {
@@ -326,6 +344,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         public static string RenameFile_NameContainInvalidChar {
             get {
                 return ResourceManager.GetString("RenameFile_NameContainInvalidChar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NewFile_ErrorOccurs.
+        /// </summary>
+        public static string NewFile_ErrorOccurs {
+            get {
+                return ResourceManager.GetString("NewFile_ErrorOccurs", resourceCulture);
             }
         }
     }

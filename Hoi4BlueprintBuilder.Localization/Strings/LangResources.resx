@@ -207,4 +207,13 @@
   <data name="File_OpenInExplorer" xml:space="preserve">
     <value>OpenInExplorer</value>
   </data>
+  <data name="Menu_NewFile" xml:space="preserve">
+    <value>Menu_NewFile</value>
+  </data>
+  <data name="Menu_NewFolder" xml:space="preserve">
+    <value>Menu_NewFolder</value>
+  </data>
+  <data name="NewFile_ErrorOccurs" xml:space="preserve">
+    <value>NewFile_ErrorOccurs</value>
+  </data>
 </root>

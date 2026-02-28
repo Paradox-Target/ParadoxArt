@@ -56,7 +56,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
         }
 
         parent.RemoveChild(target);
-        var newItem = new Models.SystemFileItem(e.FullPath, target.IsFile, parent);
+        var newItem = new SystemFileItem(e.FullPath, target.IsFile, parent);
         if (newItem.IsFolder)
         {
             LoadFileSystem(e.FullPath, newItem);
@@ -95,7 +95,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
             return;
         }
 
-        var item = new Models.SystemFileItem(e.FullPath, isFile, parent);
+        var item = new SystemFileItem(e.FullPath, isFile, parent);
         var insertIndex = FindInsertIndex(item);
         parent.InsertChild(insertIndex, item);
     }
@@ -106,7 +106,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
     /// <param name="fullPath">文件或文件夹的路径</param>
     /// <param name="items"></param>
     /// <returns></returns>
-    private static Models.SystemFileItem? FindFileItemByPath(string fullPath, IReadOnlyList<Models.SystemFileItem> items)
+    private static SystemFileItem? FindFileItemByPath(string fullPath, IReadOnlyList<SystemFileItem> items)
     {
         for (var index = 0; index < items.Count; index++)
         {
@@ -132,7 +132,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
     /// <param name="newItem">新增的项目</param>
     /// <returns>新项目的插入位置</returns>
     /// <exception cref="ArgumentException">如果 <paramref name="newItem"/> 的父节点为<c>null</c></exception>
-    private int FindInsertIndex(Models.SystemFileItem newItem)
+    private int FindInsertIndex(SystemFileItem newItem)
     {
         var parentChildren = newItem.Parent?.Children;
         if (parentChildren is null)
@@ -179,7 +179,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
         return insertIndex;
     }
 
-    private static int FindLastFolderIndex(IReadOnlyList<Models.SystemFileItem> items)
+    private static int FindLastFolderIndex(IReadOnlyList<SystemFileItem> items)
     {
         var i = 0;
         while (i < items.Count && items[i].IsFolder)
@@ -190,7 +190,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
         return i == 0 ? 0 : i - 1;
     }
 
-    private void LoadFileSystem(string path, Models.SystemFileItem parent)
+    private void LoadFileSystem(string path, SystemFileItem parent)
     {
         var directories = Directory.GetDirectories(path);
         var files = Directory.GetFiles(path);

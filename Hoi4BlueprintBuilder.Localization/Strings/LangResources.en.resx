@@ -204,4 +204,13 @@
   <data name="File_OpenInExplorer" xml:space="preserve">
     <value>Show in File Explorer</value>
   </data>
+  <data name="Menu_NewFile" xml:space="preserve">
+    <value>New File</value>
+  </data>
+  <data name="Menu_NewFolder" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
+  <data name="NewFile_ErrorOccurs" xml:space="preserve">
+    <value>An error occurred while creating the file or folder</value>
+  </data>
 </root>

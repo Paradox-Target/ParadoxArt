@@ -43,6 +43,9 @@ public sealed partial class SystemFileItem : ObservableObject
     private static readonly TelemetryService TelemetryService =
         App.Current.Services.GetRequiredService<TelemetryService>();
 
+    private const string DefaultNewFileName = "new_file.txt";
+    private const string DefaultNewFolderName = "new_folder";
+
     public SystemFileItem(string fullPath, bool isFile, SystemFileItem? parent)
     {
         Name = Path.GetFileName(fullPath);
@@ -225,5 +228,97 @@ public sealed partial class SystemFileItem : ObservableObject
         }
 
         TelemetryService.TrackEvent("FileTree_ContextMenu_DeleteFile");
+    }
+
+    [RelayCommand]
+    private async Task NewFileAsync()
+    {
+        TelemetryService.TrackEvent("FileTree_ContextMenu_NewFile");
+
+        string targetDir = IsFolder ? FullPath : Path.GetDirectoryName(FullPath)!;
+
+        var dialog = new ContentDialog
+        {
+            Title = LangResources.Menu_NewFile,
+            PrimaryButtonText = LangResources.Common_Ok,
+            CloseButtonText = LangResources.Common_Cancel,
+            DefaultButton = ContentDialogButton.Primary
+        };
+
+        var view = new NewFileOrFolderView(dialog, targetDir, DefaultNewFileName, true);
+        dialog.Content = view;
+
+        var result = await dialog.ShowAsync();
+        if (result != ContentDialogResult.Primary)
+        {
+            return;
+        }
+
+        if (view.IsInvalid)
+        {
+            return;
+        }
+
+        try
+        {
+            string newFilePath = Path.Combine(targetDir, view.NewName);
+            await using (File.Create(newFilePath)) { }
+
+            if (IsFolder)
+            {
+                IsExpanded = true;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "新建文件时发生错误");
+            await MessageBoxService.ShowErrorAsync(LangResources.NewFile_ErrorOccurs);
+        }
+    }
+
+    [RelayCommand]
+    private async Task NewFolderAsync()
+    {
+        TelemetryService.TrackEvent("FileTree_ContextMenu_NewFolder");
+
+        string targetDir = IsFolder ? FullPath : Path.GetDirectoryName(FullPath)!;
+
+        var dialog = new ContentDialog
+        {
+            Title = LangResources.Menu_NewFolder,
+            PrimaryButtonText = LangResources.Common_Ok,
+            CloseButtonText = LangResources.Common_Cancel,
+            DefaultButton = ContentDialogButton.Primary
+        };
+
+        var view = new NewFileOrFolderView(dialog, targetDir, DefaultNewFolderName, false);
+        dialog.Content = view;
+
+        var result = await dialog.ShowAsync();
+        if (result != ContentDialogResult.Primary)
+        {
+            return;
+        }
+
+        if (view.IsInvalid)
+        {
+            return;
+        }
+
+        try
+        {
+            string newFolderPath = Path.Combine(targetDir, view.NewName);
+            Directory.CreateDirectory(newFolderPath);
+
+            if (IsFolder)
+            {
+                IsExpanded = true;
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "新建文件夹时发生错误");
+            await MessageBoxService.ShowErrorAsync(LangResources.NewFile_ErrorOccurs);
+        }
     }
 }

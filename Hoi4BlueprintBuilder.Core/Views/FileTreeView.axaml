@@ -15,6 +15,20 @@
 
     <UserControl.Resources>
         <fa:FAMenuFlyout x:Key="ContextMenu" x:DataType="models:SystemFileItem">
+            <fa:MenuFlyoutItem Command="{Binding NewFileCommand}" Text="{x:Static lang:LangResources.Menu_NewFile}">
+                <fa:MenuFlyoutItem.IconSource>
+                    <fa:SymbolIconSource Symbol="Add" />
+                </fa:MenuFlyoutItem.IconSource>
+            </fa:MenuFlyoutItem>
+
+            <fa:MenuFlyoutItem Command="{Binding NewFolderCommand}" Text="{x:Static lang:LangResources.Menu_NewFolder}">
+                <fa:MenuFlyoutItem.IconSource>
+                    <fa:SymbolIconSource Symbol="NewFolder" />
+                </fa:MenuFlyoutItem.IconSource>
+            </fa:MenuFlyoutItem>
+
+            <fa:MenuFlyoutSeparator />
+
             <fa:MenuFlyoutItem Command="{Binding DeleteFileCommand}" Text="{x:Static lang:LangResources.Common_Delete}">
                 <fa:MenuFlyoutItem.IconSource>
                     <fa:SymbolIconSource Symbol="Delete" />
