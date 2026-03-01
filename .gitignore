@@ -453,3 +453,4 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 /Hoi4BlueprintBuilder.Windows/releasenotes.md
+/Hoi4BlueprintBuilder.Benchmark/Program.cs
