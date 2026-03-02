@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Collections;
@@ -24,7 +25,15 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 {
     public IAvaloniaList<FocusNodeViewModel> Nodes => _nodes;
 
-    public IReadOnlyCollection<IFocusTrigger> FocusTriggers => _focusTriggers;
+    /// <summary>
+    /// 可独立切换的叶子条件列表 (不包含 has_completed_focus 类条件, 由 Focus 节点 checkbox 管理)
+    /// </summary>
+    public IReadOnlyList<ConditionItem> ConditionItems => _conditionItems;
+
+    /// <summary>
+    /// 已完成的 Focus ID 集合
+    /// </summary>
+    public HashSet<string> CompletedFocusIds => _completedFocusIds;
 
     [ObservableProperty]
     private bool _isLoading;
@@ -40,7 +49,9 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     /// 国策来源文件路径
     /// </summary>
     private readonly List<string> _focusTreeFiles = [];
-    private readonly List<IFocusTrigger> _focusTriggers = [];
+    private readonly List<ConditionItem> _conditionItems = [];
+    private readonly List<IFocusTrigger> _allTriggers = [];
+    private readonly HashSet<string> _completedFocusIds = [];
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
     private readonly NotificationService _notificationService;
@@ -65,6 +76,10 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     {
         StrongReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
         StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(this, DeleteImageResource);
+        StrongReferenceMessenger.Default.Register<FocusCompletedChangedMessage>(
+            this,
+            (_, message) => ToggleFocusCompleted(message.FocusId)
+        );
     }
 
     public void OnUnLoaded()
@@ -109,7 +124,8 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         {
             var result = await Task.Run<(
                 Dictionary<string, FocusNode> Nodes,
-                IEnumerable<string> FilePaths
+                IEnumerable<string> FilePaths,
+                List<ConditionItem> ConditionItems
             )?>(() =>
             {
                 if (!TextParser.TryParse(filePath, out var rootNode, out _))
@@ -127,18 +143,34 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
                 return;
             }
 
-            var (focusNodes, filePaths) = result.Value;
+            var (focusNodes, filePaths, conditionItems) = result.Value;
             _editorNodesMap = focusNodes;
             _focusTreeFiles.AddRange(filePaths);
             _nodes.AddRange(
                 _editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode))
             );
-            _focusTriggers.AddRange(_editorNodesMap.Values.SelectMany(node => node.Offsets));
-            _focusTriggers.AddRange(
+
+            // 收集所有 trigger (offset + allow_branch)
+            _allTriggers.AddRange(_editorNodesMap.Values.SelectMany(node => node.Offsets));
+            _allTriggers.AddRange(
                 _editorNodesMap
                     .Values.Where(node => node.AllowBranch is not null)
                     .Select(node => node.AllowBranch!)
             );
+
+            // 设置条件列表, “has_completed_focus” 类条件由节点 checkbox 管理, 不在条件面板显示
+            foreach (var item in conditionItems)
+            {
+                if (IsCompletedFocusCondition(item))
+                {
+                    continue;
+                }
+                _conditionItems.Add(item);
+                item.PropertyChanged += OnConditionItemPropertyChanged;
+            }
+
+            // 设置哪些 focus 节点显示完成 checkbox
+            SetupFocusCompletedCheckboxVisibility(conditionItems);
 
             StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
 
@@ -221,7 +253,14 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _nodes.Clear();
         _editorNodesMap.Clear();
         _focusTreeFiles.Clear();
-        _focusTriggers.Clear();
+
+        foreach (var item in _conditionItems)
+        {
+            item.PropertyChanged -= OnConditionItemPropertyChanged;
+        }
+        _conditionItems.Clear();
+        _allTriggers.Clear();
+        _completedFocusIds.Clear();
     }
 
     [Time]
@@ -432,5 +471,116 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     {
         StrongReferenceMessenger.Default.UnregisterAll(this);
         ClearResources();
+    }
+
+    /// <summary>
+    /// 当 ConditionItem 的 IsEnabled 变化时, 重新求值所有 trigger
+    /// </summary>
+    private void OnConditionItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ConditionItem.IsEnabled))
+        {
+            ReevaluateAllTriggers();
+        }
+    }
+
+    /// <summary>
+    /// 切换 Focus 完成状态
+    /// </summary>
+    /// <param name="focusId">Focus ID</param>
+    public void ToggleFocusCompleted(string focusId)
+    {
+        if (_completedFocusIds.Contains(focusId))
+        {
+            _completedFocusIds.Remove(focusId);
+        }
+        else
+        {
+            _completedFocusIds.Add(focusId);
+
+            // 取消互斥 focus 的完成状态
+            if (_editorNodesMap.TryGetValue(focusId, out var focusNode))
+            {
+                foreach (var exclusive in focusNode.MutuallyExclusive)
+                {
+                    _completedFocusIds.Remove(exclusive.Id);
+                    // 同步 ViewModel 的 IsCompleted 状态
+                    foreach (var vm in _nodes.AsValueEnumerable().Where(vm => vm.Node.Id == exclusive.Id))
+                    {
+                        vm.IsCompleted = false;
+                    }
+                }
+            }
+        }
+
+        ReevaluateAllTriggers();
+    }
+
+    /// <summary>
+    /// 重新求值所有 trigger 的 IsEnabled 状态
+    /// </summary>
+    public void ReevaluateAllTriggers()
+    {
+        // 构建当前为 true 的条件集合
+        var trueSet = new HashSet<(string ScopeName, string NodeContent)>();
+
+        // 添加用户勾选的条件
+        foreach (var item in _conditionItems)
+        {
+            if (item.IsEnabled)
+            {
+                trueSet.Add((item.ScopeName, item.NodeContent));
+            }
+        }
+
+        // 添加已完成的 focus 条件
+        foreach (string focusId in _completedFocusIds)
+        {
+            trueSet.Add(("", $"has_completed_focus = {focusId}"));
+        }
+
+        // 对每个 trigger 进行求值
+        foreach (var trigger in _allTriggers)
+        {
+            if (trigger.Expression is not null)
+            {
+                trigger.IsEnabled = ConditionHelper.Evaluate(trigger.Expression, trueSet);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 判断条件项是否为 has_completed_focus 类型
+    /// </summary>
+    private static bool IsCompletedFocusCondition(ConditionItem item)
+    {
+        return item is ConditionLeafItem { ScopeName: "" } leafItem
+            && leafItem.Leaf.Key.EqualsIgnoreCase("has_completed_focus");
+    }
+
+    /// <summary>
+    /// 设置哪些 Focus 节点显示完成 CheckBox
+    /// </summary>
+    private void SetupFocusCompletedCheckboxVisibility(List<ConditionItem> allConditionItems)
+    {
+        // 收集所有 has_completed_focus 条件引用的 focus ID
+        var completedFocusConditionIds = new HashSet<string>();
+        foreach (var item in allConditionItems)
+        {
+            if (
+                item is ConditionLeafItem { ScopeName: "" } leafItem
+                && leafItem.Leaf.Key.EqualsIgnoreCase("has_completed_focus")
+                && !string.IsNullOrEmpty(leafItem.Leaf.ValueText)
+            )
+            {
+                completedFocusConditionIds.Add(leafItem.Leaf.ValueText);
+            }
+        }
+
+        // 设置对应的 FocusNodeViewModel
+        foreach (var vm in _nodes)
+        {
+            vm.ShowCompletedCheckbox = completedFocusConditionIds.Contains(vm.Node.Id);
+        }
     }
 }

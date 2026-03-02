@@ -1,4 +1,4 @@
-﻿using Hoi4BlueprintBuilder.Core;
+using Hoi4BlueprintBuilder.Core;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
@@ -42,7 +42,7 @@ public sealed class FocusNodeParserTests
     public void GetAllNodesFromAst_ShouldParseAllNodesCorrectly()
     {
         // 执行测试
-        var (nodes, filePaths) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, filePaths, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
 
         // 验证结果
         Assert.That(nodes, Is.Not.Null, "返回的节点字典为空");
@@ -72,13 +72,10 @@ public sealed class FocusNodeParserTests
             Assert.That(focus1.MutuallyExclusive, Is.Empty, "节点互斥关系不正确");
             Assert.That(focus1.CompletionReward, Does.Contain("add_political_power = 100"), "节点完成奖励不正确");
             Assert.That(focus1.Offsets, Has.Count.EqualTo(2));
-            Assert.That(((IFocusTrigger)focus1.Offsets.First()).DisplayContent, Is.EqualTo("tag = tst"));
+            Assert.That(focus1.Offsets.First().Expression, Is.EqualTo(new ConditionLeaf("", "tag = tst")));
             Assert.That(focus1.Offsets.First().Offset, Is.EqualTo(new FocusPoint(1, 2)));
             Assert.That(focus1.AllowBranch, Is.Not.Null);
-            Assert.That(
-                ((IFocusTrigger)focus1.AllowBranch!).DisplayContent,
-                Is.EqualTo("has_dlc = \"test\"")
-            );
+            Assert.That(focus1.AllowBranch!.Expression, Is.EqualTo(new ConditionLeaf("", "has_dlc = test")));
             Assert.That(focus1.CancelIfInvalid, Is.False);
             Assert.That(focus1.ContinueIfInvalid, Is.True);
         }
@@ -98,7 +95,7 @@ public sealed class FocusNodeParserTests
     public void GetAllNodesFromAst_ShouldProcessNodeRelationsCorrectly()
     {
         // 执行测试
-        var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
 
         // 验证先决条件关系
         var focus2 = nodes["test_focus_2"];
@@ -132,7 +129,7 @@ public sealed class FocusNodeParserTests
     public void CreateAstNodeFromEditorModel_ShouldGenerateCorrectAst()
     {
         // 首先获取解析后的节点
-        var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
 
         // 使用模型创建AST节点
         var generatedNode1 = FocusNodeHelper.CreateAstNodeFromEditorModel(nodes["test_focus_1"]);
@@ -171,7 +168,7 @@ public sealed class FocusNodeParserTests
     public void CreateAstNodeFromEditorModel_ShouldHandleComplexRelations()
     {
         // 首先获取解析后的节点
-        var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
         var originalNode = nodes["test_focus_2"];
 
         // 使用模型创建AST节点
@@ -205,7 +202,7 @@ public sealed class FocusNodeParserTests
     public void ChildrenTest()
     {
         // 首先获取解析后的节点
-        var (nodes, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
         var focus1 = nodes["test_focus_1"];
         var focus2 = nodes["test_focus_2"];
         var focus3 = nodes["test_focus_3"];

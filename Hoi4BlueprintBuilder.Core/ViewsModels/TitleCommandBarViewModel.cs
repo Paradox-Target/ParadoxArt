@@ -13,14 +13,16 @@ using Hoi4BlueprintBuilder.Localization.Strings;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
-using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
 [RegisterSingleton<TitleCommandBarViewModel>]
 public sealed partial class TitleCommandBarViewModel : ObservableObject
 {
-    public IEnumerable<FocusTriggerGroup> FocusTriggers => GetFocusTriggers();
+    /// <summary>
+    /// 当前国策树中可独立切换的叶子条件列表
+    /// </summary>
+    public IReadOnlyList<ConditionItem> ConditionItems => GetConditionItems();
 
     [ObservableProperty]
     private bool _isVisibleForTitleCommandBar;
@@ -31,61 +33,16 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private bool CanSave => _tabViewService.CurrentItem is ISave;
 
     /// <summary>
-    /// 获取当前国策树中的国策可见性条件列表
+    /// 获取当前国策树中的可切换条件列表
     /// </summary>
-    /// <returns></returns>
-    private IEnumerable<FocusTriggerGroup> GetFocusTriggers()
+    private IReadOnlyList<ConditionItem> GetConditionItems()
     {
         if (_tabViewService.CurrentItem is not FocusTreeEditorView focusTreeEditorView)
         {
             return [];
         }
 
-        var map = new Dictionary<string, FocusTriggerGroup>();
-        foreach (
-            var focusTrigger in focusTreeEditorView
-                .ViewModel.FocusTriggers.AsValueEnumerable()
-                .Where(offset => offset.Trigger is not null)
-        )
-        {
-            if (!map.TryGetValue(focusTrigger.DisplayContent, out var group))
-            {
-                group = new FocusTriggerGroup(focusTrigger.DisplayContent);
-                group.IsEnabled = focusTrigger.IsEnabled;
-                map.Add(focusTrigger.DisplayContent, group);
-            }
-
-            group.AddTrigger(focusTrigger);
-        }
-
-        return map.Values;
-    }
-
-    private static readonly string[] ConditionsKeywords = ["OR", "AND", "NOT", "limit", "if"];
-
-    private IEnumerable<Child> GetConditions(Node trigger)
-    {
-        var conditions = new List<Child>();
-        foreach (var child in trigger.AllArray)
-        {
-            if (child.TryGetNode(out var triggerNode))
-            {
-                if (ConditionsKeywords.Contains(triggerNode.Key, StringComparer.OrdinalIgnoreCase))
-                {
-                    conditions.AddRange(GetConditions(triggerNode));
-                }
-                else
-                {
-                    conditions.Add(child);
-                }
-            }
-            else if (child.TryGetLeaf(out _))
-            {
-                conditions.Add(child);
-            }
-        }
-
-        return conditions;
+        return focusTreeEditorView.ViewModel.ConditionItems;
     }
 
     private readonly SettingsService _settingsService;
@@ -117,7 +74,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         {
             if (IsVisibleForTitleCommandBar)
             {
-                OnPropertyChanged(nameof(FocusTriggers));
+                OnPropertyChanged(nameof(ConditionItems));
             }
 
             IsFocusTreeEditorAtCurrent = currentItem is FocusTreeEditorView;

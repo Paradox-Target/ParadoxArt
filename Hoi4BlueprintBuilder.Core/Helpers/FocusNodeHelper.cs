@@ -22,26 +22,29 @@ public static class FocusNodeHelper
     /// </summary>
     /// <param name="filePath"></param>
     /// <param name="rootNode"></param>
-    /// <returns>FilePaths是所有被加载的文件路径</returns>
+    /// <returns>FilePaths是所有被加载的文件路径, ConditionItems 是所有提取的叶子条件</returns>
     [Time("解析国策树")]
-    public static (Dictionary<string, FocusNode> Nodes, IEnumerable<string> FilePaths) GetAllNodesFromAst(
-        string filePath,
-        Node rootNode
-    )
+    public static (
+        Dictionary<string, FocusNode> Nodes,
+        IEnumerable<string> FilePaths,
+        List<ConditionItem> ConditionItems
+    ) GetAllNodesFromAst(string filePath, Node rootNode)
     {
         var focusMap = new Dictionary<string, FocusNode>();
         HashSet<string> filePaths = [filePath];
+        var conditionItems = new List<ConditionItem>();
 
-        GetAllNodesFromAstCore(filePath, rootNode, filePaths, focusMap);
+        GetAllNodesFromAstCore(filePath, rootNode, filePaths, focusMap, conditionItems);
 
-        return (focusMap, filePaths);
+        return (focusMap, filePaths, conditionItems);
     }
 
     private static void GetAllNodesFromAstCore(
         string filePath,
         Node rootNode,
         HashSet<string> filePaths,
-        Dictionary<string, FocusNode> focusMap
+        Dictionary<string, FocusNode> focusMap,
+        List<ConditionItem> conditionItems
     )
     {
         //TODO: 遵守shared_focus的规则(?)
@@ -62,13 +65,13 @@ public static class FocusNodeHelper
             if (TextParser.TryParse(sharedFocusPath, out var node, out _))
             {
                 filePaths.Add(sharedFocusPath);
-                GetAllNodesFromAstCore(sharedFocusPath, node, filePaths, focusMap);
+                GetAllNodesFromAstCore(sharedFocusPath, node, filePaths, focusMap, conditionItems);
             }
         }
 
         foreach (var focusNode in GetFocusNodesFromAstRootNode(rootNode))
         {
-            var focusNodeModel = CreateFocusNodeFromAstNode(filePath, focusNode);
+            var focusNodeModel = CreateFocusNodeFromAstNode(filePath, focusNode, conditionItems);
             focusMap[focusNodeModel.Id] = focusNodeModel;
         }
 
@@ -212,7 +215,11 @@ public static class FocusNodeHelper
         }
     }
 
-    private static FocusNode CreateFocusNodeFromAstNode(string filePath, Node focusNode)
+    private static FocusNode CreateFocusNodeFromAstNode(
+        string filePath,
+        Node focusNode,
+        List<ConditionItem> conditionItems
+    )
     {
         var model = new FocusNode(filePath, GetFocusType(focusNode));
 
@@ -226,7 +233,7 @@ public static class FocusNodeHelper
             }
             else if (child.TryGetNode(out var node))
             {
-                ProcessNode(node, model);
+                ProcessNode(node, model, conditionItems);
             }
         }
 
@@ -280,7 +287,7 @@ public static class FocusNodeHelper
         }
     }
 
-    private static void ProcessNode(Node node, FocusNode model)
+    private static void ProcessNode(Node node, FocusNode model, List<ConditionItem> conditionItems)
     {
         if (node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive))
         {
@@ -330,15 +337,19 @@ public static class FocusNodeHelper
                 }
                 else if (child.TryGetNode(out var childNode) && childNode.Key.EqualsIgnoreCase("trigger"))
                 {
-                    trigger = childNode.Clone();
+                    trigger = childNode;
                 }
             }
 
-            model.AddOffset(new FocusOffset(new FocusPoint(x, y), trigger));
+            var expression = trigger is not null
+                ? ConditionHelper.ExtractConditionExpression(trigger, string.Empty, conditionItems)
+                : null;
+            model.AddOffset(new FocusOffset(new FocusPoint(x, y), expression));
         }
         else if (node.Key.EqualsIgnoreCase("allow_branch") && node.AllArray.Length != 0)
         {
-            model.AllowBranch = new FocusAllowBranch(node.Clone());
+            var expression = ConditionHelper.ExtractConditionExpression(node, string.Empty, conditionItems);
+            model.AllowBranch = new FocusAllowBranch(expression);
         }
     }
 

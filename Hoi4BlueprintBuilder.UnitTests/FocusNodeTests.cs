@@ -479,7 +479,7 @@ public sealed class FocusNodeTests
             Assert.That(nodeC.RawPosition.Y, Is.EqualTo(15)); // 25 - 10
         }
     }
-    
+
     [Test]
     public void AddOffset_AddsToCollection()
     {
@@ -759,7 +759,7 @@ public sealed class FocusNodeTests
 
         // Act
         node.AllowBranch = allowBranch;
-        
+
         // Assert initial state
         Assert.That(node.IsVisible, Is.True, "Node should be visible initially");
 
@@ -778,7 +778,7 @@ public sealed class FocusNodeTests
         // Arrange
         var parentNode = new FocusNode("parent", default);
         var childNode = new FocusNode("child", default);
-        
+
         // Setup parent-child relationship: child depends on parent
         // AddPrerequisite adds 'parent' to 'child.Prerequisite' and adds 'child' to 'parent.Children'
         childNode.AddPrerequisite([parentNode]);
@@ -824,12 +824,12 @@ public sealed class FocusNodeTests
         var node = new FocusNode("test_path", default);
         var oldBranch = new FocusAllowBranch(null) { IsEnabled = true };
         var newBranch = new FocusAllowBranch(null) { IsEnabled = true };
-        
+
         node.AllowBranch = oldBranch;
 
         // Act
         node.AllowBranch = newBranch;
-        
+
         // Change old branch - should have no effect
         oldBranch.IsEnabled = false;
         Assert.That(node.IsVisible, Is.True, "Should ignore changes from the old branch object");

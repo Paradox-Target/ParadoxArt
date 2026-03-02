@@ -31,7 +31,7 @@ focus_tree = {
         child2.TryGetNode(out var node2);
 
         // Use the actual node instance which has the correct position
-        var removedList = new List<Node> { node1 };
+        var removedList = new List<Node> { node1! };
         var editorMap = new Dictionary<string, FocusNode>();
 
         // Act

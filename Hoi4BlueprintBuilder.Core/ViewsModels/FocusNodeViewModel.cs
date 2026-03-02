@@ -26,6 +26,18 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool _isSelected;
 
+    /// <summary>
+    /// 该 Focus 是否已完成 (用于条件求值)
+    /// </summary>
+    [ObservableProperty]
+    private bool _isCompleted;
+
+    /// <summary>
+    /// 是否显示完成 CheckBox (仅当 has_completed_focus 条件引用了此 Focus 时)
+    /// </summary>
+    [ObservableProperty]
+    private bool _showCompletedCheckbox;
+
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
 

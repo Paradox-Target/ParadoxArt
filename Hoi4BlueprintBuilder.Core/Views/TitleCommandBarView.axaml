@@ -59,13 +59,13 @@
                     <Button Content="当前内容">
                         <Button.Flyout>
                             <Flyout>
-                                <ScrollViewer MaxHeight="220">
+                                <ScrollViewer MaxHeight="320">
                                     <ItemsControl
-                                        MinWidth="200"
+                                        MinWidth="240"
                                         Padding="4"
-                                        ItemsSource="{Binding FocusTriggers}">
+                                        ItemsSource="{Binding ConditionItems}">
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate DataType="models:FocusTriggerGroup">
+                                            <DataTemplate DataType="models:ConditionItem">
                                                 <Border Classes="ConditionCard" PointerReleased="InputElement_OnPointerReleased">
                                                     <Grid ColumnDefinitions="Auto,*">
                                                         <CheckBox
