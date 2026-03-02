@@ -159,7 +159,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         }
 
         ParseFileAndAddToResources(folderOrFilePath);
-        OnOnResourceChanged(new ResourceChangedEventArgs(folderOrFilePath));
+        ResourceChanged(new ResourceChangedEventArgs(folderOrFilePath));
 
         Log.Info("{ServiceName}: 添加 Mod 资源成功: {FolderOrFilePath}", _serviceName, folderOrFilePath);
     }
@@ -197,7 +197,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
             }
 
             ParseFileAndAddToResources(gameFilePath);
-            OnOnResourceChanged(new ResourceChangedEventArgs(folderOrFilePath));
+            ResourceChanged(new ResourceChangedEventArgs(folderOrFilePath));
 
             Log.Info("{ServiceName}: 添加原版游戏资源: {GameFilePath}", _serviceName, gameFilePath);
         }
@@ -223,7 +223,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         // 当有移除或有添加时才触发事件
         if (isRemoved || isAdded)
         {
-            OnOnResourceChanged(new ResourceChangedEventArgs(folderOrFilePath));
+            ResourceChanged(new ResourceChangedEventArgs(folderOrFilePath));
         }
         Log.Info("{ServiceName}: 重新加载 Mod 资源成功", _serviceName);
     }
@@ -305,7 +305,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         return true;
     }
 
-    private void OnOnResourceChanged(ResourceChangedEventArgs e)
+    private void ResourceChanged(ResourceChangedEventArgs e)
     {
         OnResourceChanged?.Invoke(this, e);
     }
