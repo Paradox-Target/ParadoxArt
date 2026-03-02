@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Collections;
+using Avalonia.Controls.Notifications;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -139,7 +140,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 
             if (result is null)
             {
-                _notificationService.Show("加载国策树文件失败", "请检查文件格式是否正确");
+                _notificationService.Show("请检查文件格式是否正确", "加载国策树文件失败", NotificationType.Error);
                 return;
             }
 
