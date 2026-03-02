@@ -488,13 +488,9 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     /// 切换 Focus 完成状态
     /// </summary>
     /// <param name="focusId">Focus ID</param>
-    public void ToggleFocusCompleted(string focusId)
+    private void ToggleFocusCompleted(string focusId)
     {
-        if (_completedFocusIds.Contains(focusId))
-        {
-            _completedFocusIds.Remove(focusId);
-        }
-        else
+        if (!_completedFocusIds.Remove(focusId))
         {
             _completedFocusIds.Add(focusId);
 
@@ -519,7 +515,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     /// <summary>
     /// 重新求值所有 trigger 的 IsEnabled 状态
     /// </summary>
-    public void ReevaluateAllTriggers()
+    private void ReevaluateAllTriggers()
     {
         // 构建当前为 true 的条件集合
         var trueSet = new HashSet<(string ScopeName, string NodeContent)>();
@@ -536,16 +532,15 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         // 添加已完成的 focus 条件
         foreach (string focusId in _completedFocusIds)
         {
-            trueSet.Add(("", $"has_completed_focus = {focusId}"));
+            trueSet.Add((string.Empty, $"has_completed_focus = {focusId}"));
         }
 
         // 对每个 trigger 进行求值
-        foreach (var trigger in _allTriggers)
+        foreach (
+            var trigger in _allTriggers.AsValueEnumerable().Where(trigger => trigger.Expression is not null)
+        )
         {
-            if (trigger.Expression is not null)
-            {
-                trigger.IsEnabled = ConditionHelper.Evaluate(trigger.Expression, trueSet);
-            }
+            trigger.IsEnabled = ConditionHelper.Evaluate(trigger.Expression!, trueSet);
         }
     }
 
