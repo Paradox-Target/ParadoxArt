@@ -115,10 +115,10 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
 
     private void ParseFileAndAddToResourcesAsync(string[] filePaths)
     {
-        var tasks = new List<Task>();
+        var tasks = new List<Task>(filePaths.Length);
         foreach (string filePath in filePaths)
         {
-            tasks.Add(Task.Run(() => ParseFileAndAddToResources(filePath)));
+            tasks.Add(ParseFileAndAddToResourcesAsync(filePath));
         }
         Task.WaitAll(tasks);
     }
@@ -259,6 +259,22 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
     protected abstract TContent? ParseFileToContent(TParseResult result);
 
     protected abstract TParseResult? GetParseResult(string filePath);
+
+    protected virtual Task<TParseResult?> GetParseResultAsync(string filePath)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <summary>
+    /// 解析文件, 并将解析结果添加到 <see cref="Resources"/> 中
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns>成功添加返回 <c>true</c>, 否则返回 <c>false</c></returns>
+    private async Task<bool> ParseFileAndAddToResourcesAsync(string filePath)
+    {
+        var result = await GetParseResultAsync(filePath).ConfigureAwait(false);
+        return AddToResources(filePath, result);
+    }
 
     /// <summary>
     /// 解析文件, 并将解析结果添加到 <see cref="Resources"/> 中

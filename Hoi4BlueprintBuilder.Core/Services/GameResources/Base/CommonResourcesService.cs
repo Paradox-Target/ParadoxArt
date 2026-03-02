@@ -30,4 +30,21 @@ public abstract class CommonResourcesService<TType, TContent> : ResourcesService
         }
         return rootNode;
     }
+
+    protected override async Task<Node?> GetParseResultAsync(string filePath)
+    {
+        if (
+            !TextParser.TryParse(
+                filePath,
+                await File.ReadAllTextAsync(filePath, App.Utf8EncodingWithoutBom).ConfigureAwait(false),
+                out var rootNode,
+                out var error
+            )
+        )
+        {
+            Log.LogParseError(error);
+            return null;
+        }
+        return rootNode;
+    }
 }

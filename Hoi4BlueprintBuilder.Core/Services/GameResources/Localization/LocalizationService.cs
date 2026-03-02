@@ -174,4 +174,20 @@ public sealed class LocalizationService
         var result = localisation.GetResult()!;
         return result;
     }
+
+    protected override async Task<YAMLLocalisationParser.LocFile?> GetParseResultAsync(string filePath)
+    {
+        var localisation = YAMLLocalisationParser.ParseLocText(
+            await File.ReadAllTextAsync(filePath, Encoding.UTF8).ConfigureAwait(false),
+            filePath
+        );
+        if (localisation.IsFailure)
+        {
+            Log.LogParseError(localisation.GetError()!);
+            return null;
+        }
+
+        var result = localisation.GetResult()!;
+        return result;
+    }
 }
