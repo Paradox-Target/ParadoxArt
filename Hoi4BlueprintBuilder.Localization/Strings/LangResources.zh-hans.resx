@@ -216,4 +216,7 @@
   <data name="NewFile_ErrorOccurs" xml:space="preserve">
     <value>新建文件或文件夹时发生错误</value>
   </data>
+  <data name="AppUpdateChannel" xml:space="preserve">
+    <value>应用更新通道</value>
+  </data>
 </root>

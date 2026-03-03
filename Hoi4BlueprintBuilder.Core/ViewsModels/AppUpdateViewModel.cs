@@ -6,6 +6,7 @@ using ByteSizeLib;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using LiveMarkdown.Avalonia;
 using NLog;
 using Velopack;
@@ -18,6 +19,7 @@ public sealed partial class AppUpdateViewModel : ObservableObject
 {
     public bool ShowUpdateLog => HasUpdates && !IsDownloading;
     public string ProgressText => $"{Progress}%";
+    public string AppUpdateChannelText { get; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowUpdateLog))]
@@ -59,6 +61,7 @@ public sealed partial class AppUpdateViewModel : ObservableObject
         if (Design.IsDesignMode)
         {
             _updateManager = null!;
+            AppUpdateChannelText = "更新频道: 测试频道 (设计时)";
             return;
         }
 
@@ -71,6 +74,8 @@ public sealed partial class AppUpdateViewModel : ObservableObject
                 ExplicitChannel = $"{platform}-{settingsService.AppUpdateChannel}"
             }
         );
+        AppUpdateChannelText =
+            $"{LangResources.AppUpdateChannel}: {settingsService.AppUpdateChannel} ({platform})";
         _ = CheckUpdateAsync();
     }
 

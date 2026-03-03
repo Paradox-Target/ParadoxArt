@@ -28,12 +28,15 @@
         </Grid>
 
         <Grid IsVisible="{Binding ShowUpdateLog}" RowDefinitions="Auto,*,Auto,Auto">
-            <TextBlock
+            <StackPanel
                 Grid.Row="0"
                 Margin="0,4"
                 HorizontalAlignment="Center"
-                FontSize="16"
-                Text="{Binding NewVersionText}" />
+                Orientation="Horizontal"
+                Spacing="8">
+                <TextBlock FontSize="16" Text="{Binding NewVersionText}" />
+                <TextBlock FontSize="16" Text="{Binding AppUpdateChannelText, Mode=OneTime}" />
+            </StackPanel>
             <ScrollViewer Grid.Row="1">
                 <md:MarkdownRenderer
                     x:Name="MarkdownRenderer"

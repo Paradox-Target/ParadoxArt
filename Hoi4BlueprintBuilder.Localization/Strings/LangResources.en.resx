@@ -213,4 +213,10 @@
   <data name="NewFile_ErrorOccurs" xml:space="preserve">
     <value>An error occurred while creating the file or folder</value>
   </data>
+  <data name="CreateNewFocusView_FocusIdAlreadyExist" xml:space="preserve">
+    <value>Focus Id Already Exist</value>
+  </data>
+  <data name="AppUpdateChannel" xml:space="preserve">
+    <value>App Update Channel</value>
+  </data>
 </root>

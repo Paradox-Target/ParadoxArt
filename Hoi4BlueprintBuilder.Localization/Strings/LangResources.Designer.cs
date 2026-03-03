@@ -60,6 +60,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AppUpdateChannel.
+        /// </summary>
+        public static string AppUpdateChannel {
+            get {
+                return ResourceManager.GetString("AppUpdateChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Common_Cancel.
         /// </summary>
         public static string Common_Cancel {
@@ -78,7 +87,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error.
+        ///   Looks up a localized string similar to Common_Error.
         /// </summary>
         public static string Common_Error {
             get {
@@ -321,6 +330,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NewFile_ErrorOccurs.
+        /// </summary>
+        public static string NewFile_ErrorOccurs {
+            get {
+                return ResourceManager.GetString("NewFile_ErrorOccurs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RenameFile_ErrorOccurs.
         /// </summary>
         public static string RenameFile_ErrorOccurs {
@@ -344,15 +362,6 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         public static string RenameFile_NameContainInvalidChar {
             get {
                 return ResourceManager.GetString("RenameFile_NameContainInvalidChar", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to NewFile_ErrorOccurs.
-        /// </summary>
-        public static string NewFile_ErrorOccurs {
-            get {
-                return ResourceManager.GetString("NewFile_ErrorOccurs", resourceCulture);
             }
         }
     }

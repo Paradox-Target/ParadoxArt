@@ -157,7 +157,7 @@
     <value>CreateNewFocusView_FocusIdAlreadyExist</value>
   </data>
   <data name="Common_Error" xml:space="preserve">
-    <value>Error</value>
+    <value>Common_Error</value>
   </data>
   <data name="CreateNewFocusTreeFileView_CountryTagIsNotExist" xml:space="preserve">
     <value>CreateNewFocusTreeFileView_CountryTagNotExist</value>
@@ -215,5 +215,8 @@
   </data>
   <data name="NewFile_ErrorOccurs" xml:space="preserve">
     <value>NewFile_ErrorOccurs</value>
+  </data>
+  <data name="AppUpdateChannel" xml:space="preserve">
+    <value>AppUpdateChannel</value>
   </data>
 </root>
