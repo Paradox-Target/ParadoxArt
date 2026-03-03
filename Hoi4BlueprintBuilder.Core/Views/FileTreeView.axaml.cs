@@ -62,6 +62,15 @@ public sealed partial class FileTreeView : UserControl
 
         App.Current.OnExitBefore += OnExitBefore;
         Loaded += OnLoaded;
+
+        // 监听 TabView 的当前项变化事件，在关闭所有标签页后清理选中状态
+        _tabView.CurrentItemChanged += item =>
+        {
+            if (item is null)
+            {
+                FileTree.SelectedItem = null;
+            }
+        };
     }
 
     private void OnExitBefore(object? o, EventArgs eventArgs)
