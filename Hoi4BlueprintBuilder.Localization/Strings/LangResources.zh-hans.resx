@@ -219,4 +219,7 @@
   <data name="AppUpdateChannel" xml:space="preserve">
     <value>应用更新通道</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>关于</value>
+  </data>
 </root>

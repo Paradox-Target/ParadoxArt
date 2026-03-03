@@ -5,6 +5,7 @@
     xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:local="using:Hoi4BlueprintBuilder.Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Hoi4BlueprintBuilder.Core.Models"
@@ -138,7 +139,7 @@
                 </fa:SettingsExpander.ActionIconSource>
             </fa:SettingsExpander>
 
-            <fa:SettingsExpander Header="应用更新通道">
+            <fa:SettingsExpander Header="{x:Static lang:LangResources.AppUpdateChannel}">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE895;" />
                 </fa:SettingsExpander.IconSource>
@@ -151,7 +152,7 @@
                 Margin="4,4,0,4"
                 FontSize="18"
                 FontWeight="Bold"
-                Text="关于" />
+                Text="{x:Static lang:LangResources.About}" />
 
             <fa:SettingsExpander
                 Description="© Paradox Target 2026. All rights reserved."
@@ -159,7 +160,10 @@
                 Header="{x:Static local:App.AppName}">
                 <fa:SettingsExpanderItem Content=".NET Version" Footer="{x:Static vms:AppSettingsViewModel.DotNetVersion}" />
                 <fa:SettingsExpanderItem>
-                    <HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
+                        <HyperlinkButton Content="爱发电" NavigateUri="https://ifdian.net/a/textGamex" />
+                    </StackPanel>
                 </fa:SettingsExpanderItem>
             </fa:SettingsExpander>
 
@@ -199,6 +203,7 @@
                     <HyperlinkButton Content="Velopack" NavigateUri="https://github.com/velopack/velopack" />
                     <HyperlinkButton Content="LiveMarkdown.Avalonia" NavigateUri="https://github.com/DearVa/LiveMarkdown.Avalonia" />
                     <HyperlinkButton Content="Xaml.Behaviors.Avalonia" NavigateUri="https://github.com/wieslawsoltes/Xaml.Behaviors" />
+                    <HyperlinkButton Content="AsyncAwaitBestPractices" NavigateUri="https://github.com/brminnick/AsyncAwaitBestPractices" />
                 </UniformGrid>
             </fa:SettingsExpander>
         </StackPanel>

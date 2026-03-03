@@ -219,4 +219,7 @@
   <data name="AppUpdateChannel" xml:space="preserve">
     <value>AppUpdateChannel</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>
