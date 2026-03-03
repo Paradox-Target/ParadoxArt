@@ -5,7 +5,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.VisualTree;
-using DotNet.Globbing;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
@@ -26,10 +25,6 @@ public sealed partial class FileTreeView : UserControl
     private TreeViewItem? _lastSelectedTreeViewItem;
 
     private readonly Thickness _rightSelectedItemThickness = new(0.65);
-    private static readonly Glob FocusGlob = Glob.Parse(
-        "**/common/national_focus/*.txt",
-        new GlobOptions { Evaluation = new EvaluationOptions { CaseInsensitive = false } }
-    );
 
     /// <summary>
     /// 设计器使用
@@ -210,7 +205,7 @@ public sealed partial class FileTreeView : UserControl
 
     private void AddNewTabViewByFilePath(string filePath)
     {
-        if (FocusGlob.IsMatch(filePath))
+        if (FileCheckHelper.IsFocusTreeFile(filePath))
         {
             _tabView.AddTabFromIoc<FocusTreeEditorView>(filePath);
         }

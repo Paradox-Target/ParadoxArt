@@ -106,7 +106,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task CreateNewFocusTreeFile()
+    public async Task CreateNewFocusTreeFileAsync(string? fileName)
     {
         string focusTreeDirectory = Path.Combine(
             _settingsService.ModRootFolderPath,
@@ -114,7 +114,10 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
             "national_focus"
         );
         var content = new CreateNewFocusTreeFileView();
-        var viewModel = new CreateNewFocusTreeFileViewModel(focusTreeDirectory);
+        var viewModel = new CreateNewFocusTreeFileViewModel(focusTreeDirectory)
+        {
+            FileName = fileName ?? string.Empty
+        };
         content.DataContext = viewModel;
 
         var dialog = new ContentDialog

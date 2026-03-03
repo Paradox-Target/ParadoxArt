@@ -1,4 +1,5 @@
 ﻿using System.Collections.Frozen;
+using DotNet.Globbing;
 
 namespace Hoi4BlueprintBuilder.Core.Helpers;
 
@@ -26,4 +27,14 @@ public static class FileCheckHelper
         var extension = Path.GetExtension(filePath.AsSpan());
         return TextExtensionNamesLookup.Contains(extension);
     }
+
+    public static bool IsFocusTreeFile(string filePath)
+    {
+        return FocusGlob.IsMatch(filePath);
+    }
+
+    private static readonly Glob FocusGlob = Glob.Parse(
+        "**/common/national_focus/*.txt",
+        new GlobOptions { Evaluation = new EvaluationOptions { CaseInsensitive = false } }
+    );
 }

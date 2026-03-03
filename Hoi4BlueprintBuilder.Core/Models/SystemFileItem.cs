@@ -5,8 +5,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Cysharp.Text;
 using FluentAvalonia.UI.Controls;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
+using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
@@ -267,7 +269,16 @@ public sealed partial class SystemFileItem : ObservableObject
         try
         {
             string newFilePath = Path.Combine(targetDir, view.NewName);
-            await using (File.Create(newFilePath)) { }
+            if (FileCheckHelper.IsFocusTreeFile(newFilePath))
+            {
+                await App
+                    .Current.Services.GetRequiredService<TitleCommandBarViewModel>()
+                    .CreateNewFocusTreeFileAsync(view.NewName);
+            }
+            else
+            {
+                await using (File.Create(newFilePath)) { }
+            }
 
             if (IsFolder)
             {
