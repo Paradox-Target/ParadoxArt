@@ -6,6 +6,7 @@
   <ItemGroup>
     <!-- Avalonia packages -->
     <!-- Important: keep version in sync! -->
+    <PackageVersion Include="AsyncAwaitBestPractices" Version="10.0.0" />
     <PackageVersion Include="Avalonia" Version="11.3.12" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.12" />
     <PackageVersion Include="Avalonia.Desktop" Version="11.3.12" />

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using AsyncAwaitBestPractices;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -106,15 +107,21 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         ViewModel.OnUnLoaded();
     }
 
-    private async void OnLoaded(object? sender, RoutedEventArgs e)
+    private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         StrongReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
         ViewModel.OnLoaded();
         if (!_isFirstLoaded)
         {
-            await ViewModel.LoadFocusTreeFileAsync(FilePath);
+            ViewModel
+                .LoadFocusTreeFileAsync(FilePath)
+                .ContinueWith(_ => _isFirstLoaded = true)
+                .SafeFireAndForget(exception =>
+                {
+                    Log.Error(exception, "加载国策树文件失败");
+                    _messageBox.ShowErrorAsync("加载国策树文件失败", LangResources.Common_Error);
+                });
         }
-        _isFirstLoaded = true;
     }
 
     private void OnConnectionRequested(FocusNode from, FocusNode to, ConnectionType type)
