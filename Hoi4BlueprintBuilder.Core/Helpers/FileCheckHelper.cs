@@ -22,6 +22,11 @@ public static class FileCheckHelper
     private static readonly FrozenSet<string>.AlternateLookup<ReadOnlySpan<char>> TextExtensionNamesLookup =
         TextExtensionNames.GetAlternateLookup<ReadOnlySpan<char>>();
 
+    private static readonly Glob FocusGlob = Glob.Parse(
+        "**/common/national_focus/*.txt",
+        new GlobOptions { Evaluation = new EvaluationOptions { CaseInsensitive = false } }
+    );
+
     public static bool IsTextFile(string filePath)
     {
         var extension = Path.GetExtension(filePath.AsSpan());
@@ -32,9 +37,4 @@ public static class FileCheckHelper
     {
         return FocusGlob.IsMatch(filePath);
     }
-
-    private static readonly Glob FocusGlob = Glob.Parse(
-        "**/common/national_focus/*.txt",
-        new GlobOptions { Evaluation = new EvaluationOptions { CaseInsensitive = false } }
-    );
 }
