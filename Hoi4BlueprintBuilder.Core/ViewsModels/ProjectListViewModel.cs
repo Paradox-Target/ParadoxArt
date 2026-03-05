@@ -13,6 +13,7 @@ using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
 using ParadoxPower.Process;
@@ -27,6 +28,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
     [ObservableProperty]
     private IEnumerable<ProjectItem> _projects;
 
+    public ProjectItem? RightClickedItem { get; set; }
     public BindableReactiveProperty<string> SearchText { get; } = new(string.Empty);
 
     private readonly SettingsService _settingsService;
@@ -34,14 +36,20 @@ public sealed partial class ProjectListViewModel : ObservableObject
     private readonly MessageBoxService _messageBoxService;
     private readonly NavigationService _navigationService;
     private readonly TelemetryService _telemetryService;
+    private readonly ClipboardService _clipboardService;
+    private readonly NotificationService _notificationService;
     private readonly IDisposable _disposable;
+
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public ProjectListViewModel(
         SettingsService settingsService,
         FileService fileService,
         MessageBoxService messageBoxService,
         NavigationService navigationService,
-        TelemetryService telemetryService
+        TelemetryService telemetryService,
+        ClipboardService clipboardService,
+        NotificationService notificationService
     )
     {
         _settingsService = settingsService;
@@ -49,6 +57,8 @@ public sealed partial class ProjectListViewModel : ObservableObject
         _messageBoxService = messageBoxService;
         _navigationService = navigationService;
         _telemetryService = telemetryService;
+        _clipboardService = clipboardService;
+        _notificationService = notificationService;
         Projects = _settingsService.Projects;
 
         _disposable = SearchText
@@ -188,8 +198,50 @@ public sealed partial class ProjectListViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task RemoveProjectItem()
+    {
+        if (RightClickedItem is null)
+        {
+            Log.Warn("尝试移除项目但 RightClickedItem 为空");
+            return;
+        }
+
+        _settingsService.Projects.Remove(RightClickedItem);
+    }
+
+    [RelayCommand]
+    private async Task CopyProjectPath()
+    {
+        if (RightClickedItem is null)
+        {
+            Log.Warn("尝试复制项目路径但 RightClickedItem 为空");
+            return;
+        }
+
+        await _clipboardService.SetTextAsync(RightClickedItem.DirectoryPath);
+        _notificationService.Show("已复制项目路径到剪贴板");
+    }
+
+    [RelayCommand]
+    private async Task OpenProjectFolderInExplorer()
+    {
+        if (RightClickedItem is null)
+        {
+            Log.Warn("尝试打开项目文件夹但 RightClickedItem 为空");
+            return;
+        }
+
+        await _fileService.LaunchUriAsync(RightClickedItem.DirectoryPath).ConfigureAwait(false);
+    }
+
+    [RelayCommand]
     private async Task OpenProjectItem(PointerPressedEventArgs e)
     {
+        if (e.Properties.PointerUpdateKind != PointerUpdateKind.LeftButtonPressed)
+        {
+            return;
+        }
+
         if (e.Source is not InputElement { DataContext: ProjectItem item })
         {
             return;

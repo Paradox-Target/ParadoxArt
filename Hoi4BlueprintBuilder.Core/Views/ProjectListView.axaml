@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Hoi4BlueprintBuilder.Core.Models"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
@@ -11,6 +13,26 @@
     d:DesignWidth="800"
     x:DataType="vms:ProjectListViewModel"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <fa:FAMenuFlyout x:Key="ProjectItemContextMenu" x:DataType="vms:ProjectListViewModel">
+            <fa:MenuFlyoutItem Command="{Binding RemoveProjectItemCommand}" Text="从列表移除">
+                <fa:MenuFlyoutItem.IconSource>
+                    <fa:SymbolIconSource Symbol="Delete" />
+                </fa:MenuFlyoutItem.IconSource>
+            </fa:MenuFlyoutItem>
+            <fa:MenuFlyoutItem Command="{Binding CopyProjectPathCommand}" Text="复制路径">
+                <fa:MenuFlyoutItem.IconSource>
+                    <fa:SymbolIconSource Symbol="Copy" />
+                </fa:MenuFlyoutItem.IconSource>
+            </fa:MenuFlyoutItem>
+            <fa:MenuFlyoutItem Command="{Binding OpenProjectFolderInExplorerCommand}" Text="{x:Static lang:LangResources.File_OpenInExplorer}">
+                <fa:MenuFlyoutItem.IconSource>
+                    <fa:SymbolIconSource Symbol="OpenFolder" />
+                </fa:MenuFlyoutItem.IconSource>
+            </fa:MenuFlyoutItem>
+        </fa:FAMenuFlyout>
+    </UserControl.Resources>
 
     <UserControl.Styles>
         <Style Selector="Border.ProjectItem">
