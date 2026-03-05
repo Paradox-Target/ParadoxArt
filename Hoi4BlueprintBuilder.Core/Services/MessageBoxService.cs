@@ -1,5 +1,6 @@
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using JetBrains.Annotations;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
 
@@ -8,11 +9,13 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<MessageBoxService>]
 public sealed class MessageBoxService
 {
+    [LocalizationRequired]
     public Task ShowErrorAsync(string message, string title = "")
     {
         return ShowAsync(message, title, MessageBoxIcon.Error);
     }
 
+    [LocalizationRequired]
     public Task<MessageBoxResult> ShowAsync(
         string message,
         string title = "",
