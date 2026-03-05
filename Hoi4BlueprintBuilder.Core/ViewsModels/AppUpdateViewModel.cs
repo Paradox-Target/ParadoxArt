@@ -150,7 +150,7 @@ public sealed partial class AppUpdateViewModel : ObservableObject
         {
             Log.Error(e, "检查更新失败");
             _telemetryService.TrackException(e, new Dictionary<string, string> { { "message", "检查更新失败" } });
-            await _messageBoxService.ShowAsync("检查更新失败");
+            await _messageBoxService.ShowErrorAsync("检查更新失败");
             NavigateIfDoNotUpdate();
         }
     }

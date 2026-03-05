@@ -165,7 +165,7 @@ public sealed partial class SystemFileItem : ObservableObject
         catch (Exception e)
         {
             Log.Error(e, "重命名文件或文件夹时发生错误");
-            await MessageBoxService.ShowAsync(LangResources.RenameFile_ErrorOccurs);
+            await MessageBoxService.ShowErrorAsync(LangResources.RenameFile_ErrorOccurs);
         }
     }
 

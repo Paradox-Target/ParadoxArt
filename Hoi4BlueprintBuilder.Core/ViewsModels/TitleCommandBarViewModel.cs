@@ -143,7 +143,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         string filePath = viewModel.FinalFilePath;
         if (File.Exists(filePath))
         {
-            await _messageBoxService.ShowAsync("文件已存在, 无法创建同名文件.", "创建失败", MessageBoxIcon.Error);
+            await _messageBoxService.ShowErrorAsync("文件已存在, 无法创建同名文件.", "创建失败");
             return;
         }
 
@@ -161,7 +161,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         catch (Exception e)
         {
             Log.Error(e, "创建国策树文件失败");
-            await _messageBoxService.ShowAsync($"创建国策树文件失败: {e.Message}", "创建失败", MessageBoxIcon.Error);
+            await _messageBoxService.ShowErrorAsync($"创建国策树文件失败: {e.Message}", "创建失败");
         }
     }
 
