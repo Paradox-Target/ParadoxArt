@@ -17,6 +17,7 @@ namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 public sealed class LocalizationService
     : ResourcesService<LocalizationService, FrozenDictionary<string, string>, YAMLLocalisationParser.LocFile>
 {
+    private readonly SettingsService _settingsService;
     private ICollection<FrozenDictionary<string, string>> Localisations => Resources.Values;
 
     /// Key: 国策文件路径, Value: 国策文件的本地化内容, 键值对
@@ -36,50 +37,49 @@ public sealed class LocalizationService
             true
         )
     {
-        StrongReferenceMessenger.Default.Register<SaveFocusTreeMessage>(
-            this,
-            (_, _) =>
+        _settingsService = settingsService;
+        StrongReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveLocalizationHandler);
+    }
+
+    private void SaveLocalizationHandler(object o, SaveFocusTreeMessage saveFocusTreeMessage)
+    {
+        foreach (((string focusFilePath, var gameLanguage), var userLocalisation) in _filesLocalisations)
+        {
+            string languageKey = $"l_{gameLanguage.ToGameLocalizationLanguage()}";
+            // userLocalisation => Key: 本地化键, Value: 本地化文本
+            string filePath = Path.Combine(
+                _settingsService.ModRootFolderPath,
+                "localisation",
+                gameLanguage.ToGameLocalizationLanguage(),
+                $"{Path.GetFileNameWithoutExtension(focusFilePath)}_{languageKey}.yml"
+            );
+            Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
+
+            YAMLLocalisationParser.LocFile? result;
+            if (File.Exists(filePath) && (result = GetParseResult(filePath)) is not null)
             {
-                foreach (
-                    ((string focusFilePath, var gameLanguage), var userLocalisation) in _filesLocalisations
-                )
+                var currentLocalisation = result.Entries.ToDictionary(
+                    static entry => entry.Key,
+                    static entry => entry.Desc,
+                    StringComparer.OrdinalIgnoreCase
+                );
+                foreach (var content in userLocalisation)
                 {
-                    string languageKey = $"l_{gameLanguage.ToGameLocalizationLanguage()}";
-                    // userLocalisation => Key: 本地化键, Value: 本地化文本
-                    string filePath = Path.Combine(
-                        settingsService.ModRootFolderPath,
-                        "localisation",
-                        gameLanguage.ToGameLocalizationLanguage(),
-                        $"{Path.GetFileNameWithoutExtension(focusFilePath)}_{languageKey}.yml"
-                    );
-                    Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
-
-                    YAMLLocalisationParser.LocFile? result;
-                    if (File.Exists(filePath) && (result = GetParseResult(filePath)) is not null)
-                    {
-                        var currentLocalisation = result.Entries.ToDictionary(
-                            static entry => entry.Key,
-                            static entry => entry.Desc,
-                            StringComparer.OrdinalIgnoreCase
-                        );
-                        foreach (var content in userLocalisation)
-                        {
-                            currentLocalisation[content.Key] = content.Value;
-                        }
-                        WriteLocalisationToFile(filePath, $"{languageKey}:", currentLocalisation);
-                    }
-                    else
-                    {
-                        WriteLocalisationToFile(filePath, $"{languageKey}:", userLocalisation);
-                    }
-
-                    Log.Info("成功保存本地化文件: {FilePath}", filePath);
+                    currentLocalisation[content.Key] = content.Value;
                 }
 
-                // TODO: 有可能会有一段时间的真空期, 解决方案: 监听文件更改, 当文件更改时才清空?
-                _filesLocalisations.Clear();
+                WriteLocalisationToFile(filePath, $"{languageKey}:", currentLocalisation);
             }
-        );
+            else
+            {
+                WriteLocalisationToFile(filePath, $"{languageKey}:", userLocalisation);
+            }
+
+            Log.Info("成功保存本地化文件: {FilePath}", filePath);
+        }
+
+        // TODO: 有可能会有一段时间的真空期, 解决方案: 监听文件更改, 当文件更改时才清空?
+        _filesLocalisations.Clear();
     }
 
     private static void WriteLocalisationToFile(
