@@ -91,11 +91,9 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
                 if (!settings.IsFirstRun)
                 {
                     Log.Info(
-                        "游戏根目录: {GamePath}, 存在: {GamePathExist}, MOD根目录: {ModPath}, 存在: {ModPathExist}",
+                        "游戏根目录: {GamePath}, 存在: {GamePathExist}",
                         settings.GameRootFolderPath,
-                        Directory.Exists(settings.GameRootFolderPath),
-                        settings.ModRootFolderPath,
-                        Directory.Exists(settings.ModRootFolderPath)
+                        Directory.Exists(settings.GameRootFolderPath)
                     );
                 }
             },

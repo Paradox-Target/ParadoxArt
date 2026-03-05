@@ -14,6 +14,7 @@ using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 using Hoi4BlueprintBuilder.Localization.Strings;
 using ParadoxPower.CSharpExtensions;
+using ParadoxPower.Parser;
 using ParadoxPower.Process;
 using R3;
 using ZLinq;
@@ -75,18 +76,16 @@ public sealed partial class ProjectListViewModel : ObservableObject
     [RelayCommand]
     private async Task CreateNewProject()
     {
-        var viewModel = new CreateNewProjectViewModel();
         var dialog = new ContentDialog
         {
+            Title = LangResources.CreateNewProject_Title,
             PrimaryButtonText = LangResources.Common_Ok,
             CloseButtonText = LangResources.Common_Cancel,
             DefaultButton = ContentDialogButton.Primary,
-            IsPrimaryButtonEnabled = !viewModel.HasErrors
+            IsPrimaryButtonEnabled = false
         };
-        viewModel.ErrorsChanged += (_, _) =>
-        {
-            dialog.IsPrimaryButtonEnabled = !viewModel.HasErrors;
-        };
+        var viewModel = new CreateNewProjectViewModel(enable => dialog.IsPrimaryButtonEnabled = enable);
+
         var view = new CreateNewProjectView { DataContext = viewModel };
         dialog.Content = view;
         if (await dialog.ShowAsync() != ContentDialogResult.Primary)
@@ -109,21 +108,23 @@ public sealed partial class ProjectListViewModel : ObservableObject
             [
                 ChildHelper.LeafQString("name", viewModel.ModName),
                 ChildHelper.LeafQString("path", viewModel.FinalFolder.Replace('\\', '/')),
-                ChildHelper.LeafQString("supported_version", viewModel.SupportedVersion)
+                ChildHelper.LeafQString("supported_version", viewModel.SupportedVersion),
+                ChildHelper.Node(
+                    "tags",
+                    [.. viewModel.Tags.Select(tag => LeafValue.Create(Types.Value.NewQString(tag)))]
+                )
             ]
         };
+        string script = root.ToScript();
         await File.WriteAllTextAsync(
             Path.Combine(viewModel.FinalFolder, GameConstants.ModDescriptorFileName),
-            root.ToScript()
+            script
         );
         string? parentFolder = Path.GetDirectoryName(viewModel.FinalFolder);
 
         if (parentFolder is not null)
         {
-            await File.WriteAllTextAsync(
-                Path.Combine(parentFolder, $"{viewModel.FolderName}.mod"),
-                root.ToScript()
-            );
+            await File.WriteAllTextAsync(Path.Combine(parentFolder, $"{viewModel.FolderName}.mod"), script);
         }
         NavigateToMainView(viewModel.FinalFolder);
     }

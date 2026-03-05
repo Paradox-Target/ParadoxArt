@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Cysharp.Text;
 using Hoi4BlueprintBuilder.Core.Infrastructure.Attributes;
 using Hoi4BlueprintBuilder.Localization.Strings;
@@ -31,6 +34,15 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
     [CustomValidation(typeof(CreateNewProjectViewModel), nameof(IsValidVersion))]
     private string _supportedVersion = string.Empty;
 
+    public bool ShowTagsErrorMessage => _tags.Count is < 1 or > 10;
+    public string? TagsErrorMessage => ValidateTagsCount();
+    public IEnumerable<string> Tags => _tags;
+
+    private readonly Action<bool>? _setPrimaryEnableAction;
+    private bool IsValid => !HasErrors && !ShowTagsErrorMessage;
+
+    private readonly List<string> _tags = new(4);
+
     private static readonly string Hoi4DocumentsModPath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
         "Paradox Interactive",
@@ -38,9 +50,43 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
         "mod"
     );
 
-    public CreateNewProjectViewModel()
+    public static readonly string[] AllTags =
+    [
+        "Alternative History",
+        "Balance",
+        "Events",
+        "Fixes",
+        "Gameplay",
+        "Graphics",
+        "Historical",
+        "Ideologies",
+        "Map",
+        "Military",
+        "National Focuses",
+        "Sound",
+        "Technologies",
+        "Translation",
+        "Utilities"
+    ];
+
+    public CreateNewProjectViewModel(Action<bool>? setPrimaryEnableAction)
     {
+        _setPrimaryEnableAction = setPrimaryEnableAction;
+        ErrorsChanged += (_, _) => UpdatePrimaryButtonState();
+
         ValidateAllProperties();
+    }
+
+    private void UpdatePrimaryButtonState() => _setPrimaryEnableAction?.Invoke(IsValid);
+
+    private string? ValidateTagsCount()
+    {
+        return _tags.Count switch
+        {
+            < 1 => "至少需要选择 1 个标签",
+            > 10 => "最多只能选择 10 个标签",
+            _ => null
+        };
     }
 
     public static ValidationResult? DirectoryDoesNotExistValidation(
@@ -59,5 +105,27 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
         // Version 类不支持通配符 '*', 将其全部替换为 '0'
         version = version.Replace('*', '0');
         return Version.TryParse(version, out _) ? ValidationResult.Success : new ValidationResult("错误的版本号格式");
+    }
+
+    [RelayCommand]
+    private void ChangeCurrentTags(RoutedEventArgs eventArgs)
+    {
+        if (eventArgs.Source is not CheckBox { Content: string tag } checkBox)
+        {
+            return;
+        }
+
+        if (checkBox.IsChecked == true)
+        {
+            _tags.Add(tag);
+        }
+        else
+        {
+            _tags.Remove(tag);
+        }
+
+        OnPropertyChanged(nameof(TagsErrorMessage));
+        OnPropertyChanged(nameof(ShowTagsErrorMessage));
+        UpdatePrimaryButtonState();
     }
 }

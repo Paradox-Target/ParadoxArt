@@ -33,5 +33,33 @@
             <TextBlock VerticalAlignment="Center" Text="支持版本" />
             <TextBox VerticalAlignment="Center" Text="{Binding SupportedVersion}" />
         </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" Spacing="4">
+            <TextBlock VerticalAlignment="Center" Text="Tags" />
+            <TextBlock
+                Foreground="OrangeRed"
+                IsVisible="{Binding ShowTagsErrorMessage}"
+                Text="{Binding TagsErrorMessage, Mode=OneWay}" />
+            <ScrollViewer MaxWidth="350" MaxHeight="150">
+                <ItemsControl ItemsSource="{x:Static vms:CreateNewProjectViewModel.AllTags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Margin="0,4,0,0" Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Margin="0,0,8,4" Content="{Binding}">
+                                <Interaction.Behaviors>
+                                    <RoutedEventTriggerBehavior RoutedEvent="{x:Static ToggleButton.IsCheckedChangedEvent}">
+                                        <InvokeCommandAction Command="{ReflectionBinding DataContext.ChangeCurrentTagsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" PassEventArgsToCommand="True" />
+                                    </RoutedEventTriggerBehavior>
+                                </Interaction.Behaviors>
+                            </CheckBox>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
     </StackPanel>
 </UserControl>

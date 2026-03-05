@@ -231,6 +231,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CreateNewProject_Title.
+        /// </summary>
+        public static string CreateNewProject_Title {
+            get {
+                return ResourceManager.GetString("CreateNewProject_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DeleteFile_CanFindBack.
         /// </summary>
         public static string DeleteFile_CanFindBack {
