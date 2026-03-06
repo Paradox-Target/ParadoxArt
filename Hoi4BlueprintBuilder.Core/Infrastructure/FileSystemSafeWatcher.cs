@@ -41,6 +41,8 @@ public sealed class FileSystemSafeWatcher : IDisposable
 
     private Timer _serverTimer;
     private int _consolidationInterval = 500; // milliseconds
+    private bool _disposed;
+
     #region Delegate to FileSystemWatcher
 
     public FileSystemSafeWatcher()
@@ -188,6 +190,12 @@ public sealed class FileSystemSafeWatcher : IDisposable
     /// </summary>
     public void Dispose()
     {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
         Uninitialize();
     }
 
@@ -343,7 +351,9 @@ public sealed class FileSystemSafeWatcher : IDisposable
 
                             bool raiseEvent = true;
                             if (
-                                current.Args.ChangeType is WatcherChangeTypes.Created or WatcherChangeTypes.Changed
+                                current.Args.ChangeType
+                                    is WatcherChangeTypes.Created
+                                        or WatcherChangeTypes.Changed
                                 && File.Exists(current.Args.FullPath)
                             )
                             {
@@ -358,7 +368,7 @@ public sealed class FileSystemSafeWatcher : IDisposable
                                     );
                                     // If this succeeds, the file is finished
                                 }
-                                catch (IOException)
+                                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
                                 {
                                     raiseEvent = false;
                                 }
