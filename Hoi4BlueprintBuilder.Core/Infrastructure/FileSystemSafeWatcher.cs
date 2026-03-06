@@ -40,7 +40,7 @@ public sealed class FileSystemSafeWatcher : IDisposable
     private readonly List<DelayedEvent> _events = new(32);
 
     private Timer _serverTimer;
-    private int _consolidationInterval = 500; // milliseconds
+    private int _consolidationInterval = 600; // milliseconds
     private bool _disposed;
 
     #region Delegate to FileSystemWatcher
@@ -435,7 +435,12 @@ public sealed class FileSystemSafeWatcher : IDisposable
                     OnDeleted(de.Args);
                     break;
                 case WatcherChangeTypes.Renamed:
-                    OnRenamed((RenamedEventArgs)de.Args);
+                    if (de.Args is RenamedEventArgs renamedArgs)
+                    {
+                        OnRenamed(renamedArgs);
+                    }
+                    break;
+                case WatcherChangeTypes.All:
                     break;
             }
         }
@@ -448,6 +453,10 @@ public sealed class FileSystemSafeWatcher : IDisposable
     private sealed class DelayedEvent
     {
         private readonly FileSystemEventArgs _args;
+        private static readonly StringComparison FilePathComparison =
+            OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
 
         public DelayedEvent(FileSystemEventArgs args)
         {
@@ -480,23 +489,23 @@ public sealed class FileSystemSafeWatcher : IDisposable
             // they update the file with the file content.
             return (
                     eO1.ChangeType == eO2.ChangeType
-                    && eO1.FullPath == eO2.FullPath
-                    && eO1.Name == eO2.Name
+                    && eO1.FullPath.Equals(eO2.FullPath, FilePathComparison)
+                    && string.Equals(eO1.Name, reO2?.Name, FilePathComparison)
                     && (
                         (reO1 is null && reO2 is null)
                         || (
                             reO1 is not null
                             && reO2 is not null
-                            && reO1.OldFullPath == reO2.OldFullPath
-                            && reO1.OldName == reO2.OldName
+                            && reO1.OldFullPath.Equals(reO2.OldFullPath, FilePathComparison)
+                            && string.Equals(reO1.OldName, reO2.OldName, FilePathComparison)
                         )
                     )
                 )
                 || (
                     eO1.ChangeType == WatcherChangeTypes.Created
                     && eO2.ChangeType == WatcherChangeTypes.Changed
-                    && eO1.FullPath == eO2.FullPath
-                    && eO1.Name == eO2.Name
+                    && eO1.FullPath.Equals(eO2.FullPath, FilePathComparison)
+                    && string.Equals(eO1.Name, eO2.Name, FilePathComparison)
                 );
         }
     }
