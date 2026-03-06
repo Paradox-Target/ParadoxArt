@@ -349,9 +349,6 @@ public sealed class FileSystemSafeWatcherTests
     [Test]
     public void DuplicateChangedEvents_SameFile_DeduplicatedToSingleEvent()
     {
-        // 此测试验证同一文件的重复 Changed 事件在同一个定时器周期内被合并为一个
-        // 之前 IsDuplicate 中错误地使用了 reO2?.Name (RenamedEventArgs) 而不是 eO2.Name，
-        // 导致非 Rename 事件的去重完全失效，但宽松的断言没有捕获到这个问题
         using var allEventsReceived = new ManualResetEventSlim(false);
         int changedCount = 0;
 
@@ -388,8 +385,7 @@ public sealed class FileSystemSafeWatcherTests
         Thread.Sleep(3500);
 
         // 同一文件的重复 Changed 事件应当被去重，最终只触发 1 次
-        Assert.That(changedCount, Is.EqualTo(1),
-            "同一文件在同一个 consolidation 周期内的重复 Changed 事件应被去重为 1 次");
+        Assert.That(changedCount, Is.EqualTo(1), "同一文件在同一个 consolidation 周期内的重复 Changed 事件应被去重为 1 次");
     }
 
     [Test]
