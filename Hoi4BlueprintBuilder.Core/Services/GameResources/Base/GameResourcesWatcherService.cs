@@ -1,4 +1,3 @@
-using EnumsNET;
 using Hoi4BlueprintBuilder.Core.Infrastructure;
 using NLog;
 
@@ -101,23 +100,9 @@ public sealed class GameResourcesWatcherService : IDisposable
         watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
         watcher.Changed += (_, args) =>
         {
-            if (args.ChangeType.HasAnyFlags(WatcherChangeTypes.Changed))
-            {
-                resourcesService.Reload(args.FullPath);
-            }
+            resourcesService.Reload(args.FullPath);
 
             Log.Debug("资源文件: {Path} 发生变化, 类型: {ChangeType}", args.FullPath, args.ChangeType);
-#if DEBUG
-            if (
-                args.ChangeType.HasAnyFlags(WatcherChangeTypes.Changed)
-                && args.ChangeType.HasAnyFlags(
-                    WatcherChangeTypes.Renamed | WatcherChangeTypes.Deleted | WatcherChangeTypes.Created
-                )
-            )
-            {
-                Log.Error("在单个事件中同时进行两项更改, Path: {Path}", args.FullPath);
-            }
-#endif
         };
         watcher.Renamed += (_, args) => resourcesService.Renamed(args.OldFullPath, args.FullPath);
         watcher.Created += (_, args) => resourcesService.Add(args.FullPath);

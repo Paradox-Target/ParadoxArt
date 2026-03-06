@@ -25,18 +25,12 @@ public sealed partial class FileTreeViewModel : ObservableObject
         _fileWatcher.Deleted += ContentOnDeleted;
         _fileWatcher.Created += ContentOnCreated;
         _fileWatcher.Renamed += ContentOnRenamed;
-        _fileWatcher.Changed += ContentOnChanged;
         _fileWatcher.IncludeSubdirectories = true;
         _fileWatcher.EnableRaisingEvents = true;
 
         _root = new SystemFileItem(settingService.ModRootFolderPath, false, null);
         LoadFileSystem(settingService.ModRootFolderPath, _root);
         Items = _root.Children;
-    }
-
-    private void ContentOnChanged(object sender, FileSystemEventArgs e)
-    {
-        Log.Trace("Changed: {FullPath}", e.FullPath);
     }
 
     private void ContentOnRenamed(object sender, RenamedEventArgs e)
@@ -72,7 +66,6 @@ public sealed partial class FileTreeViewModel : ObservableObject
         var target = FindFileItemByPath(e.FullPath, Items);
         if (target is null)
         {
-            Log.Warn("找不到: {FullPath}", e.FullPath);
             return;
         }
         var parent = target.Parent;
