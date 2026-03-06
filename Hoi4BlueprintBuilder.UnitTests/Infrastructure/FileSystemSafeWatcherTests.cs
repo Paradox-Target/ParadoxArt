@@ -347,6 +347,52 @@ public sealed class FileSystemSafeWatcherTests
     }
 
     [Test]
+    public void DuplicateChangedEvents_SameFile_DeduplicatedToSingleEvent()
+    {
+        // 此测试验证同一文件的重复 Changed 事件在同一个定时器周期内被合并为一个
+        // 之前 IsDuplicate 中错误地使用了 reO2?.Name (RenamedEventArgs) 而不是 eO2.Name，
+        // 导致非 Rename 事件的去重完全失效，但宽松的断言没有捕获到这个问题
+        using var allEventsReceived = new ManualResetEventSlim(false);
+        int changedCount = 0;
+
+        using var watcher = new FileSystemSafeWatcher(_tempDir)
+        {
+            // 长间隔确保所有快速写入都落在同一个定时器周期被一起处理
+            ConsolidationInterval = 1500,
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
+        };
+        watcher.Changed += (_, _) =>
+        {
+            Interlocked.Increment(ref changedCount);
+            allEventsReceived.Set();
+        };
+        watcher.EnableRaisingEvents = true;
+
+        var filePath = Path.Combine(_tempDir, "dedup_test.txt");
+        File.WriteAllText(filePath, "initial");
+
+        // 等待初始事件处理完毕
+        Thread.Sleep(3500);
+        Interlocked.Exchange(ref changedCount, 0);
+
+        // 在一个很短的时间窗口内快速写入同一文件多次
+        // 所有写入应落在同一个 consolidation 周期内
+        for (int i = 0; i < 5; i++)
+        {
+            File.WriteAllText(filePath, $"content {i}");
+            Thread.Sleep(15);
+        }
+
+        allEventsReceived.Wait(TimeSpan.FromSeconds(7));
+        // 等待足够长时间让所有定时器周期处理完毕
+        Thread.Sleep(3500);
+
+        // 同一文件的重复 Changed 事件应当被去重，最终只触发 1 次
+        Assert.That(changedCount, Is.EqualTo(1),
+            "同一文件在同一个 consolidation 周期内的重复 Changed 事件应被去重为 1 次");
+    }
+
+    [Test]
     public void Filter_OnlyMatchingFilesRaiseEvents()
     {
         using var matchedEvent = new ManualResetEventSlim(false);

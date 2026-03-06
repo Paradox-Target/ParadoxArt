@@ -490,7 +490,7 @@ public sealed class FileSystemSafeWatcher : IDisposable
             return (
                     eO1.ChangeType == eO2.ChangeType
                     && eO1.FullPath.Equals(eO2.FullPath, FilePathComparison)
-                    && string.Equals(eO1.Name, reO2?.Name, FilePathComparison)
+                    && string.Equals(eO1.Name, eO2.Name, FilePathComparison)
                     && (
                         (reO1 is null && reO2 is null)
                         || (
