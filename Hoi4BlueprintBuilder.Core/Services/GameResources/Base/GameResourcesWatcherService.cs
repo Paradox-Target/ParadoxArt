@@ -28,8 +28,11 @@ public sealed class GameResourcesWatcherService : IDisposable
         string filter,
         bool includeSubFolders
     )> _waitingWatchFolders = new(8);
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+    private readonly Lock _lock = new();
     private readonly SettingsService _settingService;
+    private bool _disposed;
+
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public GameResourcesWatcherService(SettingsService settingService)
     {
@@ -45,14 +48,19 @@ public sealed class GameResourcesWatcherService : IDisposable
     private void OnModResourceFolderCreatedOrRenamed(object sender, FileSystemEventArgs args)
     {
         string relativePath = Path.GetRelativePath(_settingService.ModRootFolderPath, args.FullPath);
-        int index = _waitingWatchFolders.FindIndex(tuple => tuple.folderRelativePath == relativePath);
-        if (index != -1)
+        lock (_lock)
         {
-            (_, var resourcesService, string filter, bool includeSubFolders) = _waitingWatchFolders[index];
-            Watch(relativePath, resourcesService, filter, includeSubFolders);
-            _waitingWatchFolders.RemoveAt(index);
+            int index = _waitingWatchFolders.FindIndex(tuple => tuple.folderRelativePath == relativePath);
+            if (index != -1)
+            {
+                (_, var resourcesService, string filter, bool includeSubFolders) = _waitingWatchFolders[
+                    index
+                ];
+                _waitingWatchFolders.RemoveAt(index);
+                WatchInternal(relativePath, resourcesService, filter, includeSubFolders, true);
 
-            Log.Info("等待监听的文件夹 '{FolderName}' 被创建或重命名, 从待监听列表中移除并开始监听", Path.GetFileName(args.FullPath));
+                Log.Info("等待监听的文件夹 '{FolderName}' 被创建或重命名, 从待监听列表中移除并开始监听", Path.GetFileName(args.FullPath));
+            }
         }
     }
 
@@ -61,6 +69,21 @@ public sealed class GameResourcesWatcherService : IDisposable
         IResourcesService resourcesService,
         string filter = "*.*",
         bool includeSubFolders = false
+    )
+    {
+        lock (_lock)
+        {
+            WatchInternal(folderRelativePath, resourcesService, filter, includeSubFolders, false);
+        }
+    }
+
+    /// <remarks>调用方必须持有 <see cref="_lock"/></remarks>
+    private void WatchInternal(
+        string folderRelativePath,
+        IResourcesService resourcesService,
+        string filter,
+        bool includeSubFolders,
+        bool isNewFolder
     )
     {
         string modFolderPath = Path.Combine(_settingService.ModRootFolderPath, folderRelativePath);
@@ -112,32 +135,61 @@ public sealed class GameResourcesWatcherService : IDisposable
             _watchedPaths.Add(folderRelativePath, [watcher]);
         }
 
+        // 当创建文件夹和创建文件在很短的时间内先后发生时, 可能会导致来不及监听新文件夹, 错过创建文件的事件
+        // 因此在监听新文件夹时, 需要额外枚举一次现有的文件
+        if (isNewFolder)
+        {
+            var searchOption = includeSubFolders
+                ? SearchOption.AllDirectories
+                : SearchOption.TopDirectoryOnly;
+
+            foreach (string enumerateFile in Directory.EnumerateFiles(modFolderPath, filter, searchOption))
+            {
+                resourcesService.Add(enumerateFile);
+            }
+        }
+
         Log.Info("开始监听资源文件夹: {FolderPath}", modFolderPath);
     }
 
     public void Unwatch(string folderRelativePath)
     {
         Log.Debug("尝试停止监听资源文件夹: {FolderPath}", folderRelativePath);
-        if (_watchedPaths.TryGetValue(folderRelativePath, out var watcherList))
+        lock (_lock)
         {
-            watcherList.ForEach(static watcher => watcher.Dispose());
-            _watchedPaths.Remove(folderRelativePath);
+            if (_watchedPaths.TryGetValue(folderRelativePath, out var watcherList))
+            {
+                watcherList.ForEach(static watcher => watcher.Dispose());
+                _watchedPaths.Remove(folderRelativePath);
+                Log.Info("成功停止监听资源文件夹: {FolderPath}", folderRelativePath);
+            }
+
             bool isRemoved =
                 _waitingWatchFolders.RemoveAll(tuple => tuple.folderRelativePath == folderRelativePath) != 0;
             if (isRemoved)
             {
                 Log.Info("从待监听文件夹列表中移除: {FolderPath}", folderRelativePath);
             }
-            Log.Info("成功停止监听资源文件夹: {FolderPath}", folderRelativePath);
         }
     }
 
     public void Dispose()
     {
-        _modFolderWatcher.Dispose();
-        foreach (var watcher in _watchedPaths.Values.SelectMany(static watcherList => watcherList))
+        if (_disposed)
         {
-            watcher.Dispose();
+            return;
+        }
+        _disposed = true;
+
+        _modFolderWatcher.Dispose();
+        lock (_lock)
+        {
+            foreach (var watcher in _watchedPaths.Values.SelectMany(static watcherList => watcherList))
+            {
+                watcher.Dispose();
+            }
+            _watchedPaths.Clear();
+            _waitingWatchFolders.Clear();
         }
     }
 }

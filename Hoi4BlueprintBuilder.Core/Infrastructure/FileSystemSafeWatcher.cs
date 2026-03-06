@@ -1,7 +1,6 @@
 // License: Apache-2.0 License
 // https://github.com/melenaos/FileSystemSafeWatcher
 
-using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -37,10 +36,11 @@ public sealed class FileSystemSafeWatcher : IDisposable
     /// Lock order is _lock, _events.SyncRoot
     /// </summary>
     private readonly Lock _lock = new(); // Only one timer event is processed at any given moment
-    private ArrayList _events;
+    private readonly Lock _eventLock = new();
+    private readonly List<DelayedEvent> _events = new(32);
 
     private Timer _serverTimer;
-    private int _consolidationInterval = 700; // milliseconds
+    private int _consolidationInterval = 500; // milliseconds
     #region Delegate to FileSystemWatcher
 
     public FileSystemSafeWatcher()
@@ -78,7 +78,10 @@ public sealed class FileSystemSafeWatcher : IDisposable
             else
             {
                 _serverTimer.Stop();
-                _events.Clear();
+                lock (_eventLock)
+                {
+                    _events.Clear();
+                }
             }
         }
     }
@@ -267,10 +270,9 @@ public sealed class FileSystemSafeWatcher : IDisposable
 
     #region Implementation
 
-    [MemberNotNull(nameof(_events), nameof(_serverTimer))]
+    [MemberNotNull(nameof(_serverTimer))]
     private void Initialize()
     {
-        _events = ArrayList.Synchronized(new ArrayList(32));
         _fileSystemWatcher.Changed += FileSystemEventHandler;
         _fileSystemWatcher.Created += FileSystemEventHandler;
         _fileSystemWatcher.Deleted += FileSystemEventHandler;
@@ -290,7 +292,10 @@ public sealed class FileSystemSafeWatcher : IDisposable
 
     private void FileSystemEventHandler(object sender, FileSystemEventArgs e)
     {
-        _events.Add(new DelayedEvent(e));
+        lock (_eventLock)
+        {
+            _events.Add(new DelayedEvent(e));
+        }
     }
 
     private void ErrorEventHandler(object sender, ErrorEventArgs e)
@@ -300,7 +305,10 @@ public sealed class FileSystemSafeWatcher : IDisposable
 
     private void RenamedEventHandler(object sender, RenamedEventArgs e)
     {
-        _events.Add(new DelayedEvent(e));
+        lock (_eventLock)
+        {
+            _events.Add(new DelayedEvent(e));
+        }
     }
 
     private void ElapsedEventHandler(object? sender, ElapsedEventArgs e)
@@ -313,13 +321,12 @@ public sealed class FileSystemSafeWatcher : IDisposable
             // Only one thread at a time is processing the events
             try
             {
-                eventsToBeFired = new Queue<DelayedEvent>(32);
                 // Lock the collection while processing the events
-                lock (_events.SyncRoot)
+                lock (_eventLock)
                 {
                     for (int i = 0; i < _events.Count; i++)
                     {
-                        var current = (DelayedEvent)_events[i]!;
+                        var current = _events[i];
                         if (current.Delayed)
                         {
                             // This event has been delayed already so we can fire it
@@ -360,7 +367,7 @@ public sealed class FileSystemSafeWatcher : IDisposable
                             if (raiseEvent)
                             {
                                 // Add the event to the list of events to be fired
-                                eventsToBeFired.Enqueue(current);
+                                (eventsToBeFired ??= new Queue<DelayedEvent>()).Enqueue(current);
                                 // Remove it from the current list
                                 _events.RemoveAt(i);
                                 i--; // Don't skip next event
@@ -398,12 +405,7 @@ public sealed class FileSystemSafeWatcher : IDisposable
 
     private void RaiseEvents(Queue<DelayedEvent>? deQueue)
     {
-        if (deQueue is null)
-        {
-            return;
-        }
-
-        if (deQueue.Count == 0)
+        if (deQueue is null or { Count: 0 })
         {
             return;
         }
@@ -450,17 +452,17 @@ public sealed class FileSystemSafeWatcher : IDisposable
         /// </summary>
         public bool Delayed { get; set; }
 
-        public bool IsDuplicate(object? obj)
+        public bool IsDuplicate(DelayedEvent? other)
         {
-            if (obj is not DelayedEvent delayedEvent)
+            if (other is null)
             {
-                return false; // this is not null so they are different
+                return false;
             }
 
             var eO1 = _args;
             var reO1 = _args as RenamedEventArgs;
-            var eO2 = delayedEvent._args;
-            var reO2 = delayedEvent._args as RenamedEventArgs;
+            var eO2 = other._args;
+            var reO2 = other._args as RenamedEventArgs;
             // The events are equal only if they are of the same type (reO1 and reO2
             // are both null or NOT NULL) and have all properties equal.
             // We also eliminate Changed events that follow recent Created events

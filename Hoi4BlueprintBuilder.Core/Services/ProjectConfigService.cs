@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using Hoi4BlueprintBuilder.Core.Models;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -17,6 +18,11 @@ public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigServ
     /// 关闭程序前展开的文件夹的相对路径
     /// </summary>
     public List<string> ExpandedFolders { get; set; } = [];
+
+    /// <summary>
+    /// 支持的本地化语言列表
+    /// </summary>
+    public List<GameLanguage> SupportedLanguages { get; set; } = [];
 
     private SettingsService? _settingsService;
 
