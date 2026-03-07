@@ -2,7 +2,6 @@ using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using NLog;
 using ParadoxPower.CSharpExtensions;
-using ParadoxPower.Parser;
 using ParadoxPower.Process;
 using ZLinq;
 
@@ -51,11 +50,32 @@ public static class NodeHelper
         focusTreeNode.AllArray = children.ToArray();
     }
 
+    /// <summary>
+    /// 在不改变其他内容的情况下, 同步编辑器支持修改的内容到 AST 节点中
+    /// </summary>
+    /// <param name="focusNode"></param>
+    /// <param name="editorModel"></param>
     public static void SyncNodeContent(Node focusNode, FocusNode editorModel)
     {
-        SyncLeafContent(focusNode, editorModel);
+        // TODO: 修改现有国策节点和生成新国策节点有很多重复的代码, 需要重构
+        var children = new List<Child>(16)
+        {
+            ChildHelper.LeafString("id", editorModel.Id),
+            ChildHelper.Leaf("x", editorModel.RawPosition.X),
+            ChildHelper.Leaf("y", editorModel.RawPosition.Y),
+            ChildHelper.Leaf(Keywords.Cost, editorModel.Cost)
+        };
 
-        var children = GetFilteredChildren(focusNode);
+        if (!string.IsNullOrWhiteSpace(editorModel.Icon))
+        {
+            children.Add(ChildHelper.LeafString(Keywords.Icon, editorModel.Icon));
+        }
+
+        // TODO: 只有与默认值不同时才添加
+        children.Add(ChildHelper.Leaf(Keywords.ContinueIfInvalid, editorModel.ContinueIfInvalid));
+        children.Add(ChildHelper.Leaf(Keywords.CancelIfInvalid, editorModel.CancelIfInvalid));
+
+        children.AddRange(GetFilteredChildren(focusNode));
 
         AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
 
@@ -91,58 +111,43 @@ public static class NodeHelper
         }
     }
 
-    private static void SyncLeafContent(Node focusNode, FocusNode editorModel)
+    private static IEnumerable<Child> GetFilteredChildren(Node focusNode)
     {
-        // TODO: 不遍历直接写入到 Children 中性能是不是会更好?
-        foreach (var leaf in focusNode.Leaves)
+        return focusNode.AllArray.Where(static child =>
         {
-            if (leaf.Key.EqualsIgnoreCase(Keywords.Cost))
-            {
-                leaf.Value = Types.Value.NewFloat(editorModel.Cost);
-            }
-            else if (leaf.Key.EqualsIgnoreCase("x"))
-            {
-                leaf.Value = Types.Value.NewInt(editorModel.RawPosition.X);
-            }
-            else if (leaf.Key.EqualsIgnoreCase("y"))
-            {
-                leaf.Value = Types.Value.NewInt(editorModel.RawPosition.Y);
-            }
-            else if (leaf.Key.EqualsIgnoreCase(Keywords.Icon))
-            {
-                leaf.Value = Types.Value.NewString(editorModel.Icon);
-            }
-        }
-    }
-
-    private static List<Child> GetFilteredChildren(Node focusNode)
-    {
-        return focusNode
-            .AllArray.AsValueEnumerable()
-            .Where(static child =>
-            {
-                // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId, CompletionReward
-                // 这些内容完全按照编辑器模型保存
-                if (
-                    child.TryGetNode(out var node)
-                    && (
-                        node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive)
-                        || node.Key.EqualsIgnoreCase(Keywords.Prerequisite)
-                        || node.Key.EqualsIgnoreCase(Keywords.CompletionReward)
-                    )
+            // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId, CompletionReward
+            // 这些内容完全按照编辑器模型保存
+            if (
+                child.TryGetNode(out var node)
+                && (
+                    node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive)
+                    || node.Key.EqualsIgnoreCase(Keywords.Prerequisite)
+                    || node.Key.EqualsIgnoreCase(Keywords.CompletionReward)
                 )
-                {
-                    return false;
-                }
+            )
+            {
+                return false;
+            }
 
-                if (child.TryGetLeaf(out var leaf) && leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId))
-                {
-                    return false;
-                }
+            if (
+                child.TryGetLeaf(out var leaf)
+                && (
+                    leaf.Key.EqualsIgnoreCase(Keywords.RelativePositionId)
+                    || leaf.Key.EqualsIgnoreCase("id")
+                    || leaf.Key.EqualsIgnoreCase("x")
+                    || leaf.Key.EqualsIgnoreCase("y")
+                    || leaf.Key.EqualsIgnoreCase(Keywords.Cost)
+                    || leaf.Key.EqualsIgnoreCase(Keywords.Icon)
+                    || leaf.Key.EqualsIgnoreCase(Keywords.ContinueIfInvalid)
+                    || leaf.Key.EqualsIgnoreCase(Keywords.CancelIfInvalid)
+                )
+            )
+            {
+                return false;
+            }
 
-                return true;
-            })
-            .ToList();
+            return true;
+        });
     }
 
     public static void AddMutuallyExclusiveToChildrenIfExist(List<Child> children, FocusNode editorModel)
