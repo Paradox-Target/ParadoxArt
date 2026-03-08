@@ -100,9 +100,15 @@ public static class NodeHelper
             return;
         }
 
-        if (TextParser.TryParse(string.Empty, editorModel.CompletionReward, out var node, out var error))
+        if (
+            TextParser.TryParse(
+                Keywords.CompletionReward,
+                editorModel.CompletionReward,
+                out var completionRewardNode,
+                out var error
+            )
+        )
         {
-            var completionRewardNode = ChildHelper.Node(Keywords.CompletionReward, node.AllArray);
             children.Add(completionRewardNode);
         }
         else
