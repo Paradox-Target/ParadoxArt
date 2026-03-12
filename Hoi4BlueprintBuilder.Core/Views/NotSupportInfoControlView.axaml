@@ -7,5 +7,44 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <TextBlock FontSize="30" Text="暂不支持" />
+    <Grid>
+        <StackPanel
+            MaxWidth="520"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="6">
+
+            <TextBlock
+                Margin="0,12,0,0"
+                HorizontalAlignment="Center"
+                Classes="TitleTextBlock"
+                Text="暂不支持该文件类型" />
+
+            <TextBlock
+                Margin="0,4,0,0"
+                HorizontalAlignment="Center"
+                Classes="BodyTextBlock"
+                Opacity="0.6"
+                Text="此文件类型暂时无法在编辑器中打开"
+                TextAlignment="Center"
+                TextWrapping="Wrap" />
+
+            <Border
+                Margin="0,20,0,0"
+                Padding="14,10"
+                Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                BorderBrush="{DynamicResource ExpanderHeaderBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="6">
+                <TextBlock
+                    x:Name="FilePathBlock"
+                    HorizontalAlignment="Center"
+                    FontFamily="{DynamicResource CodeFontFamily}"
+                    FontSize="12"
+                    Opacity="0.7"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap" />
+            </Border>
+        </StackPanel>
+    </Grid>
 </UserControl>
