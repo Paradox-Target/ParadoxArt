@@ -40,6 +40,17 @@ public sealed class LocalizationFormatService
         return false;
     }
 
+    public bool TryGetFormatText(string key, GameLanguage language, [NotNullWhen(true)] out string? value)
+    {
+        if (_localizationService.TryGetValue(key, language, out value))
+        {
+            value = GetFormatTextByText(value);
+            return true;
+        }
+
+        return false;
+    }
+
     /// <summary>
     /// 根据 <c>key</c> 获取格式化后的文本
     /// </summary>
@@ -48,6 +59,11 @@ public sealed class LocalizationFormatService
     public string GetFormatText(string key)
     {
         return TryGetFormatText(key, out string? value) ? value : key;
+    }
+
+    public string GetFormatText(string key, GameLanguage language)
+    {
+        return TryGetFormatText(key, language, out string? value) ? value : key;
     }
 
     /// <summary>

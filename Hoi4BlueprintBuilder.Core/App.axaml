@@ -10,6 +10,7 @@
         <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml" />
         <StyleInclude Source="/Styles/DefaultStyles.axaml" />
         <StyleInclude Source="/Styles/SettingsStyle.axaml" />
+        <StyleInclude Source="/Styles/Controls/MultiComboBox.axaml" />
     </Application.Styles>
     <Application.Resources>
         <ResourceDictionary>

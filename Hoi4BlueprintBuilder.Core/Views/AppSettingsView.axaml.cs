@@ -1,19 +1,12 @@
 using Avalonia.Controls;
-using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
-using FontIconSource = Hoi4BlueprintBuilder.Core.Controls.FontIconSource;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
 [RegisterTransient<AppSettingsView>]
-public sealed partial class AppSettingsView : UserControl, ITabViewItem
+public sealed partial class AppSettingsView : UserControl
 {
-    public string Header => "应用设置";
-    public string FilePath => "应用设置";
-    public string ToolTip => "应用设置";
-    public IconSource TabIcon { get; } = new FontIconSource { Glyph = "\uE713" };
-
     private readonly AppSettingsViewModel _viewModel;
 
     public AppSettingsView(AppSettingsViewModel viewModel, TelemetryService telemetryService)

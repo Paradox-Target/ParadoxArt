@@ -1,0 +1,206 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:Hoi4BlueprintBuilder.Core.Controls">
+
+    <Design.PreviewWith>
+        <Border Width="350" Padding="40">
+            <c:MultiComboBox Watermark="Select items...">
+                <c:MultiComboBoxItem Content="Item 1" />
+                <c:MultiComboBoxItem Content="Item 2" IsSelected="True" />
+                <c:MultiComboBoxItem Content="Item 3" IsSelected="True" />
+            </c:MultiComboBox>
+        </Border>
+    </Design.PreviewWith>
+
+    <!--  MultiComboBoxItem Style  -->
+    <Style Selector="c|MultiComboBoxItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border
+                    Name="PART_LayoutRoot"
+                    Margin="4,2"
+                    Background="{TemplateBinding Background}"
+                    CornerRadius="{DynamicResource ControlCornerRadius}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <CheckBox
+                            Margin="8,0,0,0"
+                            Padding="8,0,0,0"
+                            VerticalAlignment="Center"
+                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                            IsHitTestVisible="False" />
+                        <ContentPresenter
+                            Name="PART_ContentPresenter"
+                            Grid.Column="1"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="c|MultiComboBoxItem:pointerover /template/ Border#PART_LayoutRoot">
+        <Setter Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
+    </Style>
+
+    <!--  MultiComboBox Style  -->
+    <Style Selector="c|MultiComboBox">
+        <Setter Property="Background" Value="{DynamicResource TextControlBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThickness}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Padding" Value="10, 0, 0, 0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid ColumnDefinitions="*,Auto">
+
+                    <Border
+                        x:Name="PART_BackgroundBorder"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}" />
+
+                    <!--  Selected Items Display  -->
+                    <Grid Grid.Column="0" Margin="{TemplateBinding Padding}">
+                        <TextBlock
+                            x:Name="PART_Watermark"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource TextControlPlaceholderForeground}"
+                            Text="{TemplateBinding Watermark}" />
+
+                        <!--  Tags for Selected Items  -->
+                        <ScrollViewer
+                            x:Name="PART_SelectedItemsHost"
+                            Margin="0,4,4,4"
+                            VerticalAlignment="Center"
+                            Classes="no-auto-hide"
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Disabled">
+                            <ItemsControl ItemsSource="{TemplateBinding SelectedItems}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Padding="6,2,6,2"
+                                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                            BorderBrush="{DynamicResource ControlElevationBorderBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <ContentPresenter
+                                                    VerticalAlignment="Center"
+                                                    Content="{Binding}"
+                                                    ContentTemplate="{Binding $parent[c:MultiComboBox].SelectedItemTemplate}" />
+                                                <Button
+                                                    Margin="2,0,-2,0"
+                                                    Padding="2"
+                                                    Classes="transparent"
+                                                    Command="{Binding $parent[c:MultiComboBox].RemoveItemCommand}"
+                                                    CommandParameter="{Binding}">
+                                                    <PathIcon
+                                                        Width="10"
+                                                        Height="10"
+                                                        Data="M 7.116 8 L 2.558 3.442 L 3.442 2.558 L 8 7.116 L 12.558 2.558 L 13.442 3.442 L 8.884 8 L 13.442 12.558 L 12.558 13.442 L 8 8.884 L 3.442 13.442 L 2.558 12.558 Z"
+                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                                </Button>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+
+                    <!--  Chevron Button  -->
+                    <Border
+                        Grid.Column="1"
+                        Width="32"
+                        Background="Transparent"
+                        IsHitTestVisible="False">
+                        <PathIcon
+                            Width="12"
+                            Height="12"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Data="M 1 4 L 5 8 L 9 4"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </Border>
+
+                    <!--  Popup  -->
+                    <Popup
+                        x:Name="PART_Popup"
+                        Width="{Binding #PART_BackgroundBorder.Bounds.Width}"
+                        MinHeight="30"
+                        MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                        IsLightDismissEnabled="True"
+                        IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                        Placement="BottomEdgeAlignedLeft"
+                        PlacementTarget="{Binding #PART_BackgroundBorder}"
+                        WindowManagerAddShadowHint="False">
+                        <Border
+                            Margin="0,2,0,0"
+                            Padding="1"
+                            Background="{DynamicResource SolidBackgroundFillColorQuarternaryBrush}"
+                            BorderBrush="{DynamicResource SurfaceStrokeColorFlyoutBrush}"
+                            BorderThickness="1"
+                            BoxShadow="0 4 8 0 #1A000000"
+                            CornerRadius="8">
+                            <ScrollViewer>
+                                <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            </ScrollViewer>
+                        </Border>
+                    </Popup>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <!--  Hover State  -->
+    <Style Selector="c|MultiComboBox:pointerover /template/ Border#PART_BackgroundBorder">
+        <Setter Property="Background" Value="{DynamicResource TextControlBackgroundPointerOver}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushPointerOver}" />
+    </Style>
+
+    <Style Selector="c|MultiComboBox:empty:pointerover /template/ TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextControlPlaceholderForegroundPointerOver}" />
+    </Style>
+
+    <!--  Focused State  -->
+    <Style Selector="c|MultiComboBox:focus /template/ Border#PART_BackgroundBorder">
+        <Setter Property="Background" Value="{DynamicResource TextControlBackgroundFocused}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextControlBorderBrushFocused}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource TextControlBorderThemeThicknessFocused}" />
+    </Style>
+
+    <!--  Content Visibility  -->
+    <Style Selector="c|MultiComboBox /template/ TextBlock#PART_Watermark">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="c|MultiComboBox:empty /template/ TextBlock#PART_Watermark">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+
+    <Style Selector="c|MultiComboBox /template/ ScrollViewer#PART_SelectedItemsHost">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="c|MultiComboBox:empty /template/ ScrollViewer#PART_SelectedItemsHost">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+</Styles>

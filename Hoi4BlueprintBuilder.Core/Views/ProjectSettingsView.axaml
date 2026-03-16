@@ -1,0 +1,27 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.ProjectSettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:ProjectSettingsViewModel"
+    mc:Ignorable="d">
+    <StackPanel>
+        <fa:SettingsExpander Description="决定国策本地化的可选项 *重启应用后生效" Header="项目支持本地化语言">
+            <fa:SettingsExpander.IconSource>
+                <control:FontIconSource Glyph="&#xF2B7;" />
+            </fa:SettingsExpander.IconSource>
+            <fa:SettingsExpander.Footer>
+                <control:MultiComboBox
+                    ItemsSource="{Binding GameLanguages, Mode=OneTime}"
+                    SelectedItems="{Binding SupportedLanguages}"
+                    Watermark="当前语言..." />
+            </fa:SettingsExpander.Footer>
+        </fa:SettingsExpander>
+    </StackPanel>
+</UserControl>

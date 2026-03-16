@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
@@ -22,7 +23,8 @@ public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigServ
     /// <summary>
     /// 支持的本地化语言列表
     /// </summary>
-    public List<GameLanguage> SupportedLanguages { get; set; } = [];
+    public List<GameLanguage> SupportedLanguages { get; set; } =
+        [LanguageHelper.GetGameLanguageBySystemLanguage()];
 
     private SettingsService? _settingsService;
 

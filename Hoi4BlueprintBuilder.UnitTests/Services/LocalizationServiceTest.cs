@@ -56,6 +56,7 @@ public class LocalizationServiceTests
         services.AddSingleton<GameResourcesWatcherService>();
         services.AddSingleton<GameResourcesPathService>();
         services.AddSingleton<LocalizationService>();
+        services.AddSingleton(new ProjectConfigService { SupportedLanguages = [GameLanguage.Chinese] });
         _serviceProvider = services.BuildServiceProvider();
         _localizationService = _serviceProvider.GetRequiredService<LocalizationService>();
     }

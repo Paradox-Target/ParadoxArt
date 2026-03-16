@@ -13,6 +13,7 @@ using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
@@ -94,7 +95,10 @@ public sealed partial class ProjectListViewModel : ObservableObject
             DefaultButton = ContentDialogButton.Primary,
             IsPrimaryButtonEnabled = false
         };
-        var viewModel = new CreateNewProjectViewModel(enable => dialog.IsPrimaryButtonEnabled = enable);
+        var viewModel = new CreateNewProjectViewModel(
+            _settingsService,
+            enable => dialog.IsPrimaryButtonEnabled = enable
+        );
 
         var view = new CreateNewProjectView { DataContext = viewModel };
         dialog.Content = view;
@@ -136,12 +140,21 @@ public sealed partial class ProjectListViewModel : ObservableObject
         {
             await File.WriteAllTextAsync(Path.Combine(parentFolder, $"{viewModel.FolderName}.mod"), script);
         }
-        NavigateToMainView(viewModel.FinalFolder);
+
+        NavigateToMainView(viewModel.FinalFolder, viewModel.SupportedLanguages);
     }
 
-    private void NavigateToMainView(string modRootFolderPath)
+    private void NavigateToMainView(
+        string modRootFolderPath,
+        IEnumerable<GameLanguage>? supportedLanguage = null
+    )
     {
         _settingsService.ModRootFolderPath = modRootFolderPath;
+        if (supportedLanguage is not null)
+        {
+            App.Current.Services.GetRequiredService<ProjectConfigService>().SupportedLanguages =
+                supportedLanguage.ToList();
+        }
         _navigationService.NavigateTo<MainView>();
     }
 

@@ -14,19 +14,14 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
     private readonly Lua _globalLua = new() { State = { Encoding = Encoding.UTF8 } };
 
     public DefinesService(IServiceProvider serviceProvider)
-        : base(
-            Path.Combine(Keywords.Common, "defines"),
-            WatcherFilter.Lua,
-            serviceProvider,
-            PathType.Folder
-        ) { }
+        : base(Path.Combine(Keywords.Common, "defines"), WatcherFilter.Lua, serviceProvider, PathType.Folder)
+    { }
 
-    protected override void SortFilePath(string[] filePathArray)
+    protected override void SortFilePath(Span<string> filePathArray)
     {
         var pathService = App.Current.Services.GetRequiredService<GameResourcesPathService>();
 
-        Array.Sort(
-            filePathArray,
+        filePathArray.Sort(
             (x, y) =>
             {
                 int xPriority = GetFilePathPriority(x, pathService);

@@ -9,7 +9,6 @@ using Avalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
-using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
@@ -22,7 +21,6 @@ public sealed partial class MainView : UserControl
     private readonly Animation _settingsButtonAnimation;
 
     private static readonly GridLength ZeroSize = new(0, GridUnitType.Pixel);
-    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     /// 设计器使用
@@ -65,7 +63,7 @@ public sealed partial class MainView : UserControl
         FileTreeToggleButton.IsChecked = FileTreeView.IsVisible;
         SettingsButton.Click += (_, _) =>
         {
-            _tabViewService.AddSingleTabFromIoc<AppSettingsView>();
+            _tabViewService.AddSingleTabFromIoc<MainSettingsView>();
             _settingsButtonAnimation.RunAsync(SettingsIcon);
         };
     }

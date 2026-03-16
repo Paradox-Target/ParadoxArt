@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Cysharp.Text;
+using EnumsNET;
 using Hoi4BlueprintBuilder.Core.Infrastructure.Attributes;
+using Hoi4BlueprintBuilder.Core.Models;
+using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Localization.Strings;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
@@ -12,6 +16,7 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 public sealed partial class CreateNewProjectViewModel : ObservableValidator
 {
     public string FinalFolder => Path.Combine(Hoi4DocumentsModPath, FolderName);
+    public AvaloniaList<GameLanguage> SupportedLanguages { get; }
 
     [ObservableProperty]
     [Required]
@@ -34,6 +39,7 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
     [CustomValidation(typeof(CreateNewProjectViewModel), nameof(IsValidVersion))]
     private string _supportedVersion = string.Empty;
 
+    // 虽然支持语言为 0 也可以, 但加个警告时不时更好？
     public bool ShowTagsErrorMessage => _tags.Count is < 1 or > 10;
     public string? TagsErrorMessage => ValidateTagsCount();
     public IEnumerable<string> Tags => _tags;
@@ -69,12 +75,15 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
         "Utilities"
     ];
 
-    public CreateNewProjectViewModel(Action<bool>? setPrimaryEnableAction)
+    public IReadOnlyList<GameLanguage> Languages => Enums.GetValues<GameLanguage>();
+
+    public CreateNewProjectViewModel(SettingsService settingsService, Action<bool>? setPrimaryEnableAction)
     {
         _setPrimaryEnableAction = setPrimaryEnableAction;
         ErrorsChanged += (_, _) => UpdatePrimaryButtonState();
 
         ValidateAllProperties();
+        SupportedLanguages = [settingsService.GameLanguage];
     }
 
     private void UpdatePrimaryButtonState() => _setPrimaryEnableAction?.Invoke(IsValid);

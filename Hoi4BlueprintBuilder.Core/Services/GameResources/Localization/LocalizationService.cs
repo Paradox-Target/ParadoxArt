@@ -10,15 +10,21 @@ using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using MethodTimer;
 using ParadoxPower.CSharp;
 using ParadoxPower.Localisation;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 
 [RegisterSingleton<LocalizationService>]
 public sealed class LocalizationService
-    : ResourcesService<LocalizationService, FrozenDictionary<string, string>, YAMLLocalisationParser.LocFile>
+    : ResourcesService<
+        LocalizationService,
+        (GameLanguage Language, FrozenDictionary<string, string> Items),
+        YAMLLocalisationParser.LocFile
+    >
 {
     private readonly SettingsService _settingsService;
-    private ICollection<FrozenDictionary<string, string>> Localisations => Resources.Values;
+    private ICollection<(GameLanguage Language, FrozenDictionary<string, string> Items)> Localisations =>
+        Resources.Values;
 
     /// Key: 国策文件路径, Value: 国策文件的本地化内容, 键值对
     private readonly Dictionary<
@@ -26,10 +32,22 @@ public sealed class LocalizationService
         Dictionary<string, string>
     > _filesLocalisations = new();
 
+    private static readonly (string Key, GameLanguage Enum)[] LanguageMap = Enum.GetValues<GameLanguage>()
+        .AsValueEnumerable()
+        .Select(gameLanguage => ($"l_{gameLanguage.ToGameLocalizationLanguage()}", gameLanguage))
+        .ToArray();
+
     [Time("加载本地化文件")]
-    public LocalizationService(SettingsService settingsService, IServiceProvider serviceProvider)
+    public LocalizationService(
+        SettingsService settingsService,
+        ProjectConfigService configService,
+        IServiceProvider serviceProvider
+    )
         : base(
-            Path.Combine("localisation", settingsService.GameLanguage.ToGameLocalizationLanguage()),
+            configService
+                .SupportedLanguages.AsValueEnumerable()
+                .Select(language => Path.Combine("localisation", language.ToGameLocalizationLanguage()))
+                .ToArray(),
             WatcherFilter.LocalizationFiles,
             serviceProvider,
             PathType.Folder,
@@ -109,7 +127,18 @@ public sealed class LocalizationService
         return TryGetValue(key, out string? value) ? value : key;
     }
 
+    /// <summary>
+    /// 使用当前游戏语言尝试获取本地化文本, 如果找到返回<c>true</c>和对应的值, 反之返回<c>false</c>和<c>null</c>
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
     public bool TryGetValue(string key, [NotNullWhen(true)] out string? value)
+    {
+        return TryGetValue(key, _settingsService.GameLanguage, out value);
+    }
+
+    public bool TryGetValue(string key, GameLanguage language, [NotNullWhen(true)] out string? value)
     {
         foreach (var filesLocalisations in _filesLocalisations.Values)
         {
@@ -119,9 +148,11 @@ public sealed class LocalizationService
             }
         }
 
-        foreach (var localisation in Localisations)
+        foreach (
+            var localisation in Localisations.AsValueEnumerable().Where(items => items.Language == language)
+        )
         {
-            if (localisation.TryGetValue(key, out value))
+            if (localisation.Items.TryGetValue(key, out value))
             {
                 return true;
             }
@@ -149,17 +180,21 @@ public sealed class LocalizationService
         localisation[key] = value;
     }
 
-    protected override FrozenDictionary<string, string> ParseFileToContent(
+    protected override (GameLanguage, FrozenDictionary<string, string>) ParseFileToContent(
         YAMLLocalisationParser.LocFile result
     )
     {
+        var language = LanguageMap
+            .AsValueEnumerable()
+            .First(item => result.Key.EqualsIgnoreCase(item.Key))
+            .Enum;
         var localisations = new Dictionary<string, string>(result.Entries.Count);
         foreach (var item in result.Entries)
         {
             localisations[item.Key] = item.Desc;
         }
 
-        return localisations.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
+        return (language, localisations.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase));
     }
 
     protected override YAMLLocalisationParser.LocFile? GetParseResult(string filePath)

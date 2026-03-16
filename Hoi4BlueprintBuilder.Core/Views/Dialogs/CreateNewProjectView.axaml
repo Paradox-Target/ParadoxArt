@@ -2,6 +2,7 @@
     x:Class="Hoi4BlueprintBuilder.Core.Views.Dialogs.CreateNewProjectView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs"
@@ -32,6 +33,11 @@
         <StackPanel HorizontalAlignment="Center" Spacing="4">
             <TextBlock VerticalAlignment="Center" Text="支持版本" />
             <TextBox VerticalAlignment="Center" Text="{Binding SupportedVersion}" />
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock VerticalAlignment="Center" Text="国策本地化支持语言" />
+            <control:MultiComboBox ItemsSource="{Binding Languages, Mode=OneTime}" SelectedItems="{Binding SupportedLanguages}" />
         </StackPanel>
 
         <StackPanel HorizontalAlignment="Center" Spacing="4">

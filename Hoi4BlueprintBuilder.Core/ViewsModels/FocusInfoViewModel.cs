@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using EnumsNET;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
@@ -60,7 +59,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         }
     }
 
-    public IReadOnlyList<GameLanguage> Languages { get; } = Enums.GetValues<GameLanguage>();
+    public IReadOnlyList<GameLanguage> Languages { get; }
 
     [ObservableProperty]
     private string _idText;
@@ -71,16 +70,30 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private int _selectedLanguageIndex;
     private bool _isSkipNotify;
+    private string FocusDescriptionKey => $"{FocusNode.Id}_desc";
+
+    private static int _lastSelectedLanguageIndex = (int)
+        App.Current.Services.GetRequiredService<SettingsService>().GameLanguage;
+    private static readonly SpriteService SpriteService =
+        App.Current.Services.GetRequiredService<SpriteService>();
+    private static readonly DefinesService DefinesService =
+        App.Current.Services.GetRequiredService<DefinesService>();
+    private const string DefineName = "NDefines.NFocus.FOCUS_POINT_DAYS";
+    private static readonly LocalizationService LocalizationService =
+        App.Current.Services.GetRequiredService<LocalizationService>();
+    private static readonly LocalizationFormatService LocalizationFormatService =
+        App.Current.Services.GetRequiredService<LocalizationFormatService>();
 
     public FocusInfoViewModel(FocusNode focusNode)
     {
         FocusNode = focusNode;
 
         _idText = LocalizationFormatService.GetFormatText(FocusNode.Id);
-        _descriptionText = LocalizationFormatService.GetFormatText($"{FocusNode.Id}_desc");
+        _descriptionText = LocalizationFormatService.GetFormatText(FocusDescriptionKey);
         _selectedLanguageIndex = _lastSelectedLanguageIndex;
 
         FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
+        Languages = App.Current.Services.GetRequiredService<ProjectConfigService>().SupportedLanguages;
     }
 
     private void FocusNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -118,20 +131,13 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         return $" x {focusCost} = {totalDays} 天";
     }
 
-    private static int _lastSelectedLanguageIndex = (int)
-        App.Current.Services.GetRequiredService<SettingsService>().GameLanguage;
-    private static readonly SpriteService SpriteService =
-        App.Current.Services.GetRequiredService<SpriteService>();
-    private static readonly DefinesService DefinesService =
-        App.Current.Services.GetRequiredService<DefinesService>();
-    private const string DefineName = "NDefines.NFocus.FOCUS_POINT_DAYS";
-    private static readonly LocalizationService LocalizationService =
-        App.Current.Services.GetRequiredService<LocalizationService>();
-    private static readonly LocalizationFormatService LocalizationFormatService =
-        App.Current.Services.GetRequiredService<LocalizationFormatService>();
-
     partial void OnIdTextChanged(string value)
     {
+        if (_isUpdatingLanguage)
+        {
+            return;
+        }
+
         LocalizationService.AddOrUpdateLocalisation(
             FocusNode.Path,
             Languages[SelectedLanguageIndex],
@@ -144,7 +150,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 
     partial void OnDescriptionTextChanged(string value)
     {
-        if (string.IsNullOrEmpty(value))
+        if (string.IsNullOrEmpty(value) || _isUpdatingLanguage)
         {
             return;
         }
@@ -152,14 +158,20 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         LocalizationService.AddOrUpdateLocalisation(
             FocusNode.Path,
             Languages[SelectedLanguageIndex],
-            $"{FocusNode.Id}_desc",
+            FocusDescriptionKey,
             value
         );
     }
 
+    private bool _isUpdatingLanguage;
+
     partial void OnSelectedLanguageIndexChanged(int value)
     {
         _lastSelectedLanguageIndex = value;
+        _isUpdatingLanguage = true;
+        DescriptionText = LocalizationFormatService.GetFormatText(FocusDescriptionKey, Languages[value]);
+        IdText = LocalizationFormatService.GetFormatText(FocusNode.Id, Languages[value]);
+        _isUpdatingLanguage = false;
     }
 
     public void Dispose()

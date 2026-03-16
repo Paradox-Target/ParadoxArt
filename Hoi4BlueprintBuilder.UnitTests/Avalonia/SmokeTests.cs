@@ -19,6 +19,8 @@ public sealed class SmokeTests
         Assert.DoesNotThrow(() =>
         {
             _ = new GameSettingsPageView();
+            _ = new ProjectSettingsView();
+            _ = new MainSettingsView();
             _ = new AppSettingsPageView();
             _ = new RenameFileView(new ContentDialog(), file);
             _ = new CreateNewProjectView();

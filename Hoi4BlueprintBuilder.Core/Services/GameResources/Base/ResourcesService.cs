@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 
@@ -18,7 +19,18 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
 
     private readonly SettingsService _settingService;
     private readonly string _serviceName = typeof(TType).Name;
-    private readonly string _folderOrFileRelativePath;
+    private readonly string[] _folderOrFileRelativePath;
+
+    protected ResourcesService(
+        string folderOrFileRelativePath,
+        WatcherFilter filter,
+        IServiceProvider serviceProvider,
+        PathType pathType,
+        SearchOption searchOption = SearchOption.TopDirectoryOnly,
+        bool isAsyncLoading = false
+    )
+        : this([folderOrFileRelativePath], filter, serviceProvider, pathType, searchOption, isAsyncLoading)
+    { }
 
     /// <summary>
     ///
@@ -30,7 +42,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
     /// <param name="searchOption">指定文件夹的搜索模式, 当路径是文件时此配置无效</param>
     /// <param name="isAsyncLoading">是否多线程加载资源, 子类需要确保重写的方法是线程安全的</param>
     protected ResourcesService(
-        string folderOrFileRelativePath,
+        string[] folderOrFileRelativePath,
         WatcherFilter filter,
         IServiceProvider serviceProvider,
         PathType pathType,
@@ -46,30 +58,27 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         var watcherService = serviceProvider.GetRequiredService<GameResourcesWatcherService>();
 
         bool isFolderPath = pathType == PathType.Folder;
-        string[] filePaths;
+        PooledArray<string> filePaths;
         if (isFolderPath)
         {
-            filePaths = gameResourcesPathService
-                .GetAllFilePriorModByRelativePathForFolder(
-                    _folderOrFileRelativePath,
-                    filter.Name,
-                    searchOption
+            filePaths = _folderOrFileRelativePath
+                .AsValueEnumerable()
+                .SelectMany(path =>
+                    gameResourcesPathService.GetAllFilePriorModByRelativePathForFolder(
+                        path,
+                        filter.Name,
+                        searchOption
+                    )
                 )
-                .ToArray();
+                .ToArrayPool();
         }
         else
         {
-            string? path = gameResourcesPathService.GetFilePathPriorModByRelativePath(
-                folderOrFileRelativePath
-            );
-            if (path is null)
-            {
-                filePaths = [];
-            }
-            else
-            {
-                filePaths = [path];
-            }
+            filePaths = folderOrFileRelativePath
+                .AsValueEnumerable()
+                .Select(path => gameResourcesPathService.GetFilePathPriorModByRelativePath(path))
+                .Where(path => path is not null)
+                .ToArrayPool()!;
         }
 
         // Resources 必须在使用 ParseFileAndAddToResources 之前初始化
@@ -79,41 +88,44 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         }
         else
         {
-            Resources = new Dictionary<string, TContent>(filePaths.Length);
+            Resources = new Dictionary<string, TContent>(filePaths.Size);
         }
 
         if (isAsyncLoading)
         {
-            ParseFileAndAddToResourcesAsync(filePaths);
+            ParseFileAndAddToResourcesAsync(filePaths.Span);
         }
         else
         {
-            SortFilePath(filePaths);
-            ParseFileAndAddToResourcesSync(filePaths);
+            SortFilePath(filePaths.Span);
+            ParseFileAndAddToResourcesSync(filePaths.Span);
         }
 
         bool includeSubFolders = searchOption == SearchOption.AllDirectories && isFolderPath;
 
-        watcherService.Watch(
-            isFolderPath
-                ? _folderOrFileRelativePath
-                : Path.GetDirectoryName(folderOrFileRelativePath) ?? folderOrFileRelativePath,
-            this,
-            filter.Name,
-            includeSubFolders
-        );
+        foreach (string path in folderOrFileRelativePath)
+        {
+            watcherService.Watch(
+                isFolderPath ? path : Path.GetDirectoryName(path) ?? path,
+                this,
+                filter.Name,
+                includeSubFolders
+            );
+        }
 
-        Log.Info("初始化资源成功: {FolderRelativePath}, 共 {Count} 个文件", _folderOrFileRelativePath, filePaths.Length);
+        Log.Info("初始化资源成功: {FolderRelativePath}, 共 {Count} 个文件", _folderOrFileRelativePath, filePaths.Size);
         LogItemsSum();
+
+        filePaths.Dispose();
     }
 
     /// <summary>
     /// 当需要对传入的文件路径顺序进行排序时, 重写此方法, 在多线程加载资源时不调用.
     /// </summary>
     /// <param name="filePathArray"></param>
-    protected virtual void SortFilePath(string[] filePathArray) { }
+    protected virtual void SortFilePath(Span<string> filePathArray) { }
 
-    private void ParseFileAndAddToResourcesAsync(string[] filePaths)
+    private void ParseFileAndAddToResourcesAsync(Span<string> filePaths)
     {
         var tasks = new List<Task>(filePaths.Length);
         foreach (string filePath in filePaths)
@@ -123,7 +135,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         Task.WaitAll(tasks);
     }
 
-    private void ParseFileAndAddToResourcesSync(string[] filePaths)
+    private void ParseFileAndAddToResourcesSync(Span<string> filePaths)
     {
         foreach (string filePath in filePaths)
         {
