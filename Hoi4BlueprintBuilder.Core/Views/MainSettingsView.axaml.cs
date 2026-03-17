@@ -8,11 +8,12 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 [RegisterTransient<MainSettingsView>]
 public sealed partial class MainSettingsView : UserControl, ITabViewItem
 {
-    private readonly IServiceProvider _serviceProvider;
     public string Header => "设置";
     public string FilePath => "SettingsView";
     public string ToolTip => Header;
     public IconSource TabIcon { get; } = new FontIconSource { Glyph = "\uE713" };
+
+    private readonly IServiceProvider _serviceProvider;
 
     public MainSettingsView()
     {
