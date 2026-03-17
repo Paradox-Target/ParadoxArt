@@ -36,70 +36,139 @@
 
     <UserControl.Styles>
         <Style Selector="Border.ProjectItem">
-            <Setter Property="Background" Value="{DynamicResource ButtonBackground}" />
-            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
         </Style>
         <Style Selector="Border.ProjectItem:pointerover">
-            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundPointerOver}" />
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
         </Style>
-        <Style Selector="Border.ProjectDirectoryNotExist">
+        <Style Selector="Border.ProjectItem:pressed">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorClickBrush}" />
+        </Style>
 
-            <Setter Property="Background" Value="LightGray" />
+        <Style Selector="Border.ProjectDirectoryNotExist">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDisabledBrush}" />
         </Style>
-        <Style Selector="Border.ProjectDirectoryNotExist TextBlock">
+        <Style Selector="Border.ProjectDirectoryNotExist TextBlock.InfoText">
             <Setter Property="TextDecorations" Value="Strikethrough" />
-            <Setter Property="Foreground" Value="DarkGray" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorDisabledBrush}" />
         </Style>
     </UserControl.Styles>
 
-    <Grid Margin="8,0" RowDefinitions="Auto,*">
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+    <Grid Margin="16,12" RowDefinitions="Auto,*">
+        <!--  工具栏  -->
+        <Grid
+            Grid.Row="0"
+            Margin="0,0,0,12"
+            ColumnDefinitions="*,Auto">
             <TextBox
                 Grid.Column="0"
+                Height="36"
+                VerticalContentAlignment="Center"
                 Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}"
-                Watermark="搜索项目">
+                Watermark="搜索项目名称...">
                 <TextBox.InnerLeftContent>
-                    <controls:FontIcon Glyph="&#xE721;" />
+                    <controls:FontIcon
+                        Margin="12,0,8,0"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Glyph="&#xE721;" />
                 </TextBox.InnerLeftContent>
             </TextBox>
             <StackPanel
                 Grid.Column="1"
+                Margin="12,0,0,0"
                 Orientation="Horizontal"
-                Spacing="4">
-                <Button Command="{Binding CreateNewProjectCommand}" Content="新建Mod" />
-                <Button Command="{Binding OpenProjectCommand}" Content="打开Mod" />
+                Spacing="8">
+                <Button
+                    Height="36"
+                    Padding="12,0"
+                    Classes="accent"
+                    Command="{Binding CreateNewProjectCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:FontIcon FontSize="14" Glyph="&#xE710;" />
+                        <TextBlock VerticalAlignment="Center" Text="新建 Mod" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Height="36"
+                    Padding="12,0"
+                    Command="{Binding OpenProjectCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:FontIcon FontSize="14" Glyph="&#xE8E5;" />
+                        <TextBlock VerticalAlignment="Center" Text="打开 Mod" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </Grid>
 
-        <ScrollViewer Grid.Row="1" Margin="0,8,0,0">
-            <ItemsControl x:Name="ProjectListBox" ItemsSource="{Binding Projects}">
-                <Interaction.Behaviors>
-                    <PointerPressedEventTrigger>
-                        <InvokeCommandAction Command="{Binding OpenProjectItemCommand}" PassEventArgsToCommand="True" />
-                    </PointerPressedEventTrigger>
-                </Interaction.Behaviors>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="models:ProjectItem">
-                        <Border
-                            Margin="0,0,0,8"
-                            Padding="8"
-                            Classes="ProjectItem"
-                            Classes.ProjectDirectoryNotExist="{Binding !IsPathExist}">
-                            <StackPanel>
-                                <TextBlock
-                                    FontSize="16"
-                                    FontWeight="Bold"
-                                    Text="{Binding Name}" />
-                                <TextBlock
-                                    Margin="0,4,0,0"
-                                    Text="{Binding Path=DirectoryPath}"
-                                    TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <!--  项目列表  -->
+        <Border
+            Grid.Row="1"
+            Padding="12"
+            Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="8">
+            <ScrollViewer>
+                <ItemsControl x:Name="ProjectListBox" ItemsSource="{Binding Projects}">
+                    <Interaction.Behaviors>
+                        <PointerPressedEventTrigger>
+                            <InvokeCommandAction Command="{Binding OpenProjectItemCommand}" PassEventArgsToCommand="True" />
+                        </PointerPressedEventTrigger>
+                    </Interaction.Behaviors>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="models:ProjectItem">
+                            <Border
+                                Margin="0,0,0,8"
+                                Padding="16,12"
+                                Classes="ProjectItem"
+                                Classes.ProjectDirectoryNotExist="{Binding !IsPathExist}">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock
+                                            Classes="InfoText"
+                                            FontSize="15"
+                                            FontWeight="SemiBold"
+                                            Text="{Binding Name}" />
+                                        <TextBlock
+                                            Margin="0,4,0,0"
+                                            Classes="InfoText"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Text="{Binding Path=DirectoryPath}"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        IsVisible="{Binding !IsPathExist}"
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                        <Border
+                                            Padding="6,2"
+                                            Background="{DynamicResource SystemFillColorCriticalBackgroundBrush}"
+                                            CornerRadius="4">
+                                            <TextBlock
+                                                FontSize="12"
+                                                FontWeight="SemiBold"
+                                                Foreground="{DynamicResource SystemFillColorCriticalBrush}"
+                                                Text="路径失效" />
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </UserControl>
