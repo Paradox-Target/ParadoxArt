@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FluentAvalonia.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:md="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
     d:DesignHeight="450"
@@ -13,73 +14,100 @@
     mc:Ignorable="d">
 
     <Panel>
-        <Grid IsVisible="{Binding !HasUpdates}" RowDefinitions="*,*">
-            <TextBlock
-                Grid.Row="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                FontSize="24"
-                Text="正在检查更新中..." />
+        <!-- 检查更新状态 -->
+        <Grid IsVisible="{Binding !HasUpdates}" RowDefinitions="*,*" Background="{DynamicResource LayerFillColorDefaultBrush}">
+            <StackPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Spacing="16" Margin="0,0,0,24">
+                <controls:FontIcon Glyph="&#xE896;" FontSize="48" Foreground="{DynamicResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center" />
+                <TextBlock FontSize="20" FontWeight="SemiBold" Text="正在检查更新" HorizontalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                <TextBlock FontSize="14" Text="请稍候，由于网络原因这可能需要一些时间..." Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+            </StackPanel>
             <fa:ProgressRing
                 Grid.Row="1"
-                Width="80"
-                Height="80"
-                IsActive="True" />
+                Width="48"
+                Height="48"
+                IsActive="True" 
+                VerticalAlignment="Top"
+                Foreground="{DynamicResource AccentFillColorDefaultBrush}" />
         </Grid>
 
-        <Grid IsVisible="{Binding ShowUpdateLog}" RowDefinitions="Auto,*,Auto,Auto">
-            <StackPanel
-                Grid.Row="0"
-                Margin="0,4"
-                HorizontalAlignment="Center"
-                Orientation="Horizontal"
-                Spacing="8">
-                <TextBlock FontSize="16" Text="{Binding NewVersionText}" />
-                <TextBlock FontSize="16" Text="{Binding AppUpdateChannelText, Mode=OneTime}" />
-            </StackPanel>
-            <ScrollViewer Grid.Row="1">
-                <md:MarkdownRenderer
-                    x:Name="MarkdownRenderer"
-                    Margin="16. 4"
-                    MarkdownBuilder="{Binding UpdateLog}" />
-            </ScrollViewer>
+        <!-- 更新日志视图 -->
+        <Border IsVisible="{Binding ShowUpdateLog}" 
+                Margin="16" 
+                Padding="0" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                BorderThickness="1" 
+                CornerRadius="8">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <!-- 头部 -->
+                <Border Grid.Row="0" Background="{DynamicResource LayerOnMicaBaseAltFillColorDefaultBrush}" CornerRadius="8,8,0,0" Padding="16,16,16,12" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock FontSize="20" FontWeight="Bold" Text="发现新版本" />
+                            <TextBlock Margin="0,4,0,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="建议您尽快更新至最新版本以获得最佳体验" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="6" HorizontalAlignment="Right">
+                            <Border Background="{DynamicResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,4">
+                                <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" Text="{Binding NewVersionText}" />
+                            </Border>
+                            <Border Background="{DynamicResource SystemFillColorCautionBackgroundBrush}" CornerRadius="4" Padding="8,2" HorizontalAlignment="Right">
+                                <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource SystemFillColorCautionBrush}" Text="{Binding AppUpdateChannelText, Mode=OneTime}" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
 
-            <Button
-                Grid.Row="2"
-                Margin="0,0,0,4"
-                HorizontalAlignment="Center"
-                Command="{Binding StartUpdateAppCommand}"
-                Content="开始更新" />
+                <!-- 滚动日志 -->
+                <ScrollViewer Grid.Row="1" Padding="20,16">
+                    <md:MarkdownRenderer
+                        x:Name="MarkdownRenderer"
+                        MarkdownBuilder="{Binding UpdateLog}" />
+                </ScrollViewer>
 
-            <TextBlock
-                Grid.Row="3"
-                Margin="0,0,0,12"
-                HorizontalAlignment="Center"
-                FontSize="18"
-                Text="{Binding TotalPackagesSize}" />
-        </Grid>
+                <!-- 底部操作栏 -->
+                <Border Grid.Row="2" Background="{DynamicResource LayerFillColorAltBrush}" CornerRadius="0,0,8,8" Padding="16,12" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" Text="{Binding TotalPackagesSize}" />
+                        <Button
+                            Grid.Column="1"
+                            Classes="accent"
+                            Width="120"
+                            Height="36"
+                            Command="{Binding StartUpdateAppCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <controls:FontIcon Glyph="&#xE896;" FontSize="16" />
+                                <TextBlock Text="开始更新" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
 
-        <Grid IsVisible="{Binding IsDownloading}" RowDefinitions="*,*">
-            <TextBlock
-                Grid.Row="0"
-                Margin="0,0,0,24"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                FontSize="18"
-                Text="下载中..." />
-            <StackPanel Grid.Row="1">
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="18"
-                    Text="{Binding ProgressText, Mode=OneWay}" />
+        <!-- 下载进度视图 -->
+        <Border IsVisible="{Binding IsDownloading}" 
+                Background="{DynamicResource LayerFillColorDefaultBrush}" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Padding="32" 
+                CornerRadius="12"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                BoxShadow="0 8 32 0 #1A000000">
+            <StackPanel Spacing="16" Width="320">
+                <controls:FontIcon Glyph="&#xE896;" FontSize="40" Foreground="{DynamicResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center" />
+                <TextBlock FontSize="18" FontWeight="SemiBold" Text="正在下载更新" HorizontalAlignment="Center" />
+                
                 <ProgressBar
-                    Width="300"
-                    MinWidth="150"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Value="{Binding Progress}" />
+                    Value="{Binding Progress}" 
+                    Height="6" 
+                    Margin="0,8" />
+                    
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="下载进度" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="1" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" FontWeight="SemiBold" Text="{Binding ProgressText, Mode=OneWay}" VerticalAlignment="Center" />
+                </Grid>
             </StackPanel>
-        </Grid>
+        </Border>
     </Panel>
 </UserControl>

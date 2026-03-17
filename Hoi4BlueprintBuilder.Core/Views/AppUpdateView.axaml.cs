@@ -7,7 +7,7 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 public sealed partial class AppUpdateView : UserControl
 {
     public AppUpdateView()
-        : this(new AppUpdateViewModel(null!, null!, null!, null!) { HasUpdates = true }) { }
+        : this(new AppUpdateViewModel(null!, null!, null!, null!) { HasUpdates = true, NewVersionText = "新版本: 1.0.0"}) { }
 
     public AppUpdateView(AppUpdateViewModel viewModel)
     {
