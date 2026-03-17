@@ -29,7 +29,9 @@ public sealed partial class ProjectListViewModel : ObservableObject
     [ObservableProperty]
     private IEnumerable<ProjectItem> _projects;
 
-    public ProjectItem? RightClickedItem { get; set; }
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(CopyProjectPathCommand), nameof(OpenProjectFolderInExplorerCommand))]
+    private ProjectItem? _rightClickedItem;
     public BindableReactiveProperty<string> SearchText { get; } = new(string.Empty);
 
     private readonly SettingsService _settingsService;
@@ -40,6 +42,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
     private readonly ClipboardService _clipboardService;
     private readonly NotificationService _notificationService;
     private readonly IDisposable _disposable;
+    private bool IsValidRightClickedItem => RightClickedItem is not null && RightClickedItem.IsPathExist;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -211,7 +214,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task RemoveProjectItem()
+    private void RemoveProjectItem()
     {
         if (RightClickedItem is null)
         {
@@ -222,7 +225,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
         _settingsService.Projects.Remove(RightClickedItem);
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsValidRightClickedItem))]
     private async Task CopyProjectPath()
     {
         if (RightClickedItem is null)
@@ -231,16 +234,26 @@ public sealed partial class ProjectListViewModel : ObservableObject
             return;
         }
 
+        if (!RightClickedItem.IsPathExist)
+        {
+            return;
+        }
+
         await _clipboardService.SetTextAsync(RightClickedItem.DirectoryPath);
         _notificationService.Show("已复制项目路径到剪贴板");
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(IsValidRightClickedItem))]
     private async Task OpenProjectFolderInExplorer()
     {
         if (RightClickedItem is null)
         {
             Log.Warn("尝试打开项目文件夹但 RightClickedItem 为空");
+            return;
+        }
+
+        if (!RightClickedItem.IsPathExist)
+        {
             return;
         }
 
