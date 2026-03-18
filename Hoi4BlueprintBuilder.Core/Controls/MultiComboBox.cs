@@ -94,10 +94,14 @@ public sealed class MultiComboBox : SelectingItemsControl
     private void OnSelectedItemsChanged(AvaloniaPropertyChangedEventArgs args)
     {
         if (args.OldValue is INotifyCollectionChanged oldList)
+        {
             oldList.CollectionChanged -= OnSelectedItemsCollectionChanged;
+        }
 
         if (args.NewValue is INotifyCollectionChanged newList)
+        {
             newList.CollectionChanged += OnSelectedItemsCollectionChanged;
+        }
 
         UpdateEmptyPseudoClass();
     }
@@ -107,7 +111,9 @@ public sealed class MultiComboBox : SelectingItemsControl
         UpdateEmptyPseudoClass();
         var containers = Presenter?.Panel?.Children;
         if (containers == null)
+        {
             return;
+        }
 
         foreach (var container in containers)
         {
@@ -177,7 +183,9 @@ public sealed class MultiComboBox : SelectingItemsControl
     private void OnBackgroundPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.Handled)
+        {
             return;
+        }
 
         SetCurrentValue(IsDropDownOpenProperty, !IsDropDownOpen);
         e.Handled = true;

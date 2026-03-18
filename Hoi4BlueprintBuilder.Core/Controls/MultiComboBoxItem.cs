@@ -40,7 +40,9 @@ public sealed class MultiComboBoxItem : ContentControl
         UpdatePseudoClasses(isSelected);
 
         if (_updateInternal)
+        {
             return;
+        }
 
         var parent = this.FindLogicalAncestorOfType<MultiComboBox>();
         var dataContext = this.DataContext;
@@ -50,7 +52,9 @@ public sealed class MultiComboBoxItem : ContentControl
             if (isSelected)
             {
                 if (!parent.SelectedItems.Contains(dataContext))
+                {
                     parent.SelectedItems.Add(dataContext);
+                }
             }
             else
             {
@@ -84,7 +88,9 @@ public sealed class MultiComboBoxItem : ContentControl
     {
         base.OnPointerPressed(e);
         if (e.Handled)
+        {
             return;
+        }
 
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
