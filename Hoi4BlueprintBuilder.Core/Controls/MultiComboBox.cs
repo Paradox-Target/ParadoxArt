@@ -199,20 +199,13 @@ public sealed class MultiComboBox : SelectingItemsControl
         }
     }
 
-    private class RemoveCommandImpl : ICommand
+    private sealed class RemoveCommandImpl(MultiComboBox parent) : ICommand
     {
-        private readonly MultiComboBox _parent;
-
-        public RemoveCommandImpl(MultiComboBox parent)
-        {
-            _parent = parent;
-        }
-
         public bool CanExecute(object? parameter) => true;
 
         public void Execute(object? parameter)
         {
-            _parent.Remove(parameter);
+            parent.Remove(parameter);
         }
 
         public event EventHandler? CanExecuteChanged
