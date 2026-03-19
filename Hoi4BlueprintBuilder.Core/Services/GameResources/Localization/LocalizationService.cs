@@ -28,7 +28,7 @@ public sealed class LocalizationService
 
     /// Key: 国策文件路径, Value: 国策文件的本地化内容, 键值对
     private readonly Dictionary<
-        (string FilePath, GameLanguage),
+        (string FilePath, GameLanguage Language),
         Dictionary<string, string>
     > _filesLocalisations = new();
 
@@ -140,9 +140,13 @@ public sealed class LocalizationService
 
     public bool TryGetValue(string key, GameLanguage language, [NotNullWhen(true)] out string? value)
     {
-        foreach (var filesLocalisations in _filesLocalisations.Values)
+        foreach (
+            var filesLocalisation in _filesLocalisations
+                .AsValueEnumerable()
+                .Where(filesLocalisation => filesLocalisation.Key.Language == language)
+        )
         {
-            if (filesLocalisations.TryGetValue(key, out value))
+            if (filesLocalisation.Value.TryGetValue(key, out value))
             {
                 return true;
             }
