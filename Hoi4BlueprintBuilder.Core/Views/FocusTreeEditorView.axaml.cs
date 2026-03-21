@@ -194,7 +194,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         var notificationService = App.Current.Services.GetRequiredService<NotificationService>();
         try
         {
-            _screenshotService.SaveFocusTreeScreenshot(nodes, file.Path.LocalPath);
+            await _screenshotService.SaveFocusTreeScreenshotAsync(nodes, file);
             Log.Info("已导出图片: {FileName}", file.Path.LocalPath);
             notificationService.Show("导出图片成功");
         }

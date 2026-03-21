@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Controls;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -12,7 +13,10 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<ScreenshotService>]
 public sealed class ScreenshotService
 {
-    public void SaveFocusTreeScreenshot(IReadOnlyCollection<FocusNodeViewModel> nodes, string filePath)
+    public async Task SaveFocusTreeScreenshotAsync(
+        IReadOnlyCollection<FocusNodeViewModel> nodes,
+        IStorageFile file
+    )
     {
         (double minX, double minY, double maxX, double maxY) = CalculateBounds(nodes);
         const double padding = 1.0;
@@ -53,8 +57,8 @@ public sealed class ScreenshotService
             pushedState.Dispose();
         }
 
-        using var fileStream = new FileStream(filePath, FileMode.Create);
-        renderBitmap.Save(fileStream);
+        await using var writeStream = await file.OpenWriteAsync();
+        renderBitmap.Save(writeStream);
     }
 
     private static (double MinX, double MinY, double MaxX, double MaxY) CalculateBounds(
