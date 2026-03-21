@@ -103,6 +103,8 @@ public sealed partial class AppUpdateViewModel : ObservableObject
     {
         try
         {
+            Log.Info("当前版本: {CurrentVersion}", App.Version);
+
             long checkUpdateStartTimestamp = Stopwatch.GetTimestamp();
             _updateInfo = await _updateManager.CheckForUpdatesAsync();
             _telemetryService.TrackMetric(

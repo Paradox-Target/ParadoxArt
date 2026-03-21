@@ -72,8 +72,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     private bool _isSkipNotify;
     private string FocusDescriptionKey => $"{FocusNode.Id}_desc";
 
-    private static int _lastSelectedLanguageIndex = (int)
-        App.Current.Services.GetRequiredService<SettingsService>().GameLanguage;
+    private static int _lastSelectedLanguageIndex;
     private static readonly SpriteService SpriteService =
         App.Current.Services.GetRequiredService<SpriteService>();
     private static readonly DefinesService DefinesService =
