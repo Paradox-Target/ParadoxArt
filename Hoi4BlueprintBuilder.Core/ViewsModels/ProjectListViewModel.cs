@@ -141,7 +141,11 @@ public sealed partial class ProjectListViewModel : ObservableObject
 
         if (parentFolder is not null)
         {
-            await File.WriteAllTextAsync(Path.Combine(parentFolder, $"{viewModel.FolderName}.mod"), script);
+            await File.WriteAllTextAsync(
+                Path.Combine(parentFolder, $"{viewModel.FolderName}.mod"),
+                script,
+                Encoding.UTF8
+            );
         }
 
         NavigateToMainView(viewModel.FinalFolder, viewModel.SupportedLanguages);
