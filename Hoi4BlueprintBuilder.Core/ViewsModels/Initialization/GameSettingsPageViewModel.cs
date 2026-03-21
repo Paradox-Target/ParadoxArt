@@ -23,7 +23,7 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings, 
     [RelayCommand]
     private async Task PickGamePath()
     {
-        var storageFolder = await fileService.OpenFolderAsync();
+        using var storageFolder = await fileService.OpenFolderAsync();
 
         if (storageFolder is not null)
         {

@@ -171,7 +171,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
             return;
         }
 
-        var file = await _fileService.SaveFileAsync(
+        using var file = await _fileService.SaveFileAsync(
             new FilePickerSaveOptions
             {
                 Title = "导出国策树为图片",

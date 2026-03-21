@@ -159,7 +159,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task PickGameRootPath()
     {
-        var dialog = await _fileService.OpenFolderAsync();
+        using var dialog = await _fileService.OpenFolderAsync();
 
         if (dialog is not null)
         {

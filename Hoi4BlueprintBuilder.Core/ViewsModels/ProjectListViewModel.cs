@@ -169,7 +169,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
     [RelayCommand]
     private async Task OpenProject()
     {
-        var storageFolder = await _fileService.OpenFolderAsync();
+        using var storageFolder = await _fileService.OpenFolderAsync();
         if (storageFolder is null)
         {
             return;
