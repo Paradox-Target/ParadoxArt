@@ -135,7 +135,8 @@ public sealed partial class ProjectListViewModel : ObservableObject
         string script = root.ToScript();
         await File.WriteAllTextAsync(
             Path.Combine(viewModel.FinalFolder, GameConstants.ModDescriptorFileName),
-            script
+            script,
+            Encoding.UTF8
         );
         string? parentFolder = Path.GetDirectoryName(viewModel.FinalFolder);
 
