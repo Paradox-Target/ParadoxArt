@@ -161,6 +161,7 @@
                 <fa:SettingsExpanderItem Content=".NET Version" Footer="{x:Static vms:AppSettingsViewModel.DotNetVersion}" />
                 <fa:SettingsExpanderItem>
                     <StackPanel Orientation="Horizontal" Spacing="8">
+                        <HyperlinkButton Command="{Binding OpenEulaCommand}" Content="用户协议 (EULA)" />
                         <HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
                         <HyperlinkButton Content="爱发电" NavigateUri="https://ifdian.net/a/textGamex" />
                     </StackPanel>

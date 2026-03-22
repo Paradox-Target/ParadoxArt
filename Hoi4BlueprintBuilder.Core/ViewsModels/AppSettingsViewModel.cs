@@ -1,11 +1,14 @@
 using System.ComponentModel;
+using Avalonia;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
+using LiveMarkdown.Avalonia;
 using NLog;
 using ZLinq;
 
@@ -194,6 +197,33 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         {
             await _messageBoxService.ShowErrorAsync("无法打开日志文件夹，可能文件夹不存在。", "打开日志文件夹失败").ConfigureAwait(false);
             Log.Error(e, "打开日志文件夹失败: {LogsFolder}", logsFolder);
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenEulaAsync()
+    {
+        Log.Debug("尝试在应用内打开用户协议文本");
+        try
+        {
+            string text = AssetLoadHelper.GetContentText("EULA.txt");
+
+            var sb = new ObservableStringBuilder();
+            sb.Append(text);
+
+            var dialog = new ContentDialog
+            {
+                Title = "用户协议 (EULA)",
+                Content = new MarkdownRenderer { MarkdownBuilder = sb, Margin = new Thickness(10) },
+                CloseButtonText = "关闭"
+            };
+
+            await dialog.ShowAsync();
+        }
+        catch (Exception e)
+        {
+            await _messageBoxService.ShowErrorAsync("无法打开用户协议文本。", "打开失败").ConfigureAwait(false);
+            Log.Error(e, "打开用户协议失败");
         }
     }
 

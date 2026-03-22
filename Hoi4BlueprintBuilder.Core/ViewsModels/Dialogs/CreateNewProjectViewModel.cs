@@ -41,7 +41,7 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
 
     // 虽然支持语言为 0 也可以, 但加个警告时不时更好？
     public bool ShowTagsErrorMessage => _tags.Count is < 1 or > 10;
-    public string? TagsErrorMessage => ValidateTagsCount();
+    public string? TagsErrorMessage => GetTagsCountErrorMessage();
     public IEnumerable<string> Tags => _tags;
 
     private readonly Action<bool>? _setPrimaryEnableAction;
@@ -88,7 +88,7 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
 
     private void UpdatePrimaryButtonState() => _setPrimaryEnableAction?.Invoke(IsValid);
 
-    private string? ValidateTagsCount()
+    private string? GetTagsCountErrorMessage()
     {
         return _tags.Count switch
         {
