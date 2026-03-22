@@ -1,5 +1,6 @@
 ﻿using Avalonia.Platform;
 using Avalonia.Styling;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using TextMateSharp.Grammars;
 using TextMateSharp.Internal.Grammars.Reader;
 using TextMateSharp.Internal.Themes.Reader;
@@ -12,10 +13,10 @@ namespace Hoi4BlueprintBuilder.Core.Infrastructure.CodeEditor;
 public sealed class ParadoxRegistryOptions(ThemeVariant? themeVariant, RegistryOptions rawOptions)
     : IRegistryOptions
 {
-    private static string ThemesFolderPath => string.Join('/', AssetsFolder, "CodeEditor", "Themes");
-    private static string GrammarsFolderPath => string.Join('/', AssetsFolder, "CodeEditor", "Grammars");
-    private static string AssetsFolder { get; } =
-        string.Join('/', $"avares://{typeof(ParadoxRegistryOptions).Assembly.GetName().Name}", "Assets");
+    private static string ThemesFolderPath =>
+        string.Join('/', AssetLoadHelper.AssetsFolder, "CodeEditor", "Themes");
+    private static string GrammarsFolderPath =>
+        string.Join('/', AssetLoadHelper.AssetsFolder, "CodeEditor", "Grammars");
 
     private readonly RegistryOptions _rawOptions = rawOptions;
 

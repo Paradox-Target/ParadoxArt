@@ -1,8 +1,7 @@
-﻿using System.Text;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
-using Avalonia.Platform;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using LiveMarkdown.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,13 +15,9 @@ public sealed partial class EulaView : UserControl
     {
         InitializeComponent();
 
-        using var reader = new StreamReader(
-            AssetLoader.Open(new Uri("avares://ParadoxArt.Core/Assets/EULA.txt")),
-            Encoding.UTF8
-        );
         var sb = new ObservableStringBuilder();
         MarkdownRenderer.MarkdownBuilder = sb;
-        sb.Append(reader.ReadToEnd());
+        sb.Append(AssetLoadHelper.GetContentText("EULA.txt"));
     }
 
     private void ExitApp(object? sender, RoutedEventArgs e)
