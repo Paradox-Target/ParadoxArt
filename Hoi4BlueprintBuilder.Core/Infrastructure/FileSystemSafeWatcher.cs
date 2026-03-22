@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Timers;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Timer = System.Timers.Timer;
 
 namespace Hoi4BlueprintBuilder.Core.Infrastructure;
@@ -453,10 +454,6 @@ public sealed class FileSystemSafeWatcher : IDisposable
     private sealed class DelayedEvent
     {
         private readonly FileSystemEventArgs _args;
-        private static readonly StringComparison FilePathComparison =
-            OperatingSystem.IsWindows() || OperatingSystem.IsMacOS()
-                ? StringComparison.OrdinalIgnoreCase
-                : StringComparison.Ordinal;
 
         public DelayedEvent(FileSystemEventArgs args)
         {
@@ -489,23 +486,23 @@ public sealed class FileSystemSafeWatcher : IDisposable
             // they update the file with the file content.
             return (
                     eO1.ChangeType == eO2.ChangeType
-                    && eO1.FullPath.Equals(eO2.FullPath, FilePathComparison)
-                    && string.Equals(eO1.Name, eO2.Name, FilePathComparison)
+                    && eO1.FullPath.Equals(eO2.FullPath, PlatformHelper.Comparison)
+                    && string.Equals(eO1.Name, eO2.Name, PlatformHelper.Comparison)
                     && (
                         (reO1 is null && reO2 is null)
                         || (
                             reO1 is not null
                             && reO2 is not null
-                            && reO1.OldFullPath.Equals(reO2.OldFullPath, FilePathComparison)
-                            && string.Equals(reO1.OldName, reO2.OldName, FilePathComparison)
+                            && reO1.OldFullPath.Equals(reO2.OldFullPath, PlatformHelper.Comparison)
+                            && string.Equals(reO1.OldName, reO2.OldName, PlatformHelper.Comparison)
                         )
                     )
                 )
                 || (
                     eO1.ChangeType == WatcherChangeTypes.Created
                     && eO2.ChangeType == WatcherChangeTypes.Changed
-                    && eO1.FullPath.Equals(eO2.FullPath, FilePathComparison)
-                    && string.Equals(eO1.Name, eO2.Name, FilePathComparison)
+                    && eO1.FullPath.Equals(eO2.FullPath, PlatformHelper.Comparison)
+                    && string.Equals(eO1.Name, eO2.Name, PlatformHelper.Comparison)
                 );
         }
     }

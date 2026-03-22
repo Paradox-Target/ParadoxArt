@@ -1,3 +1,4 @@
+using Hoi4BlueprintBuilder.Core.Helpers;
 using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
@@ -61,7 +62,10 @@ public sealed class GameResourcesPathService(
         string[] modFilePaths
     )
     {
-        var set = new Dictionary<string, string>(Math.Max(gameFilePaths.Length, modFilePaths.Length));
+        var set = new Dictionary<string, string>(
+            Math.Max(gameFilePaths.Length, modFilePaths.Length),
+            PlatformHelper.Comparer
+        );
 
         // 优先读取Mod文件
         // TODO: 做一下性能测试, 看和原来的算法有什么区别

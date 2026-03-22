@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Extensions;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 
@@ -70,7 +71,7 @@ public sealed class GameModDescriptorService
                     break;
             }
         }
-        _replacePaths = replacePathList.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+        _replacePaths = replacePathList.ToFrozenSet(PlatformHelper.Comparer);
     }
 
     public void Reload()
