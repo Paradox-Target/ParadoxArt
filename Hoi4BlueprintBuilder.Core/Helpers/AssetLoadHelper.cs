@@ -6,7 +6,7 @@ namespace Hoi4BlueprintBuilder.Core.Helpers;
 public static class AssetLoadHelper
 {
     public static readonly string AssetsFolder =
-        $"avares://{typeof(AssetLoadHelper).Assembly.GetName().Name}/Assets/";
+        $"avares://{typeof(AssetLoadHelper).Assembly.GetName().Name}/Assets";
 
     public static string GetContentText(string path)
     {
