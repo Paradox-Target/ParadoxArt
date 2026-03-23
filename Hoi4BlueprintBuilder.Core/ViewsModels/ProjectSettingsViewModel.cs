@@ -61,6 +61,6 @@ public sealed partial class ProjectSettingsViewModel : ObservableObject
         });
 
         GameLocalizationFilesInfo =
-            $"文件数量: {filesCount}, 总大小: {ByteSize.FromBytes(filesByteSum).MebiBytes:F1} MB";
+            $"本地化文件数量: {filesCount}, 总大小: {ByteSize.FromBytes(filesByteSum).MebiBytes:F1} MB";
     }
 }
