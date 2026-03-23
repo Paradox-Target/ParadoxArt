@@ -22,6 +22,12 @@
                     SelectedItems="{Binding SupportedLanguages}"
                     Watermark="当前语言..." />
             </fa:SettingsExpander.Footer>
+
+            <fa:SettingsExpanderItem Content="{Binding GameLocalizationFilesInfo}">
+                <fa:SettingsExpanderItem.Footer>
+                    <Button Command="{Binding ComputeFilesSumCommand}" Content="计算文件大小" />
+                </fa:SettingsExpanderItem.Footer>
+            </fa:SettingsExpanderItem>
         </fa:SettingsExpander>
     </StackPanel>
 </UserControl>

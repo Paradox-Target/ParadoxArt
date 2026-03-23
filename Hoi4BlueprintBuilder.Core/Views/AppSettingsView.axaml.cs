@@ -9,6 +9,12 @@ public sealed partial class AppSettingsView : UserControl
 {
     private readonly AppSettingsViewModel _viewModel;
 
+    public AppSettingsView()
+    {
+        InitializeComponent();
+        _viewModel = null!;
+    }
+
     public AppSettingsView(AppSettingsViewModel viewModel, TelemetryService telemetryService)
     {
         InitializeComponent();

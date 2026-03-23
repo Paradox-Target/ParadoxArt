@@ -71,8 +71,7 @@ public sealed class GameResourcesPathService(
         // TODO: 做一下性能测试, 看和原来的算法有什么区别
         foreach (string filePath in modFilePaths.Concat(gameFilePaths))
         {
-            string fileName =
-                Path.GetFileName(filePath) ?? throw new ArgumentException($"无法得到文件名: {filePath}");
+            string fileName = Path.GetFileName(filePath);
             set.TryAdd(fileName, filePath);
         }
 
