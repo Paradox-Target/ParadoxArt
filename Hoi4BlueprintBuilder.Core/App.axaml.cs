@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using Avalonia;
@@ -9,6 +10,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Extensions;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -116,6 +118,8 @@ public sealed class App : Application
 
         UpdateApplicationFont(settingsService.MainFontFamily);
         UpdateApplicationCodeFont(settingsService.CodeFontFamily);
+        var rawCulture = CultureInfo.CurrentUICulture;
+        LanguageHelper.SetLanguage(settingsService.AppLanguage);
 
         var telemetryService = Services.GetRequiredService<TelemetryService>();
 
@@ -143,7 +147,7 @@ public sealed class App : Application
             singleViewPlatform.MainView = Services.GetRequiredService<MainWindow>();
         }
 
-        Task.Run(() => telemetryService.TrackSystemEnvironment(screenSize, screenScaling));
+        Task.Run(() => telemetryService.TrackSystemEnvironment(rawCulture, screenSize, screenScaling));
 
         base.OnFrameworkInitializationCompleted();
     }

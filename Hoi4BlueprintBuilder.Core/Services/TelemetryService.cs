@@ -64,7 +64,11 @@ public sealed class TelemetryService : IDisposable
         return _client.GetMetric(name);
     }
 
-    public void TrackSystemEnvironment(string? screenSize = null, string? screenScaling = null)
+    public void TrackSystemEnvironment(
+        CultureInfo cultureInfo,
+        string? screenSize = null,
+        string? screenScaling = null
+    )
     {
         try
         {
@@ -73,7 +77,7 @@ public sealed class TelemetryService : IDisposable
                 { "App_Version", App.Version.ToString() },
                 { "App_Update_Channel", _settingsService.AppUpdateChannel },
                 { "OS_Version", Environment.OSVersion.ToString() },
-                { "Culture", CultureInfo.CurrentUICulture.Name },
+                { "Culture", cultureInfo.Name },
                 { "Processor_Count", Environment.ProcessorCount.ToString() }
             };
             // 第一次运行时用户还没有选择主题模式，所以这里不记录
