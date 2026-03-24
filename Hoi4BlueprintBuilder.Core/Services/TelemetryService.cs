@@ -54,6 +54,11 @@ public sealed class TelemetryService : IDisposable
         _client.TrackMetric(name, value);
     }
 
+    public void TrackException(Exception exception, string message)
+    {
+        _client.TrackException(exception, new Dictionary<string, string> { { "message", message } });
+    }
+
     public void TrackException(Exception exception, IDictionary<string, string>? properties = null)
     {
         _client.TrackException(exception, properties);

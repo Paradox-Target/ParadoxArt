@@ -101,7 +101,9 @@ public sealed class FileService(MainWindow mainWindow, TelemetryService telemetr
         catch (Exception e)
         {
             message = e.Message;
-            Log.Error(e, "移动文件或文件夹到回收站时发生错误");
+            const string errorMessage = "移动文件或文件夹到回收站时发生错误";
+            telemetryService.TrackException(e, errorMessage);
+            Log.Error(e, errorMessage);
             return false;
         }
     }
