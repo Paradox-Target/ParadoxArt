@@ -18,54 +18,125 @@
         </Style>
     </UserControl.Styles>
 
-    <StackPanel VerticalAlignment="Center" Spacing="16">
-        <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <TextBlock VerticalAlignment="Center" Text="Mod 名称" />
-            <TextBox VerticalAlignment="Center" Text="{Binding ModName}" />
-        </StackPanel>
+    <Border Padding="24" CornerRadius="8">
+        <Grid
+            Margin="0,0,24,0"
+            ColumnDefinitions="Auto, *"
+            RowDefinitions="Auto, Auto, Auto, Auto, Auto">
 
-        <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <TextBlock VerticalAlignment="Center" Text="Mod 文件夹名称" />
-            <TextBox VerticalAlignment="Center" Text="{Binding FolderName, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Text="{Binding FinalFolder}" TextWrapping="Wrap" />
-        </StackPanel>
+            <Grid.Styles>
+                <Style Selector="TextBlock.Label">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="0,0,24,16" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                </Style>
+                <Style Selector="TextBox">
+                    <Setter Property="Margin" Value="0,0,0,16" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                </Style>
+                <Style Selector="control|MultiComboBox">
+                    <Setter Property="Margin" Value="0,0,0,16" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                </Style>
+            </Grid.Styles>
 
-        <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <TextBlock VerticalAlignment="Center" Text="支持版本" />
-            <TextBox VerticalAlignment="Center" Text="{Binding SupportedVersion}" />
-        </StackPanel>
-
-        <StackPanel Spacing="4">
-            <TextBlock VerticalAlignment="Center" Text="国策本地化支持语言" />
-            <control:MultiComboBox ItemsSource="{Binding Languages, Mode=OneTime}" SelectedItems="{Binding SupportedLanguages}" />
-        </StackPanel>
-
-        <StackPanel HorizontalAlignment="Center" Spacing="4">
-            <TextBlock VerticalAlignment="Center" Text="Tags" />
+            <!--  1. Mod 名称  -->
             <TextBlock
-                Foreground="OrangeRed"
-                IsVisible="{Binding ShowTagsErrorMessage}"
-                Text="{Binding TagsErrorMessage, Mode=OneWay}" />
-            <ScrollViewer MaxWidth="350" MaxHeight="150">
-                <ItemsControl ItemsSource="{x:Static vms:CreateNewProjectViewModel.AllTags}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Margin="0,4,0,0" Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox Margin="0,0,8,4" Content="{Binding}">
-                                <Interaction.Behaviors>
-                                    <RoutedEventTriggerBehavior RoutedEvent="{x:Static ToggleButton.IsCheckedChangedEvent}">
-                                        <InvokeCommandAction Command="{ReflectionBinding DataContext.ChangeCurrentTagsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" PassEventArgsToCommand="True" />
-                                    </RoutedEventTriggerBehavior>
-                                </Interaction.Behaviors>
-                            </CheckBox>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-        </StackPanel>
-    </StackPanel>
+                Grid.Row="0"
+                Grid.Column="0"
+                Classes="Label"
+                Text="Mod 名称" />
+            <TextBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Text="{Binding ModName}" />
+
+            <!--  2. Mod 文件夹名称  -->
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="0,8,24,16"
+                VerticalAlignment="Top"
+                Classes="Label"
+                Text="Mod 文件夹名称" />
+            <StackPanel
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="0,0,0,16">
+                <TextBox Margin="0,0,0,4" Text="{Binding FolderName, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock
+                    FontSize="12"
+                    Opacity="0.6"
+                    Text="{Binding FinalFolder}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!--  3. 支持版本  -->
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="0"
+                Classes="Label"
+                Text="支持版本" />
+            <TextBox
+                Grid.Row="2"
+                Grid.Column="1"
+                Text="{Binding SupportedVersion}" />
+
+            <!--  4. 本地化支持语言  -->
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                Classes="Label"
+                Text="国策本地化支持语言" />
+            <control:MultiComboBox
+                Grid.Row="3"
+                Grid.Column="1"
+                ItemsSource="{Binding Languages, Mode=OneTime}"
+                SelectedItems="{Binding SupportedLanguages}" />
+
+            <!--  5. Tags  -->
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                Margin="0,8,24,0"
+                VerticalAlignment="Top"
+                Classes="Label"
+                Text="Tags" />
+            <StackPanel Grid.Row="4" Grid.Column="1">
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontWeight="SemiBold"
+                    Foreground="#FF6B6B"
+                    IsVisible="{Binding ShowTagsErrorMessage}"
+                    Text="{Binding TagsErrorMessage, Mode=OneWay}" />
+                <Border
+                    Padding="12,12,0,8"
+                    Background="{DynamicResource TextControlBackground}"
+                    BorderBrush="{DynamicResource TextControlBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                    <ScrollViewer MaxHeight="150" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{x:Static vms:CreateNewProjectViewModel.AllTags}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Margin="0,0,16,8" Content="{Binding}">
+                                        <Interaction.Behaviors>
+                                            <RoutedEventTriggerBehavior RoutedEvent="{x:Static ToggleButton.IsCheckedChangedEvent}">
+                                                <InvokeCommandAction Command="{ReflectionBinding DataContext.ChangeCurrentTagsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" PassEventArgsToCommand="True" />
+                                            </RoutedEventTriggerBehavior>
+                                        </Interaction.Behaviors>
+                                    </CheckBox>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>
