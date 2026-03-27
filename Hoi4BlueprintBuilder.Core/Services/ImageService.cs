@@ -25,10 +25,12 @@ public sealed class ImageService : IDisposable
     public ImageService(SpriteService spriteService, SettingsService settingsService)
     {
         _spriteService = spriteService;
-        _fileSystemWatcher = new FileSystemSafeWatcher(
-            Path.Combine(settingsService.ModRootFolderPath, "gfx"),
-            "*.dds"
-        );
+        string path = Path.Combine(settingsService.ModRootFolderPath, "gfx");
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        _fileSystemWatcher = new FileSystemSafeWatcher(path, "*.dds");
         _fileSystemWatcher.Deleted += OnDeleted;
         _fileSystemWatcher.EnableRaisingEvents = true;
         _fileSystemWatcher.IncludeSubdirectories = true;
