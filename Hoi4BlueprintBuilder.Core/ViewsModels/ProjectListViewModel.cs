@@ -1,12 +1,11 @@
 ﻿using System.Text;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
-using AvaloniaEdit.Utils;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Constants;
-using Hoi4BlueprintBuilder.Core.Extensions;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
@@ -19,7 +18,6 @@ using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
 using ParadoxPower.Process;
 using R3;
-using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
@@ -149,33 +147,26 @@ public sealed partial class ProjectListViewModel : ObservableObject
             );
         }
 
-        NavigateToMainView(viewModel.FinalFolder, viewModel.SupportedLanguages);
-    }
-
-    private void NavigateToMainView(
-        string modRootFolderPath,
-        IEnumerable<GameLanguage>? supportedLanguage = null
-    )
-    {
-        _settingsService.ModRootFolderPath = modRootFolderPath;
-        if (supportedLanguage is not null)
-        {
-            App.Current.Services.GetRequiredService<ProjectConfigService>().SupportedLanguages =
-                supportedLanguage.ToList();
-        }
-        _navigationService.NavigateTo<MainView>();
+        NavigateToMainView(
+            viewModel.FinalFolder,
+            () =>
+            {
+                App.Current.Services.GetRequiredService<ProjectConfigService>().SupportedLanguages =
+                    viewModel.SupportedLanguages.ToList();
+            }
+        );
     }
 
     [RelayCommand]
     private async Task OpenProject()
     {
-        using var storageFolder = await _fileService.OpenFolderAsync();
+        using var storageFolder = await _fileService.OpenFolderAsync("选择模组根目录");
         if (storageFolder is null)
         {
             return;
         }
 
-        string? modName = await GetModNameAsync(storageFolder);
+        string? modName = await ModHelper.GetModNameAsync(storageFolder);
 
         if (modName is null)
         {
@@ -189,33 +180,24 @@ public sealed partial class ProjectListViewModel : ObservableObject
         string modPath = storageFolder.TryGetLocalPath() ?? throw new ArgumentException();
         _settingsService.Projects.Insert(0, new ProjectItem(modName, modPath));
 
-        NavigateToMainView(modPath);
+        NavigateToMainView(
+            modPath,
+            () =>
+            {
+                var service = App.Current.Services.GetRequiredService<GameModDescriptorService>();
+                if (service.DependenciesName.Length != 0)
+                {
+                    _messageBoxService.ShowAsync("检测到项目可能存在依赖模组, 您可以到项目设置中添加依赖模组路径来支持 submod 开发", "提示");
+                }
+            }
+        );
     }
 
-    private static async Task<string?> GetModNameAsync(IStorageFolder storageFolder)
+    private void NavigateToMainView(string modRootFolderPath, Action? handle = null)
     {
-        var modStorageFile = await storageFolder.GetFileAsync(GameConstants.ModDescriptorFileName);
-        if (modStorageFile is null)
-        {
-            return null;
-        }
-
-        await using var reader = await modStorageFile.OpenReadAsync();
-        string? content = FileReader.ReadFileContent(reader, Encoding.UTF8);
-        if (content is null)
-        {
-            return null;
-        }
-
-        if (!TextParser.TryParse(string.Empty, content, out var rootNode, out _))
-        {
-            return null;
-        }
-
-        return rootNode
-            .Leaves.AsValueEnumerable()
-            .FirstOrDefault(leaf => leaf.Key.EqualsIgnoreCase("name"))
-            ?.ValueText;
+        _settingsService.ModRootFolderPath = modRootFolderPath;
+        handle?.Invoke();
+        _navigationService.NavigateTo<MainView>();
     }
 
     [RelayCommand]

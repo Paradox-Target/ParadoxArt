@@ -26,6 +26,8 @@ public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigServ
     public List<GameLanguage> SupportedLanguages { get; set; } =
         [LanguageHelper.GetGameLanguageBySystemLanguage()];
 
+    public List<DependencyModInfo> Dependencies { get; set; } = [];
+
     private SettingsService? _settingsService;
 
     private const string ConfigFileName = "project.json";

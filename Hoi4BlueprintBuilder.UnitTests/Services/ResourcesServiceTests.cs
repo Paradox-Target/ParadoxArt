@@ -42,9 +42,11 @@ public class ResourcesServiceTests
         var descriptorService = new GameModDescriptorService(
             new SettingsService { ModRootFolderPath = Path.Combine(_testRunDirectory, "no_descriptor") }
         );
+        var projectService = new ProjectConfigService();
         var services = new ServiceCollection();
         services.AddSingleton(settingsService);
         services.AddSingleton(descriptorService);
+        services.AddSingleton(projectService);
         services.AddSingleton<GameResourcesWatcherService>();
         services.AddSingleton<GameResourcesPathService>();
         _serviceProvider = services.BuildServiceProvider();

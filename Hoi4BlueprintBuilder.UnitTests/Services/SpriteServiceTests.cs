@@ -43,6 +43,7 @@ public class SpriteServiceTests
             GameRootFolderPath = _testRunDirectory,
             GameLanguage = GameLanguage.Chinese
         };
+        var projectService = new ProjectConfigService();
         var services = new ServiceCollection();
         var descriptorService = new GameModDescriptorService(
             new SettingsService { ModRootFolderPath = TestApp.TestDataDirectory }
@@ -50,6 +51,7 @@ public class SpriteServiceTests
 
         services.AddSingleton(settingsService);
         services.AddSingleton(descriptorService);
+        services.AddSingleton(projectService);
         services.AddSingleton<GameResourcesWatcherService>();
         services.AddSingleton<GameResourcesPathService>();
         services.AddSingleton<SpriteService>();

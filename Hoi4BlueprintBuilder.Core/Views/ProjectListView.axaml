@@ -94,7 +94,7 @@
                     Command="{Binding CreateNewProjectCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:FontIcon FontSize="14" Glyph="&#xE710;" />
-                        <TextBlock VerticalAlignment="Center" Text="新建 Mod" />
+                        <TextBlock VerticalAlignment="Center" Text="新建项目" />
                     </StackPanel>
                 </Button>
                 <Button
@@ -103,7 +103,7 @@
                     Command="{Binding OpenProjectCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:FontIcon FontSize="14" Glyph="&#xE8E5;" />
-                        <TextBlock VerticalAlignment="Center" Text="打开 Mod" />
+                        <TextBlock VerticalAlignment="Center" Text="打开项目" />
                     </StackPanel>
                 </Button>
             </StackPanel>

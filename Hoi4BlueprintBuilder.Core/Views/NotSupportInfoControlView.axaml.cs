@@ -10,6 +10,17 @@ public sealed partial class NotSupportInfoControlView : UserControl, ITabViewIte
     public string FilePath { get; }
     public string ToolTip { get; }
 
+    /// <summary>
+    /// 设计器使用
+    /// </summary>
+    public NotSupportInfoControlView()
+    {
+        InitializeComponent();
+        Header = string.Empty;
+        FilePath = string.Empty;
+        ToolTip = string.Empty;
+    }
+
     public NotSupportInfoControlView(UserStatusService userStatusService)
     {
         InitializeComponent();

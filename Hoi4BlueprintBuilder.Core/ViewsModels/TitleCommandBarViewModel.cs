@@ -125,7 +125,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
             Title = LangResources.CreateNewFocusTreeFileView_Title,
             Content = content,
             PrimaryButtonText = "创建",
-            CloseButtonText = "取消",
+            CloseButtonText = LangResources.Common_Cancel,
             IsPrimaryButtonEnabled = false
         };
         viewModel.PrimaryEnableChanged += enabled => dialog.IsPrimaryButtonEnabled = enabled;

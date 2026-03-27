@@ -100,6 +100,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
             SortFilePath(filePaths.Span);
             ParseFileAndAddToResourcesSync(filePaths.Span);
         }
+        filePaths.Dispose();
 
         bool includeSubFolders = searchOption == SearchOption.AllDirectories && isFolderPath;
 
@@ -115,8 +116,6 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
 
         Log.Info("初始化资源成功: {FolderRelativePath}, 共 {Count} 个文件", _folderOrFileRelativePath, filePaths.Size);
         LogItemsSum();
-
-        filePaths.Dispose();
     }
 
     /// <summary>

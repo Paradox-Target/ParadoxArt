@@ -5,14 +5,15 @@ using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using NLog;
 using ParadoxPower.CSharpExtensions;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<GameModDescriptorService>]
 public sealed class GameModDescriptorService
 {
-    private readonly SettingsService _settingService;
     public string Name { get; private set; } = string.Empty;
+    public string[] DependenciesName { get; private set; } = [];
 
     /// <summary>
     /// 保存着替换的文件夹相对路径的只读集合
@@ -22,6 +23,8 @@ public sealed class GameModDescriptorService
     /// </remarks>
     public IReadOnlySet<string> ReplacePaths => _replacePaths;
     private FrozenSet<string> _replacePaths;
+
+    private readonly SettingsService _settingService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -58,17 +61,24 @@ public sealed class GameModDescriptorService
 
         var replacePathList = new List<string>();
 
-        foreach (var item in rootNode.Leaves)
+        foreach (var child in rootNode.AllArray)
         {
-            switch (item.Key)
+            if (child.TryGetLeaf(out var leaf))
             {
-                case "name":
-                    Name = item.ValueText;
-                    break;
-                case "replace_path":
-                    string[] parts = item.ValueText.Split('/');
-                    replacePathList.Add(Path.Combine(parts));
-                    break;
+                switch (leaf.Key)
+                {
+                    case "name":
+                        Name = leaf.ValueText;
+                        break;
+                    case "replace_path":
+                        string[] parts = leaf.ValueText.Split('/');
+                        replacePathList.Add(Path.Combine(parts));
+                        break;
+                }
+            }
+            else if (child.TryGetNode(out var node) && node.Key.EqualsIgnoreCase("dependencies"))
+            {
+                DependenciesName = node.LeafValues.AsValueEnumerable().Select(value => value.Key).ToArray();
             }
         }
         _replacePaths = replacePathList.ToFrozenSet(PlatformHelper.Comparer);

@@ -11,7 +11,7 @@
     d:DesignWidth="800"
     x:DataType="vms:ProjectSettingsViewModel"
     mc:Ignorable="d">
-    <StackPanel>
+    <StackPanel Spacing="4">
         <fa:SettingsExpander Description="决定国策本地化的可选项 *重启应用后生效" Header="项目支持本地化语言">
             <fa:SettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF2B7;" />
@@ -27,6 +27,32 @@
                 <fa:SettingsExpanderItem.Footer>
                     <Button Command="{Binding ComputeFilesSumCommand}" Content="计算文件大小" />
                 </fa:SettingsExpanderItem.Footer>
+            </fa:SettingsExpanderItem>
+        </fa:SettingsExpander>
+
+        <fa:SettingsExpander Header="有依赖模组">
+            <fa:SettingsExpander.IconSource>
+                <control:FontIconSource Glyph="&#xF003;" />
+            </fa:SettingsExpander.IconSource>
+            <fa:SettingsExpander.Footer>
+                <ToggleSwitch
+                    x:Name="HasDepsToggleSwitch"
+                    Classes="CleanToggleSwitch"
+                    IsChecked="{Binding IsEnabledHasDepsToggleSwitch}" />
+            </fa:SettingsExpander.Footer>
+            <fa:SettingsExpanderItem
+                Content="添加模组路径"
+                Description="*修改后重启应用生效"
+                IsEnabled="{Binding #HasDepsToggleSwitch.IsChecked}">
+                <fa:SettingsExpanderItem.Footer>
+                    <Button Command="{Binding PickDependencyModDirectoryCommand}" Content="选择路径" />
+                </fa:SettingsExpanderItem.Footer>
+                <fa:SettingsExpanderItem.IconSource>
+                    <fa:SymbolIconSource Symbol="OpenFolder" />
+                </fa:SettingsExpanderItem.IconSource>
+            </fa:SettingsExpanderItem>
+            <fa:SettingsExpanderItem IsVisible="{Binding #HasDepsToggleSwitch.IsChecked}">
+                <ListBox MaxHeight="130" ItemsSource="{Binding DependenciesPath}" />
             </fa:SettingsExpanderItem>
         </fa:SettingsExpander>
     </StackPanel>
