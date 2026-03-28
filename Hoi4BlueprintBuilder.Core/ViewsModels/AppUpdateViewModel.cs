@@ -10,6 +10,7 @@ using Hoi4BlueprintBuilder.Localization.Strings;
 using LiveMarkdown.Avalonia;
 using NLog;
 using Velopack;
+using Velopack.Sources;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -67,7 +68,7 @@ public sealed partial class AppUpdateViewModel : ObservableObject
 
         string platform = GetPlatformName();
         _updateManager = new UpdateManager(
-            App.UpdatePackageDownloadUrl,
+            new SimpleWebSource(App.UpdatePackageDownloadUrl, new HighHttpVersionClientFileDownloader()),
             new UpdateOptions
             {
                 AllowVersionDowngrade = true,
@@ -201,5 +202,15 @@ public sealed partial class AppUpdateViewModel : ObservableObject
     private void NavigateIfDoNotUpdate()
     {
         _navigationService.NavigateBasedOnDeviceStatus();
+    }
+
+    private sealed class HighHttpVersionClientFileDownloader : HttpClientFileDownloader
+    {
+        protected override HttpClient CreateHttpClient(IDictionary<string, string>? headers, double timeout)
+        {
+            var client = base.CreateHttpClient(headers, timeout);
+            client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
+            return client;
+        }
     }
 }
