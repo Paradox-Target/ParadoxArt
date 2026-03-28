@@ -12,6 +12,9 @@ using Hoi4BlueprintBuilder.Core.ViewsModels;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
+/// <summary>
+/// 当用户选择项目后打开的就是此视图
+/// </summary>
 [RegisterSingleton<MainView>]
 public sealed partial class MainView : UserControl
 {
@@ -29,7 +32,7 @@ public sealed partial class MainView : UserControl
         : this(
             new FileTreeView(),
             new TabViewService(new ServiceContainer()),
-            new MainViewModel(),
+            null!,
             SettingsService.LoadSettings(),
             null!
         ) { }
