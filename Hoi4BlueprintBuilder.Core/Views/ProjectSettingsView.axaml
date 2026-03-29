@@ -30,7 +30,7 @@
             </fa:SettingsExpanderItem>
         </fa:SettingsExpander>
 
-        <fa:SettingsExpander Header="有依赖模组">
+        <fa:SettingsExpander x:Name="SubModExpander" Header="有依赖模组">
             <fa:SettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF003;" />
             </fa:SettingsExpander.IconSource>
@@ -38,7 +38,8 @@
                 <ToggleSwitch
                     x:Name="HasDepsToggleSwitch"
                     Classes="CleanToggleSwitch"
-                    IsChecked="{Binding IsEnabledHasDepsToggleSwitch}" />
+                    IsChecked="{Binding IsEnabledHasDepsToggleSwitch}"
+                    IsCheckedChanged="HasDepsToggleSwitch_OnIsCheckedChanged" />
             </fa:SettingsExpander.Footer>
             <fa:SettingsExpanderItem
                 Content="添加模组路径"

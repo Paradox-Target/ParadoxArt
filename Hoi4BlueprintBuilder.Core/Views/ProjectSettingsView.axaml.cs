@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
@@ -20,5 +21,10 @@ public sealed partial class ProjectSettingsView : UserControl
         DataContext = viewModel;
 
         Unloaded += (_, _) => viewModel.OnUnload();
+    }
+
+    private void HasDepsToggleSwitch_OnIsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        SubModExpander.IsExpanded = HasDepsToggleSwitch.IsChecked == true;
     }
 }
