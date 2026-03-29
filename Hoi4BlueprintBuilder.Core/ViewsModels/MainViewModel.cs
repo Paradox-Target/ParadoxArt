@@ -1,3 +1,4 @@
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Services;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -21,7 +22,8 @@ public sealed class MainViewModel
 
             var properties = new Dictionary<string, string>
             {
-                { "IsSubMod", (projectConfigService.Dependencies.Count > 0).ToString() },
+                { "ModName", descriptorService.Name },
+                { "IsSubMod", projectConfigService.Dependencies.IsNotEmpty.ToString() },
                 { "SupportedLanguages", string.Join(',', projectConfigService.SupportedLanguages) }
             };
             string modDirectory = settingsService.ModRootFolderPath;

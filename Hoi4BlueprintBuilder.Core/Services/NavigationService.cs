@@ -45,7 +45,7 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
         var settingsService = serviceProvider.GetRequiredService<SettingsService>();
         var messageBox = serviceProvider.GetRequiredService<MessageBoxService>();
 
-        if (!settingsService.IsAgreedEula)
+        if (!settingsService.IsAgreedEula || settingsService.IsNeedAgreeEulaAgain)
         {
             NavigateTo<EulaView>();
         }

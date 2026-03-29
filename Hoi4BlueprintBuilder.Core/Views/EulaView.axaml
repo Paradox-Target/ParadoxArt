@@ -27,8 +27,8 @@
 
     <Grid
         Margin="16,10,16,16"
-        RowDefinitions="*"
-        Background="{DynamicResource LayerFillColorAltBrush}">
+        Background="{DynamicResource LayerFillColorAltBrush}"
+        RowDefinitions="*">
         <Border
             MaxWidth="940"
             HorizontalAlignment="Center"
@@ -43,6 +43,11 @@
                     CornerRadius="12,12,0,0">
                     <StackPanel Spacing="6">
                         <TextBlock Classes="TitleTextBlock" Text="用户协议" />
+                        <TextBlock
+                            x:Name="AgainCheckTipTextBlock"
+                            Classes="BodyTextBlock"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="协议内容有更新, 请重新查看" />
                         <TextBlock
                             Classes="BodyTextBlock"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"

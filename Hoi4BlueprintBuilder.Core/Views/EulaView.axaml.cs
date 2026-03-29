@@ -12,12 +12,16 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 public sealed partial class EulaView : UserControl
 {
     public EulaView()
+        : this(SettingsService.LoadSettings()) { }
+
+    public EulaView(SettingsService settingsService)
     {
         InitializeComponent();
 
         var sb = new ObservableStringBuilder();
         MarkdownRenderer.MarkdownBuilder = sb;
         sb.Append(AssetLoadHelper.GetContentText("EULA.txt"));
+        AgainCheckTipTextBlock.IsVisible = settingsService.IsNeedAgreeEulaAgain;
     }
 
     private void ExitApp(object? sender, RoutedEventArgs e)
@@ -41,7 +45,13 @@ public sealed partial class EulaView : UserControl
     {
         var navigationService = App.Current.Services.GetRequiredService<NavigationService>();
         var settings = App.Current.Services.GetRequiredService<SettingsService>();
+
+        string eulaText = AssetLoadHelper.GetContentText("EULA.txt");
+
         settings.IsAgreedEula = true;
+        settings.AgreedEulaHash = HashHelper.GetSha256HexString(eulaText);
+        settings.SaveSettings();
+
         navigationService.NavigateBasedOnDeviceStatus();
     }
 }

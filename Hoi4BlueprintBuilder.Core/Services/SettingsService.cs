@@ -49,8 +49,22 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
 
     public bool IsAgreedEula { get; set; }
 
+    /// <summary>
+    /// 已同意的最终用户许可协议(EULA)的SHA256哈希值
+    /// </summary>
+    public string AgreedEulaHash { get; set; } = string.Empty;
+
     [JsonIgnore]
     public bool IsFirstRun { get; private init; }
+
+    [JsonIgnore]
+    public bool IsNeedAgreeEulaAgain => AgreedEulaHash != GetCurrentEulaHash();
+
+    private static string GetCurrentEulaHash()
+    {
+        string eulaText = AssetLoadHelper.GetContentText("EULA.txt");
+        return HashHelper.GetSha256HexString(eulaText);
+    }
 
     private const string SettingsFileName = "settings.json";
 
