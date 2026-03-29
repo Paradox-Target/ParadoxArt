@@ -4,6 +4,7 @@ using Avalonia.Collections;
 using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
+using Hoi4BlueprintBuilder.Core.Views;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -38,6 +39,24 @@ public sealed class SettingsService : BaseSettingsService<SettingsService>
     /// 文件树侧边栏宽度
     /// </summary>
     public double FileTreeWidth { get; set; } = 250;
+
+    /// <summary>
+    /// 国策信息卡宽度
+    /// </summary>
+    public double FocusInfoCardWidth
+    {
+        get;
+        set => field = Math.Max(value, FocusInfoView.MinCardWidth);
+    } = 400;
+
+    /// <summary>
+    /// 国策信息卡高度
+    /// </summary>
+    public double FocusInfoCardHeight
+    {
+        get;
+        set => field = Math.Max(value, FocusInfoView.MinCardHeight);
+    } = 600;
 
     /// <summary>
     /// 应用程序字体

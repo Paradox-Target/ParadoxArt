@@ -20,6 +20,9 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 
 public sealed partial class FocusInfoView : UserControl
 {
+    public const int MinCardWidth = 200;
+    public const int MinCardHeight = 200;
+
     public static readonly StyledProperty<bool> IsOpenProperty = AvaloniaProperty.Register<
         FocusInfoView,
         bool
@@ -39,6 +42,8 @@ public sealed partial class FocusInfoView : UserControl
         App.Current.Services.GetRequiredService<FileResourceService>();
     private readonly NotificationService _notificationService =
         App.Current.Services.GetRequiredService<NotificationService>();
+    private readonly SettingsService _settingsService =
+        App.Current.Services.GetRequiredService<SettingsService>();
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     static FocusInfoView()
@@ -49,6 +54,9 @@ public sealed partial class FocusInfoView : UserControl
     public FocusInfoView()
     {
         InitializeComponent();
+
+        Width = _settingsService.FocusInfoCardWidth;
+        Height = _settingsService.FocusInfoCardHeight;
 
         CompletionRewardEditor.SetGrammar(".txt");
         // 设置 DataContext 防止运行时提示绑定错误
@@ -76,6 +84,18 @@ public sealed partial class FocusInfoView : UserControl
         // 绑定 LostFocus 事件以模拟 UpdateSourceTrigger=LostFocus
         IdTextBox.LostFocus += IdTextBox_OnLostFocus;
         DescriptionTextBox.LostFocus += DescriptionTextBox_OnLostFocus;
+
+        SizeChanged += (_, args) =>
+        {
+            if (args.NewSize.Width > 1)
+            {
+                _settingsService.FocusInfoCardWidth = args.NewSize.Width;
+            }
+            if (args.NewSize.Height > 1)
+            {
+                _settingsService.FocusInfoCardHeight = args.NewSize.Height;
+            }
+        };
     }
 
     private FocusTreeEditorView? _focusTreeEditorView;
@@ -329,5 +349,25 @@ public sealed partial class FocusInfoView : UserControl
         FocusIcon.Source = bitmap;
         FocusIcon.Width = bitmap?.PixelSize.Width ?? 0;
         FocusIcon.Height = bitmap?.PixelSize.Height ?? 0;
+    }
+
+    private void ResizeThumbLeft_OnDragDelta(object? sender, VectorEventArgs e)
+    {
+        double currentWidth = !double.IsNaN(Width) && Width > 0 ? Width : Bounds.Width;
+        double newWidth = currentWidth - e.Vector.X;
+        Width = Math.Max(MinCardWidth, newWidth);
+    }
+
+    private void ResizeThumbBottom_OnDragDelta(object? sender, VectorEventArgs e)
+    {
+        double currentHeight = !double.IsNaN(Height) && Height > 0 ? Height : Bounds.Height;
+        double newHeight = currentHeight + e.Vector.Y;
+        Height = Math.Max(MinCardHeight, newHeight);
+    }
+
+    private void ResizeThumbBottomLeft_OnDragDelta(object? sender, VectorEventArgs e)
+    {
+        ResizeThumbLeft_OnDragDelta(sender, e);
+        ResizeThumbBottom_OnDragDelta(sender, e);
     }
 }

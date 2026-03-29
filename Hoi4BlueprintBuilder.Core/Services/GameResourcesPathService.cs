@@ -56,7 +56,7 @@ public sealed class GameResourcesPathService(
         return RemoveFileOfEqualName(gameFilesPath, modsFiles);
     }
 
-    private IEnumerable<IEnumerable<string>> GetModFiles(
+    private static IEnumerable<IEnumerable<string>> GetModFiles(
         string modFolder,
         PooledArray<string> dependenciesPath,
         string filter,
