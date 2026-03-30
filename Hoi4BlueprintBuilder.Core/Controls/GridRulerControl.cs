@@ -2,7 +2,6 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
@@ -73,10 +72,10 @@ public sealed class GridRulerControl : Control
         (int startX, int endX) = GridDrawHelper.GetXRange(TranslateX, Scale, Bounds.Width);
         for (int i = startX; i <= endX; i++)
         {
-            // X坐标
-            double xPos = GridDrawHelper.GetX(TranslateX, Scale, i);
             if (canDrawText)
             {
+                // X坐标
+                double xPos = GridDrawHelper.GetX(TranslateX, Scale, i);
                 // 画底部标尺数字
                 var text = new FormattedText(
                     i.ToString(),
@@ -98,10 +97,10 @@ public sealed class GridRulerControl : Control
         (int startY, int endY) = GridDrawHelper.GetXRange(TranslateY, Scale, Bounds.Height);
         for (int i = startY; i <= endY; i++)
         {
-            // Y坐标
-            double yPos = GridDrawHelper.GetY(TranslateY, Scale, i);
             if (canDrawText)
             {
+                // Y坐标
+                double yPos = GridDrawHelper.GetY(TranslateY, Scale, i);
                 // 画左侧标尺的数字
                 var text = new FormattedText(
                     i.ToString(),
