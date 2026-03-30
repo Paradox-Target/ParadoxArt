@@ -61,18 +61,26 @@ public sealed class GridRulerControl : Control
 
     #endregion
 
-    public override void Render(DrawingContext dc)
+    public override void Render(DrawingContext context)
     {
-        base.Render(dc);
+        base.Render(context);
 
         // 绘制标尺背景
-        dc.DrawRectangle(RulerBrush, null, new Rect(0, 0, RulerSize, Bounds.Height));
-        dc.DrawRectangle(RulerBrush, null, new Rect(0, Bounds.Height - RulerSize, Bounds.Width, RulerSize));
+        context.DrawRectangle(RulerBrush, null, new Rect(0, 0, RulerSize, Bounds.Height));
+        context.DrawRectangle(
+            RulerBrush,
+            null,
+            new Rect(0, Bounds.Height - RulerSize, Bounds.Width, RulerSize)
+        );
 
         bool canDrawText = Scale > 0.3;
 
-        #region 绘制垂直标尺
+        if (!canDrawText)
+        {
+            return;
+        }
 
+        // 绘制垂直标尺
         (int startX, int endX) = GridDrawHelper.GetXRange(
             TranslateX,
             Scale,
@@ -81,28 +89,22 @@ public sealed class GridRulerControl : Control
         );
         for (int i = startX; i <= endX; i++)
         {
-            if (canDrawText)
-            {
-                // X坐标
-                double xPos = GridDrawHelper.GetX(TranslateX, Scale, i, ProjectConfigService.FocusCellWidth);
-                // 画底部标尺数字
-                var text = new FormattedText(
-                    i.ToString(),
-                    CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    RulerTypeface,
-                    12,
-                    Brushes.WhiteSmoke
-                );
-                // 5内边距
-                dc.DrawText(text, new Point(xPos + 5, Bounds.Height - RulerSize + 5));
-            }
+            // X坐标
+            double xPos = GridDrawHelper.GetX(TranslateX, Scale, i, ProjectConfigService.FocusCellWidth);
+            // 画底部标尺数字
+            var text = new FormattedText(
+                i.ToString(),
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                RulerTypeface,
+                12,
+                Brushes.WhiteSmoke
+            );
+            // 5内边距
+            context.DrawText(text, new Point(xPos + 5, Bounds.Height - RulerSize + 5));
         }
 
-        #endregion
-
-        #region 绘制水平标尺
-
+        // 绘制水平标尺
         (int startY, int endY) = GridDrawHelper.GetXRange(
             TranslateY,
             Scale,
@@ -111,24 +113,19 @@ public sealed class GridRulerControl : Control
         );
         for (int i = startY; i <= endY; i++)
         {
-            if (canDrawText)
-            {
-                // Y坐标
-                double yPos = GridDrawHelper.GetY(TranslateY, Scale, i, ProjectConfigService.FocusCellHeight);
-                // 画左侧标尺的数字
-                var text = new FormattedText(
-                    i.ToString(),
-                    CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    RulerTypeface,
-                    12,
-                    Brushes.WhiteSmoke
-                );
-                // 5内边距
-                dc.DrawText(text, new Point(5, yPos + 5));
-            }
+            // Y坐标
+            double yPos = GridDrawHelper.GetY(TranslateY, Scale, i, ProjectConfigService.FocusCellHeight);
+            // 画左侧标尺的数字
+            var text = new FormattedText(
+                i.ToString(),
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                RulerTypeface,
+                12,
+                Brushes.WhiteSmoke
+            );
+            // 5内边距
+            context.DrawText(text, new Point(5, yPos + 5));
         }
-
-        #endregion
     }
 }
