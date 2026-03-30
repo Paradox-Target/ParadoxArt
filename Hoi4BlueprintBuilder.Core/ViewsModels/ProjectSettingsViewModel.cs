@@ -16,6 +16,18 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 [RegisterTransient<ProjectSettingsViewModel>]
 public sealed partial class ProjectSettingsViewModel : ObservableObject
 {
+    public double FocusCellWidth
+    {
+        get => _projectConfigService.FocusCellWidth;
+        set => _projectConfigService.FocusCellWidth = value;
+    }
+
+    public double FocusCellHeight
+    {
+        get => _projectConfigService.FocusCellHeight;
+        set => _projectConfigService.FocusCellHeight = value;
+    }
+
     public AvaloniaList<string> DependenciesPath { get; }
     public IReadOnlyList<GameLanguage> GameLanguages => Enums.GetValues<GameLanguage>();
     public AvaloniaList<GameLanguage> SupportedLanguages { get; }

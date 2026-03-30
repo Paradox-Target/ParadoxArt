@@ -3,6 +3,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Helpers;
+using Hoi4BlueprintBuilder.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
 
@@ -12,6 +14,8 @@ public sealed class GridRulerControl : Control
     private const double RulerSize = 30.0;
     private static readonly SolidColorBrush RulerBrush = new(Color.FromRgb(74, 74, 74));
     private static readonly Typeface RulerTypeface = new("Segoe UI");
+    private static readonly ProjectConfigService ProjectConfigService =
+        App.Current.Services.GetRequiredService<ProjectConfigService>();
 
     #region Styled Properties (样式属性)
 
@@ -69,13 +73,18 @@ public sealed class GridRulerControl : Control
 
         #region 绘制垂直标尺
 
-        (int startX, int endX) = GridDrawHelper.GetXRange(TranslateX, Scale, Bounds.Width);
+        (int startX, int endX) = GridDrawHelper.GetXRange(
+            TranslateX,
+            Scale,
+            Bounds.Width,
+            ProjectConfigService.FocusCellWidth
+        );
         for (int i = startX; i <= endX; i++)
         {
             if (canDrawText)
             {
                 // X坐标
-                double xPos = GridDrawHelper.GetX(TranslateX, Scale, i);
+                double xPos = GridDrawHelper.GetX(TranslateX, Scale, i, ProjectConfigService.FocusCellWidth);
                 // 画底部标尺数字
                 var text = new FormattedText(
                     i.ToString(),
@@ -94,13 +103,18 @@ public sealed class GridRulerControl : Control
 
         #region 绘制水平标尺
 
-        (int startY, int endY) = GridDrawHelper.GetXRange(TranslateY, Scale, Bounds.Height);
+        (int startY, int endY) = GridDrawHelper.GetXRange(
+            TranslateY,
+            Scale,
+            Bounds.Height,
+            ProjectConfigService.FocusCellWidth
+        );
         for (int i = startY; i <= endY; i++)
         {
             if (canDrawText)
             {
                 // Y坐标
-                double yPos = GridDrawHelper.GetY(TranslateY, Scale, i);
+                double yPos = GridDrawHelper.GetY(TranslateY, Scale, i, ProjectConfigService.FocusCellHeight);
                 // 画左侧标尺的数字
                 var text = new FormattedText(
                     i.ToString(),

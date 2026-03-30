@@ -5,6 +5,7 @@
     xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
     d:DesignHeight="450"
@@ -12,6 +13,24 @@
     x:DataType="vms:ProjectSettingsViewModel"
     mc:Ignorable="d">
     <StackPanel Spacing="4">
+        <fa:SettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="网格大小">
+            <fa:SettingsExpander.IconSource>
+                <control:FontIconSource Glyph="&#xF0E2;" />
+            </fa:SettingsExpander.IconSource>
+
+            <fa:SettingsExpanderItem Content="网格宽度">
+                <fa:SettingsExpanderItem.Footer>
+                    <fa:NumberBox Minimum="80" Value="{Binding FocusCellWidth}" />
+                </fa:SettingsExpanderItem.Footer>
+            </fa:SettingsExpanderItem>
+
+            <fa:SettingsExpanderItem Content="网格长度">
+                <fa:SettingsExpanderItem.Footer>
+                    <fa:NumberBox Minimum="110" Value="{Binding FocusCellHeight}" />
+                </fa:SettingsExpanderItem.Footer>
+            </fa:SettingsExpanderItem>
+        </fa:SettingsExpander>
+
         <fa:SettingsExpander Description="决定国策本地化的可选项 *重启应用后生效" Header="项目支持本地化语言">
             <fa:SettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF2B7;" />

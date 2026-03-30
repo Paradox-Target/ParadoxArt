@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:const="clr-namespace:Hoi4BlueprintBuilder.Core.Constants"
     xmlns:controls="using:Hoi4BlueprintBuilder.Core.Controls"
-    xmlns:converters="using:Hoi4BlueprintBuilder.Core.Infrastructure.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FluentAvalonia.UI.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,10 +14,6 @@
     x:DataType="vms:FocusTreeEditorViewModel"
     Background="#333333"
     mc:Ignorable="d">
-
-    <UserControl.Resources>
-        <converters:CoordinateToPixelConverter x:Key="CoordinateToPixelConverter" />
-    </UserControl.Resources>
 
     <Grid x:Name="MainGrid" ClipToBounds="True">
         <Grid.ContextFlyout>
@@ -95,8 +90,8 @@
 
             <ItemsControl.Styles>
                 <Style x:DataType="vms:FocusNodeViewModel" Selector="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding Node.X, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellWidth}}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Node.Y, Converter={StaticResource CoordinateToPixelConverter}, ConverterParameter={x:Static const:FocusMapConstants.CellHeight}}" />
+                    <Setter Property="Canvas.Left" Value="{Binding ActualX}" />
+                    <Setter Property="Canvas.Top" Value="{Binding ActualY}" />
                 </Style>
             </ItemsControl.Styles>
         </ItemsControl>

@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
-using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Controls;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using ZLinq;
@@ -11,17 +10,20 @@ using ZLinq;
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<ScreenshotService>]
-public sealed class ScreenshotService
+public sealed class ScreenshotService(ProjectConfigService projectConfigService)
 {
     public async Task SaveFocusTreeScreenshotAsync(
         IReadOnlyCollection<FocusNodeViewModel> nodes,
         IStorageFile file
     )
     {
+        double cellWidth = projectConfigService.FocusCellWidth;
+        double cellHeight = projectConfigService.FocusCellHeight;
+
         (double minX, double minY, double maxX, double maxY) = CalculateBounds(nodes);
         const double padding = 1.0;
-        double width = (maxX - minX + 1 + 2 * padding) * FocusMapConstants.CellWidth;
-        double height = (maxY - minY + 1 + 2 * padding) * FocusMapConstants.CellHeight;
+        double width = (maxX - minX + 1 + 2 * padding) * cellWidth;
+        double height = (maxY - minY + 1 + 2 * padding) * cellHeight;
 
         var size = new PixelSize((int)width, (int)height);
         var renderBitmap = new RenderTargetBitmap(size);
@@ -36,8 +38,8 @@ public sealed class ScreenshotService
 
             // Transform to handle padding and offset
             var transform = new TranslateTransform(
-                (padding - minX) * FocusMapConstants.CellWidth,
-                (padding - minY) * FocusMapConstants.CellHeight
+                (padding - minX) * cellWidth,
+                (padding - minY) * cellHeight
             );
             var pushedState = dc.PushTransform(transform.Value);
 
@@ -108,10 +110,13 @@ public sealed class ScreenshotService
         return (minX, minY, maxX, maxY);
     }
 
-    private static void DrawNode(DrawingContext dc, FocusNodeViewModel viewModel)
+    private void DrawNode(DrawingContext dc, FocusNodeViewModel viewModel)
     {
-        double x = viewModel.Node.X * FocusMapConstants.CellWidth;
-        double y = viewModel.Node.Y * FocusMapConstants.CellHeight;
+        double cellWidth = projectConfigService.FocusCellWidth;
+        double cellHeight = projectConfigService.FocusCellHeight;
+
+        double x = viewModel.Node.X * cellWidth;
+        double y = viewModel.Node.Y * cellHeight;
 
         // Draw Image
         if (viewModel.Bitmap is not null)
@@ -119,8 +124,8 @@ public sealed class ScreenshotService
             double imgWidth = viewModel.Width;
             double imgHeight = viewModel.Height;
 
-            double imgX = x + (FocusMapConstants.CellWidth - imgWidth) / 2;
-            double imgY = y + (FocusMapConstants.CellHeight - imgHeight) / 2;
+            double imgX = x + (cellWidth - imgWidth) / 2;
+            double imgY = y + (cellHeight - imgHeight) / 2;
 
             dc.DrawImage(viewModel.Bitmap, new Rect(imgX, imgY, imgWidth, imgHeight));
         }
@@ -137,12 +142,12 @@ public sealed class ScreenshotService
                 Brushes.White
             )
             {
-                MaxTextWidth = FocusMapConstants.CellWidth - 4,
+                MaxTextWidth = cellWidth - 4,
                 TextAlignment = TextAlignment.Center,
                 Trimming = TextTrimming.CharacterEllipsis,
             };
 
-            double textY = y + FocusMapConstants.FocusHeight + FocusMapConstants.FocusNameUpOffset;
+            double textY = y + cellHeight + projectConfigService.FocusNameUpOffset;
             double textX = x + 2;
 
             dc.DrawText(formattedText, new Point(textX, textY));

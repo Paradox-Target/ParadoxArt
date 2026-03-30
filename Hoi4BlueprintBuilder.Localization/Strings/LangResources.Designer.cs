@@ -382,5 +382,14 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
                 return ResourceManager.GetString("RenameFile_NameContainInvalidChar", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_Must_Reset.
+        /// </summary>
+        public static string Settings_Must_Reset {
+            get {
+                return ResourceManager.GetString("Settings_Must_Reset", resourceCulture);
+            }
+        }
     }
 }

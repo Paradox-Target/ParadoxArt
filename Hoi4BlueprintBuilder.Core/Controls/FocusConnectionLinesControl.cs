@@ -4,10 +4,11 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
-using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
+using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using Microsoft.Extensions.DependencyInjection;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
@@ -17,8 +18,8 @@ namespace Hoi4BlueprintBuilder.Core.Controls;
 /// </summary>
 public sealed class FocusConnectionLinesControl : Control
 {
-    private static double CellWidth => FocusMapConstants.CellWidth;
-    private static double CellHeight => FocusMapConstants.CellHeight;
+    private static double CellWidth => ProjectConfigService.FocusCellWidth;
+    private static double CellHeight => ProjectConfigService.FocusCellHeight;
 
     private const double LinePenWidth = 3.0;
     public static readonly Pen PrerequisiteLinePen =
@@ -72,6 +73,9 @@ public sealed class FocusConnectionLinesControl : Control
         get => GetValue(TranslateYProperty);
         set => SetValue(TranslateYProperty, value);
     }
+
+    private static readonly ProjectConfigService ProjectConfigService =
+        App.Current.Services.GetRequiredService<ProjectConfigService>();
 
     static FocusConnectionLinesControl()
     {

@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.VisualTree;
-using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Controls;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
@@ -16,6 +15,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 /// </summary>
 public sealed class CanvasInteractionManager
 {
+    private readonly ProjectConfigService _projectConfigService;
     private readonly FocusTreeEditorViewModel _viewModel;
     private readonly Control _canvas;
     private readonly ConnectionPreviewOverlayControl _connectionPreview;
@@ -74,6 +74,7 @@ public sealed class CanvasInteractionManager
     public event Action<FocusNode, FocusNode, ConnectionType>? ConnectionRequested;
 
     public CanvasInteractionManager(
+        ProjectConfigService projectConfigService,
         FocusTreeEditorViewModel viewModel,
         Control canvas,
         ConnectionPreviewOverlayControl connectionPreview,
@@ -82,6 +83,7 @@ public sealed class CanvasInteractionManager
         Func<bool> isOpenedFocusInfoView
     )
     {
+        _projectConfigService = projectConfigService;
         _viewModel = viewModel;
         _canvas = canvas;
         _connectionPreview = connectionPreview;
@@ -405,8 +407,8 @@ public sealed class CanvasInteractionManager
     {
         double rX = mousePoint.X - _viewModel.TranslateX;
         double rY = mousePoint.Y - _viewModel.TranslateY;
-        double width = FocusMapConstants.CellWidth * _viewModel.Scale;
-        double height = FocusMapConstants.CellHeight * _viewModel.Scale;
+        double width = _projectConfigService.FocusCellWidth * _viewModel.Scale;
+        double height = _projectConfigService.FocusCellHeight * _viewModel.Scale;
 
         int x = (int)Math.Floor(rX / width);
         int y = (int)Math.Floor(rY / height);

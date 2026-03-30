@@ -37,6 +37,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
     private readonly MessageBoxService _messageBox;
     private readonly FileService _fileService;
     private readonly SettingsService _settingsService;
+    private readonly ProjectConfigService _projectConfigService;
     private CanvasInteractionManager? _interactionManager;
     private readonly Dictionary<StandardCursorType, Cursor> _cursorCache = new();
 
@@ -69,7 +70,8 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         LocalizationFormatService localizationFormatService,
         FileService fileService,
         UserStatusService userStatusService,
-        SettingsService settingsService
+        SettingsService settingsService,
+        ProjectConfigService projectConfigService
     )
     {
         InitializeComponent();
@@ -90,6 +92,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
         _localizationFormatService = localizationFormatService;
         _fileService = fileService;
         _settingsService = settingsService;
+        _projectConfigService = projectConfigService;
         DataContext = ViewModel;
         if (userStatusService.CurrentSelectedFile is null)
         {
@@ -150,6 +153,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
 
         // 控件加载完成后初始化交互管理器
         _interactionManager = new CanvasInteractionManager(
+            _projectConfigService,
             ViewModel,
             this,
             ConnectionPreviewOverlay,

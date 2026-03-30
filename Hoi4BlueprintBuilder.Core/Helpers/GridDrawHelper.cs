@@ -1,11 +1,16 @@
-﻿using Hoi4BlueprintBuilder.Core.Constants;
-
-namespace Hoi4BlueprintBuilder.Core.Helpers;
+﻿namespace Hoi4BlueprintBuilder.Core.Helpers;
 
 public static class GridDrawHelper
 {
-    private static double CellWidth => FocusMapConstants.CellWidth;
-    private static double CellHeight => FocusMapConstants.CellHeight;
+    public static (int Start, int End) GetXRange(
+        double translate,
+        double scale,
+        double viewLength,
+        double cellWidth
+    )
+    {
+        return GetRange(translate, scale, viewLength, cellWidth);
+    }
 
     private static (int Start, int End) GetRange(
         double translate,
@@ -19,23 +24,18 @@ public static class GridDrawHelper
         return (start, end);
     }
 
-    public static (int Start, int End) GetXRange(double translate, double scale, double viewLength)
+    public static double GetX(double translate, double scale, int index, double cellWidth)
     {
-        return GetRange(translate, scale, viewLength, CellWidth);
+        return GetPos(translate, scale, index, cellWidth);
     }
 
-    private static double GetPos(double translate, double scale, int index, double cellLength)
+    public static double GetY(double translate, double scale, int index, double cellHeight)
     {
-        return translate + index * cellLength * scale;
+        return GetPos(translate, scale, index, cellHeight);
     }
 
-    public static double GetX(double translate, double scale, int index)
+    private static double GetPos(double translate, double scale, int index, double cellWidth)
     {
-        return GetPos(translate, scale, index, CellWidth);
-    }
-
-    public static double GetY(double translate, double scale, int index)
-    {
-        return GetPos(translate, scale, index, CellHeight);
+        return translate + index * cellWidth * scale;
     }
 }

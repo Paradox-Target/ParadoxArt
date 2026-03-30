@@ -3,14 +3,18 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
+using Hoi4BlueprintBuilder.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
 
 public sealed class GridBackgroundControl : Control
 {
     private static readonly IPen GridPen = InitializeGridPen();
+    private static readonly ProjectConfigService ProjectConfigService =
+        App.Current.Services.GetRequiredService<ProjectConfigService>();
 
-    private static IPen InitializeGridPen()
+    private static Pen InitializeGridPen()
     {
         var brush = "#444444".ToBrush();
         return new Pen(brush ?? Brushes.Gray);
@@ -63,18 +67,28 @@ public sealed class GridBackgroundControl : Control
         base.Render(context);
 
         // 绘制垂直网格线和X轴标尺
-        (int startX, int endX) = GridDrawHelper.GetXRange(TranslateX, Scale, Bounds.Width);
+        (int startX, int endX) = GridDrawHelper.GetXRange(
+            TranslateX,
+            Scale,
+            Bounds.Width,
+            ProjectConfigService.FocusCellWidth
+        );
         for (int i = startX; i <= endX; i++)
         {
-            double xPos = GridDrawHelper.GetX(TranslateX, Scale, i);
+            double xPos = GridDrawHelper.GetX(TranslateX, Scale, i, ProjectConfigService.FocusCellWidth);
             context.DrawLine(GridPen, new Point(xPos, 0), new Point(xPos, Bounds.Height));
         }
 
         // 绘制水平网格线和Y轴标尺
-        (int startY, int endY) = GridDrawHelper.GetXRange(TranslateY, Scale, Bounds.Height);
+        (int startY, int endY) = GridDrawHelper.GetXRange(
+            TranslateY,
+            Scale,
+            Bounds.Height,
+            ProjectConfigService.FocusCellWidth
+        );
         for (int i = startY; i <= endY; i++)
         {
-            double yPos = GridDrawHelper.GetY(TranslateY, Scale, i);
+            double yPos = GridDrawHelper.GetY(TranslateY, Scale, i, ProjectConfigService.FocusCellHeight);
             context.DrawLine(GridPen, new Point(0, yPos), new Point(Bounds.Width, yPos));
         }
     }

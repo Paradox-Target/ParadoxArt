@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 
@@ -27,6 +28,23 @@ public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigServ
         [LanguageHelper.GetGameLanguageBySystemLanguage()];
 
     public List<DependencyModInfo> Dependencies { get; set; } = [];
+
+    public double FocusCellHeight { get; set; } = FocusMapConstants.CellHeight;
+    public double FocusCellWidth { get; set; } = FocusMapConstants.CellWidth;
+
+    [JsonIgnore]
+    public double FocusHeight => FocusCellHeight * FocusMapConstants.FocusFactor;
+
+    /// <summary>
+    /// 国策竖直方向居中偏移
+    /// </summary>
+    private double FocusCenterOffsetVertical => (FocusCellHeight - FocusHeight) / 2.0;
+
+    /// <summary>
+    /// 国策名称向上偏移
+    /// </summary>
+    [JsonIgnore]
+    public double FocusNameUpOffset => -FocusCenterOffsetVertical / 2.0;
 
     private SettingsService? _settingsService;
 

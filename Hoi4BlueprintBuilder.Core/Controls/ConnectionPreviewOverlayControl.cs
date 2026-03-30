@@ -1,9 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
+using Hoi4BlueprintBuilder.Core.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
 
@@ -28,6 +29,9 @@ public sealed class ConnectionPreviewOverlayControl : Control
             InvalidateVisual();
         }
     }
+
+    private static readonly ProjectConfigService ProjectConfigService =
+        App.Current.Services.GetRequiredService<ProjectConfigService>();
 
     static ConnectionPreviewOverlayControl()
     {
@@ -92,7 +96,12 @@ public sealed class ConnectionPreviewOverlayControl : Control
 
             if (Mode == ConnectionType.Prerequisite)
             {
-                FocusConnectionLinesControl.DrawPrerequisiteLine(dc, From, To, FocusConnectionLinesControl.PrerequisiteLinePen);
+                FocusConnectionLinesControl.DrawPrerequisiteLine(
+                    dc,
+                    From,
+                    To,
+                    FocusConnectionLinesControl.PrerequisiteLinePen
+                );
             }
 
             if (Mode == ConnectionType.RelativePosition)
@@ -116,8 +125,8 @@ public sealed class ConnectionPreviewOverlayControl : Control
     private static Point GetNodeCenterPoint(FocusNode node)
     {
         return new Point(
-            node.X * FocusMapConstants.CellWidth + FocusMapConstants.CellWidth / 2,
-            node.Y * FocusMapConstants.CellHeight + FocusMapConstants.CellHeight / 2
+            node.X * ProjectConfigService.FocusCellWidth + ProjectConfigService.FocusCellWidth / 2,
+            node.Y * ProjectConfigService.FocusCellHeight + ProjectConfigService.FocusCellHeight / 2
         );
     }
 }

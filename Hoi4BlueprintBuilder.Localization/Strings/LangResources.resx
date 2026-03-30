@@ -225,4 +225,7 @@
   <data name="CreateNewProject_Title" xml:space="preserve">
     <value>CreateNewProject_Title</value>
   </data>
+  <data name="Settings_Must_Reset" xml:space="preserve">
+    <value>Settings_Must_Reset</value>
+  </data>
 </root>

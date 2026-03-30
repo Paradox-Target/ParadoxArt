@@ -87,7 +87,7 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
-            <fa:SettingsExpander Description="*重启App后生效" Header="App 语言">
+            <fa:SettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="App 语言">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
                 </fa:SettingsExpander.IconSource>
@@ -102,7 +102,7 @@
                 </fa:SettingsExpander.Footer>
             </fa:SettingsExpander>
 
-            <fa:SettingsExpander Description="*重启App后生效" Header="游戏本地化语言">
+            <fa:SettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="游戏本地化语言">
                 <fa:SettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
                 </fa:SettingsExpander.IconSource>

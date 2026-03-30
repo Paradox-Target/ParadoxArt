@@ -9,6 +9,9 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
 public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
 {
+    public double ActualX => Node.X * FocusCellWidth;
+    public double ActualY => Node.Y * FocusCellHeight;
+
     public FocusNode Node { get; }
 
     [ObservableProperty]
@@ -38,8 +41,15 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool _showCompletedCheckbox;
 
+    public double FocusCellWidth => ProjectConfigService.FocusCellWidth;
+    public double FocusCellHeight => ProjectConfigService.FocusCellHeight;
+    public double FocusHeight => ProjectConfigService.FocusHeight;
+    public double FocusNameUpOffset => ProjectConfigService.FocusNameUpOffset;
+
     private static readonly ImageService ImageService =
         App.Current.Services.GetRequiredService<ImageService>();
+    private static readonly ProjectConfigService ProjectConfigService =
+        App.Current.Services.GetRequiredService<ProjectConfigService>();
 
     public FocusNodeViewModel(FocusNode node)
     {
@@ -54,6 +64,14 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
         if (args.PropertyName == nameof(Node.Icon))
         {
             LoadBitmapSource();
+        }
+        else if (args.PropertyName == nameof(Node.X))
+        {
+            OnPropertyChanged(nameof(ActualX));
+        }
+        else if (args.PropertyName == nameof(Node.Y))
+        {
+            OnPropertyChanged(nameof(ActualY));
         }
     }
 
