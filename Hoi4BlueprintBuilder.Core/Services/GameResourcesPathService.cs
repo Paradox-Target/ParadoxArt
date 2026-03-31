@@ -49,11 +49,11 @@ public sealed class GameResourcesPathService(
         if (descriptor.ReplacePaths.Contains(folderRelativePath))
         {
             Log.Debug("MOD文件夹已完全替换游戏文件夹: \n\t {GamePath} => {ModPath}", gameFolder, modFolder);
-            return RemoveFileOfEqualName([], modsFiles);
+            return GetUniqueFiles([], modsFiles);
         }
 
         string[] gameFilesPath = Directory.GetFiles(gameFolder, filter, searchOption);
-        return RemoveFileOfEqualName(gameFilesPath, modsFiles);
+        return GetUniqueFiles(gameFilesPath, modsFiles);
     }
 
     private static IEnumerable<IEnumerable<string>> GetModFiles(
@@ -107,7 +107,7 @@ public sealed class GameResourcesPathService(
     /// <param name="modFilePaths"></param>
     /// <returns>不重名的文件路径</returns>
     /// <exception cref="ArgumentException"></exception>
-    private static IReadOnlyCollection<string> RemoveFileOfEqualName(
+    private static IReadOnlyCollection<string> GetUniqueFiles(
         string[] gameFilePaths,
         IEnumerable<IEnumerable<string>> modFilePaths
     )

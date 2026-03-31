@@ -58,10 +58,10 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         var watcherService = serviceProvider.GetRequiredService<GameResourcesWatcherService>();
 
         bool isFolderPath = pathType == PathType.Folder;
-        PooledArray<string> filePaths;
+        PooledArray<string> filesPath;
         if (isFolderPath)
         {
-            filePaths = _folderOrFileRelativePath
+            filesPath = _folderOrFileRelativePath
                 .AsValueEnumerable()
                 .SelectMany(path =>
                     gameResourcesPathService.GetAllFilePriorModByRelativePathForFolder(
@@ -74,7 +74,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         }
         else
         {
-            filePaths = folderOrFileRelativePath
+            filesPath = folderOrFileRelativePath
                 .AsValueEnumerable()
                 .Select(path => gameResourcesPathService.GetFilePathPriorModByRelativePath(path))
                 .Where(path => path is not null)
@@ -88,19 +88,19 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
         }
         else
         {
-            Resources = new Dictionary<string, TContent>(filePaths.Size);
+            Resources = new Dictionary<string, TContent>(filesPath.Size);
         }
 
         if (isAsyncLoading)
         {
-            ParseFileAndAddToResourcesAsync(filePaths.Span);
+            ParseFileAndAddToResourcesAsync(filesPath.Span);
         }
         else
         {
-            SortFilePath(filePaths.Span);
-            ParseFileAndAddToResourcesSync(filePaths.Span);
+            SortFilePath(filesPath.Span);
+            ParseFileAndAddToResourcesSync(filesPath.Span);
         }
-        filePaths.Dispose();
+        filesPath.Dispose();
 
         bool includeSubFolders = searchOption == SearchOption.AllDirectories && isFolderPath;
 
@@ -114,7 +114,7 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
             );
         }
 
-        Log.Info("初始化资源成功: {FolderRelativePath}, 共 {Count} 个文件", _folderOrFileRelativePath, filePaths.Size);
+        Log.Info("初始化资源成功: {FolderRelativePath}, 共 {Count} 个文件", _folderOrFileRelativePath, filesPath.Size);
         LogItemsSum();
     }
 
@@ -124,19 +124,19 @@ public abstract partial class ResourcesService<TType, TContent, TParseResult> : 
     /// <param name="filePathArray"></param>
     protected virtual void SortFilePath(Span<string> filePathArray) { }
 
-    private void ParseFileAndAddToResourcesAsync(Span<string> filePaths)
+    private void ParseFileAndAddToResourcesAsync(Span<string> filesPath)
     {
-        var tasks = new List<Task>(filePaths.Length);
-        foreach (string filePath in filePaths)
+        var tasks = new List<Task>(filesPath.Length);
+        foreach (string filePath in filesPath)
         {
             tasks.Add(ParseFileAndAddToResourcesAsync(filePath));
         }
         Task.WaitAll(tasks);
     }
 
-    private void ParseFileAndAddToResourcesSync(Span<string> filePaths)
+    private void ParseFileAndAddToResourcesSync(Span<string> filesPath)
     {
-        foreach (string filePath in filePaths)
+        foreach (string filePath in filesPath)
         {
             ParseFileAndAddToResources(filePath);
         }
