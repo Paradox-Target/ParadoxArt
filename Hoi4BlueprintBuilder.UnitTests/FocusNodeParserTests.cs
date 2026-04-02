@@ -2,6 +2,10 @@ using Hoi4BlueprintBuilder.Core;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
+using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Core.Services.GameResources;
+using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
+using Microsoft.Extensions.DependencyInjection;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
 
@@ -13,25 +17,56 @@ public sealed class FocusNodeParserTests
     private const string TestDataPath = "TestData/FocusNodeParserTests.txt";
     private string _fullTestDataPath;
     private Node _rootNode = null!;
+    private FocusTreeFileService _fileService;
+    private ServiceProvider _serviceProvider;
 
     [SetUp]
     public void Setup()
     {
+        var services = new ServiceCollection();
+        var settingsService = new SettingsService
+        {
+            ModRootFolderPath = TestApp.TestDataDirectory,
+            GameRootFolderPath = TestApp.TestDataDirectory
+        };
+        services.AddSingleton(settingsService);
+        services.AddSingleton(new GameModDescriptorService(settingsService));
+        services.AddSingleton<GameResourcesPathService>();
+        services.AddSingleton<GameResourcesWatcherService>();
+        services.AddSingleton(new ProjectConfigService());
+        services.AddSingleton<FocusTreeFileService>();
+        services.AddSingleton<SharedFocusService>();
+        _serviceProvider = services.BuildServiceProvider();
+        _fileService = _serviceProvider.GetRequiredService<FocusTreeFileService>();
+
+        // 确保 common/national_focus 目录存在, 因为 FocusTreeFileService 会读取共享国策
+        var sharedFocusDir = Path.Combine(TestApp.TestDataDirectory, "common", "national_focus");
+        if (!Directory.Exists(sharedFocusDir))
+        {
+            Directory.CreateDirectory(sharedFocusDir);
+        }
+
         // 获取完整的测试数据路径
         _fullTestDataPath = Path.Combine(TestContext.CurrentContext.TestDirectory, TestDataPath);
         Assert.That(File.Exists(_fullTestDataPath), Is.True, $"测试数据文件不存在: {_fullTestDataPath}");
 
         // 解析测试数据文件
-        var parseResult = TextParser.TryParse(_fullTestDataPath, out _rootNode!, out var errorMessage);
+        bool parseResult = TextParser.TryParse(_fullTestDataPath, out _rootNode!, out var errorMessage);
         Assert.That(parseResult, Is.True, $"解析测试数据文件失败: {errorMessage}");
         Assert.That(_rootNode, Is.Not.Null, "解析结果为空");
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _serviceProvider.Dispose();
     }
 
     [Test]
     public void GetFocusNodesFromAstRootNode_ShouldReturnAllFocusNodes()
     {
         // 执行测试
-        var focusNodes = FocusNodeHelper.GetFocusNodesFromAstRootNode(_rootNode);
+        var focusNodes = NodeHelper.GetFocusNodesFromAstRootNode(_rootNode);
 
         // 验证结果
         Assert.That(focusNodes, Is.Not.Null, "返回的国策节点集合为空");
@@ -42,7 +77,7 @@ public sealed class FocusNodeParserTests
     public void GetAllNodesFromAst_ShouldParseAllNodesCorrectly()
     {
         // 执行测试
-        var (nodes, filePaths, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, filePaths, _) = _fileService.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
 
         // 验证结果
         Assert.That(nodes, Is.Not.Null, "返回的节点字典为空");
@@ -95,7 +130,7 @@ public sealed class FocusNodeParserTests
     public void GetAllNodesFromAst_ShouldProcessNodeRelationsCorrectly()
     {
         // 执行测试
-        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = _fileService.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
 
         // 验证先决条件关系
         var focus2 = nodes["test_focus_2"];
@@ -129,7 +164,7 @@ public sealed class FocusNodeParserTests
     public void CreateAstNodeFromEditorModel_ShouldGenerateCorrectAst()
     {
         // 首先获取解析后的节点
-        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = _fileService.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
 
         // 使用模型创建AST节点
         var generatedNode1 = FocusNodeHelper.CreateAstNodeFromEditorModel(nodes["test_focus_1"]);
@@ -168,7 +203,7 @@ public sealed class FocusNodeParserTests
     public void CreateAstNodeFromEditorModel_ShouldHandleComplexRelations()
     {
         // 首先获取解析后的节点
-        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = _fileService.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
         var originalNode = nodes["test_focus_2"];
 
         // 使用模型创建AST节点
@@ -202,7 +237,7 @@ public sealed class FocusNodeParserTests
     public void ChildrenTest()
     {
         // 首先获取解析后的节点
-        var (nodes, _, _) = FocusNodeHelper.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
+        var (nodes, _, _) = _fileService.GetAllNodesFromAst(_fullTestDataPath, _rootNode);
         var focus1 = nodes["test_focus_1"];
         var focus2 = nodes["test_focus_2"];
         var focus3 = nodes["test_focus_3"];
@@ -212,5 +247,25 @@ public sealed class FocusNodeParserTests
         Assert.That(focus1.Children.Count, Is.EqualTo(2), "focus1的Children数量不正确");
         Assert.That(focus2.Children, Is.Empty, "focus2的Children不应包含任何节点");
         Assert.That(focus3.Children, Is.Empty, "focus3的Children不应包含任何节点");
+    }
+
+    [Test]
+    public void SharedFocusLoadTest()
+    {
+        string path = Path.Combine(
+            TestApp.TestDataDirectory,
+            "common",
+            "national_focus",
+            "use_shared_focus.txt"
+        );
+        var (nodes, _, _) = _fileService.GetAllNodesFromAst(
+            path,
+            TextParser.TryParse(path, out var rootNode, out _) ? rootNode : throw new Exception("解析失败")
+        );
+
+        Assert.That(nodes, Has.Count.EqualTo(3));
+        Assert.That(nodes, Does.ContainKey("focus_head"));
+        Assert.That(nodes, Does.ContainKey("focus_2"));
+        Assert.That(nodes, Does.ContainKey("focus_3"));
     }
 }

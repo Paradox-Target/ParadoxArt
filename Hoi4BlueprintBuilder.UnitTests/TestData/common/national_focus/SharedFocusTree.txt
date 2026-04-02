@@ -1,0 +1,22 @@
+﻿shared_focus = {
+	id = focus_head
+	x = 38
+	y = 0
+	cost = 10
+	icon = GFX_focus_generic_concessions
+}
+shared_focus = {
+	id = focus_2
+	x = -10
+	y = 1
+	cost = 5
+	icon = GFX_focus_chi_mission_to_germany
+	relative_position_id = focus_head
+}
+shared_focus = {
+	id = focus_3
+	x = -1
+	y = 1
+	cost = 5
+	relative_position_id = focus_2
+}

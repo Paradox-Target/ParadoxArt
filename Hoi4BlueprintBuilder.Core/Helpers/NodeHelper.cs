@@ -12,6 +12,32 @@ public static class NodeHelper
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
+    /// 获取所有国策 AST <see cref="Node"/>, 包括普通国策和共享国策。
+    /// </summary>
+    /// <param name="rootNode">根节点</param>
+    /// <returns></returns>
+    public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node rootNode)
+    {
+        // TODO: 性能优化
+        var focusTreeNode = rootNode
+            .Nodes.AsValueEnumerable()
+            .FirstOrDefault(static node => node.Key.EqualsIgnoreCase("focus_tree"));
+
+        IEnumerable<Node>? nodes = null;
+        if (focusTreeNode is not null)
+        {
+            nodes = focusTreeNode.Nodes.Where(static node => node.Key.EqualsIgnoreCase(Keywords.Focus));
+        }
+
+        var sharedFocusNode = rootNode.Nodes.Where(static node =>
+            node.Key.EqualsIgnoreCase(Keywords.SharedFocus)
+        );
+        nodes = nodes is null ? sharedFocusNode : nodes.Concat(sharedFocusNode);
+
+        return nodes;
+    }
+
+    /// <summary>
     /// 同步 <c>focusTreeNode</c> 节点的子节点
     /// </summary>
     public static void SyncNodeChildren(

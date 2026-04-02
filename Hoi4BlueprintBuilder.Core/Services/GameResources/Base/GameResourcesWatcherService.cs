@@ -9,6 +9,7 @@ namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 [RegisterSingleton<GameResourcesWatcherService>]
 public sealed class GameResourcesWatcherService : IDisposable
 {
+    //TODO: 性能优化: 只使用一个 FileSystemSafeWatcher 来监听 Mod文件夹, 当有事件发生时, 根据事件路径判断是哪个资源文件夹, 从而通知对应的资源服务
     /// <summary>
     /// key: 资源文件夹路径, value: 监听器列表
     /// </summary>

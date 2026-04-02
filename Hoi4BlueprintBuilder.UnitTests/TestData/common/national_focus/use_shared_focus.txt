@@ -1,0 +1,17 @@
+﻿focus_tree = {
+    id = test_focus
+    country = {
+        factor = 0
+        modifier = {
+            add = 10
+            tag = TST
+            has_dlc = "Waking the Tiger"
+        }
+    }
+    default = no
+    continuous_focus_position = {
+        x = 20
+        y = 1000
+    }
+    shared_focus = focus_head
+}

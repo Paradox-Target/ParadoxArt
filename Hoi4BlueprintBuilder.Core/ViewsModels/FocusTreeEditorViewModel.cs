@@ -56,6 +56,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     private readonly GameResourcesPathService _pathService;
     private readonly SettingsService _settingsService;
     private readonly NotificationService _notificationService;
+    private readonly FocusTreeFileService _focusTreeFileService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -63,12 +64,14 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         GameResourcesPathService pathService,
         SettingsService settingsService,
         NotificationService notificationService,
-        StatusBarService statusBarService
+        StatusBarService statusBarService,
+        FocusTreeFileService focusTreeFileService
     )
     {
         _pathService = pathService;
         _settingsService = settingsService;
         _notificationService = notificationService;
+        _focusTreeFileService = focusTreeFileService;
 
         _nodes.CollectionChanged += (_, _) => statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
@@ -133,7 +136,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
                 {
                     return null;
                 }
-                return FocusNodeHelper.GetAllNodesFromAst(filePath, rootNode);
+                return _focusTreeFileService.GetAllNodesFromAst(filePath, rootNode);
             });
 
             ClearResources();
@@ -176,7 +179,12 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
 
             Log.Info("已加载国策树文件: {FilePath}", filePath);
-            Log.Info("共添加: {Amount}, 来自 {Count} 个文件", _nodes.Count, _focusTreeFiles.Count);
+            Log.Info(
+                "共添加: {Amount}, 来自 {Count} 个文件, Paths: {Paths}",
+                _nodes.Count,
+                _focusTreeFiles.Count,
+                string.Join(", ", _focusTreeFiles.Select(Path.GetFileName))
+            );
         }
         finally
         {
@@ -309,7 +317,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             .FirstOrDefault(static node => node.Key.EqualsIgnoreCase("focus_tree"));
 
         var removedFocus = new List<Node>();
-        foreach (var node in FocusNodeHelper.GetFocusNodesFromAstRootNode(rootNode))
+        foreach (var node in NodeHelper.GetFocusNodesFromAstRootNode(rootNode))
         {
             var idLeaf = node
                 .Leaves.AsValueEnumerable()
