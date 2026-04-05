@@ -3,6 +3,7 @@ using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources;
@@ -48,7 +49,7 @@ public sealed class CountryTagService : CommonResourcesService<CountryTagService
 
     protected override FrozenSet<string>? ParseFileToContent(Node rootNode)
     {
-        using var leaves = rootNode.Leaves.AsValueEnumerable().ToArrayPool();
+        using var leaves = rootNode.LeavesValue.ToArrayPool();
         // 不加载临时标签
         if (
             leaves

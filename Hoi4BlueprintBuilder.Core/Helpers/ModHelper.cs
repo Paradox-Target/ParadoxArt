@@ -4,6 +4,7 @@ using AvaloniaEdit.Utils;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using ParadoxPower.CSharpExtensions;
+using ParadoxPower.ZLinq;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Helpers;
@@ -30,9 +31,6 @@ public static class ModHelper
             return null;
         }
 
-        return rootNode
-            .Leaves.AsValueEnumerable()
-            .FirstOrDefault(leaf => leaf.Key.EqualsIgnoreCase("name"))
-            ?.ValueText;
+        return rootNode.LeavesValue.FirstOrDefault(leaf => leaf.Key.EqualsIgnoreCase("name"))?.ValueText;
     }
 }

@@ -6,6 +6,8 @@ using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using MethodTimer;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 
@@ -38,11 +40,11 @@ public sealed class LocalizationTextColorsService
 
     protected override FrozenDictionary<char, LocalizationTextColor>? ParseFileToContent(Node rootNode)
     {
-        var bitmapFontsNode = rootNode.Nodes.FirstOrDefault(static node =>
+        var bitmapFontsNode = rootNode.NodesValue.FirstOrDefault(static node =>
             StringComparer.OrdinalIgnoreCase.Equals("bitmapfonts", node.Key)
         );
 
-        var textColorsNode = bitmapFontsNode?.Nodes.FirstOrDefault(static node =>
+        var textColorsNode = bitmapFontsNode?.NodesValue.FirstOrDefault(static node =>
             StringComparer.OrdinalIgnoreCase.Equals("textcolors", node.Key)
         );
 
@@ -52,12 +54,12 @@ public sealed class LocalizationTextColorsService
         }
 
         var colors = new Dictionary<char, LocalizationTextColor>(textColorsNode.AllArray.Length);
-        foreach (var textColorNode in textColorsNode.Nodes)
+        foreach (var textColorNode in textColorsNode.NodesValue)
         {
             char key = textColorNode.Key[0];
             var colorBytes = new List<int>(3);
 
-            foreach (var leafValue in textColorNode.LeafValues)
+            foreach (var leafValue in textColorNode.LeafValuesValue)
             {
                 if (leafValue.Value.TryGetInt(out int colorByte))
                 {

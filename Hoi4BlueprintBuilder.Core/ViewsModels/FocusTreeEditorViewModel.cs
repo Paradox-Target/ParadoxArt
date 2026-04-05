@@ -17,6 +17,7 @@ using MethodTimer;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -312,16 +313,14 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             return;
         }
 
-        var focusTreeNode = rootNode
-            .Nodes.AsValueEnumerable()
-            .FirstOrDefault(static node => node.Key.EqualsIgnoreCase("focus_tree"));
+        var focusTreeNode = rootNode.NodesValue.FirstOrDefault(static node =>
+            node.Key.EqualsIgnoreCase("focus_tree")
+        );
 
         var removedFocus = new List<Node>();
         foreach (var node in NodeHelper.GetFocusNodesFromAstRootNode(rootNode))
         {
-            var idLeaf = node
-                .Leaves.AsValueEnumerable()
-                .FirstOrDefault(static leaf => leaf.Key.EqualsIgnoreCase("id"));
+            var idLeaf = node.LeavesValue.FirstOrDefault(static leaf => leaf.Key.EqualsIgnoreCase("id"));
             string? id = idLeaf?.ValueText;
             if (id is null)
             {

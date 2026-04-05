@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -170,7 +172,7 @@ public sealed class FocusTreeFileService(IServiceProvider serviceProvider)
     /// <returns>返回键值对，键为配置项，值为配置项的值</returns>
     private static List<string> GetSharedFocusIds(Node rootNode)
     {
-        var focusTreeNode = rootNode.Nodes.FirstOrDefault(static node =>
+        var focusTreeNode = rootNode.NodesValue.FirstOrDefault(static node =>
             node.Key.EqualsIgnoreCase("focus_tree")
         );
         if (focusTreeNode is null)
@@ -180,7 +182,7 @@ public sealed class FocusTreeFileService(IServiceProvider serviceProvider)
 
         var sharedFocusIds = new List<string>();
         foreach (
-            var leaf in focusTreeNode.Leaves.Where(static leaf =>
+            var leaf in focusTreeNode.LeavesValue.Where(static leaf =>
                 leaf.Key.EqualsIgnoreCase(Keywords.SharedFocus)
             )
         )
@@ -312,7 +314,7 @@ public sealed class FocusTreeFileService(IServiceProvider serviceProvider)
     {
         if (node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive))
         {
-            foreach (var focusLeaf in node.Leaves)
+            foreach (var focusLeaf in node.LeavesValue)
             {
                 model.AddMutuallyExclusive(
                     new FocusNode(string.Empty, FocusType.Normal) { Id = focusLeaf.ValueText }

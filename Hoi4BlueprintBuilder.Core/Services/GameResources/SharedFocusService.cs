@@ -1,7 +1,7 @@
 ﻿using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
-using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources;
@@ -24,19 +24,15 @@ public sealed class SharedFocusService : CommonResourcesService<SharedFocusServi
     protected override Dictionary<string, Node> ParseFileToContent(Node rootNode)
     {
         var sharedFocuses = new Dictionary<string, Node>();
-        foreach (var child in rootNode.AllArray)
+        foreach (
+            var node in rootNode.NodesValue.Where(static n => n.Key.EqualsIgnoreCase(Keywords.SharedFocus))
+        )
         {
-            if (child.TryGetNode(out var node) && node.Key.EqualsIgnoreCase(Keywords.SharedFocus))
-            {
-                string? id = node
-                    .Leaves.AsValueEnumerable()
-                    .FirstOrDefault(leaf => leaf.Key.EqualsIgnoreCase("id"))
-                    ?.ValueText;
+            string? id = node.LeavesValue.FirstOrDefault(leaf => leaf.Key.EqualsIgnoreCase("id"))?.ValueText;
 
-                if (id is not null)
-                {
-                    sharedFocuses[id] = node;
-                }
+            if (id is not null)
+            {
+                sharedFocuses[id] = node;
             }
         }
 

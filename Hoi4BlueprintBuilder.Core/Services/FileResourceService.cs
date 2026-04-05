@@ -8,6 +8,7 @@ using Hoi4BlueprintBuilder.Core.Models;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Parser;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using ZLinq;
@@ -43,8 +44,7 @@ public sealed class FileResourceService(SettingsService settingsService)
 
         bool isNeedConvertToDds =
             settingsService.IsAutoFocusPngConvertToDds
-            && Path.GetExtension(filePath.AsSpan())
-                .Equals(".png", StringComparison.OrdinalIgnoreCase);
+            && Path.GetExtension(filePath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase);
 
         // 复制图片到 mod 文件夹中
         if (isNeedConvertToDds)
@@ -58,11 +58,7 @@ public sealed class FileResourceService(SettingsService settingsService)
             File.Copy(filePath, destPath, true);
         }
 
-        string editorResourceFolder = Path.Combine(
-            settingsService.ModRootFolderPath,
-            "interface",
-            "editor"
-        );
+        string editorResourceFolder = Path.Combine(settingsService.ModRootFolderPath, "interface", "editor");
         _ = Directory.CreateDirectory(editorResourceFolder);
 
         string iconName = $"GFX_{Path.GetFileNameWithoutExtension(filePath)}";
@@ -72,25 +68,18 @@ public sealed class FileResourceService(SettingsService settingsService)
         return new RegisterFocusIconResult(iconName, destPath, isNeedConvertToDds);
     }
 
-    private static void WriteFocusIconShineFile(
-        string editorResourceFolder,
-        string name,
-        string relativePath
-    )
+    private static void WriteFocusIconShineFile(string editorResourceFolder, string name, string relativePath)
     {
-        string focusIconShineRegistrationFilePath = Path.Combine(
-            editorResourceFolder,
-            "focusIconShine.gfx"
-        );
+        string focusIconShineRegistrationFilePath = Path.Combine(editorResourceFolder, "focusIconShine.gfx");
         Node spriteTypesNode;
         if (
             File.Exists(focusIconShineRegistrationFilePath)
             && TextParser.TryParse(focusIconShineRegistrationFilePath, out var rootNode, out _)
         )
         {
-            spriteTypesNode = rootNode
-                .Nodes.AsValueEnumerable()
-                .First(static node => node.Key.EqualsIgnoreCase(SpriteTypesKey));
+            spriteTypesNode = rootNode.NodesValue.First(static node =>
+                node.Key.EqualsIgnoreCase(SpriteTypesKey)
+            );
         }
         else
         {
@@ -121,9 +110,9 @@ public sealed class FileResourceService(SettingsService settingsService)
             && TextParser.TryParse(focusIconRegistrationFilePath, out var rootNode, out _)
         )
         {
-            spriteTypesNode = rootNode
-                .Nodes.AsValueEnumerable()
-                .First(static node => node.Key.EqualsIgnoreCase(SpriteTypesKey));
+            spriteTypesNode = rootNode.NodesValue.First(static node =>
+                node.Key.EqualsIgnoreCase(SpriteTypesKey)
+            );
         }
         else
         {
@@ -153,10 +142,7 @@ public sealed class FileResourceService(SettingsService settingsService)
         [
             ChildHelper.LeafQString("animationmaskfile", relativePath),
             // animated file
-            ChildHelper.LeafQString(
-                "animationtexturefile",
-                "gfx/interface/goals/shine_overlay.dds"
-            ),
+            ChildHelper.LeafQString("animationtexturefile", "gfx/interface/goals/shine_overlay.dds"),
             ChildHelper.Leaf("animationrotation", -90),
             ChildHelper.Leaf("animationlooping", false),
             ChildHelper.Leaf("animationtime", 0.75M),
@@ -174,7 +160,7 @@ public sealed class FileResourceService(SettingsService settingsService)
         ];
         var animationEndNode = animationStartNode.Clone();
         animationEndNode
-            .Leaves.First(static leaf => leaf.Key.EqualsIgnoreCase("animationrotation"))
+            .LeavesValue.First(static leaf => leaf.Key.EqualsIgnoreCase("animationrotation"))
             .Value = Types.Value.NewInt(90);
 
         var spriteTypeNode = Node.Create(SpriteTypeKey);

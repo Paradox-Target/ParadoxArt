@@ -5,6 +5,7 @@ using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using NLog;
 using ParadoxPower.CSharpExtensions;
+using ParadoxPower.ZLinq;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
@@ -78,7 +79,7 @@ public sealed class GameModDescriptorService
             }
             else if (child.TryGetNode(out var node) && node.Key.EqualsIgnoreCase("dependencies"))
             {
-                DependenciesName = node.LeafValues.AsValueEnumerable().Select(value => value.Key).ToArray();
+                DependenciesName = node.LeafValuesValue.Select(static value => value.Key).ToArray();
             }
         }
         _replacePaths = replacePathList.ToFrozenSet(PlatformHelper.Comparer);

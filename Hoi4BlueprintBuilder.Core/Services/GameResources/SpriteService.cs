@@ -5,8 +5,9 @@ using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using MethodTimer;
-using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services.GameResources;
 
@@ -60,15 +61,14 @@ public sealed class SpriteService
     {
         var sprites = new Dictionary<string, SpriteInfo>(16);
 
-        foreach (var child in rootNode.AllArray)
+        foreach (
+            var spriteTypes in rootNode.NodesValue.Where(static node =>
+                node.Key.EqualsIgnoreCase("spriteTypes")
+            )
+        )
         {
-            if (!(child.TryGetNode(out var spriteTypes) && spriteTypes.Key.EqualsIgnoreCase("spriteTypes")))
-            {
-                continue;
-            }
-
             foreach (
-                var spriteType in spriteTypes.Nodes.Where(static node =>
+                var spriteType in spriteTypes.NodesValue.Where(static node =>
                     node.Key.EqualsIgnoreCase("spriteType")
                 )
             )
@@ -89,7 +89,7 @@ public sealed class SpriteService
         string? textureFilePath = null;
         short frameSum = 1;
 
-        foreach (var leaf in spriteTypeNode.Leaves)
+        foreach (var leaf in spriteTypeNode.LeavesValue)
         {
             if (StringComparer.OrdinalIgnoreCase.Equals("name", leaf.Key))
             {
