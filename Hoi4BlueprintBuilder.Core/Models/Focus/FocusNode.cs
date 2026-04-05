@@ -91,7 +91,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     private int GetActualX()
     {
         int x = RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
-        foreach (var offset in Offsets)
+        foreach (var offset in _offsets)
         {
             if (offset.IsEnabled)
             {
@@ -104,7 +104,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     private int GetActualY()
     {
         int y = RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
-        foreach (var offset in Offsets)
+        foreach (var offset in _offsets)
         {
             if (offset.IsEnabled)
             {
@@ -234,7 +234,7 @@ public sealed partial class FocusNode(string path, FocusType type)
             focusNode._mutuallyExclusive.Add(this);
         }
     }
-    
+
     public void RemoveMutuallyExclusive(FocusNode focusNode)
     {
         if (_mutuallyExclusive.Remove(focusNode))
