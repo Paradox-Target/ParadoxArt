@@ -15,6 +15,7 @@ public sealed class GameModDescriptorService
 {
     public string Name { get; private set; } = string.Empty;
     public string[] DependenciesName { get; private set; } = [];
+    public string SteamWorkshopId { get; private set; } = string.Empty;
 
     /// <summary>
     /// 保存着替换的文件夹相对路径的只读集合
@@ -74,6 +75,9 @@ public sealed class GameModDescriptorService
                     case "replace_path":
                         string[] parts = leaf.ValueText.Split('/');
                         replacePathList.Add(Path.Combine(parts));
+                        break;
+                    case "remote_file_id":
+                        SteamWorkshopId = leaf.ValueText;
                         break;
                 }
             }

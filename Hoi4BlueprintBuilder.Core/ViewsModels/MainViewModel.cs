@@ -36,6 +36,11 @@ public sealed class MainViewModel
                 properties["Project_File_Count"] = count.ToString();
             }
 
+            if (!string.IsNullOrWhiteSpace(descriptorService.SteamWorkshopId))
+            {
+                properties["SteamWorkshopId"] = descriptorService.SteamWorkshopId;
+            }
+
             properties["Replace_Path_Count"] = descriptorService.ReplacePaths.Count.ToString();
 
             telemetryService.TrackEvent("User_Project_Info", properties);
