@@ -29,7 +29,10 @@ public sealed class MainViewModel
             string modDirectory = settingsService.ModRootFolderPath;
             if (Directory.Exists(modDirectory))
             {
-                int count = Directory.EnumerateFiles(modDirectory, "*", SearchOption.AllDirectories).Count();
+                int count = Directory
+                    .EnumerateFiles(modDirectory, "*", SearchOption.AllDirectories)
+                    .Take(50000)
+                    .Count();
                 properties["Project_File_Count"] = count.ToString();
             }
 
