@@ -1,0 +1,1 @@
+﻿dotnet run -c Release --project .\Hoi4BlueprintBuilder.Benchmark.csproj

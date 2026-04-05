@@ -18,23 +18,31 @@ public static class NodeHelper
     /// <returns></returns>
     public static IEnumerable<Node> GetFocusNodesFromAstRootNode(Node rootNode)
     {
-        // TODO: 性能优化
-        var focusTreeNode = rootNode
-            .Nodes.AsValueEnumerable()
-            .FirstOrDefault(static node => node.Key.EqualsIgnoreCase("focus_tree"));
-
-        IEnumerable<Node>? nodes = null;
-        if (focusTreeNode is not null)
+        foreach (var child in rootNode.AllArray)
         {
-            nodes = focusTreeNode.Nodes.Where(static node => node.Key.EqualsIgnoreCase(Keywords.Focus));
+            if (!child.TryGetNode(out var node))
+            {
+                continue;
+            }
+
+            if (node.Key.EqualsIgnoreCase("focus_tree"))
+            {
+                foreach (var nodeChild in node.AllArray)
+                {
+                    if (
+                        nodeChild.TryGetNode(out var focusNode)
+                        && focusNode.Key.EqualsIgnoreCase(Keywords.Focus)
+                    )
+                    {
+                        yield return focusNode;
+                    }
+                }
+            }
+            else if (node.Key.EqualsIgnoreCase(Keywords.SharedFocus))
+            {
+                yield return node;
+            }
         }
-
-        var sharedFocusNode = rootNode.Nodes.Where(static node =>
-            node.Key.EqualsIgnoreCase(Keywords.SharedFocus)
-        );
-        nodes = nodes is null ? sharedFocusNode : nodes.Concat(sharedFocusNode);
-
-        return nodes;
     }
 
     /// <summary>
