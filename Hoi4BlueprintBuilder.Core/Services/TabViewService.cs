@@ -1,9 +1,10 @@
-using System.Collections.ObjectModel;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -17,7 +18,7 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
     private TabView? _tabView;
     private Func<double>? _tabContentHeight;
     private Func<double>? _tabContentWight;
-    private readonly ObservableCollection<TabViewItem> _openedTabFileItems = [];
+    private readonly AvaloniaList<TabViewItem> _openedTabFileItems = [];
 
     // 高: 32, padding: 8
     private const double TabHeight = 40;
@@ -51,11 +52,13 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
 
     public void AddTab(ITabViewItem content)
     {
-        var openedTabFileItem = _openedTabFileItems.FirstOrDefault(item =>
-        {
-            var tabViewItem = item.Content as ITabViewItem;
-            return tabViewItem?.Equals(content) == true;
-        });
+        var openedTabFileItem = _openedTabFileItems
+            .AsValueEnumerable()
+            .FirstOrDefault(item =>
+            {
+                var tabViewItem = item.Content as ITabViewItem;
+                return tabViewItem?.Equals(content) == true;
+            });
 
         AddTabCore(openedTabFileItem, () => content);
     }
@@ -67,7 +70,9 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
     public void AddSingleTabFromIoc<TType>()
         where TType : class, ITabViewItem
     {
-        var openedTabFileItem = _openedTabFileItems.FirstOrDefault(item => item.Content is TType);
+        var openedTabFileItem = _openedTabFileItems
+            .AsValueEnumerable()
+            .FirstOrDefault(item => item.Content is TType);
         AddTabCore(openedTabFileItem, serviceProvider.GetRequiredService<TType>);
     }
 
@@ -79,11 +84,13 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
     public void AddTabFromIoc<TType>(string filePath)
         where TType : class, ITabViewItem
     {
-        var openedTabFileItem = _openedTabFileItems.FirstOrDefault(item =>
-        {
-            var i = item.Content as TType;
-            return i?.FilePath.Equals(filePath, StringComparison.OrdinalIgnoreCase) ?? false;
-        });
+        var openedTabFileItem = _openedTabFileItems
+            .AsValueEnumerable()
+            .FirstOrDefault(item =>
+            {
+                var i = item.Content as TType;
+                return i?.FilePath.Equals(filePath, StringComparison.OrdinalIgnoreCase) ?? false;
+            });
         AddTabCore(openedTabFileItem, serviceProvider.GetRequiredService<TType>);
     }
 
