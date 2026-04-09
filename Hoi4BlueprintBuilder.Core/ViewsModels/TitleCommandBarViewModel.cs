@@ -49,7 +49,6 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private readonly MessageBoxService _messageBoxService;
     private readonly TabViewService _tabViewService;
     private readonly UserStatusService _userStatusService;
-    private readonly NavigationService _navigationService;
     private readonly TelemetryService _telemetryService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -67,7 +66,6 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         _messageBoxService = messageBoxService;
         _tabViewService = tabViewService;
         _userStatusService = userStatusService;
-        _navigationService = navigationService;
         _telemetryService = telemetryService;
 
         _tabViewService.CurrentItemChanged += currentItem =>
@@ -194,5 +192,11 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
 
         rootNode.AllArray = [focusTreeNode];
         return rootNode.ToScript();
+    }
+
+    [RelayCommand]
+    private void OpenLocalizationManager()
+    {
+        _tabViewService.AddSingleTabFromIoc<LocalizationManagerView>();
     }
 }

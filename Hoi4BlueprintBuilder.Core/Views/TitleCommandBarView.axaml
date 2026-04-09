@@ -51,6 +51,12 @@
                 </fa:CommandBarButton.IconSource>
             </fa:CommandBarButton>
 
+            <fa:CommandBarButton Command="{Binding OpenLocalizationManagerCommand}" Label="本地化编辑器">
+                <fa:CommandBarButton.IconSource>
+                    <control:FontIconSource Glyph="&#xE775;" />
+                </fa:CommandBarButton.IconSource>
+            </fa:CommandBarButton>
+
             <fa:CommandBarSeparator Margin="4,0" />
 
             <fa:CommandBarElementContainer VerticalContentAlignment="Center" IsEnabled="{Binding IsFocusTreeEditorAtCurrent}">

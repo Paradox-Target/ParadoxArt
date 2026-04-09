@@ -29,6 +29,7 @@
         <PackageReference Include="DeviceId.Linux" />
         <PackageReference Include="DeviceId.Windows" />
         <PackageReference Include="DotNet.Glob" />
+        <PackageReference Include="DynamicData" />
         <PackageReference Include="FluentAvaloniaUI" />
         <PackageReference Include="Hardware.Info" />
         <PackageReference Include="JetBrains.Annotations" />

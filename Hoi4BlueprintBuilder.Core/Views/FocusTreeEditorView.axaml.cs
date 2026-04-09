@@ -23,7 +23,7 @@ using ZLinq;
 namespace Hoi4BlueprintBuilder.Core.Views;
 
 [RegisterTransient<FocusTreeEditorView>]
-public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, IClosed, ISave
+public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISave
 {
     public string Header { get; }
     public string FilePath { get; }
@@ -41,8 +41,6 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
     private CanvasInteractionManager? _interactionManager;
     private readonly Dictionary<StandardCursorType, Cursor> _cursorCache = new();
 
-    private const double FocusInfoViewWidthRatio = 0.35;
-    private const double FocusInfoViewHeightRatio = 0.9;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
@@ -418,14 +416,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ICl
     private void OpenFocusInfoView(FocusNode focusNode)
     {
         FocusInfoViewControl.DataContext = new FocusInfoViewModel(focusNode);
-        FocusInfoViewControl.Width = Bounds.Width * FocusInfoViewWidthRatio;
-        FocusInfoViewControl.Height = Bounds.Height * FocusInfoViewHeightRatio;
         FocusInfoViewControl.IsOpen = true;
-    }
-
-    public void Close()
-    {
-        ViewModel.Close();
     }
 
     public void Save()

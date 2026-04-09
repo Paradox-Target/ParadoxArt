@@ -130,7 +130,7 @@ public class LocalizationServiceTests
         _localizationService.AddOrUpdateLocalisation(focusFilePath, GameLanguage.Chinese, key, value);
 
         // 发送保存消息触发写入
-        StrongReferenceMessenger.Default.Send(new SaveFocusTreeMessage());
+        StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
 
         // Assert
         // 预期路径: <ModRoot>/localisation/simp_chinese/new_focus_tree.yml
@@ -185,7 +185,7 @@ public class LocalizationServiceTests
             "new_value"
         );
 
-        StrongReferenceMessenger.Default.Send(new SaveFocusTreeMessage());
+        StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
 
         // Assert
         var content = File.ReadAllText(existingLocPath);

@@ -4,8 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
+using Hoi4BlueprintBuilder.Core.Models.Localization;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using MethodTimer;
 using ParadoxPower.CSharp;
@@ -23,6 +25,8 @@ public sealed class LocalizationService
     >
 {
     private readonly SettingsService _settingsService;
+    private readonly GameResourcesPathService _gameResourcesPathService;
+
     private ICollection<(GameLanguage Language, FrozenDictionary<string, string> Items)> Localisations =>
         Resources.Values;
 
@@ -40,6 +44,7 @@ public sealed class LocalizationService
     [Time("加载本地化文件")]
     public LocalizationService(
         SettingsService settingsService,
+        GameResourcesPathService gameResourcesPathService,
         ProjectConfigService configService,
         IServiceProvider serviceProvider
     )
@@ -56,12 +61,13 @@ public sealed class LocalizationService
         )
     {
         _settingsService = settingsService;
-        StrongReferenceMessenger.Default.Register<SaveFocusTreeMessage>(this, SaveLocalizationHandler);
+        _gameResourcesPathService = gameResourcesPathService;
+        StrongReferenceMessenger.Default.Register<SaveLocalizationMessage>(this, SaveLocalizationHandler);
     }
 
-    private void SaveLocalizationHandler(object o, SaveFocusTreeMessage saveFocusTreeMessage)
+    private void SaveLocalizationHandler(object o, SaveLocalizationMessage saveLocalizationMessage)
     {
-        foreach (((string focusFilePath, var gameLanguage), var userLocalisation) in _filesLocalisations)
+        foreach (((string path, var gameLanguage), var userLocalisation) in _filesLocalisations)
         {
             string languageKey = $"l_{gameLanguage.ToGameLocalizationLanguage()}";
             // userLocalisation => Key: 本地化键, Value: 本地化文本
@@ -69,7 +75,7 @@ public sealed class LocalizationService
                 _settingsService.ModRootFolderPath,
                 "localisation",
                 gameLanguage.ToGameLocalizationLanguage(),
-                $"{Path.GetFileNameWithoutExtension(focusFilePath)}_{languageKey}.yml"
+                GetFileName(path, languageKey)
             );
             Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
 
@@ -98,6 +104,23 @@ public sealed class LocalizationService
 
         // TODO: 有可能会有一段时间的真空期, 解决方案: 监听文件更改, 当文件更改时才清空?
         _filesLocalisations.Clear();
+    }
+
+    private static string GetFileName(string filePath, string languageKey)
+    {
+        if (FileCheckHelper.IsFocusTreeFile(filePath))
+        {
+            return $"{Path.GetFileNameWithoutExtension(filePath)}_{languageKey}.yml";
+        }
+
+        var fileName = Path.GetFileName(filePath.AsSpan());
+        int index = fileName.IndexOf("_l_", StringComparison.InvariantCulture);
+        if (index != -1)
+        {
+            return $"{fileName[..index]}_{languageKey}.yml";
+        }
+
+        return $"{Path.GetFileNameWithoutExtension(filePath)}_{languageKey}.yml";
     }
 
     private static void WriteLocalisationToFile(
@@ -182,6 +205,73 @@ public sealed class LocalizationService
             _filesLocalisations.Add(mapKey, localisation);
         }
         localisation[key] = value;
+    }
+
+    /// <summary>
+    /// 获取当前 MOD 下所有本地化行数据（仅包含 Mod 目录下解析的文件和内存中暂存的内容）
+    /// </summary>
+    public IEnumerable<LocalizationRow> GetAllModLocalisationRows()
+    {
+        var rowsMap = new Dictionary<string, LocalizationRow>(StringComparer.OrdinalIgnoreCase);
+
+        // 1. 获取 MOD 下的所有静态文件中的记录
+        foreach (var resource in Resources)
+        {
+            string filePath = resource.Key;
+            // 判定是否是在 MOD 文件夹下
+            if (_gameResourcesPathService.GetFileOrigin(filePath) != FileOrigin.Mod)
+            {
+                continue;
+            }
+
+            var language = resource.Value.Language;
+            var items = resource.Value.Items;
+
+            foreach ((string key, string value) in items)
+            {
+                if (!rowsMap.TryGetValue(key, out var row))
+                {
+                    row = new LocalizationRow(key);
+                    rowsMap[key] = row;
+                }
+
+                var langItem = row.Languages.AsValueEnumerable().FirstOrDefault(l => l.Language == language);
+                if (langItem is null)
+                {
+                    row.Languages.Add(new LocalizationLanguageItem(language, filePath, value));
+                }
+                else
+                {
+                    langItem.Value = value;
+                }
+            }
+        }
+
+        // 2. 合并由用户修改而暂存到 _filesLocalisations 的内容 (优先覆盖)
+        foreach (var (mapKey, localizations) in _filesLocalisations)
+        {
+            (string filePath, var language) = mapKey;
+            foreach (var (key, value) in localizations)
+            {
+                if (!rowsMap.TryGetValue(key, out var row))
+                {
+                    row = new LocalizationRow(key);
+                    rowsMap[key] = row;
+                }
+
+                var langItem = row.Languages.AsValueEnumerable().FirstOrDefault(l => l.Language == language);
+                if (langItem is null)
+                {
+                    row.Languages.Add(new LocalizationLanguageItem(language, filePath, value));
+                }
+                else
+                {
+                    langItem.Value = value;
+                }
+            }
+        }
+
+        return rowsMap.Values;
     }
 
     protected override (GameLanguage, FrozenDictionary<string, string>) ParseFileToContent(

@@ -195,6 +195,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
 
     private void NavigateToMainView(string modRootFolderPath, Action? handle = null)
     {
+        Log.Info("打开项目: {Path}", modRootFolderPath);
         _settingsService.ModRootFolderPath = modRootFolderPath;
         handle?.Invoke();
         _navigationService.NavigateTo<MainView>();

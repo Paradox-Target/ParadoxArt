@@ -1,0 +1,57 @@
+<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.LocalizationManagerView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:LocalizationManagerViewModel"
+    mc:Ignorable="d">
+
+    <Grid RowDefinitions="Auto,*">
+        <!--  顶部工具栏  -->
+        <Border
+            Grid.Row="0"
+            Padding="10"
+            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBox
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding SearchText.Value}"
+                    Watermark="搜索 Key 或者 Value..." />
+
+                <Button
+                    Grid.Column="1"
+                    Margin="0,0,10,0"
+                    Command="{Binding SaveCommand}"
+                    Content="{x:Static lang:LangResources.Menu_Save}"
+                    HotKey="Ctrl+S" />
+            </Grid>
+        </Border>
+
+        <!--  底部数据表格  -->
+        <!--  我们将在后置代码中动态生成语言列  -->
+        <DataGrid
+            x:Name="MainDataGrid"
+            Grid.Row="1"
+            AutoGenerateColumns="False"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="True"
+            GridLinesVisibility="All"
+            ItemsSource="{Binding LocalizationRows}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="200"
+                    Binding="{Binding Key}"
+                    Header="Key"
+                    IsReadOnly="True" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+
+</UserControl>

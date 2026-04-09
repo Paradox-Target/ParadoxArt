@@ -3,4 +3,4 @@
 /// <summary>
 /// StrongReferenceMessenger
 /// </summary>
-public sealed record SaveFocusTreeMessage;
+public sealed record SaveLocalizationMessage;

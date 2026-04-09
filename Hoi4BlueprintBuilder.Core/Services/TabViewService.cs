@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
@@ -120,6 +121,12 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
         {
             closed.Close();
             Log.Debug("释放 {Content}", ((ITabViewItem)content.Content).Header);
+        }
+
+        if (content.Content is StyledElement { DataContext: IClosed c })
+        {
+            c.Close();
+            Log.Debug("释放 {Content} DataContext", ((ITabViewItem)content.Content).Header);
         }
         return _openedTabFileItems.Remove(content);
     }
