@@ -28,6 +28,7 @@ public sealed class SmokeTests
             _ = new CreateNewFocusView();
             _ = new NotSupportInfoControlView(new UserStatusService { CurrentSelectedFile = file });
             _ = new EulaView();
+            _ = new LocalizationManagerView();
         });
     }
 }

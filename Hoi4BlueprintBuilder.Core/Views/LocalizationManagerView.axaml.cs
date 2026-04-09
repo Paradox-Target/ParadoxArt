@@ -8,12 +8,21 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 [RegisterTransient<LocalizationManagerView>]
 public sealed partial class LocalizationManagerView : UserControl, ITabViewItem
 {
-    private readonly LocalizationManagerViewModel _viewModel;
-
     public string Header => "本地化编辑器";
     public string ToolTip => "Manage all localizations in the current MOD";
     public string FilePath => "internal://localization_manager";
     public IconSource? TabIcon { get; } = new SymbolIconSource { Symbol = Symbol.Character };
+
+    private readonly LocalizationManagerViewModel _viewModel;
+
+    /// <summary>
+    /// 设计器使用
+    /// </summary>
+    public LocalizationManagerView()
+    {
+        _viewModel = null!;
+        InitializeComponent();
+    }
 
     public LocalizationManagerView(LocalizationManagerViewModel viewModel)
     {
