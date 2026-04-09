@@ -133,8 +133,9 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
                 List<ConditionItem> ConditionItems
             )?>(() =>
             {
-                if (!TextParser.TryParse(filePath, out var rootNode, out _))
+                if (!TextParser.TryParse(filePath, out var rootNode, out var error))
                 {
+                    Log.LogParseError(error);
                     return null;
                 }
                 return _focusTreeFileService.GetAllNodesFromAst(filePath, rootNode);
@@ -283,7 +284,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         }
 
         // 通知本地化服务保存本地化文本
-        StrongReferenceMessenger.Default.Send(new SaveFocusTreeMessage());
+        StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
 
         // 将编辑器中的 FocusNode 按照文件路径分组
         var maps = _editorNodesMap
