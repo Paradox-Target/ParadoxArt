@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
@@ -162,11 +163,19 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task PickGameRootPath()
     {
-        using var dialog = await _fileService.OpenFolderAsync();
+        using var storageFolder = await _fileService.OpenFolderAsync();
 
-        if (dialog is not null)
+        if (storageFolder is not null)
         {
-            GameRootFolderPath = dialog.Path.LocalPath;
+            bool isExist = await storageFolder.GetFileAsync("hoi4.exe") is not null;
+            if (!isExist)
+            {
+                await _messageBoxService
+                    .ShowErrorAsync("未在选择目录中找到 hoi4.exe 文件, 请确认当前目录是游戏根目录")
+                    .ConfigureAwait(false);
+                return;
+            }
+            GameRootFolderPath = storageFolder.TryGetLocalPath() ?? throw new InvalidOperationException();
         }
     }
 

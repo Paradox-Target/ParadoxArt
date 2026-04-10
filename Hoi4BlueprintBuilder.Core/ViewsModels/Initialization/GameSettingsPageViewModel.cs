@@ -9,8 +9,11 @@ using Hoi4BlueprintBuilder.Core.Views.Initialization;
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Initialization;
 
 [RegisterTransient<GameSettingsPageViewModel>]
-public sealed partial class GameSettingsPageViewModel(SettingsService settings, FileService fileService)
-    : ObservableObject
+public sealed partial class GameSettingsPageViewModel(
+    SettingsService settings,
+    FileService fileService,
+    MessageBoxService messageBoxService
+) : ObservableObject
 {
     public Frame? Frame { get; set; }
 
@@ -27,7 +30,16 @@ public sealed partial class GameSettingsPageViewModel(SettingsService settings, 
 
         if (storageFolder is not null)
         {
-            GamePath = storageFolder.TryGetLocalPath() ?? throw new NullReferenceException();
+            //TODO: 如果要新增其他平台支持, 这一块需要改
+            bool isExist = await storageFolder.GetFileAsync("hoi4.exe") is not null;
+            if (!isExist)
+            {
+                await messageBoxService
+                    .ShowErrorAsync("未在选择目录中找到 hoi4.exe 文件, 请确认当前目录是游戏根目录")
+                    .ConfigureAwait(false);
+                return;
+            }
+            GamePath = storageFolder.TryGetLocalPath() ?? throw new InvalidOperationException();
             settings.GameRootFolderPath = GamePath;
         }
     }
