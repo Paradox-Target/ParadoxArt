@@ -76,7 +76,11 @@
         </TreeView.Styles>
         <TreeView.ItemTemplate>
             <TreeDataTemplate x:DataType="models:SystemFileItem" ItemsSource="{Binding Children}">
-                <TextBlock Text="{Binding Name}" />
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <fa:SymbolIcon Symbol="Folder" FontSize="15" IsVisible="{Binding IsFolder}" />
+                    <fa:SymbolIcon Symbol="Document" FontSize="15" IsVisible="{Binding IsFile}" />
+                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                </StackPanel>
             </TreeDataTemplate>
         </TreeView.ItemTemplate>
     </TreeView>
