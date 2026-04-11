@@ -50,6 +50,11 @@ public sealed class FileService(MainWindow mainWindow, TelemetryService telemetr
         return mainWindow.Launcher.LaunchUriAsync(new Uri(path));
     }
 
+    public Task<bool> LaunchUriAsync(Uri uri)
+    {
+        return mainWindow.Launcher.LaunchUriAsync(uri);
+    }
+
     public void OpenInExplorer(string path)
     {
         if (OperatingSystem.IsWindows())

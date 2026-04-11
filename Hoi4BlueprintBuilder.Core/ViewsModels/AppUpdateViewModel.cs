@@ -47,18 +47,21 @@ public sealed partial class AppUpdateViewModel : ObservableObject
     private readonly MessageBoxService _messageBoxService;
     private readonly NavigationService _navigationService;
     private readonly TelemetryService _telemetryService;
+    private readonly FileService _fileService;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public AppUpdateViewModel(
         MessageBoxService messageBoxService,
         NavigationService navigationService,
         TelemetryService telemetryService,
-        SettingsService settingsService
+        SettingsService settingsService,
+        FileService fileService
     )
     {
         _messageBoxService = messageBoxService;
         _navigationService = navigationService;
         _telemetryService = telemetryService;
+        _fileService = fileService;
         if (Design.IsDesignMode)
         {
             _updateManager = null!;
@@ -202,6 +205,15 @@ public sealed partial class AppUpdateViewModel : ObservableObject
     private void NavigateIfDoNotUpdate()
     {
         _navigationService.NavigateBasedOnDeviceStatus();
+    }
+
+    [RelayCommand]
+    private void OpenLink(LinkClickedEventArgs args)
+    {
+        if (args.HRef is not null)
+        {
+            _fileService.LaunchUriAsync(args.HRef);
+        }
     }
 
     private sealed class HighHttpVersionClientFileDownloader : HttpClientFileDownloader
