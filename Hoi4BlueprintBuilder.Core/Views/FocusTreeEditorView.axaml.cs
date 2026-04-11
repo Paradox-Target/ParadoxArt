@@ -362,7 +362,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
             IsPrimaryButtonEnabled = false
         };
         var viewModel = new CreateNewFocusViewModel(
-            ViewModel.GetAllFocusFiles(),
+            ViewModel.AllFocusFiles,
             enable => dialog.IsPrimaryButtonEnabled = enable,
             focusId => ViewModel.ContainsFocus(focusId)
         )

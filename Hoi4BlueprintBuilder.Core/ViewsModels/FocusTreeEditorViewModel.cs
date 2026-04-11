@@ -373,10 +373,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     [ObservableProperty]
     private double _translateY;
 
-    public IReadOnlyCollection<string> GetAllFocusFiles()
-    {
-        return _focusTreeFiles;
-    }
+    public IReadOnlyCollection<string> AllFocusFiles => _focusTreeFiles;
 
     /// <summary>
     ///

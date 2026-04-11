@@ -1,7 +1,9 @@
+using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using FluentAvalonia.UI.Controls;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
@@ -10,6 +12,7 @@ using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
@@ -50,6 +53,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private readonly TabViewService _tabViewService;
     private readonly UserStatusService _userStatusService;
     private readonly TelemetryService _telemetryService;
+    private readonly FileResourceService _fileResourceService;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -59,7 +63,8 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         TabViewService tabViewService,
         UserStatusService userStatusService,
         NavigationService navigationService,
-        TelemetryService telemetryService
+        TelemetryService telemetryService,
+        FileResourceService fileResourceService
     )
     {
         _settingsService = settingsService;
@@ -67,6 +72,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         _tabViewService = tabViewService;
         _userStatusService = userStatusService;
         _telemetryService = telemetryService;
+        _fileResourceService = fileResourceService;
 
         _tabViewService.CurrentItemChanged += currentItem =>
         {
@@ -198,5 +204,39 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private void OpenLocalizationManager()
     {
         _tabViewService.AddSingleTabFromIoc<LocalizationManagerView>();
+        _telemetryService.TrackEvent("OpenLocalizationManager");
+    }
+
+    [RelayCommand]
+    private async Task OpenImageImport()
+    {
+        var fileService = App.Current.Services.GetRequiredService<FileService>();
+        _telemetryService.TrackEvent("ImageImport");
+
+        var type = new FilePickerFileType("Image") { Patterns = ["*.png", "*.dds"] };
+        var imageFile = await fileService.OpenFileAsync(
+            new FilePickerOpenOptions
+            {
+                Title = "选择图片",
+                AllowMultiple = false,
+                FileTypeFilter = [type]
+            }
+        );
+        if (imageFile is null)
+        {
+            return;
+        }
+
+        string path = imageFile.TryGetLocalPath() ?? throw new PlatformNotSupportedException();
+        if (!ImageHelper.IsValidFocusImageFormat(path))
+        {
+            _ = _messageBoxService.ShowErrorAsync("不支持的图像格式", "导入图片失败");
+            return;
+        }
+
+        var result = _fileResourceService.RegisterFocusIcon(path);
+        _ = _messageBoxService.ShowAsync(
+            $"导入成功, 导入路径: \n{result.DestFilePath} \nSpriteName: {result.SpriteName}"
+        );
     }
 }

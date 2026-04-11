@@ -57,6 +57,12 @@
                 </fa:CommandBarButton.IconSource>
             </fa:CommandBarButton>
 
+            <fa:CommandBarButton Command="{Binding OpenImageImportCommand}" Label="导入国策Icon">
+                <fa:CommandBarButton.IconSource>
+                    <control:FontIconSource Glyph="&#xE8B5;" />
+                </fa:CommandBarButton.IconSource>
+            </fa:CommandBarButton>
+
             <fa:CommandBarSeparator Margin="4,0" />
 
             <fa:CommandBarElementContainer VerticalContentAlignment="Center" IsEnabled="{Binding IsFocusTreeEditorAtCurrent}">

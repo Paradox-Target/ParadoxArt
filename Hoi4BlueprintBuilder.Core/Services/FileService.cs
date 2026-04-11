@@ -12,11 +12,14 @@ public sealed class FileService(MainWindow mainWindow, TelemetryService telemetr
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public async Task<IStorageFile?> OpenFileAsync(string title = "Open File")
+    public Task<IStorageFile?> OpenFileAsync(string title = "Open File")
     {
-        var files = await mainWindow.StorageProvider.OpenFilePickerAsync(
-            new FilePickerOpenOptions { Title = title, AllowMultiple = false }
-        );
+        return OpenFileAsync(new FilePickerOpenOptions { Title = title, AllowMultiple = false });
+    }
+
+    public async Task<IStorageFile?> OpenFileAsync(FilePickerOpenOptions options)
+    {
+        var files = await mainWindow.StorageProvider.OpenFilePickerAsync(options);
 
         return files.Count >= 1 ? files[0] : null;
     }
