@@ -20,4 +20,4 @@ jobs:
       with:
         dotnet-version: 10.0.x
     - name: Test
-      run: dotnet test
+      run: dotnet test --project Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj
