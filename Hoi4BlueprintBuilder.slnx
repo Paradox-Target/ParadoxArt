@@ -11,6 +11,7 @@
     <File Path="Hoi4BlueprintBuilder.Windows/full-build.ps1" />
     <File Path="Hoi4BlueprintBuilder.Windows/publish.ps1" />
   </Folder>
+  <Project Path="Hoi4BlueprintBuilder.Linux/Hoi4BlueprintBuilder.Linux.csproj" />
   <Project Path="Hoi4BlueprintBuilder.Localization/Hoi4BlueprintBuilder.Localization.csproj" />
   <Project Path="Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj" />
   <Project Path="Hoi4BlueprintBuilder.Windows/Hoi4BlueprintBuilder.Windows.csproj" />
