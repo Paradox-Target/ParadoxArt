@@ -22,7 +22,8 @@ namespace Hoi4BlueprintBuilder.Core;
 public sealed class App : Application
 {
     public const string AppName = "ParadoxArt";
-    public static readonly Version Version = Assembly.GetEntryAssembly()?.GetName().Version ?? new Version();
+    public static readonly Version Version =
+        Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
     public static new App Current => (App)Application.Current!;
 
     public ServiceProvider Services { get; private set; } = null!;
