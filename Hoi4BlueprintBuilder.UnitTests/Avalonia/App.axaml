@@ -15,7 +15,7 @@
             <FontFamily x:Key="MainFontFamily">$Default</FontFamily>
             <FontFamily x:Key="CodeFontFamily">$Default</FontFamily>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://ParadoxArt.Core/Assets/Icons/IconsDictionary.axaml" />
+                <ResourceInclude Source="avares://ParadoxArt.Core/Constants/IconsDictionary.axaml" />
                 <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
