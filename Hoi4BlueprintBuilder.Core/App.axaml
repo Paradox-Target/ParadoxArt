@@ -18,8 +18,8 @@
             <FontFamily x:Key="MainFontFamily">$Default</FontFamily>
             <FontFamily x:Key="CodeFontFamily">$Default</FontFamily>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="/Assets/ConstantDictionary.axaml" />
-                <ResourceInclude Source="/Assets/Icons/IconsDictionary.axaml" />
+                <ResourceInclude Source="/Constants/ConstantDictionary.axaml" />
+                <ResourceInclude Source="/Constants/IconsDictionary.axaml" />
                 <ResourceInclude Source="/Styles/AppThemeResource.axaml" />
                 <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml" />
             </ResourceDictionary.MergedDictionaries>
