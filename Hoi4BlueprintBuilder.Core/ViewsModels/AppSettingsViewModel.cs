@@ -56,32 +56,32 @@ public sealed partial class AppSettingsViewModel : ObservableObject
 
     public bool IsAutoFocusPngConvertToDds
     {
+        get => _settings.IsAutoFocusPngConvertToDds;
         set
         {
             _settings.IsAutoFocusPngConvertToDds = value;
             OnPropertyChanged();
         }
-        get => _settings.IsAutoFocusPngConvertToDds;
     }
 
     public bool IsAutoOpenFocusInfoCard
     {
+        get => _settings.IsAutoOpenFocusInfoCard;
         set
         {
             _settings.IsAutoOpenFocusInfoCard = value;
             OnPropertyChanged();
         }
-        get => _settings.IsAutoOpenFocusInfoCard;
     }
 
     public bool EnableTelemetry
     {
+        get => _settings.EnableTelemetry;
         set
         {
             _settings.EnableTelemetry = value;
             OnPropertyChanged();
         }
-        get => _settings.EnableTelemetry;
     }
 
     public string GameRootFolderPath
