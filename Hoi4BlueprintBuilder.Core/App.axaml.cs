@@ -94,15 +94,13 @@ public sealed class App : Application
     {
         if (_serviceCollection is null)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("serviceCollection未初始化");
         }
 
         ConfiguringServices?.Invoke(_serviceCollection);
         _serviceCollection.TryAddSingleton<IFileSortComparer, DefaultFileSortComparer>();
 
-        Services =
-            _serviceCollection?.BuildServiceProvider()
-            ?? throw new ArgumentException("serviceCollection未初始化");
+        Services = _serviceCollection.BuildServiceProvider();
 
         var settingsService = Services.GetRequiredService<SettingsService>();
         RequestedThemeVariant = settingsService.ThemeMode.ToThemeVariant();
