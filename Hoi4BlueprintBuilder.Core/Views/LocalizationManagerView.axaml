@@ -22,8 +22,8 @@
                     Grid.Column="0"
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
-                    Text="{Binding SearchText.Value}"
-                    Watermark="搜索 Key 或者 Value..." />
+                    PlaceholderText="搜索 Key 或者 Value..."
+                    Text="{Binding SearchText.Value}" />
 
                 <Button
                     Grid.Column="1"

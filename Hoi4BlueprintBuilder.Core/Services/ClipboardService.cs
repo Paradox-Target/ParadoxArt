@@ -1,4 +1,5 @@
-﻿using Hoi4BlueprintBuilder.Core.Views;
+﻿using Avalonia.Input.Platform;
+using Hoi4BlueprintBuilder.Core.Views;
 using NLog;
 
 namespace Hoi4BlueprintBuilder.Core.Services;

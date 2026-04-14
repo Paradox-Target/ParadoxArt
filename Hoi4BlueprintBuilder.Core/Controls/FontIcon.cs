@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using Avalonia.Media;
+using FluentAvalonia.UI.Controls;
 
 namespace Hoi4BlueprintBuilder.Core.Controls;
 
-public sealed class FontIcon : FluentAvalonia.UI.Controls.FontIcon
+public sealed class FontIcon : FAFontIcon
 {
     public FontIcon()
     {

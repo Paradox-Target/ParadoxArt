@@ -16,7 +16,7 @@ public sealed partial class LocalizationManagerView : UserControl, ITabViewItem
     public string Header => "本地化编辑器";
     public string ToolTip => "Manage all localizations in the current MOD";
     public string FilePath => "internal://localization_manager";
-    public IconSource? TabIcon { get; } = new SymbolIconSource { Symbol = Symbol.Character };
+    public FAIconSource? TabIcon { get; } = new FASymbolIconSource { Symbol = FASymbol.Character };
 
     private readonly LocalizationManagerViewModel _viewModel;
 

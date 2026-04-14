@@ -11,7 +11,7 @@ public sealed partial class NewFileOrFolderView : UserControl
     private NewFileOrFolderViewModel OrFolderViewModel { get; }
 
     public NewFileOrFolderView(
-        ContentDialog dialog,
+        FAContentDialog dialog,
         string targetDirectoryPath,
         string defaultName,
         bool isFile

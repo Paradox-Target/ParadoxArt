@@ -144,7 +144,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
     private void OnInitialized(object? sender, EventArgs e)
     {
         // 方便右键菜单在前端绑定 Command
-        foreach (MenuFlyoutItem? item in _menuFlyout.Items)
+        foreach (FAMenuFlyoutItem? item in _menuFlyout.Items)
         {
             item?.DataContext = this;
         }
@@ -353,12 +353,12 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
     [RelayCommand(CanExecute = nameof(CursorNotOverFocus))]
     private async Task CreateNewFocus()
     {
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Title = "新建国策",
             CloseButtonText = "取消",
             PrimaryButtonText = "创建",
-            DefaultButton = ContentDialogButton.Primary,
+            DefaultButton = FAContentDialogButton.Primary,
             IsPrimaryButtonEnabled = false
         };
         var viewModel = new CreateNewFocusViewModel(
@@ -375,7 +375,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         var result = await dialog.ShowAsync();
         viewModel.Clean();
 
-        if (result == ContentDialogResult.Primary)
+        if (result == FAContentDialogResult.Primary)
         {
             var position = _interactionManager?.GetRightClickGridPosition() ?? (0, 0);
             var newFocusNode = await StrongReferenceMessenger.Default.Send(

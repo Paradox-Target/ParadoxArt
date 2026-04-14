@@ -38,8 +38,8 @@ public sealed class MultiComboBox : SelectingItemsControl
     public static readonly StyledProperty<IDataTemplate?> SelectedItemTemplateProperty =
         AvaloniaProperty.Register<MultiComboBox, IDataTemplate?>(nameof(SelectedItemTemplate));
 
-    public static readonly StyledProperty<string?> WatermarkProperty =
-        TextBox.WatermarkProperty.AddOwner<MultiComboBox>();
+    public static readonly StyledProperty<string?> PlaceholderTextProperty =
+        TextBox.PlaceholderTextProperty.AddOwner<MultiComboBox>();
 
     public bool IsDropDownOpen
     {
@@ -65,10 +65,10 @@ public sealed class MultiComboBox : SelectingItemsControl
         set => SetValue(SelectedItemTemplateProperty, value);
     }
 
-    public string? Watermark
+    public string? PlaceholderText
     {
-        get => GetValue(WatermarkProperty);
-        set => SetValue(WatermarkProperty, value);
+        get => GetValue(PlaceholderTextProperty);
+        set => SetValue(PlaceholderTextProperty, value);
     }
 
     public ICommand RemoveItemCommand { get; }

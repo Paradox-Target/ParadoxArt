@@ -67,17 +67,17 @@
 
                     <StackPanel Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center" Text="X: " />
-                        <fa:NumberBox Value="{Binding X, Mode=TwoWay}" />
+                        <fa:FANumberBox Value="{Binding X, Mode=TwoWay}" />
                         <TextBlock
                             Margin="8,0,0,0"
                             VerticalAlignment="Center"
                             Text="Y: " />
-                        <fa:NumberBox Value="{Binding Y, Mode=TwoWay}" />
+                        <fa:FANumberBox Value="{Binding Y, Mode=TwoWay}" />
                     </StackPanel>
 
                     <TextBlock Text="Cost" />
                     <StackPanel Orientation="Horizontal">
-                        <fa:NumberBox
+                        <fa:FANumberBox
                             Minimum="0"
                             SpinButtonPlacementMode="Inline"
                             ValidationMode="InvalidInputOverwritten"
@@ -110,7 +110,7 @@
                                                 Margin="0,0,0,8"
                                                 Orientation="Horizontal"
                                                 Spacing="4">
-                                                <fa:FontIcon
+                                                <fa:FAFontIcon
                                                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                                                     FontSize="12"
                                                     Glyph="&#xE71D;" />
@@ -140,7 +140,7 @@
                                                                     Text="{Binding LocalizedName}" />
                                                                 <Button Click="RemovePrerequisite">
                                                                     <Button.Content>
-                                                                        <fa:SymbolIcon Symbol="Cancel" />
+                                                                        <fa:FASymbolIcon Symbol="Cancel" />
                                                                     </Button.Content>
                                                                 </Button>
                                                             </StackPanel>
@@ -171,7 +171,7 @@
                                                 Text="{Binding LocalizedName}" />
                                             <Button Click="RemoveMutuallyExclusive">
                                                 <Button.Content>
-                                                    <fa:SymbolIcon Symbol="Cancel" />
+                                                    <fa:FASymbolIcon Symbol="Cancel" />
                                                 </Button.Content>
                                             </Button>
                                         </StackPanel>

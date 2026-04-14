@@ -11,7 +11,7 @@ public sealed partial class RenameFileView : UserControl
     public bool IsInvalid => ViewModel.HasErrors;
     private RenameFileViewModel ViewModel { get; }
 
-    public RenameFileView(ContentDialog dialog, SystemFileItem fileItem)
+    public RenameFileView(FAContentDialog dialog, SystemFileItem fileItem)
     {
         InitializeComponent();
         ViewModel = new RenameFileViewModel(dialog, fileItem);

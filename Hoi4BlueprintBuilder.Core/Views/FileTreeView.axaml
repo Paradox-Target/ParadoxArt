@@ -15,51 +15,51 @@
 
     <UserControl.Resources>
         <fa:FAMenuFlyout x:Key="ContextMenu" x:DataType="models:SystemFileItem">
-            <fa:MenuFlyoutItem Command="{Binding NewFileCommand}" Text="{x:Static lang:LangResources.Menu_NewFile}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="Add" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding NewFileCommand}" Text="{x:Static lang:LangResources.Menu_NewFile}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Add" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
 
-            <fa:MenuFlyoutItem Command="{Binding NewFolderCommand}" Text="{x:Static lang:LangResources.Menu_NewFolder}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="NewFolder" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding NewFolderCommand}" Text="{x:Static lang:LangResources.Menu_NewFolder}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="NewFolder" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
 
-            <fa:MenuFlyoutSeparator />
+            <fa:FAMenuFlyoutSeparator />
 
-            <fa:MenuFlyoutItem Command="{Binding DeleteFileCommand}" Text="{x:Static lang:LangResources.Common_Delete}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="Delete" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding DeleteFileCommand}" Text="{x:Static lang:LangResources.Common_Delete}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Delete" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
 
-            <fa:MenuFlyoutItem Command="{Binding RenameCommand}" Text="{x:Static lang:LangResources.Common_Rename}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="Rename" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding RenameCommand}" Text="{x:Static lang:LangResources.Common_Rename}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Rename" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
 
-            <fa:MenuFlyoutItem Command="{Binding ShowInExplorerCommand}" Text="{x:Static lang:LangResources.File_OpenInExplorer}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="OpenLocal" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding ShowInExplorerCommand}" Text="{x:Static lang:LangResources.File_OpenInExplorer}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="OpenLocal" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
 
-            <fa:MenuFlyoutSeparator />
+            <fa:FAMenuFlyoutSeparator />
 
-            <fa:MenuFlyoutItem Command="{Binding CopyPathCommand}" Text="{x:Static lang:LangResources.Menu_CopyFullPath}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="Copy" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding CopyPathCommand}" Text="{x:Static lang:LangResources.Menu_CopyFullPath}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Copy" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
 
-            <fa:MenuFlyoutItem Command="{Binding CopyAsRelativePathCommand}" Text="{x:Static lang:LangResources.Menu_CopyRelativePath}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="Copy" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding CopyAsRelativePathCommand}" Text="{x:Static lang:LangResources.Menu_CopyRelativePath}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Copy" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
         </fa:FAMenuFlyout>
     </UserControl.Resources>
 
@@ -70,16 +70,22 @@
         SelectionChanged="TreeView_OnSelectionChanged"
         SelectionMode="Single">
         <TreeView.Styles>
-            <Style Selector="TreeViewItem" x:DataType="models:SystemFileItem">
+            <Style x:DataType="models:SystemFileItem" Selector="TreeViewItem">
                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
             </Style>
         </TreeView.Styles>
         <TreeView.ItemTemplate>
             <TreeDataTemplate x:DataType="models:SystemFileItem" ItemsSource="{Binding Children}">
                 <StackPanel Orientation="Horizontal" Spacing="4">
-                    <fa:SymbolIcon Symbol="Folder" FontSize="15" IsVisible="{Binding IsFolder}" />
-                    <fa:SymbolIcon Symbol="Document" FontSize="15" IsVisible="{Binding IsFile}" />
-                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                    <fa:FASymbolIcon
+                        FontSize="15"
+                        IsVisible="{Binding IsFolder}"
+                        Symbol="Folder" />
+                    <fa:FASymbolIcon
+                        FontSize="15"
+                        IsVisible="{Binding IsFile}"
+                        Symbol="Document" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
                 </StackPanel>
             </TreeDataTemplate>
         </TreeView.ItemTemplate>

@@ -122,7 +122,7 @@ public sealed partial class SystemFileItem : ObservableObject
     {
         TelemetryService.TrackEvent("FileTree_ContextMenu_Rename");
 
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Title = LangResources.Common_Rename,
             PrimaryButtonText = LangResources.Common_Ok,
@@ -133,7 +133,7 @@ public sealed partial class SystemFileItem : ObservableObject
         dialog.Content = view;
 
         var result = await dialog.ShowAsync();
-        if (result != ContentDialogResult.Primary)
+        if (result != FAContentDialogResult.Primary)
         {
             Log.Debug("取消重命名");
             return;
@@ -244,19 +244,19 @@ public sealed partial class SystemFileItem : ObservableObject
 
         string targetDir = IsFolder ? FullPath : Path.GetDirectoryName(FullPath)!;
 
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Title = LangResources.Menu_NewFile,
             PrimaryButtonText = LangResources.Common_Ok,
             CloseButtonText = LangResources.Common_Cancel,
-            DefaultButton = ContentDialogButton.Primary
+            DefaultButton = FAContentDialogButton.Primary
         };
 
         var view = new NewFileOrFolderView(dialog, targetDir, DefaultNewFileName, true);
         dialog.Content = view;
 
         var result = await dialog.ShowAsync();
-        if (result != ContentDialogResult.Primary)
+        if (result != FAContentDialogResult.Primary)
         {
             return;
         }
@@ -299,19 +299,19 @@ public sealed partial class SystemFileItem : ObservableObject
 
         string targetDir = IsFolder ? FullPath : Path.GetDirectoryName(FullPath)!;
 
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Title = LangResources.Menu_NewFolder,
             PrimaryButtonText = LangResources.Common_Ok,
             CloseButtonText = LangResources.Common_Cancel,
-            DefaultButton = ContentDialogButton.Primary
+            DefaultButton = FAContentDialogButton.Primary
         };
 
         var view = new NewFileOrFolderView(dialog, targetDir, DefaultNewFolderName, false);
         dialog.Content = view;
 
         var result = await dialog.ShowAsync();
-        if (result != ContentDialogResult.Primary)
+        if (result != FAContentDialogResult.Primary)
         {
             return;
         }

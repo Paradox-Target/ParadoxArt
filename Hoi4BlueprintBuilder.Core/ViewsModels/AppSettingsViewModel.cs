@@ -220,7 +220,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
             var sb = new ObservableStringBuilder();
             sb.Append(text);
 
-            var dialog = new ContentDialog
+            var dialog = new FAContentDialog
             {
                 Title = "用户协议 (EULA)",
                 Content = new MarkdownRenderer { MarkdownBuilder = sb, Margin = new Thickness(10) },

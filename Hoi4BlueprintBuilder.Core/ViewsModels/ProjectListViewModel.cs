@@ -88,12 +88,12 @@ public sealed partial class ProjectListViewModel : ObservableObject
     [RelayCommand]
     private async Task CreateNewProject()
     {
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Title = LangResources.CreateNewProject_Title,
             PrimaryButtonText = LangResources.Common_Ok,
             CloseButtonText = LangResources.Common_Cancel,
-            DefaultButton = ContentDialogButton.Primary,
+            DefaultButton = FAContentDialogButton.Primary,
             IsPrimaryButtonEnabled = false
         };
         var viewModel = new CreateNewProjectViewModel(
@@ -103,7 +103,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
 
         var view = new CreateNewProjectView { DataContext = viewModel };
         dialog.Content = view;
-        if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+        if (await dialog.ShowAsync() != FAContentDialogResult.Primary)
         {
             return;
         }

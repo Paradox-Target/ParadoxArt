@@ -19,10 +19,10 @@ public sealed partial class RenameFileViewModel : ObservableValidator
 
     public int SelectionEnd { get; }
 
-    private readonly ContentDialog _dialog;
+    private readonly FAContentDialog _dialog;
     private readonly SystemFileItem _fileItem;
 
-    public RenameFileViewModel(ContentDialog dialog, SystemFileItem fileItem)
+    public RenameFileViewModel(FAContentDialog dialog, SystemFileItem fileItem)
     {
         _dialog = dialog;
         _fileItem = fileItem;

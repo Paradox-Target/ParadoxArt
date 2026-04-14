@@ -10,7 +10,7 @@ namespace Hoi4BlueprintBuilder.Core.Views.Initialization;
 
 public sealed partial class AppSettingsPageView : UserControl
 {
-    private readonly Frame _frame;
+    private readonly FAFrame _frame;
 
     /// <summary>
     /// 设计器使用
@@ -18,10 +18,10 @@ public sealed partial class AppSettingsPageView : UserControl
     public AppSettingsPageView()
     {
         InitializeComponent();
-        _frame = new Frame();
+        _frame = new FAFrame();
     }
 
-    public AppSettingsPageView(Frame frame)
+    public AppSettingsPageView(FAFrame frame)
     {
         _frame = frame;
         InitializeComponent();

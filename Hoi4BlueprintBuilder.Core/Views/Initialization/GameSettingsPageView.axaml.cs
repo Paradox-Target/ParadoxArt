@@ -12,7 +12,7 @@ public partial class GameSettingsPageView : UserControl
     /// </summary>
     public GameSettingsPageView() => InitializeComponent();
 
-    public GameSettingsPageView(Frame frame)
+    public GameSettingsPageView(FAFrame frame)
     {
         InitializeComponent();
 

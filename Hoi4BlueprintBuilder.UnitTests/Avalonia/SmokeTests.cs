@@ -22,7 +22,7 @@ public sealed class SmokeTests
             _ = new ProjectSettingsView();
             _ = new MainSettingsView();
             _ = new AppSettingsPageView();
-            _ = new RenameFileView(new ContentDialog(), file);
+            _ = new RenameFileView(new FAContentDialog(), file);
             _ = new CreateNewProjectView();
             _ = new CreateNewFocusTreeFileView();
             _ = new CreateNewFocusView();

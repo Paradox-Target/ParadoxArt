@@ -30,42 +30,42 @@
         </Style>
     </UserControl.Styles>
 
-    <fa:CommandBar DefaultLabelPosition="Right">
-        <fa:CommandBar.PrimaryCommands>
-            <fa:CommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:LangResources.Menu_CreateNewFocusTree}">
-                <fa:CommandBarButton.IconSource>
+    <fa:FACommandBar DefaultLabelPosition="Right">
+        <fa:FACommandBar.PrimaryCommands>
+            <fa:FACommandBarButton Command="{Binding CreateNewFocusTreeFileCommand}" Label="{x:Static lang:LangResources.Menu_CreateNewFocusTree}">
+                <fa:FACommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xECC8;" />
-                </fa:CommandBarButton.IconSource>
-            </fa:CommandBarButton>
-            <fa:CommandBarButton
+                </fa:FACommandBarButton.IconSource>
+            </fa:FACommandBarButton>
+            <fa:FACommandBarButton
                 Command="{Binding SaveFileCommand}"
                 HotKey="Ctrl+S"
                 IconSource="Save"
                 Label="{x:Static lang:LangResources.Menu_Save}" />
-            <fa:CommandBarButton
+            <fa:FACommandBarButton
                 Command="{Binding ExportFocusTreeScreenshotCommand}"
                 IsEnabled="{Binding IsFocusTreeEditorAtCurrent}"
                 Label="导出截图">
-                <fa:CommandBarButton.IconSource>
+                <fa:FACommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xEE71;" />
-                </fa:CommandBarButton.IconSource>
-            </fa:CommandBarButton>
+                </fa:FACommandBarButton.IconSource>
+            </fa:FACommandBarButton>
 
-            <fa:CommandBarButton Command="{Binding OpenLocalizationManagerCommand}" Label="本地化编辑器">
-                <fa:CommandBarButton.IconSource>
+            <fa:FACommandBarButton Command="{Binding OpenLocalizationManagerCommand}" Label="本地化编辑器">
+                <fa:FACommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xE775;" />
-                </fa:CommandBarButton.IconSource>
-            </fa:CommandBarButton>
+                </fa:FACommandBarButton.IconSource>
+            </fa:FACommandBarButton>
 
-            <fa:CommandBarButton Command="{Binding OpenImageImportCommand}" Label="导入国策Icon">
-                <fa:CommandBarButton.IconSource>
+            <fa:FACommandBarButton Command="{Binding OpenImageImportCommand}" Label="导入国策Icon">
+                <fa:FACommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xE8B5;" />
-                </fa:CommandBarButton.IconSource>
-            </fa:CommandBarButton>
+                </fa:FACommandBarButton.IconSource>
+            </fa:FACommandBarButton>
 
-            <fa:CommandBarSeparator Margin="4,0" />
+            <fa:FACommandBarSeparator Margin="4,0" />
 
-            <fa:CommandBarElementContainer VerticalContentAlignment="Center" IsEnabled="{Binding IsFocusTreeEditorAtCurrent}">
+            <fa:FACommandBarElementContainer VerticalContentAlignment="Center" IsEnabled="{Binding IsFocusTreeEditorAtCurrent}">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <TextBlock VerticalAlignment="Center" Text="条件:" />
                     <Button Content="当前内容">
@@ -103,8 +103,8 @@
                     </Button>
                 </StackPanel>
 
-            </fa:CommandBarElementContainer>
-        </fa:CommandBar.PrimaryCommands>
-    </fa:CommandBar>
+            </fa:FACommandBarElementContainer>
+        </fa:FACommandBar.PrimaryCommands>
+    </fa:FACommandBar>
 
 </UserControl>

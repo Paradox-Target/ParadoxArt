@@ -42,7 +42,7 @@
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="请稍候，由于网络原因这可能需要一些时间..." />
             </StackPanel>
-            <fa:ProgressRing
+            <fa:FAProgressRing
                 Grid.Row="1"
                 Width="48"
                 Height="48"

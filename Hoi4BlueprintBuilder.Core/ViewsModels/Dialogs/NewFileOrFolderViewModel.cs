@@ -17,7 +17,7 @@ public sealed partial class NewFileOrFolderViewModel : ObservableValidator
 
     public int SelectionEnd { get; }
 
-    private readonly ContentDialog _dialog;
+    private readonly FAContentDialog _dialog;
     private readonly string _targetDirectoryPath;
 
     /// <summary>
@@ -28,7 +28,7 @@ public sealed partial class NewFileOrFolderViewModel : ObservableValidator
     /// <param name="defaultName">默认文件/文件夹名</param>
     /// <param name="isFile">是否为文件（影响默认选中范围）</param>
     public NewFileOrFolderViewModel(
-        ContentDialog dialog,
+        FAContentDialog dialog,
         string targetDirectoryPath,
         string defaultName,
         bool isFile

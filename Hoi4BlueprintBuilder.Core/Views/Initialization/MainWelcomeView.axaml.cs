@@ -14,7 +14,7 @@ public sealed partial class MainWelcomeView : UserControl
         MainFrame.NavigateFromObject(new GameSettingsPageView(MainFrame));
     }
 
-    private sealed class NavigationPageFactory : INavigationPageFactory
+    private sealed class NavigationPageFactory : IFANavigationPageFactory
     {
         public Control GetPage(Type srcType)
         {

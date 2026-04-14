@@ -32,7 +32,7 @@
                     Classes="SideButton"
                     DockPanel.Dock="Top">
                     <ToggleButton.Content>
-                        <fa:SymbolIcon Symbol="Folder" />
+                        <fa:FASymbolIcon Symbol="Folder" />
                     </ToggleButton.Content>
                 </ToggleButton>
                 <Button
@@ -40,7 +40,7 @@
                     Classes="SideButton"
                     DockPanel.Dock="Bottom">
                     <Button.Content>
-                        <fa:SymbolIcon x:Name="SettingsIcon" Symbol="Settings" />
+                        <fa:FASymbolIcon x:Name="SettingsIcon" Symbol="Settings" />
                     </Button.Content>
                 </Button>
                 <Border Background="Transparent" />

@@ -16,82 +16,82 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
 
         <StackPanel Margin="8,0" Spacing="4">
-            <fa:SettingsExpander Description="{Binding GameRootFolderPath, Mode=OneWay}" Header="游戏根目录">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Description="{Binding GameRootFolderPath, Mode=OneWay}" Header="游戏根目录">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE756;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <Button Command="{Binding PickGameRootPathCommand}" Content="重新选择" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Description="使用 DDS 格式有助于加快游戏载入速度" Header="导入 PNG 时自动转换成 DDS 格式">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Description="使用 DDS 格式有助于加快游戏载入速度" Header="导入 PNG 时自动转换成 DDS 格式">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xEB9F;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ToggleSwitch Classes="CleanToggleSwitch" IsChecked="{Binding IsAutoFocusPngConvertToDds, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Description="创建新国策后自动打开国策信息卡以便编辑" Header="自动打开国策信息卡">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Description="创建新国策后自动打开国策信息卡以便编辑" Header="自动打开国策信息卡">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE70B;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ToggleSwitch Classes="CleanToggleSwitch" IsChecked="{Binding IsAutoOpenFocusInfoCard, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Description="发送匿名的应用使用数据以帮助我们改进应用" Header="启用遥测">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Description="发送匿名的应用使用数据以帮助我们改进应用" Header="启用遥测">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xEADF;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ToggleSwitch Classes="CleanToggleSwitch" IsChecked="{Binding EnableTelemetry, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Header="主题模式">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Header="主题模式">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE790;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox ItemsSource="{Binding ThemeModes, Mode=OneTime}" SelectedIndex="{Binding SelectedThemeModeIndex, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Header="应用字体">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Header="应用字体">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8D2;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox
                         MinWidth="150"
                         ItemsSource="{Binding InstalledFonts, Mode=OneTime}"
                         MaxDropDownHeight="300"
                         SelectedItem="{Binding SelectedFontFamily, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Header="代码编辑器字体">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Header="代码编辑器字体">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8D2;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox
                         MinWidth="150"
                         ItemsSource="{Binding InstalledFonts, Mode=OneTime}"
                         MaxDropDownHeight="300"
                         SelectedItem="{Binding SelectedCodeFontFamily, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="App 语言">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="App 语言">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox ItemsSource="{Binding AppLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedAppLanguagesIndex, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate DataType="models:LanguageInfo">
@@ -99,54 +99,54 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="游戏本地化语言">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="游戏本地化语言">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox ItemsSource="{Binding GameLanguages, Mode=OneTime}" SelectedIndex="{Binding SelectedGameLanguagesIndex, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander
+            <fa:FASettingsExpander
                 Command="{Binding OpenConfigFolderInExplorerCommand}"
                 CommandParameter="{Binding Description, RelativeSource={RelativeSource Self}}"
                 Description="{x:Static local:App.ConfigFolder}"
                 Header="打开配置文件夹"
                 IsClickEnabled="True">
-                <fa:SettingsExpander.IconSource>
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8DA;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.ActionIconSource>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.ActionIconSource>
                     <control:FontIconSource Glyph="&#xE8A7;" />
-                </fa:SettingsExpander.ActionIconSource>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.ActionIconSource>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander
+            <fa:FASettingsExpander
                 Command="{Binding OpenLogsFolderInExplorerCommand}"
                 CommandParameter="{Binding Description, RelativeSource={RelativeSource Self}}"
                 Description="{x:Static local:App.LogsFolder}"
                 Header="打开日志文件夹"
                 IsClickEnabled="True">
-                <fa:SettingsExpander.IconSource>
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8DA;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.ActionIconSource>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.ActionIconSource>
                     <control:FontIconSource Glyph="&#xE8A7;" />
-                </fa:SettingsExpander.ActionIconSource>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.ActionIconSource>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Header="{x:Static lang:LangResources.AppUpdateChannel}">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Header="{x:Static lang:LangResources.AppUpdateChannel}">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE895;" />
-                </fa:SettingsExpander.IconSource>
-                <fa:SettingsExpander.Footer>
+                </fa:FASettingsExpander.IconSource>
+                <fa:FASettingsExpander.Footer>
                     <ComboBox ItemsSource="{x:Static local:App.AppUpdateChannels}" SelectedItem="{Binding SelectedUpdateChannel, Mode=TwoWay}" />
-                </fa:SettingsExpander.Footer>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpander.Footer>
+            </fa:FASettingsExpander>
 
             <TextBlock
                 Margin="4,4,0,4"
@@ -154,12 +154,12 @@
                 FontWeight="Bold"
                 Text="{x:Static lang:LangResources.About}" />
 
-            <fa:SettingsExpander
+            <fa:FASettingsExpander
                 Description="© Paradox Target 2026. All rights reserved."
                 Footer="{x:Static local:App.Version}"
                 Header="{x:Static local:App.AppName}">
-                <fa:SettingsExpanderItem Content=".NET Version" Footer="{x:Static vms:AppSettingsViewModel.DotNetVersion}" />
-                <fa:SettingsExpanderItem>
+                <fa:FASettingsExpanderItem Content=".NET Version" Footer="{x:Static vms:AppSettingsViewModel.DotNetVersion}" />
+                <fa:FASettingsExpanderItem>
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <HyperlinkButton Command="{Binding OpenEulaCommand}" Content="用户协议 (EULA)" />
                         <HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
@@ -169,13 +169,13 @@
                             NavigateUri="mailto:contact@paradoxtarget.top"
                             ToolTip.Tip="mailto:contact@paradoxtarget.top" />
                     </StackPanel>
-                </fa:SettingsExpanderItem>
-            </fa:SettingsExpander>
+                </fa:FASettingsExpanderItem>
+            </fa:FASettingsExpander>
 
-            <fa:SettingsExpander Margin="0,0,0,8" Header="开放源代码库">
-                <fa:SettingsExpander.IconSource>
+            <fa:FASettingsExpander Margin="0,0,0,8" Header="开放源代码库">
+                <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8F1;" />
-                </fa:SettingsExpander.IconSource>
+                </fa:FASettingsExpander.IconSource>
                 <UniformGrid>
                     <HyperlinkButton Content="Avalonia" NavigateUri="https://avaloniaui.net/" />
                     <HyperlinkButton Content="FluentAvaloniaUI" NavigateUri="https://github.com/amwx/FluentAvalonia" />
@@ -211,7 +211,7 @@
                     <HyperlinkButton Content="Xaml.Behaviors.Avalonia" NavigateUri="https://github.com/wieslawsoltes/Xaml.Behaviors" />
                     <HyperlinkButton Content="AsyncAwaitBestPractices" NavigateUri="https://github.com/brminnick/AsyncAwaitBestPractices" />
                 </UniformGrid>
-            </fa:SettingsExpander>
+            </fa:FASettingsExpander>
         </StackPanel>
     </ScrollViewer>
 

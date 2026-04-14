@@ -8,5 +8,5 @@
     d:DesignHeight="{StaticResource MainWindowHeight}"
     d:DesignWidth="{StaticResource MainWindowWidth}"
     mc:Ignorable="d">
-    <fa:Frame Name="MainFrame" />
+    <fa:FAFrame Name="MainFrame" />
 </UserControl>

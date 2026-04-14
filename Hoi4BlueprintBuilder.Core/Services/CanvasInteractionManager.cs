@@ -73,6 +73,8 @@ public sealed class CanvasInteractionManager
     /// </summary>
     public event Action<FocusNode, FocusNode, ConnectionType>? ConnectionRequested;
 
+    private PointerPressedEventArgs? _pressedEventArgs;
+
     public CanvasInteractionManager(
         ProjectConfigService projectConfigService,
         FocusTreeEditorViewModel viewModel,
@@ -211,14 +213,18 @@ public sealed class CanvasInteractionManager
             return StandardCursorType.SizeAll;
         }
 
-        if (Mode == CanvasInteractionMode.DraggingNodeForConnecting && _draggedNode is not null)
+        if (
+            Mode == CanvasInteractionMode.DraggingNodeForConnecting
+            && _draggedNode is not null
+            && _pressedEventArgs is not null
+        )
         {
             var dragData = new DataTransfer();
 
             var item = new DataTransferItem();
             item.Set(DataFormat.Text, _draggedNode.Id);
             dragData.Add(item);
-            DragDrop.DoDragDropAsync(e, dragData, DragDropEffects.Copy);
+            DragDrop.DoDragDropAsync(_pressedEventArgs, dragData, DragDropEffects.Copy);
             Mode = CanvasInteractionMode.None;
         }
 
@@ -327,6 +333,7 @@ public sealed class CanvasInteractionManager
         FocusNodeViewModel? hitViewModel
     )
     {
+        _pressedEventArgs = e;
         // 连接模式下点击节点建立连接
         if (
             Mode == CanvasInteractionMode.Connecting

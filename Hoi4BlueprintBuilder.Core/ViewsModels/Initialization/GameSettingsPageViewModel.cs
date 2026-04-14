@@ -15,7 +15,7 @@ public sealed partial class GameSettingsPageViewModel(
     MessageBoxService messageBoxService
 ) : ObservableObject
 {
-    public Frame? Frame { get; set; }
+    public FAFrame? Frame { get; set; }
 
     private bool IsCompleted => !string.IsNullOrEmpty(GamePath) && Directory.Exists(GamePath);
 

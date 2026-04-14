@@ -19,7 +19,7 @@
                 FontSize="20"
                 Foreground="White"
                 Text="{Binding #Root.Message}" />
-            <fa:ProgressRing
+            <fa:FAProgressRing
                 Width="60"
                 Height="60"
                 IsActive="{Binding #Root.IsVisible}" />

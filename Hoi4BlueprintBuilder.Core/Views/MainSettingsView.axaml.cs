@@ -11,7 +11,7 @@ public sealed partial class MainSettingsView : UserControl, ITabViewItem
     public string Header => "设置";
     public string FilePath => "SettingsView";
     public string ToolTip => Header;
-    public IconSource TabIcon { get; } = new FontIconSource { Glyph = "\uE713" };
+    public FAIconSource TabIcon { get; } = new FontIconSource { Glyph = "\uE713" };
 
     private readonly IServiceProvider _serviceProvider;
 

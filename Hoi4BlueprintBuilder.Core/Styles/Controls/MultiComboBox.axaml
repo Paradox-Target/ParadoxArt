@@ -75,10 +75,10 @@
                     <!--  Selected Items Display  -->
                     <Grid Grid.Column="0" Margin="{TemplateBinding Padding}">
                         <TextBlock
-                            x:Name="PART_Watermark"
+                            x:Name="PART_PlaceholderText"
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource TextControlPlaceholderForeground}"
-                            Text="{TemplateBinding Watermark}" />
+                            Text="{TemplateBinding PlaceholderText}" />
 
                         <!--  Tags for Selected Items  -->
                         <ScrollViewer
@@ -189,10 +189,10 @@
     </Style>
 
     <!--  Content Visibility  -->
-    <Style Selector="c|MultiComboBox /template/ TextBlock#PART_Watermark">
+    <Style Selector="c|MultiComboBox /template/ TextBlock#PART_PlaceholderText">
         <Setter Property="IsVisible" Value="False" />
     </Style>
-    <Style Selector="c|MultiComboBox:empty /template/ TextBlock#PART_Watermark">
+    <Style Selector="c|MultiComboBox:empty /template/ TextBlock#PART_PlaceholderText">
         <Setter Property="IsVisible" Value="True" />
     </Style>
 

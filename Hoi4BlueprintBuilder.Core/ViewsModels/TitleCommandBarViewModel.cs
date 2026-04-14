@@ -124,7 +124,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         };
         content.DataContext = viewModel;
 
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Title = LangResources.CreateNewFocusTreeFileView_Title,
             Content = content,
@@ -137,7 +137,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         var result = await dialog.ShowAsync();
         viewModel.Clean();
 
-        if (result != ContentDialogResult.Primary)
+        if (result != FAContentDialogResult.Primary)
         {
             return;
         }

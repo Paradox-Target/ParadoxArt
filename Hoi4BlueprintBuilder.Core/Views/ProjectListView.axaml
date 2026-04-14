@@ -16,21 +16,21 @@
 
     <UserControl.Resources>
         <fa:FAMenuFlyout x:Key="ProjectItemContextMenu" x:DataType="vms:ProjectListViewModel">
-            <fa:MenuFlyoutItem Command="{Binding RemoveProjectItemCommand}" Text="从列表移除">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="Delete" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
-            <fa:MenuFlyoutItem Command="{Binding CopyProjectPathCommand}" Text="复制路径">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="Copy" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
-            <fa:MenuFlyoutItem Command="{Binding OpenProjectFolderInExplorerCommand}" Text="{x:Static lang:LangResources.File_OpenInExplorer}">
-                <fa:MenuFlyoutItem.IconSource>
-                    <fa:SymbolIconSource Symbol="OpenFolder" />
-                </fa:MenuFlyoutItem.IconSource>
-            </fa:MenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding RemoveProjectItemCommand}" Text="从列表移除">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Delete" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding CopyProjectPathCommand}" Text="复制路径">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Copy" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
+            <fa:FAMenuFlyoutItem Command="{Binding OpenProjectFolderInExplorerCommand}" Text="{x:Static lang:LangResources.File_OpenInExplorer}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="OpenFolder" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
         </fa:FAMenuFlyout>
     </UserControl.Resources>
 
@@ -73,8 +73,8 @@
                 Grid.Column="0"
                 Height="36"
                 VerticalContentAlignment="Center"
-                Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}"
-                Watermark="搜索项目名称...">
+                PlaceholderText="搜索项目名称..."
+                Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InnerLeftContent>
                     <controls:FontIcon
                         Margin="12,0,8,0"

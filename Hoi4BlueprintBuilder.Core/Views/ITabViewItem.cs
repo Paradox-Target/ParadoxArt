@@ -22,7 +22,7 @@ public interface ITabViewItem
     /// <summary>
     /// 选项卡左侧显示的图标
     /// </summary>
-    IconSource? TabIcon => null;
+    FAIconSource? TabIcon => null;
 
     bool Equals(ITabViewItem? other)
     {

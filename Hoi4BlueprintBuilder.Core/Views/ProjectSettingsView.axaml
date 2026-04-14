@@ -13,67 +13,67 @@
     x:DataType="vms:ProjectSettingsViewModel"
     mc:Ignorable="d">
     <StackPanel Spacing="4">
-        <fa:SettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="网格大小">
-            <fa:SettingsExpander.IconSource>
+        <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="网格大小">
+            <fa:FASettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF0E2;" />
-            </fa:SettingsExpander.IconSource>
+            </fa:FASettingsExpander.IconSource>
 
-            <fa:SettingsExpanderItem Content="网格宽度">
-                <fa:SettingsExpanderItem.Footer>
-                    <fa:NumberBox Minimum="80" Value="{Binding FocusCellWidth}" />
-                </fa:SettingsExpanderItem.Footer>
-            </fa:SettingsExpanderItem>
+            <fa:FASettingsExpanderItem Content="网格宽度">
+                <fa:FASettingsExpanderItem.Footer>
+                    <fa:FANumberBox Minimum="80" Value="{Binding FocusCellWidth}" />
+                </fa:FASettingsExpanderItem.Footer>
+            </fa:FASettingsExpanderItem>
 
-            <fa:SettingsExpanderItem Content="网格长度">
-                <fa:SettingsExpanderItem.Footer>
-                    <fa:NumberBox Minimum="110" Value="{Binding FocusCellHeight}" />
-                </fa:SettingsExpanderItem.Footer>
-            </fa:SettingsExpanderItem>
-        </fa:SettingsExpander>
+            <fa:FASettingsExpanderItem Content="网格长度">
+                <fa:FASettingsExpanderItem.Footer>
+                    <fa:FANumberBox Minimum="110" Value="{Binding FocusCellHeight}" />
+                </fa:FASettingsExpanderItem.Footer>
+            </fa:FASettingsExpanderItem>
+        </fa:FASettingsExpander>
 
-        <fa:SettingsExpander Description="决定国策本地化的可选项 *重启应用后生效" Header="项目支持本地化语言">
-            <fa:SettingsExpander.IconSource>
+        <fa:FASettingsExpander Description="决定国策本地化的可选项 *重启应用后生效" Header="项目支持本地化语言">
+            <fa:FASettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF2B7;" />
-            </fa:SettingsExpander.IconSource>
-            <fa:SettingsExpander.Footer>
+            </fa:FASettingsExpander.IconSource>
+            <fa:FASettingsExpander.Footer>
                 <control:MultiComboBox
                     ItemsSource="{Binding GameLanguages, Mode=OneTime}"
-                    SelectedItems="{Binding SupportedLanguages}"
-                    Watermark="当前语言..." />
-            </fa:SettingsExpander.Footer>
+                    PlaceholderText="当前语言..."
+                    SelectedItems="{Binding SupportedLanguages}" />
+            </fa:FASettingsExpander.Footer>
 
-            <fa:SettingsExpanderItem Content="{Binding GameLocalizationFilesInfo}">
-                <fa:SettingsExpanderItem.Footer>
+            <fa:FASettingsExpanderItem Content="{Binding GameLocalizationFilesInfo}">
+                <fa:FASettingsExpanderItem.Footer>
                     <Button Command="{Binding ComputeFilesSumCommand}" Content="计算文件大小" />
-                </fa:SettingsExpanderItem.Footer>
-            </fa:SettingsExpanderItem>
-        </fa:SettingsExpander>
+                </fa:FASettingsExpanderItem.Footer>
+            </fa:FASettingsExpanderItem>
+        </fa:FASettingsExpander>
 
-        <fa:SettingsExpander x:Name="SubModExpander" Header="有依赖模组">
-            <fa:SettingsExpander.IconSource>
+        <fa:FASettingsExpander x:Name="SubModExpander" Header="有依赖模组">
+            <fa:FASettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF003;" />
-            </fa:SettingsExpander.IconSource>
-            <fa:SettingsExpander.Footer>
+            </fa:FASettingsExpander.IconSource>
+            <fa:FASettingsExpander.Footer>
                 <ToggleSwitch
                     x:Name="HasDepsToggleSwitch"
                     Classes="CleanToggleSwitch"
                     IsChecked="{Binding IsEnabledHasDepsToggleSwitch}"
                     IsCheckedChanged="HasDepsToggleSwitch_OnIsCheckedChanged" />
-            </fa:SettingsExpander.Footer>
-            <fa:SettingsExpanderItem
+            </fa:FASettingsExpander.Footer>
+            <fa:FASettingsExpanderItem
                 Content="添加模组路径"
                 Description="*修改后重启应用生效"
                 IsEnabled="{Binding #HasDepsToggleSwitch.IsChecked}">
-                <fa:SettingsExpanderItem.Footer>
+                <fa:FASettingsExpanderItem.Footer>
                     <Button Command="{Binding PickDependencyModDirectoryCommand}" Content="选择路径" />
-                </fa:SettingsExpanderItem.Footer>
-                <fa:SettingsExpanderItem.IconSource>
-                    <fa:SymbolIconSource Symbol="OpenFolder" />
-                </fa:SettingsExpanderItem.IconSource>
-            </fa:SettingsExpanderItem>
-            <fa:SettingsExpanderItem IsVisible="{Binding #HasDepsToggleSwitch.IsChecked}">
+                </fa:FASettingsExpanderItem.Footer>
+                <fa:FASettingsExpanderItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="OpenFolder" />
+                </fa:FASettingsExpanderItem.IconSource>
+            </fa:FASettingsExpanderItem>
+            <fa:FASettingsExpanderItem IsVisible="{Binding #HasDepsToggleSwitch.IsChecked}">
                 <ListBox MaxHeight="130" ItemsSource="{Binding DependenciesPath}" />
-            </fa:SettingsExpanderItem>
-        </fa:SettingsExpander>
+            </fa:FASettingsExpanderItem>
+        </fa:FASettingsExpander>
     </StackPanel>
 </UserControl>

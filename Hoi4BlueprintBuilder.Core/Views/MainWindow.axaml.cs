@@ -8,7 +8,7 @@ using Hoi4BlueprintBuilder.Core.ViewsModels;
 namespace Hoi4BlueprintBuilder.Core.Views;
 
 [RegisterSingleton<MainWindow>]
-public sealed partial class MainWindow : AppWindow
+public sealed partial class MainWindow : FAAppWindow
 {
     public MainWindow(
         MainWindowViewModel mainWindowViewModel,
