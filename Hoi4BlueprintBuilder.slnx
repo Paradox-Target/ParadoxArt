@@ -7,9 +7,10 @@
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path="full-build.ps1" />
     <File Path="global.json" />
-    <File Path="Hoi4BlueprintBuilder.Windows/full-build.ps1" />
-    <File Path="Hoi4BlueprintBuilder.Windows/publish.ps1" />
+    <File Path="publish.ps1" />
+    <File Path="releasenotes.md" />
   </Folder>
   <Project Path="Hoi4BlueprintBuilder.Linux/Hoi4BlueprintBuilder.Linux.csproj" />
   <Project Path="Hoi4BlueprintBuilder.Localization/Hoi4BlueprintBuilder.Localization.csproj" />

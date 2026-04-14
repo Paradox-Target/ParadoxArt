@@ -83,7 +83,7 @@ public sealed class TelemetryService : IDisposable
                 { "App_Update_Channel", _settingsService.AppUpdateChannel },
                 { "OS_Version", Environment.OSVersion.ToString() },
                 { "Culture", cultureInfo.Name },
-                { "Processor_Count", Environment.ProcessorCount.ToString() }
+                { "Platform", GetPlatformName() }
             };
             // 第一次运行时用户还没有选择主题模式，所以这里不记录
             if (!_settingsService.IsFirstRun)
@@ -101,6 +101,21 @@ public sealed class TelemetryService : IDisposable
         {
             // 忽略
         }
+    }
+
+    private static string GetPlatformName()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return "Windows";
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            return "Linux";
+        }
+
+        return "Unknown";
     }
 
     private void TrackHardwareInfo(string? screenSize, string? screenScaling)
@@ -139,7 +154,8 @@ public sealed class TelemetryService : IDisposable
                 { "Memory_Total_GB", $"{totalMemory.ToString("F1", CultureInfo.InvariantCulture)} GB" },
                 { "OS_Name", hardwareInfo.OperatingSystem.Name },
                 { "Screen_Size", screenSize ?? "Unknown" },
-                { "Screen_Scaling", screenScaling ?? "Unknown" }
+                { "Screen_Scaling", screenScaling ?? "Unknown" },
+                { "Processor_Count", Environment.ProcessorCount.ToString() }
             };
             TrackEvent("Hardware_Snapshop", properties);
         }
