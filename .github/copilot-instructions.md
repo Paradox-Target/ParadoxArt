@@ -1,104 +1,43 @@
 # Hoi4-BlueprintBuilder Copilot Instructions
 
-## 项目概述
+## Code Style & Conventions
 
-这是一个为《钢铁雄心IV》设计的可视化国策树编辑器，使用 Avalonia UI + MVVM 架构。核心目标是将 HOI4 MOD 制作中繁琐的脚本编写转化为直观的节点拖拽操作。
+- **.NET 10 / C# 13**: Use strictly modern C# features (e.g. file-scoped namespaces).
+- **MVVM Architecture**: Use CommunityToolkit.Mvvm, [ObservableProperty], and [RelayCommand] extensively to avoid boilerplate.
+- **Dependency Injection**: Use Injectio attributes ([RegisterSingleton<T>], [RegisterTransient<T>]) for auto-registration instead of manual service configuration. Fetch via App.Current.Services.GetRequiredService<T>() only when necessary (prefer constructor injection).
+- **Messaging**: Use StrongReferenceMessenger for guaranteed delivery (like SaveFocusTreeMessage) and WeakReferenceMessenger for decoupled broad events.
+- **Localization**: Application text is in Hoi4BlueprintBuilder.Localization (LangResources.resx). Game keys/constants are in Keywords.cs.
+- **Performance Profiling**: Use [Time("description")] (MethodTimer.Fody) for automatic execution time tracking of critical methods (e.g. GetAllNodesFromAst).
 
-## 技术栈
+## Architecture & Domain
 
-- **.NET 10** + **Avalonia UI** + **FluentAvaloniaUI**
-- **MVVM**: CommunityToolkit.Mvvm (`[ObservableProperty]`, `[RelayCommand]`)
-- **DI**: Microsoft.Extensions.DependencyInjection + **Injectio** 自动注册
-- **解析器**: ParadoxPower 用于解析 Paradox 脚本格式
-- **遥测**: TelemetryService (封装 Microsoft.ApplicationInsights.TelemetryClient) 发送使用数据到 Application Insights
-- **日志**: NLog 记录运行时日志
+### Core Components
+- **FocusNode** (Models/Focus/FocusNode.cs): The primary domain entity. Contains grid position, dependencies, mutual exclusivity, etc.
+- **FocusType**: Differs between a standard focus and shared_focus.
+- **ParadoxPower Parser**: Used for reading Paradox script format AST. Key logic is in FocusNodeHelper.GetAllNodesFromAst() supporting recursive resolution of shared focus links.
 
-## 架构要点
+### Project Structure Principles
+- Hoi4BlueprintBuilder.Core: Contains all UI Views (.axaml), ViewModels (.cs), Domain Models, and Services.
+- Hoi4BlueprintBuilder.Windows / Hoi4BlueprintBuilder.Linux: Minimal platform-specific entry points.
 
-### 依赖注入 (Injectio 自动注册)
+*(Note: Avalonia UI conventions and XAML patterns are covered by the included xaml-csharp-development-skill-for-avalonia skill.)*
 
-使用 `[RegisterSingleton<T>]` 或 `[RegisterTransient<T>]` 特性自动注册服务，无需手动配置：
+## Build and Test
 
-```csharp
-[RegisterSingleton<LocalizationService>]
-public sealed class LocalizationService { }
+Agents running tests or builds should use the following standard commands:
 
-[RegisterTransient<FocusTreeEditorViewModel>]
-public sealed partial class FocusTreeEditorViewModel : ObservableObject { }
-```
-
-通过 `App.Current.Services.GetRequiredService<T>()` 获取服务实例。
-
-### 消息传递 (CommunityToolkit.Mvvm)
-
-- **StrongReferenceMessenger**: 用于必须送达的消息（如 `SaveFocusTreeMessage`）
-- **WeakReferenceMessenger**: 弱引用消息
-
-消息定义在 `Messages/` 目录，通常为 `record` 类型。
-
-### 核心领域模型
-
-- **FocusNode** (`Models/Focus/FocusNode.cs`): 国策节点，包含位置、前置条件、互斥关系等
-- **FocusPoint**: 国策在画布上的网格坐标
-- **FocusType**: 普通国策 vs 共享国策 (`shared_focus`)
-
-### 文件解析流程
-
-`FocusNodeHelper.GetAllNodesFromAst()` 解析国策树文件，支持 `shared_focus` 链接的递归解析。使用 `ParadoxPower.CSharpExtensions.TextParser` 解析 Paradox 脚本。
-
-## 代码规范
-
-### 方法性能追踪
-
-使用 `[Time("描述")]` 特性（MethodTimer.Fody）自动记录方法执行时间：
-
-```csharp
-[Time("解析国策树")]
-public static (Dictionary<string, FocusNode> Nodes, ...) GetAllNodesFromAst(...) { }
-```
-
-日志输出到 `MethodTimeLogger`。
-
-### 本地化
-
-- 应用内文本: `Hoi4BlueprintBuilder.Localization` 项目的 `LangResources.resx`
-- 游戏数据关键字: `Keywords.cs` 常量类
-
-### 日志
-
-使用 NLog，通过 `LogManager.GetCurrentClassLogger()` 获取 Logger。Release 模式输出到 `Logs/` 目录。
-
-## 开发命令
-
-```bash
-# 构建
+``bash
+# Build
 dotnet build
 
-# 运行测试 (NUnit)
+# Run unit tests
 dotnet test
 
-# 发布 Windows 版本
+# Publish Windows version
 dotnet publish -r win-x64 -o .\publish\win-x64 .\Hoi4BlueprintBuilder.Windows\Hoi4BlueprintBuilder.Windows.csproj --self-contained true
-```
+``
 
-## 项目结构
-
-```
-Hoi4BlueprintBuilder.Core/     # 核心逻辑和 UI
-  ├── Models/Focus/            # 国策领域模型
-  ├── Views/                   # Avalonia 视图 (.axaml + .axaml.cs)
-  ├── ViewsModels/             # MVVM ViewModels
-  ├── Services/                # 业务服务 (自动注册)
-  ├── Messages/                # 跨组件消息
-  └── Helpers/                 # 纯函数工具类
-
-Hoi4BlueprintBuilder.Windows/  # Windows 平台入口
-Hoi4BlueprintBuilder.UnitTests/ # NUnit 测试
-  └── TestData/                # 测试数据文件
-```
-
-## 测试约定
-
-- 测试框架: NUnit 4
-- 测试数据放在 `TestData/` 目录，通过 `TestApp.TestDataDirectory` 访问
-- 需要隔离环境时使用 `TestHelper.CreateUniqueTempDirectory()`
+### Testing Conventions
+- **Framework**: NUnit 4
+- **Test Data**: Resides in Hoi4BlueprintBuilder.UnitTests/TestData/, accessible via TestApp.TestDataDirectory.
+- **Setup/Teardown**: Always use TestHelper.CreateUniqueTempDirectory() for file-system-bound tests to ensure isolation.

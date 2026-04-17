@@ -47,6 +47,7 @@ public sealed class Program
                 app.ConfiguringServices += static serviceCollection =>
                 {
                     serviceCollection.AddSingleton<IFileSortComparer, WindowsFileSortComparer>();
+                    serviceCollection.AddSingleton<IOperatingSystemService, WindowsOperatingSystemService>();
                 };
             });
     }

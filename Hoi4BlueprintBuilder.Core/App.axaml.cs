@@ -8,8 +8,10 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
+using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -98,7 +100,9 @@ public sealed class App : Application
         }
 
         ConfiguringServices?.Invoke(_serviceCollection);
+
         _serviceCollection.TryAddSingleton<IFileSortComparer, DefaultFileSortComparer>();
+        _serviceCollection.TryAddSingleton<IOperatingSystemService, DefaultOperatingSystemService>();
 
         Services = _serviceCollection.BuildServiceProvider();
 
@@ -127,6 +131,7 @@ public sealed class App : Application
         string? screenScaling = null;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            desktop.ShutdownRequested += OnOSShutdownRequested;
             desktop.MainWindow = Services.GetRequiredService<MainWindow>();
             desktop.Exit += OnDesktopExit;
 
@@ -145,6 +150,17 @@ public sealed class App : Application
         Task.Run(() => telemetryService.TrackSystemEnvironment(rawCulture, screenSize, screenScaling));
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private static void OnOSShutdownRequested(object? sender, ShutdownRequestedEventArgs e)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            // 设置 Cancel = true，这会告诉 Windows 终止关机流程
+            e.Cancel = true;
+            var service = Current.Services.GetRequiredService<IOperatingSystemService>();
+            service.ShutdownBlockReasonCreate("有工作正在进行中...");
+        }
     }
 
     public void UpdateApplicationFont(string? fontName)
