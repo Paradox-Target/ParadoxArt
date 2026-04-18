@@ -36,7 +36,8 @@
         <PackageReference Include="Hardware.Info" />
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="LiveMarkdown.Avalonia" />
-        <PackageReference Include="MessageBox.Avalonia" />
+<!--        需要等待适配-->
+<!--        <PackageReference Include="MessageBox.Avalonia" />-->
         <PackageReference Include="Microsoft.ApplicationInsights" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
@@ -71,6 +72,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AvMessageBox.Avalonia\MsBox.Avalonia\MsBox.Avalonia.csproj" />
       <ProjectReference Include="..\Hoi4BlueprintBuilder.Localization\Hoi4BlueprintBuilder.Localization.csproj" />
     </ItemGroup>
 
