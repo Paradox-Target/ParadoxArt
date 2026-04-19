@@ -609,4 +609,10 @@
   <data name="FocusInfoCard_PrerequisitesTip" xml:space="preserve">
     <value>FocusInfoCard_PrerequisitesTip</value>
   </data>
+  <data name="Common_Create" xml:space="preserve">
+    <value>Common_Create</value>
+  </data>
+  <data name="CreateNewFocus" xml:space="preserve">
+    <value>CreateNewFocus</value>
+  </data>
 </root>

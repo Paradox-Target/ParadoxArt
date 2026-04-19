@@ -613,4 +613,10 @@ SpriteName: {1}</value>
   <data name="LocalizationManager_ToolTip" xml:space="preserve">
     <value>管理此模组的所有本地化</value>
   </data>
+  <data name="Common_Create" xml:space="preserve">
+    <value>创建</value>
+  </data>
+  <data name="CreateNewFocus" xml:space="preserve">
+    <value>新建国策</value>
+  </data>
 </root>

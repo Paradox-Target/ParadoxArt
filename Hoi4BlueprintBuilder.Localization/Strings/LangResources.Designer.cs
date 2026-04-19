@@ -249,6 +249,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Common_Create.
+        /// </summary>
+        public static string Common_Create {
+            get {
+                return ResourceManager.GetString("Common_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Common_Delete.
         /// </summary>
         public static string Common_Delete {
@@ -353,6 +362,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         public static string CopiedToClipboard {
             get {
                 return ResourceManager.GetString("CopiedToClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CreateNewFocus.
+        /// </summary>
+        public static string CreateNewFocus {
+            get {
+                return ResourceManager.GetString("CreateNewFocus", resourceCulture);
             }
         }
         

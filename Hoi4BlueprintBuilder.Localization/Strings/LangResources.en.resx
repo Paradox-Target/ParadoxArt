@@ -611,4 +611,10 @@
 Path: {0}
 Sprite Name: {1}</value>
     </data>
+    <data name="Common_Create" xml:space="preserve">
+        <value>Create</value>
+    </data>
+    <data name="CreateNewFocus" xml:space="preserve">
+        <value>Create New Focus</value>
+    </data>
 </root>

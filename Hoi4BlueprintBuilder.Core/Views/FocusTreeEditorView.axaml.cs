@@ -367,9 +367,9 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
     {
         var dialog = new FAContentDialog
         {
-            Title = "新建国策",
-            CloseButtonText = "取消",
-            PrimaryButtonText = "创建",
+            Title = LangResources.CreateNewFocus,
+            CloseButtonText = LangResources.Common_Cancel,
+            PrimaryButtonText = LangResources.Common_Create,
             DefaultButton = FAContentDialogButton.Primary,
             IsPrimaryButtonEnabled = false
         };
