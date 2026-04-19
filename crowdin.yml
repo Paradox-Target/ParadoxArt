@@ -2,4 +2,4 @@ files:
   - source: /**/*.resx
     ignore:
       - /**/*.*.resx
-    translation: /%original_path%/%file_name%.%locale%.resx
+    translation: /%original_path%/%file_name%.%osx_locale%.resx
