@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!-- 
+  <!--  
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,416 +59,554 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <data name="CreateNewFocusView_FocusId" xml:space="preserve">
-        <value>Focus Id</value>
-    </data>
-    <data name="CreateNewFocusView_TargetFileName" xml:space="preserve">
-        <value>Target FileName</value>
-    </data>
-    <data name="CreateNewFocusView_FocusType" xml:space="preserve">
-        <value>Focus Type</value>
-    </data>
-    <data name="CreateNewFocusTreeFileView_DefaultFocusTree" xml:space="preserve">
-        <value>Default</value>
-    </data>
-    <data name="CreateNewFocusTreeFileView_FileName" xml:space="preserve">
-        <value>File Name</value>
-    </data>
-    <data name="CreateNewFocusTreeFileView_FocusTreeId" xml:space="preserve">
-        <value>Focus Tree ID</value>
-    </data>
-    <data name="CreateNewFocusTreeFileView_CountryTag" xml:space="preserve">
-        <value>Country Tag</value>
-    </data>
-    <data name="Menu_CreateNewFocusTree" xml:space="preserve">
-        <value>New</value>
-    </data>
-    <data name="Menu_Save" xml:space="preserve">
-        <value>Save</value>
-    </data>
-    <data name="CreateNewFocusTreeFileView_Title" xml:space="preserve">
-        <value>Create New Focus Tree File</value>
-    </data>
-    <data name="CreateNewFocusView_CommonFocus" xml:space="preserve">
-        <value>Common Focus</value>
-    </data>
-    <data name="CreateNewFocusView_SharedFocus" xml:space="preserve">
-        <value>Shared Focus</value>
-    </data>
-    <data name="Common_Error" xml:space="preserve">
-        <value>Error</value>
-    </data>
-    <data name="CreateNewFocusTreeFileView_CountryTagIsNotExist" xml:space="preserve">
-        <value>Country Tag Not Exist</value>
-    </data>
-    <data name="RenameFile_ErrorOccurs" xml:space="preserve">
-        <value>An error occurs within file or folder renaming</value>
-    </data>
-    <data name="Common_Delete" xml:space="preserve">
-        <value>Delete</value>
-    </data>
-    <data name="DeleteFile_EnsureFile" xml:space="preserve">
-        <value>Are you sure to delete '{0}'?</value>
-    </data>
-    <data name="Common_Cancel" xml:space="preserve">
-        <value>Cancel</value>
-    </data>
-    <data name="Common_Ok" xml:space="preserve">
-        <value>Ok</value>
-    </data>
-    <data name="Common_Rename" xml:space="preserve">
-        <value>Rename</value>
-    </data>
-    <data name="DeleteFile_CanFindBack" xml:space="preserve">
-        <value>You can restore from recycle bin</value>
-    </data>
-    <data name="DeleteFile_EnsureFolder" xml:space="preserve">
-        <value>Are you sure to delete '{0}' and all of its content?</value>
-    </data>
-    <data name="DeleteFile_Failed" xml:space="preserve">
-        <value>Delete failed because: </value>
-    </data>
-    <data name="RenameFile_NameContainInvalidChar" xml:space="preserve">
-        <value>The file or folder name contains invalid characters</value>
-    </data>
-    <data name="File_NameAlreadyExists" xml:space="preserve">
-        <value>A file or folder with the same name already exists at this location: {0}. Please rename it</value>
-    </data>
-    <data name="RenameFile_InvalidFileOrFolderName" xml:space="preserve">
-        <value>Invalid file or folder name</value>
-    </data>
-    <data name="Menu_CopyRelativePath" xml:space="preserve">
-        <value>Copy Relative Path</value>
-    </data>
-    <data name="Menu_CopyFullPath" xml:space="preserve">
-        <value>Copy Path</value>
-    </data>
-    <data name="File_OpenInExplorer" xml:space="preserve">
-        <value>Show in File Explorer</value>
-    </data>
-    <data name="Menu_NewFile" xml:space="preserve">
-        <value>New File</value>
-    </data>
-    <data name="Menu_NewFolder" xml:space="preserve">
-        <value>New Folder</value>
-    </data>
-    <data name="NewFile_ErrorOccurs" xml:space="preserve">
-        <value>An error occurred while creating the file or folder</value>
-    </data>
-    <data name="CreateNewFocusView_FocusIdAlreadyExist" xml:space="preserve">
-        <value>Focus Id Already Exist</value>
-    </data>
-    <data name="AppUpdateChannel" xml:space="preserve">
-        <value>App Update Channel</value>
-    </data>
-    <data name="About" xml:space="preserve">
-        <value>About</value>
-    </data>
-    <data name="CreateNewProject_Title" xml:space="preserve">
-        <value>Create New Project</value>
-    </data>
-    <data name="Settings_Must_Reset" xml:space="preserve">
-        <value>*Must Reset APP</value>
-    </data>
-    <data name="Settings_RePick" xml:space="preserve">
-        <value>Re-select</value>
-    </data>
-    <data name="Settings_AutoDDS_Header" xml:space="preserve">
-        <value>Automatically convert PNG to DDS format when importing</value>
-    </data>
-    <data name="Settings_AutoDDS_Description" xml:space="preserve">
-        <value>Using DDS format helps speed up game loading times</value>
-    </data>
-    <data name="Settings_AutoOpenCard_Header" xml:space="preserve">
-        <value>Automatically open focus information card</value>
-    </data>
-    <data name="Settings_AutoOpenCard_Description" xml:space="preserve">
-        <value>Automatically open the focus information card for editing after creating a new focus</value>
-    </data>
-    <data name="Settings_Telemetry_Header" xml:space="preserve">
-        <value>Enable telemetry</value>
-    </data>
-    <data name="Settings_Telemetry_Description" xml:space="preserve">
-        <value>Send anonymous app usage data to help us improve the app</value>
-    </data>
-    <data name="Settings_ThemeMode_Header" xml:space="preserve">
-        <value>Theme mode</value>
-    </data>
-    <data name="Settings_AppFont_Header" xml:space="preserve">
-        <value>App font</value>
-    </data>
-    <data name="Settings_CodeEditorFont_Header" xml:space="preserve">
-        <value>Code editor font</value>
-    </data>
-    <data name="Settings_AppLanguage_Header" xml:space="preserve">
-        <value>App Language</value>
-    </data>
-    <data name="Settings_GameLanguage_Header" xml:space="preserve">
-        <value>Game localization language</value>
-    </data>
-    <data name="Settings_OpenConfigFolder_Header" xml:space="preserve">
-        <value>Open configuration folder</value>
-    </data>
-    <data name="Settings_OpenLogFolder_Header" xml:space="preserve">
-        <value>Open logs folder</value>
-    </data>
-    <data name="Settings_OpenSourceLibrary_Header" xml:space="preserve">
-        <value>Open source libraries</value>
-    </data>
-    <data name="Settings_EULA" xml:space="preserve">
-        <value>EULA</value>
-    </data>
-    <data name="Settings_ReportIssue" xml:space="preserve">
-        <value>Report Issue / Suggestion</value>
-    </data>
-    <data name="Settings_Afdian" xml:space="preserve">
-        <value>Afdian</value>
-    </data>
-    <data name="Settings_ContactUs" xml:space="preserve">
-        <value>Contact Us</value>
-    </data>
-    <data name="GameRootPath" xml:space="preserve">
-        <value>Game Root Path</value>
-    </data>
-    <data name="Initialization_Next" xml:space="preserve">
-        <value>Next</value>
-    </data>
-    <data name="Initialization_Previous" xml:space="preserve">
-        <value>Previous</value>
-    </data>
-    <data name="AppUpdate_Checking" xml:space="preserve">
-        <value>Checking for updates</value>
-    </data>
-    <data name="AppUpdate_CheckWaitDetails" xml:space="preserve">
-        <value>Please wait, this may take some time due to network conditions...</value>
-    </data>
-    <data name="AppUpdate_NewVersionAvailable" xml:space="preserve">
-        <value>New version available</value>
-    </data>
-    <data name="AppUpdate_RecommendUpdate" xml:space="preserve">
-        <value>It is recommended to update to the latest version as soon as possible for the best experience</value>
-    </data>
-    <data name="AppUpdate_StartUpdate" xml:space="preserve">
-        <value>Start update</value>
-    </data>
-    <data name="AppUpdate_Downloading" xml:space="preserve">
-        <value>Downloading update</value>
-    </data>
-    <data name="AppUpdate_DownloadProgress" xml:space="preserve">
-        <value>Download progress</value>
-    </data>
-    <data name="ProjectList_RemoveFromList" xml:space="preserve">
-        <value>Remove from list</value>
-    </data>
-    <data name="ProjectList_CopyPath" xml:space="preserve">
-        <value>Copy path</value>
-    </data>
-    <data name="ProjectList_SearchPlaceholder" xml:space="preserve">
-        <value>Search project name...</value>
-    </data>
-    <data name="ProjectList_CreateProject" xml:space="preserve">
-        <value>New Project</value>
-    </data>
-    <data name="ProjectList_OpenProject" xml:space="preserve">
-        <value>Open Project</value>
-    </data>
-    <data name="ProjectList_PathInvalid" xml:space="preserve">
-        <value>Invalid path</value>
-    </data>
-    <data name="Settings_GridWidth" xml:space="preserve">
-        <value>Grid Width</value>
-    </data>
-    <data name="Setting" xml:space="preserve">
-        <value>Setting</value>
-    </data>
-    <data name="LocalizationManager_Title" xml:space="preserve">
-        <value>Localization Manager</value>
-    </data>
-    <data name="LocalizationManager_ToolTip" xml:space="preserve">
-        <value>Manage all localizations in the current MOD</value>
-    </data>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CreateNewFocusView_FocusId" xml:space="preserve">
+    <value>CreateNewFocusView_FocusId</value>
+  </data>
+  <data name="CreateNewFocusView_TargetFileName" xml:space="preserve">
+    <value>CreateNewFocusView_TargetFileName</value>
+  </data>
+  <data name="CreateNewFocusView_FocusType" xml:space="preserve">
+    <value>CreateNewFocusView_FocusType</value>
+  </data>
+  <data name="CreateNewFocusTreeFileView_DefaultFocusTree" xml:space="preserve">
+    <value>CreateNewFocusTreeFileView_DefaultFocusTree</value>
+  </data>
+  <data name="CreateNewFocusTreeFileView_FileName" xml:space="preserve">
+    <value>CreateNewFocusTreeFileView_FileName</value>
+  </data>
+  <data name="CreateNewFocusTreeFileView_FocusTreeId" xml:space="preserve">
+    <value>CreateNewFocusTreeFileView_FocusTreeId</value>
+  </data>
+  <data name="CreateNewFocusTreeFileView_CountryTag" xml:space="preserve">
+    <value>CreateNewFocusTreeFileView_CountryTag</value>
+  </data>
+  <data name="Menu_CreateNewFocusTree" xml:space="preserve">
+    <value>Menu_CreateNewFocusTree</value>
+  </data>
+  <data name="Menu_Save" xml:space="preserve">
+    <value>Menu_Save</value>
+  </data>
+  <data name="CreateNewFocusTreeFileView_Title" xml:space="preserve">
+    <value>CreateNewFocusTreeFileView_Title</value>
+  </data>
+  <data name="CreateNewFocusView_CommonFocus" xml:space="preserve">
+    <value>CreateNewFocusView_CommonFocus</value>
+  </data>
+  <data name="CreateNewFocusView_SharedFocus" xml:space="preserve">
+    <value>CreateNewFocusView_SharedFocus</value>
+  </data>
+  <data name="CreateNewFocusView_FocusIdAlreadyExist" xml:space="preserve">
+    <value>CreateNewFocusView_FocusIdAlreadyExist</value>
+  </data>
+  <data name="Common_Error" xml:space="preserve">
+    <value>Common_Error</value>
+  </data>
+  <data name="CreateNewFocusTreeFileView_CountryTagIsNotExist" xml:space="preserve">
+    <value>CreateNewFocusTreeFileView_CountryTagNotExist</value>
+  </data>
+  <data name="RenameFile_ErrorOccurs" xml:space="preserve">
+    <value>RenameFile_ErrorOccurs</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>Common_Delete</value>
+  </data>
+  <data name="DeleteFile_EnsureFile" xml:space="preserve">
+    <value>DeleteFile_EnsureFile</value>
+  </data>
+  <data name="DeleteFile_EnsureFolder" xml:space="preserve">
+    <value>DeleteFile_EnsureFolder</value>
+  </data>
+  <data name="DeleteFile_CanFindBack" xml:space="preserve">
+    <value>DeleteFile_CanFindBack</value>
+  </data>
+  <data name="Common_Rename" xml:space="preserve">
+    <value>Common_Rename</value>
+  </data>
+  <data name="Common_Ok" xml:space="preserve">
+    <value>Common_Ok</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Common_Cancel</value>
+  </data>
+  <data name="DeleteFile_Failed" xml:space="preserve">
+    <value>DeleteFile_Failed</value>
+  </data>
+  <data name="RenameFile_InvalidFileOrFolderName" xml:space="preserve">
+    <value>RenameFile_InvalidFileOrFolderName</value>
+  </data>
+  <data name="RenameFile_NameContainInvalidChar" xml:space="preserve">
+    <value>RenameFile_NameContainInvalidChar</value>
+  </data>
+  <data name="File_NameAlreadyExists" xml:space="preserve">
+    <value>File_NameAlreadyExists</value>
+  </data>
+  <data name="Menu_CopyRelativePath" xml:space="preserve">
+    <value>Menu_CopyRelativePath</value>
+  </data>
+  <data name="Menu_CopyFullPath" xml:space="preserve">
+    <value>Menu_CopyFullPath</value>
+  </data>
+  <data name="File_OpenInExplorer" xml:space="preserve">
+    <value>OpenInExplorer</value>
+  </data>
+  <data name="Menu_NewFile" xml:space="preserve">
+    <value>Menu_NewFile</value>
+  </data>
+  <data name="Menu_NewFolder" xml:space="preserve">
+    <value>Menu_NewFolder</value>
+  </data>
+  <data name="NewFile_ErrorOccurs" xml:space="preserve">
+    <value>NewFile_ErrorOccurs</value>
+  </data>
+  <data name="AppUpdateChannel" xml:space="preserve">
+    <value>AppUpdateChannel</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="CreateNewProject_Title" xml:space="preserve">
+    <value>CreateNewProject_Title</value>
+  </data>
+  <data name="Settings_Must_Reset" xml:space="preserve">
+    <value>Settings_Must_Reset</value>
+  </data>
+  <data name="Common_LoadFocusTreeFailed" xml:space="preserve">
+    <value>Common_LoadFocusTreeFailed</value>
+  </data>
+  <data name="Common_NoFocusToDisplay" xml:space="preserve">
+    <value>Common_NoFocusToDisplay</value>
+  </data>
+  <data name="Common_ExportImageFailed" xml:space="preserve">
+    <value>Common_ExportImageFailed</value>
+  </data>
+  <data name="TitleCommandBar_CreateFailed" xml:space="preserve">
+    <value>TitleCommandBar_CreateFailed</value>
+  </data>
+  <data name="TitleCommandBar_FileExistsCannotCreate" xml:space="preserve">
+    <value>TitleCommandBar_FileExistsCannotCreate</value>
+  </data>
+  <data name="TitleCommandBar_CreateFocusTreeMessageFailed" xml:space="preserve">
+    <value>TitleCommandBar_CreateFocusTreeMessageFailed</value>
+  </data>
+  <data name="TitleCommandBar_UnsupportedImageFormat" xml:space="preserve">
+    <value>TitleCommandBar_UnsupportedImageFormat</value>
+  </data>
+  <data name="TitleCommandBar_ImportImageFailed" xml:space="preserve">
+    <value>TitleCommandBar_ImportImageFailed</value>
+  </data>
+  <data name="TitleCommandBar_ImportSuccess" xml:space="preserve">
+    <value>TitleCommandBar_ImportSuccess</value>
+  </data>
+  <data name="ProjectList_InvalidModFolder" xml:space="preserve">
+    <value>ProjectList_InvalidModFolder</value>
+  </data>
+  <data name="ProjectList_OpenProjectFailed" xml:space="preserve">
+    <value>ProjectList_OpenProjectFailed</value>
+  </data>
+  <data name="ProjectList_SubmodDependencyDetected" xml:space="preserve">
+    <value>ProjectList_SubmodDependencyDetected</value>
+  </data>
+  <data name="Common_Prompt" xml:space="preserve">
+    <value>Common_Prompt</value>
+  </data>
+  <data name="ProjectList_ProjectNotFoundRemovePrompt" xml:space="preserve">
+    <value>ProjectList_ProjectNotFoundRemovePrompt</value>
+  </data>
+  <data name="ProjectList_ProjectNotFound" xml:space="preserve">
+    <value>ProjectList_ProjectNotFound</value>
+  </data>
+  <data name="AppSettings_Hoi4ExeNotFound" xml:space="preserve">
+    <value>AppSettings_Hoi4ExeNotFound</value>
+  </data>
+  <data name="AppSettings_OpenConfigFolderFailed" xml:space="preserve">
+    <value>AppSettings_OpenConfigFolderFailed</value>
+  </data>
+  <data name="AppSettings_OpenConfigFolderFailed_Title" xml:space="preserve">
+    <value>AppSettings_OpenConfigFolderFailed_Title</value>
+  </data>
+  <data name="AppSettings_OpenLogFolderFailed" xml:space="preserve">
+    <value>AppSettings_OpenLogFolderFailed</value>
+  </data>
+  <data name="AppSettings_OpenLogFolderFailed_Title" xml:space="preserve">
+    <value>AppSettings_OpenLogFolderFailed_Title</value>
+  </data>
+  <data name="AppSettings_OpenEulaFailed" xml:space="preserve">
+    <value>AppSettings_OpenEulaFailed</value>
+  </data>
+  <data name="Common_OpenFailed" xml:space="preserve">
+    <value>Common_OpenFailed</value>
+  </data>
+  <data name="AppUpdate_CheckUpdateFailed" xml:space="preserve">
+    <value>AppUpdate_CheckUpdateFailed</value>
+  </data>
+  <data name="FocusTreeEditor_DeleteRelativePositionImpactWarning" xml:space="preserve">
+    <value>FocusTreeEditor_DeleteRelativePositionImpactWarning</value>
+  </data>
+  <data name="Common_ConfirmDelete" xml:space="preserve">
+    <value>Common_ConfirmDelete</value>
+  </data>
+  <data name="InvalidGamePath" xml:space="preserve">
+    <value>Invalid_Game_Path</value>
+  </data>
+  <data name="GameRootPath" xml:space="preserve">
+    <value>GameRootPath</value>
+  </data>
+  <data name="Settings_RePick" xml:space="preserve">
+    <value>Settings_RePick</value>
+  </data>
+  <data name="Settings_AutoDDS_Header" xml:space="preserve">
+    <value>Automatically convert PNG to DDS format when importing</value>
+  </data>
+  <data name="Settings_AutoDDS_Description" xml:space="preserve">
+    <value>Using DDS format helps speed up game loading times</value>
+  </data>
+  <data name="Settings_AutoOpenCard_Header" xml:space="preserve">
+    <value>Automatically open focus information card</value>
+  </data>
+  <data name="Settings_AutoOpenCard_Description" xml:space="preserve">
+    <value>Automatically open the focus information card for editing after creating a new focus</value>
+  </data>
+  <data name="Settings_Telemetry_Header" xml:space="preserve">
+    <value>Settings_Telemetry_Header</value>
+  </data>
+  <data name="Settings_Telemetry_Description" xml:space="preserve">
+    <value>Settings_Telemetry_Description</value>
+  </data>
+  <data name="Settings_ThemeMode_Header" xml:space="preserve">
+    <value>Settings_ThemeMode_Header</value>
+  </data>
+  <data name="Settings_AppFont_Header" xml:space="preserve">
+    <value>App font</value>
+  </data>
+  <data name="Settings_CodeEditorFont_Header" xml:space="preserve">
+    <value>Code editor font</value>
+  </data>
+  <data name="Settings_AppLanguage_Header" xml:space="preserve">
+    <value>App Language</value>
+  </data>
+  <data name="Settings_GameLanguage_Header" xml:space="preserve">
+    <value>Game localization language</value>
+  </data>
+  <data name="Settings_OpenConfigFolder_Header" xml:space="preserve">
+    <value>Open configuration folder</value>
+  </data>
+  <data name="Settings_OpenLogFolder_Header" xml:space="preserve">
+    <value>Open logs folder</value>
+  </data>
+  <data name="Settings_OpenSourceLibrary_Header" xml:space="preserve">
+    <value>Open source libraries</value>
+  </data>
+  <data name="Settings_EULA" xml:space="preserve">
+    <value>End User License Agreement (EULA)</value>
+  </data>
+  <data name="Settings_ReportIssue" xml:space="preserve">
+    <value>Settings_ReportIssue</value>
+  </data>
+  <data name="Settings_Afdian" xml:space="preserve">
+    <value>Afdian</value>
+  </data>
+  <data name="Settings_ContactUs" xml:space="preserve">
+    <value>Settings_ContactUs</value>
+  </data>
+  <data name="Initialization_Next" xml:space="preserve">
+    <value>Initialization_Next</value>
+  </data>
+  <data name="Initialization_Previous" xml:space="preserve">
+    <value>Initialization_Previous</value>
+  </data>
+  <data name="AppUpdate_Checking" xml:space="preserve">
+    <value>AppUpdate_Checking</value>
+  </data>
+  <data name="AppUpdate_CheckWaitDetails" xml:space="preserve">
+    <value>Please wait, this may take some time due to network conditions...</value>
+  </data>
+  <data name="AppUpdate_NewVersionAvailable" xml:space="preserve">
+    <value>New version available</value>
+  </data>
+  <data name="AppUpdate_RecommendUpdate" xml:space="preserve">
+    <value>It is recommended to update to the latest version as soon as possible for the best experience</value>
+  </data>
+  <data name="AppUpdate_StartUpdate" xml:space="preserve">
+    <value>Start update</value>
+  </data>
+  <data name="AppUpdate_Downloading" xml:space="preserve">
+    <value>Downloading update</value>
+  </data>
+  <data name="AppUpdate_DownloadProgress" xml:space="preserve">
+    <value>Download progress</value>
+  </data>
+  <data name="ProjectList_RemoveFromList" xml:space="preserve">
+    <value>Remove from list</value>
+  </data>
+  <data name="ProjectList_CopyPath" xml:space="preserve">
+    <value>Copy path</value>
+  </data>
+  <data name="ProjectList_SearchPlaceholder" xml:space="preserve">
+    <value>Search project name...</value>
+  </data>
+  <data name="ProjectList_CreateProject" xml:space="preserve">
+    <value>New Project</value>
+  </data>
+  <data name="ProjectList_OpenProject" xml:space="preserve">
+    <value>Open Project</value>
+  </data>
+  <data name="ProjectList_PathInvalid" xml:space="preserve">
+    <value>Invalid path</value>
+  </data>
+  <data name="Settings_GridWidth" xml:space="preserve">
+    <value>Settings_GridWidth</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="LocalizationManager_Title" xml:space="preserve">
+    <value>LocalizationManager_Title</value>
+  </data>
+  <data name="LocalizationManager_ToolTip" xml:space="preserve">
+    <value>LocalizationManager_ToolTip</value>
+  </data>
   <data name="NotSupportInfoControl_Title" xml:space="preserve">
-    <value>Unsupported File Type</value>
+    <value>NotSupportInfoControl_Title</value>
   </data>
   <data name="NotSupportInfoControl_Body" xml:space="preserve">
-    <value>This file type is currently not supported to be opened in the editor</value>
+    <value>NotSupportInfoControl_Body</value>
   </data>
   <data name="MainSettings_Project" xml:space="preserve">
-    <value>Project</value>
+    <value>MainSettings_Project</value>
   </data>
   <data name="MainSettings_App" xml:space="preserve">
-    <value>App</value>
+    <value>MainSettings_App</value>
+  </data>
+  <data name="ExportFocusTreeImage" xml:space="preserve">
+    <value>ExportFocusTreeImage</value>
   </data>
   <data name="Settings_GridSize" xml:space="preserve">
-    <value>Grid Size</value>
+    <value>Settings_GridSize</value>
   </data>
   <data name="Settings_GridHeight" xml:space="preserve">
-    <value>Grid Height</value>
+    <value>Settings_GridHeight</value>
   </data>
   <data name="Settings_SupportedLanguages_Header" xml:space="preserve">
-    <value>Supported Localization Languages</value>
+    <value>Settings_SupportedLanguages_Header</value>
   </data>
   <data name="Settings_SupportedLanguages_Description" xml:space="preserve">
-    <value>Options for focus tree localization *Takes effect after restarting</value>
+    <value>Settings_SupportedLanguages_Description</value>
   </data>
   <data name="Settings_CurrentLanguagePlaceholder" xml:space="preserve">
-    <value>Current Language...</value>
+    <value>Settings_CurrentLanguagePlaceholder</value>
   </data>
   <data name="Settings_ComputeFilesSize" xml:space="preserve">
-    <value>Compute Files Size</value>
+    <value>Settings_ComputeFilesSize</value>
   </data>
   <data name="Settings_HasDependencies_Header" xml:space="preserve">
-    <value>Has Dependencies</value>
+    <value>Settings_HasDependencies_Header</value>
   </data>
   <data name="Settings_AddModPath" xml:space="preserve">
-    <value>Add Mod Path</value>
+    <value>Settings_AddModPath</value>
   </data>
   <data name="Settings_AddModPath_Description" xml:space="preserve">
-    <value>*Takes effect after restarting</value>
+    <value>Settings_AddModPath_Description</value>
   </data>
   <data name="Settings_SelectPath" xml:space="preserve">
-    <value>Select Path</value>
+    <value>Settings_SelectPath</value>
   </data>
   <data name="EulaView_Title" xml:space="preserve">
-    <value>End User License Agreement</value>
+    <value>EulaView_Title</value>
   </data>
   <data name="EulaView_UpdateTip" xml:space="preserve">
-    <value>The agreement has been updated, please review it again.</value>
+    <value>EulaView_UpdateTip</value>
   </data>
   <data name="EulaView_Description" xml:space="preserve">
-    <value>Please read the agreement completely. By continuing to use this application, you understand and agree to the relevant terms.</value>
+    <value>EulaView_Description</value>
   </data>
   <data name="EulaView_ConfirmTip" xml:space="preserve">
-    <value>It is recommended to confirm that you have read all terms before continuing.</value>
+    <value>EulaView_ConfirmTip</value>
   </data>
   <data name="EulaView_DeclineAndExit" xml:space="preserve">
-    <value>Decline and Exit</value>
+    <value>EulaView_DeclineAndExit</value>
   </data>
   <data name="EulaView_AgreeAndContinue" xml:space="preserve">
-    <value>Agree and Continue</value>
+    <value>EulaView_AgreeAndContinue</value>
   </data>
-    <data name="StatusBar_RAM" xml:space="preserve">
-        <value>RAM: {0}</value>
-    </data>
-    <data name="AppUpdate_NewVersion" xml:space="preserve">
-        <value>New Version: {0}, Current Version: {1}</value>
-    </data>
-    <data name="AppUpdate_UpgradePackageSize" xml:space="preserve">
-        <value>Upgrade Package Size: {0}</value>
-    </data>
-    <data name="StatusBar_FocusSum" xml:space="preserve">
-        <value>Focus Sum: {0}</value>
-    </data>
+  <data name="StatusBar_FocusSum" xml:space="preserve">
+    <value>StatusBar_FocusSum</value>
+  </data>
+  <data name="StatusBar_RAM" xml:space="preserve">
+    <value>StatusBar_RAM</value>
+  </data>
+  <data name="AppUpdate_NewVersion" xml:space="preserve">
+    <value>AppUpdate_NewVersion</value>
+  </data>
+  <data name="AppUpdate_UpgradePackageSize" xml:space="preserve">
+    <value>AppUpdate_UpgradePackageSize</value>
+  </data>
   <data name="FileService_OpenFolder" xml:space="preserve">
-    <value>Open Folder</value>
+    <value>FileService_OpenFolder</value>
   </data>
   <data name="ProjectSettings_SelectDependencyModFolder" xml:space="preserve">
-    <value>Select the root directory of the dependency mod</value>
+    <value>ProjectSettings_SelectDependencyModFolder</value>
   </data>
   <data name="ProjectList_SelectModRootFolder" xml:space="preserve">
-    <value>Select mod root directory</value>
+    <value>ProjectList_SelectModRootFolder</value>
   </data>
-    <data name="Success" xml:space="preserve">
-        <value>Success</value>
-    </data>
-    <data name="SaveFailed" xml:space="preserve">
-        <value>Save Failed</value>
-    </data>
+  <data name="SavedSuccessfully" xml:space="preserve">
+    <value>SavedSuccessfully</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="CopiedToClipboard" xml:space="preserve">
+    <value>CopyToClipboard</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>SaveFailed</value>
+  </data>
   <data name="CreateNewProject_ModName" xml:space="preserve">
-    <value>Mod Name</value>
+    <value>CreateNewProject_ModName</value>
   </data>
   <data name="CreateNewProject_FolderName" xml:space="preserve">
-    <value>Mod Folder Name</value>
+    <value>CreateNewProject_FolderName</value>
   </data>
   <data name="CreateNewProject_SupportedVersion" xml:space="preserve">
-    <value>Supported Version</value>
+    <value>CreateNewProject_SupportedVersion</value>
   </data>
   <data name="CreateNewProject_SupportedLanguages" xml:space="preserve">
-    <value>Focus Localization Supported Languages</value>
+    <value>CreateNewProject_SupportedLanguages</value>
   </data>
   <data name="CreateNewProject_Tags" xml:space="preserve">
-    <value>Tags</value>
+    <value>CreateNewProject_Tags</value>
   </data>
-    <data name="FocusCondition" xml:space="preserve">
-        <value>Condition</value>
-    </data>
-    <data name="Day" xml:space="preserve">
-        <value>Days</value>
-    </data>
-    <data name="AbsolutePosition" xml:space="preserve">
-        <value>Absolute Position</value>
-    </data>
-    <data name="RelativePosition" xml:space="preserve">
-        <value>Relative Position</value>
-    </data>
-    <data name="Localization" xml:space="preserve">
-        <value>Localization</value>
-    </data>
-    <data name="Description" xml:space="preserve">
-        <value>Description</value>
-    </data>
-    <data name="CompletionEffect" xml:space="preserve">
-        <value>Completion Effect</value>
-    </data>
-    <data name="FocusInfoCard_Prerequisites" xml:space="preserve">
-        <value>Prerequisites</value>
-    </data>
+  <data name="NewFocus" xml:space="preserve">
+    <value>NewFocus</value>
+  </data>
+  <data name="SetRelativePosition" xml:space="preserve">
+    <value>SetRelativePosition</value>
+  </data>
+  <data name="ConvertToAbsolutePosition" xml:space="preserve">
+    <value>ConvertToAbsolutePosition</value>
+  </data>
+  <data name="ParsingFocusTreeFile" xml:space="preserve">
+    <value>ParsingFocusTreeFile</value>
+  </data>
+  <data name="SetPrerequisiteFocus" xml:space="preserve">
+    <value>SetPrerequisiteFocus</value>
+  </data>
+  <data name="SetMutuallyExclusiveFocus" xml:space="preserve">
+    <value>SetMutuallyExclusiveFocus</value>
+  </data>
+  <data name="ExportImageSuccessfully" xml:space="preserve">
+    <value>ExportImageSuccessfully</value>
+  </data>
+  <data name="ExportImageTitle" xml:space="preserve">
+    <value>ExportImageTitle</value>
+  </data>
+  <data name="ImportFocusIcon" xml:space="preserve">
+    <value>ImportFocusIcon</value>
+  </data>
+  <data name="FocusCondition" xml:space="preserve">
+    <value>FocusCondition</value>
+  </data>
+  <data name="GameLocalizationFilesInfo" xml:space="preserve">
+    <value>GameLocalizationFilesInfo</value>
+  </data>
+  <data name="NotCalculated" xml:space="preserve">
+    <value>NotCalculated</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="AbsolutePosition" xml:space="preserve">
+    <value>AbsolutePosition</value>
+  </data>
+  <data name="RelativePosition" xml:space="preserve">
+    <value>RelativePosition</value>
+  </data>
+  <data name="Localization" xml:space="preserve">
+    <value>Localization</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="CompletionEffect" xml:space="preserve">
+    <value>CompletionEffect</value>
+  </data>
+  <data name="FocusInfoCard_PositioningSystem" xml:space="preserve">
+    <value>FocusInfoCard_PositioningSystem</value>
+  </data>
+  <data name="FocusInfoCard_PositionRelativeTo" xml:space="preserve">
+    <value>FocusInfoCard_PositionRelativeTo</value>
+  </data>
+  <data name="FocusInfoCard_Prerequisites" xml:space="preserve">
+    <value>FocusInfoCard_Prerequisites</value>
+  </data>
+  <data name="FocusInfoCard_MutualExclusion" xml:space="preserve">
+    <value>FocusInfoCard_MutualExclusion</value>
+  </data>
+  <data name="FocusInfoCard_CancelIfInvalid" xml:space="preserve">
+    <value>FocusInfoCard_CancelIfInvalid</value>
+  </data>
+  <data name="FocusInfoCard_ContinueIfInvalid" xml:space="preserve">
+    <value>FocusInfoCard_ContinueIfInvalid</value>
+  </data>
+  <data name="FocusInfoCard_PrerequisitesTip" xml:space="preserve">
+    <value>FocusInfoCard_PrerequisitesTip</value>
+  </data>
 </root>
