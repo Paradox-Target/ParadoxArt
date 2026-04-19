@@ -217,7 +217,7 @@
         <value>Focus Id Already Exist</value>
     </data>
     <data name="AppUpdateChannel" xml:space="preserve">
-        <value>App Update Channel</value>
+        <value>Update Channel</value>
     </data>
     <data name="About" xml:space="preserve">
         <value>About</value>
@@ -390,9 +390,9 @@
   <data name="EulaView_Title" xml:space="preserve">
     <value>End User License Agreement</value>
   </data>
-  <data name="EulaView_UpdateTip" xml:space="preserve">
-    <value>The agreement has been updated, please review it again.</value>
-  </data>
+    <data name="EulaView_UpdateTip" xml:space="preserve">
+        <value>The agreement has been updated, Please review it again.</value>
+    </data>
   <data name="EulaView_Description" xml:space="preserve">
     <value>Please read the agreement completely. By continuing to use this application, you understand and agree to the relevant terms.</value>
   </data>
@@ -420,9 +420,9 @@
   <data name="FileService_OpenFolder" xml:space="preserve">
     <value>Open Folder</value>
   </data>
-  <data name="ProjectSettings_SelectDependencyModFolder" xml:space="preserve">
-    <value>Select the root directory of the dependency mod</value>
-  </data>
+    <data name="ProjectSettings_SelectDependencyModFolder" xml:space="preserve">
+        <value>Select dependency mod root directory</value>
+    </data>
   <data name="ProjectList_SelectModRootFolder" xml:space="preserve">
     <value>Select mod root directory</value>
   </data>
@@ -430,7 +430,7 @@
         <value>Success</value>
     </data>
     <data name="SaveFailed" xml:space="preserve">
-        <value>Save Failed</value>
+        <value>Failed to save</value>
     </data>
   <data name="CreateNewProject_ModName" xml:space="preserve">
     <value>Mod Name</value>
@@ -470,5 +470,145 @@
     </data>
     <data name="FocusInfoCard_Prerequisites" xml:space="preserve">
         <value>Prerequisites</value>
+    </data>
+    <data name="Common_ExportImageFailed" xml:space="preserve">
+        <value>Failed to export image</value>
+    </data>
+    <data name="Common_LoadFocusTreeFailed" xml:space="preserve">
+        <value>Failed to load focus tree file</value>
+    </data>
+    <data name="Common_ConfirmDelete" xml:space="preserve">
+        <value>Confirm Delete</value>
+    </data>
+    <data name="NewFocus" xml:space="preserve">
+        <value>New Focus</value>
+    </data>
+    <data name="Common_OpenFailed" xml:space="preserve">
+        <value>Failed to open</value>
+    </data>
+    <data name="AppSettings_OpenEulaFailed" xml:space="preserve">
+        <value>Failed to open EULA.</value>
+    </data>
+    <data name="AppUpdate_CheckUpdateFailed" xml:space="preserve">
+        <value>Failed to check update</value>
+    </data>
+    <data name="CopiedToClipboard" xml:space="preserve">
+        <value>Copy to clipboard</value>
+    </data>
+    <data name="ConvertToAbsolutePosition" xml:space="preserve">
+        <value>Convert to absolute position</value>
+    </data>
+    <data name="Common_NoFocusToDisplay" xml:space="preserve">
+        <value>No focus to display</value>
+    </data>
+    <data name="ExportFocusTreeImage" xml:space="preserve">
+        <value>Export Focus tree image</value>
+    </data>
+    <data name="ExportImageSuccessfully" xml:space="preserve">
+        <value>Image exported successfully</value>
+    </data>
+    <data name="ExportImageTitle" xml:space="preserve">
+        <value>Export Focus tree as image</value>
+    </data>
+    <data name="AppSettings_OpenLogFolderFailed_Title" xml:space="preserve">
+        <value>Failed to open log folder</value>
+    </data>
+    <data name="AppSettings_Hoi4ExeNotFound" xml:space="preserve">
+        <value>Could not find hoi4.exe. Please ensure you have selected the game's root folder.</value>
+    </data>
+    <data name="AppSettings_OpenConfigFolderFailed" xml:space="preserve">
+        <value>Could not open configuration folder. It may not exist.</value>
+    </data>
+    <data name="AppSettings_OpenConfigFolderFailed_Title" xml:space="preserve">
+        <value>Failed to open configuration folder</value>
+    </data>
+    <data name="AppSettings_OpenLogFolderFailed" xml:space="preserve">
+        <value>Could not open log folder. It may not exist.</value>
+    </data>
+    <data name="Common_Prompt" xml:space="preserve">
+        <value>Tip</value>
+    </data>
+    <data name="SetRelativePosition" xml:space="preserve">
+        <value>Set relative position</value>
+    </data>
+    <data name="SetPrerequisiteFocus" xml:space="preserve">
+        <value>Ser Pre-request focus</value>
+    </data>
+    <data name="SetMutuallyExclusiveFocus" xml:space="preserve">
+        <value>Set mutually exclusive focus</value>
+    </data>
+    <data name="SavedSuccessfully" xml:space="preserve">
+        <value>Saved successfully</value>
+    </data>
+    <data name="ImportFocusIcon" xml:space="preserve">
+        <value>Inport focus icon</value>
+    </data>
+    <data name="InvalidGamePath" xml:space="preserve">
+        <value>Invalid game path. Please reset it.</value>
+    </data>
+    <data name="FocusInfoCard_CancelIfInvalid" xml:space="preserve">
+        <value>Cancel if invalid</value>
+    </data>
+    <data name="FocusInfoCard_ContinueIfInvalid" xml:space="preserve">
+        <value>Continue if invalid</value>
+    </data>
+    <data name="FocusInfoCard_MutualExclusion" xml:space="preserve">
+        <value>Mutual Exclusions</value>
+    </data>
+    <data name="FocusInfoCard_PositioningSystem" xml:space="preserve">
+        <value>Positioning System:</value>
+    </data>
+    <data name="FocusInfoCard_PositionRelativeTo" xml:space="preserve">
+        <value>Relative to:</value>
+    </data>
+    <data name="FocusTreeEditor_DeleteRelativePositionImpactWarning" xml:space="preserve">
+        <value>Other focuses are positioned relative to this one. Deleting it will change their positions to absolute.</value>
+    </data>
+    <data name="GameLocalizationFilesInfo" xml:space="preserve">
+        <value>Localization files: {0}, Total size: {1}</value>
+    </data>
+    <data name="FocusInfoCard_PrerequisitesTip" xml:space="preserve">
+        <value>Prerequisite Groups (OR)</value>
+    </data>
+    <data name="ProjectList_InvalidModFolder" xml:space="preserve">
+        <value>Invalid mod folder. Missing descriptor file ({0}) or incorrect format.</value>
+    </data>
+    <data name="ProjectList_SubmodDependencyDetected" xml:space="preserve">
+        <value>Dependency mods detected. You can add dependency paths in Project Settings to support submod development.</value>
+    </data>
+    <data name="NotCalculated" xml:space="preserve">
+        <value>Not calculated</value>
+    </data>
+    <data name="ParsingFocusTreeFile" xml:space="preserve">
+        <value>Parsing focus tree files...</value>
+    </data>
+    <data name="ProjectList_OpenProjectFailed" xml:space="preserve">
+        <value>Failed to open project</value>
+    </data>
+    <data name="ProjectList_ProjectNotFoundRemovePrompt" xml:space="preserve">
+        <value>Project not found. Remove it from the list?</value>
+    </data>
+    <data name="ProjectList_ProjectNotFound" xml:space="preserve">
+        <value>Project not found</value>
+    </data>
+    <data name="TitleCommandBar_UnsupportedImageFormat" xml:space="preserve">
+        <value>Unsupproted image format</value>
+    </data>
+    <data name="TitleCommandBar_ImportImageFailed" xml:space="preserve">
+        <value>Failed to import images</value>
+    </data>
+    <data name="TitleCommandBar_FileExistsCannotCreate" xml:space="preserve">
+        <value>File already exists. Cannot create a file with the same name.</value>
+    </data>
+    <data name="TitleCommandBar_CreateFailed" xml:space="preserve">
+        <value>Failed to create</value>
+    </data>
+    <data name="TitleCommandBar_CreateFocusTreeMessageFailed" xml:space="preserve">
+        <value>Failed to create focus tree file: {0}</value>
+    </data>
+    <data name="TitleCommandBar_ImportSuccess" xml:space="preserve">
+        <value>Imported successfully.
+Path: {0}
+Sprite Name: {1}</value>
     </data>
 </root>

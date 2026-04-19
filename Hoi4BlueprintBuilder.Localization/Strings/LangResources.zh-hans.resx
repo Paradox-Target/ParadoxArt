@@ -241,7 +241,7 @@
     <value>创建失败</value>
   </data>
   <data name="TitleCommandBar_FileExistsCannotCreate" xml:space="preserve">
-    <value>文件已存在, 无法创建同名文件.</value>
+    <value>文件已存在, 无法创建同名文件。</value>
   </data>
   <data name="TitleCommandBar_CreateFocusTreeMessageFailed" xml:space="preserve">
     <value>创建国策树文件失败: {0}</value>
@@ -276,16 +276,16 @@ SpriteName: {1}</value>
     <value>项目不存在</value>
   </data>
   <data name="AppSettings_Hoi4ExeNotFound" xml:space="preserve">
-    <value>未在选择目录中找到 hoi4.exe 文件, 请确认当前目录是游戏根目录</value>
+    <value>未找到 hoi4.exe。请确认选择的目录是游戏根目录</value>
   </data>
   <data name="AppSettings_OpenConfigFolderFailed" xml:space="preserve">
-    <value>无法打开配置文件夹，可能文件夹不存在。</value>
+    <value>无法打开配置文件夹，可能是文件夹不存在。</value>
   </data>
   <data name="AppSettings_OpenConfigFolderFailed_Title" xml:space="preserve">
     <value>打开配置文件夹失败</value>
   </data>
   <data name="AppSettings_OpenLogFolderFailed" xml:space="preserve">
-    <value>无法打开日志文件夹，可能文件夹不存在。</value>
+    <value>无法打开日志文件夹，可能是文件夹不存在。</value>
   </data>
   <data name="AppSettings_OpenLogFolderFailed_Title" xml:space="preserve">
     <value>打开日志文件夹失败</value>
@@ -437,7 +437,7 @@ SpriteName: {1}</value>
     <value>应用</value>
   </data>
   <data name="ExportFocusTreeImage" xml:space="preserve">
-    <value>导出截图</value>
+    <value>导出国策截图</value>
   </data>
   <data name="Settings_GridSize" xml:space="preserve">
     <value>网格大小</value>
@@ -609,5 +609,8 @@ SpriteName: {1}</value>
   </data>
   <data name="FocusInfoCard_PrerequisitesTip" xml:space="preserve">
     <value>前置条件组 (任意达成)</value>
+  </data>
+  <data name="LocalizationManager_ToolTip" xml:space="preserve">
+    <value>管理此模组的所有本地化</value>
   </data>
 </root>
