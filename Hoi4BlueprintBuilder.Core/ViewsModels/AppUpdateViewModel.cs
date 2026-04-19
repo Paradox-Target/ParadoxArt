@@ -137,18 +137,26 @@ public sealed partial class AppUpdateViewModel : ObservableObject
                     }
                     totalBytes += asset.Size;
                 }
-                NewVersionText = $"新版本: {_updateInfo.DeltasToTarget[^1].Version}, 当前版本: {App.Version}";
+                NewVersionText = string.Format(
+                    LangResources.AppUpdate_NewVersion,
+                    _updateInfo.DeltasToTarget[^1].Version,
+                    App.Version
+                );
             }
             else
             {
                 totalBytes = _updateInfo.TargetFullRelease.Size;
                 UpdateLog.AppendLine(_updateInfo.TargetFullRelease.NotesMarkdown);
-                NewVersionText = $"新版本: {_updateInfo.TargetFullRelease.Version}, 当前版本: {App.Version}";
+                NewVersionText = string.Format(
+                    LangResources.AppUpdate_NewVersion,
+                    _updateInfo.TargetFullRelease.Version,
+                    App.Version
+                );
             }
-            TotalPackagesSize =
-                $"升级包体积: {ByteSize
-                .FromBytes(totalBytes)
-                .MebiBytes.ToString("F2", CultureInfo.InvariantCulture)} MB";
+            TotalPackagesSize = string.Format(
+                LangResources.AppUpdate_UpgradePackageSize,
+                ByteSize.FromBytes(totalBytes).MebiBytes.ToString("F2", CultureInfo.InvariantCulture)
+            );
 
             Log.Info("需要更新, 更新包数量: {Count}", _updateInfo.DeltasToTarget.Length);
         }
@@ -156,7 +164,7 @@ public sealed partial class AppUpdateViewModel : ObservableObject
         {
             Log.Error(e, "检查更新失败");
             _telemetryService.TrackException(e, "检查更新失败");
-            await _messageBoxService.ShowErrorAsync("检查更新失败");
+            await _messageBoxService.ShowErrorAsync(LangResources.AppUpdate_CheckUpdateFailed);
             NavigateIfDoNotUpdate();
         }
     }

@@ -160,7 +160,9 @@ public sealed partial class ProjectListViewModel : ObservableObject
     [RelayCommand]
     private async Task OpenProject()
     {
-        using var storageFolder = await _fileService.OpenFolderAsync("选择模组根目录");
+        using var storageFolder = await _fileService.OpenFolderAsync(
+            LangResources.ProjectList_SelectModRootFolder
+        );
         if (storageFolder is null)
         {
             return;
@@ -171,8 +173,11 @@ public sealed partial class ProjectListViewModel : ObservableObject
         if (modName is null)
         {
             await _messageBoxService.ShowErrorAsync(
-                $"无法识别该文件夹为有效的模组文件夹，缺少 mod 描述文件({GameConstants.ModDescriptorFileName})或文件格式错误。",
-                "打开项目失败"
+                string.Format(
+                    LangResources.ProjectList_InvalidModFolder,
+                    GameConstants.ModDescriptorFileName
+                ),
+                LangResources.ProjectList_OpenProjectFailed
             );
             return;
         }
@@ -187,7 +192,10 @@ public sealed partial class ProjectListViewModel : ObservableObject
                 var service = App.Current.Services.GetRequiredService<GameModDescriptorService>();
                 if (service.DependenciesName.Length != 0)
                 {
-                    _messageBoxService.ShowAsync("检测到项目可能存在依赖模组, 您可以到项目设置中添加依赖模组路径来支持 submod 开发", "提示");
+                    _messageBoxService.ShowAsync(
+                        LangResources.ProjectList_SubmodDependencyDetected,
+                        LangResources.Common_Prompt
+                    );
                 }
             }
         );
@@ -228,7 +236,7 @@ public sealed partial class ProjectListViewModel : ObservableObject
         }
 
         await _clipboardService.SetTextAsync(RightClickedItem.DirectoryPath);
-        _notificationService.Show("已复制项目路径到剪贴板");
+        _notificationService.Show(LangResources.CopiedToClipboard);
     }
 
     [RelayCommand(CanExecute = nameof(IsValidRightClickedItem))]
@@ -264,8 +272,8 @@ public sealed partial class ProjectListViewModel : ObservableObject
         if (!item.IsPathExist)
         {
             var result = await _messageBoxService.ShowAsync(
-                "项目不存在, 是否需要从列表中移除?",
-                "项目不存在",
+                LangResources.ProjectList_ProjectNotFoundRemovePrompt,
+                LangResources.ProjectList_ProjectNotFound,
                 MessageBoxIcon.Info,
                 MessageBoxButtons.YesNo
             );

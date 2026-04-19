@@ -16,16 +16,16 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
 
         <StackPanel Margin="8,0" Spacing="4">
-            <fa:FASettingsExpander Description="{Binding GameRootFolderPath, Mode=OneWay}" Header="游戏根目录">
+            <fa:FASettingsExpander Description="{Binding GameRootFolderPath, Mode=OneWay}" Header="{x:Static lang:LangResources.GameRootPath}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE756;" />
                 </fa:FASettingsExpander.IconSource>
                 <fa:FASettingsExpander.Footer>
-                    <Button Command="{Binding PickGameRootPathCommand}" Content="重新选择" />
+                    <Button Command="{Binding PickGameRootPathCommand}" Content="{x:Static lang:LangResources.Settings_RePick}" />
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Description="使用 DDS 格式有助于加快游戏载入速度" Header="导入 PNG 时自动转换成 DDS 格式">
+            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_AutoDDS_Description}" Header="{x:Static lang:LangResources.Settings_AutoDDS_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xEB9F;" />
                 </fa:FASettingsExpander.IconSource>
@@ -34,7 +34,7 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Description="创建新国策后自动打开国策信息卡以便编辑" Header="自动打开国策信息卡">
+            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_AutoOpenCard_Description}" Header="{x:Static lang:LangResources.Settings_AutoOpenCard_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE70B;" />
                 </fa:FASettingsExpander.IconSource>
@@ -43,7 +43,7 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Description="发送匿名的应用使用数据以帮助我们改进应用" Header="启用遥测">
+            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Telemetry_Description}" Header="{x:Static lang:LangResources.Settings_Telemetry_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xEADF;" />
                 </fa:FASettingsExpander.IconSource>
@@ -52,7 +52,7 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Header="主题模式">
+            <fa:FASettingsExpander Header="{x:Static lang:LangResources.Settings_ThemeMode_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE790;" />
                 </fa:FASettingsExpander.IconSource>
@@ -61,7 +61,7 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Header="应用字体">
+            <fa:FASettingsExpander Header="{x:Static lang:LangResources.Settings_AppFont_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8D2;" />
                 </fa:FASettingsExpander.IconSource>
@@ -74,7 +74,7 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Header="代码编辑器字体">
+            <fa:FASettingsExpander Header="{x:Static lang:LangResources.Settings_CodeEditorFont_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8D2;" />
                 </fa:FASettingsExpander.IconSource>
@@ -87,7 +87,7 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="App 语言">
+            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="{x:Static lang:LangResources.Settings_AppLanguage_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
                 </fa:FASettingsExpander.IconSource>
@@ -102,7 +102,7 @@
                 </fa:FASettingsExpander.Footer>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="游戏本地化语言">
+            <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="{x:Static lang:LangResources.Settings_GameLanguage_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xF2B7;" />
                 </fa:FASettingsExpander.IconSource>
@@ -115,7 +115,7 @@
                 Command="{Binding OpenConfigFolderInExplorerCommand}"
                 CommandParameter="{Binding Description, RelativeSource={RelativeSource Self}}"
                 Description="{x:Static local:App.ConfigFolder}"
-                Header="打开配置文件夹"
+                Header="{x:Static lang:LangResources.Settings_OpenConfigFolder_Header}"
                 IsClickEnabled="True">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8DA;" />
@@ -129,7 +129,7 @@
                 Command="{Binding OpenLogsFolderInExplorerCommand}"
                 CommandParameter="{Binding Description, RelativeSource={RelativeSource Self}}"
                 Description="{x:Static local:App.LogsFolder}"
-                Header="打开日志文件夹"
+                Header="{x:Static lang:LangResources.Settings_OpenLogFolder_Header}"
                 IsClickEnabled="True">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8DA;" />
@@ -161,18 +161,18 @@
                 <fa:FASettingsExpanderItem Content=".NET Version" Footer="{x:Static vms:AppSettingsViewModel.DotNetVersion}" />
                 <fa:FASettingsExpanderItem>
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <HyperlinkButton Command="{Binding OpenEulaCommand}" Content="用户协议 (EULA)" />
-                        <HyperlinkButton Content="反馈问题/建议" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
-                        <HyperlinkButton Content="爱发电" NavigateUri="https://ifdian.net/a/textGamex" />
+                        <HyperlinkButton Command="{Binding OpenEulaCommand}" Content="{x:Static lang:LangResources.Settings_EULA}" />
+                        <HyperlinkButton Content="{x:Static lang:LangResources.Settings_ReportIssue}" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
+                        <HyperlinkButton Content="{x:Static lang:LangResources.Settings_Afdian}" NavigateUri="https://ifdian.net/a/textGamex" />
                         <HyperlinkButton
-                            Content="联系我们"
+                            Content="{x:Static lang:LangResources.Settings_ContactUs}"
                             NavigateUri="mailto:contact@paradoxtarget.top"
                             ToolTip.Tip="mailto:contact@paradoxtarget.top" />
                     </StackPanel>
                 </fa:FASettingsExpanderItem>
             </fa:FASettingsExpander>
 
-            <fa:FASettingsExpander Margin="0,0,0,8" Header="开放源代码库">
+            <fa:FASettingsExpander Margin="0,0,0,8" Header="{x:Static lang:LangResources.Settings_OpenSourceLibrary_Header}">
                 <fa:FASettingsExpander.IconSource>
                     <control:FontIconSource Glyph="&#xE8F1;" />
                 </fa:FASettingsExpander.IconSource>

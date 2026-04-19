@@ -45,19 +45,19 @@
             <fa:FACommandBarButton
                 Command="{Binding ExportFocusTreeScreenshotCommand}"
                 IsEnabled="{Binding IsFocusTreeEditorAtCurrent}"
-                Label="导出截图">
+                Label="{x:Static lang:LangResources.ExportFocusTreeImage}">
                 <fa:FACommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xEE71;" />
                 </fa:FACommandBarButton.IconSource>
             </fa:FACommandBarButton>
 
-            <fa:FACommandBarButton Command="{Binding OpenLocalizationManagerCommand}" Label="本地化编辑器">
+            <fa:FACommandBarButton Command="{Binding OpenLocalizationManagerCommand}" Label="{x:Static lang:LangResources.LocalizationManager_Title}">
                 <fa:FACommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xE775;" />
                 </fa:FACommandBarButton.IconSource>
             </fa:FACommandBarButton>
 
-            <fa:FACommandBarButton Command="{Binding OpenImageImportCommand}" Label="导入国策Icon">
+            <fa:FACommandBarButton Command="{Binding OpenImageImportCommand}" Label="{x:Static lang:LangResources.ImportFocusIcon}">
                 <fa:FACommandBarButton.IconSource>
                     <control:FontIconSource Glyph="&#xE8B5;" />
                 </fa:FACommandBarButton.IconSource>
@@ -66,42 +66,39 @@
             <fa:FACommandBarSeparator Margin="4,0" />
 
             <fa:FACommandBarElementContainer VerticalContentAlignment="Center" IsEnabled="{Binding IsFocusTreeEditorAtCurrent}">
-                <StackPanel Orientation="Horizontal" Spacing="4">
-                    <TextBlock VerticalAlignment="Center" Text="条件:" />
-                    <Button Content="当前内容">
-                        <Button.Flyout>
-                            <Flyout>
-                                <ScrollViewer MaxHeight="320">
-                                    <ItemsControl
-                                        MinWidth="240"
-                                        Padding="4"
-                                        ItemsSource="{Binding ConditionItems}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate DataType="models:ConditionItem">
-                                                <Border Classes="ConditionCard" PointerReleased="InputElement_OnPointerReleased">
-                                                    <Grid ColumnDefinitions="Auto,*">
-                                                        <CheckBox
-                                                            Grid.Column="0"
-                                                            MinWidth="0"
-                                                            Padding="0"
-                                                            VerticalAlignment="Center"
-                                                            IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
-                                                        <TextBlock
-                                                            Grid.Column="1"
-                                                            Margin="8,0,0,0"
-                                                            VerticalAlignment="Center"
-                                                            Text="{Binding DisplayContent, Mode=OneTime}"
-                                                            TextTrimming="CharacterEllipsis" />
-                                                    </Grid>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </StackPanel>
+                <Button Content="{x:Static lang:LangResources.FocusCondition}">
+                    <Button.Flyout>
+                        <Flyout>
+                            <ScrollViewer MaxHeight="320">
+                                <ItemsControl
+                                    MinWidth="240"
+                                    Padding="4"
+                                    ItemsSource="{Binding ConditionItems}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="models:ConditionItem">
+                                            <Border Classes="ConditionCard" PointerReleased="InputElement_OnPointerReleased">
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox
+                                                        Grid.Column="0"
+                                                        MinWidth="0"
+                                                        Padding="0"
+                                                        VerticalAlignment="Center"
+                                                        IsChecked="{Binding IsEnabled, Mode=TwoWay}" />
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Margin="8,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding DisplayContent, Mode=OneTime}"
+                                                        TextTrimming="CharacterEllipsis" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
 
             </fa:FACommandBarElementContainer>
         </fa:FACommandBar.PrimaryCommands>

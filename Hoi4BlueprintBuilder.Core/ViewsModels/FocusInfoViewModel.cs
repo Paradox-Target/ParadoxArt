@@ -5,6 +5,7 @@ using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +14,8 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 {
     [LocalizationRequired]
-    public string LocationSystemText => FocusNode.RelativePosition is null ? "绝对位置" : "相对位置";
+    public string LocationSystemText =>
+        FocusNode.RelativePosition is null ? LangResources.AbsolutePosition : LangResources.RelativePosition;
     public bool IsRelativePositionVisible => FocusNode.RelativePosition is not null;
 
     public string RelativePositionFocusName =>
@@ -127,7 +129,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     {
         long focusCost = DefinesService.GetLong(DefineName);
         int totalDays = (int)(FocusNode.Cost * focusCost);
-        return $" x {focusCost} = {totalDays} 天";
+        return $" x {focusCost} = {totalDays} {LangResources.Day}";
     }
 
     partial void OnIdTextChanged(string value)

@@ -228,4 +228,386 @@
   <data name="Settings_Must_Reset" xml:space="preserve">
     <value>*重启应用后生效</value>
   </data>
+  <data name="Common_LoadFocusTreeFailed" xml:space="preserve">
+    <value>加载国策树文件失败</value>
+  </data>
+  <data name="Common_NoFocusToDisplay" xml:space="preserve">
+    <value>没有可显示的国策</value>
+  </data>
+  <data name="Common_ExportImageFailed" xml:space="preserve">
+    <value>导出图片失败</value>
+  </data>
+  <data name="TitleCommandBar_CreateFailed" xml:space="preserve">
+    <value>创建失败</value>
+  </data>
+  <data name="TitleCommandBar_FileExistsCannotCreate" xml:space="preserve">
+    <value>文件已存在, 无法创建同名文件.</value>
+  </data>
+  <data name="TitleCommandBar_CreateFocusTreeMessageFailed" xml:space="preserve">
+    <value>创建国策树文件失败: {0}</value>
+  </data>
+  <data name="TitleCommandBar_UnsupportedImageFormat" xml:space="preserve">
+    <value>不支持的图像格式</value>
+  </data>
+  <data name="TitleCommandBar_ImportImageFailed" xml:space="preserve">
+    <value>导入图片失败</value>
+  </data>
+  <data name="TitleCommandBar_ImportSuccess" xml:space="preserve">
+    <value>导入成功, 导入路径: 
+{0} 
+SpriteName: {1}</value>
+  </data>
+  <data name="ProjectList_InvalidModFolder" xml:space="preserve">
+    <value>无法识别该文件夹为有效的模组文件夹，缺少 mod 描述文件({0})或文件格式错误。</value>
+  </data>
+  <data name="ProjectList_OpenProjectFailed" xml:space="preserve">
+    <value>打开项目失败</value>
+  </data>
+  <data name="ProjectList_SubmodDependencyDetected" xml:space="preserve">
+    <value>检测到项目可能存在依赖模组, 您可以到项目设置中添加依赖模组路径来支持 submod 开发</value>
+  </data>
+  <data name="Common_Prompt" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="ProjectList_ProjectNotFoundRemovePrompt" xml:space="preserve">
+    <value>项目不存在, 是否需要从列表中移除?</value>
+  </data>
+  <data name="ProjectList_ProjectNotFound" xml:space="preserve">
+    <value>项目不存在</value>
+  </data>
+  <data name="AppSettings_Hoi4ExeNotFound" xml:space="preserve">
+    <value>未在选择目录中找到 hoi4.exe 文件, 请确认当前目录是游戏根目录</value>
+  </data>
+  <data name="AppSettings_OpenConfigFolderFailed" xml:space="preserve">
+    <value>无法打开配置文件夹，可能文件夹不存在。</value>
+  </data>
+  <data name="AppSettings_OpenConfigFolderFailed_Title" xml:space="preserve">
+    <value>打开配置文件夹失败</value>
+  </data>
+  <data name="AppSettings_OpenLogFolderFailed" xml:space="preserve">
+    <value>无法打开日志文件夹，可能文件夹不存在。</value>
+  </data>
+  <data name="AppSettings_OpenLogFolderFailed_Title" xml:space="preserve">
+    <value>打开日志文件夹失败</value>
+  </data>
+  <data name="AppSettings_OpenEulaFailed" xml:space="preserve">
+    <value>无法打开用户协议文本。</value>
+  </data>
+  <data name="Common_OpenFailed" xml:space="preserve">
+    <value>打开失败</value>
+  </data>
+  <data name="AppUpdate_CheckUpdateFailed" xml:space="preserve">
+    <value>检查更新失败</value>
+  </data>
+  <data name="FocusTreeEditor_DeleteRelativePositionImpactWarning" xml:space="preserve">
+    <value>有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?
+
+受影响节点:
+
+{0}</value>
+  </data>
+  <data name="Common_ConfirmDelete" xml:space="preserve">
+    <value>确认删除</value>
+  </data>
+  <data name="GameRootPath" xml:space="preserve">
+    <value>游戏根目录</value>
+  </data>
+  <data name="Settings_RePick" xml:space="preserve">
+    <value>重新选择</value>
+  </data>
+  <data name="Settings_AutoDDS_Header" xml:space="preserve">
+    <value>导入 PNG 时自动转换成 DDS 格式</value>
+  </data>
+  <data name="Settings_AutoDDS_Description" xml:space="preserve">
+    <value>使用 DDS 格式有助于加快游戏载入速度</value>
+  </data>
+  <data name="Settings_AutoOpenCard_Header" xml:space="preserve">
+    <value>自动打开国策信息卡</value>
+  </data>
+  <data name="Settings_AutoOpenCard_Description" xml:space="preserve">
+    <value>创建新国策后自动打开国策信息卡以便编辑</value>
+  </data>
+  <data name="Settings_Telemetry_Header" xml:space="preserve">
+    <value>启用遥测</value>
+  </data>
+  <data name="Settings_Telemetry_Description" xml:space="preserve">
+    <value>发送匿名的应用使用数据以帮助我们改进应用</value>
+  </data>
+  <data name="Settings_ThemeMode_Header" xml:space="preserve">
+    <value>主题模式</value>
+  </data>
+  <data name="Settings_AppFont_Header" xml:space="preserve">
+    <value>应用字体</value>
+  </data>
+  <data name="Settings_CodeEditorFont_Header" xml:space="preserve">
+    <value>代码编辑器字体</value>
+  </data>
+  <data name="Settings_AppLanguage_Header" xml:space="preserve">
+    <value>App 语言</value>
+  </data>
+  <data name="Settings_GameLanguage_Header" xml:space="preserve">
+    <value>游戏本地化语言</value>
+  </data>
+  <data name="Settings_OpenConfigFolder_Header" xml:space="preserve">
+    <value>打开配置文件夹</value>
+  </data>
+  <data name="Settings_OpenLogFolder_Header" xml:space="preserve">
+    <value>打开日志文件夹</value>
+  </data>
+  <data name="Settings_OpenSourceLibrary_Header" xml:space="preserve">
+    <value>开放源代码库</value>
+  </data>
+  <data name="Settings_EULA" xml:space="preserve">
+    <value>用户协议 (EULA)</value>
+  </data>
+  <data name="Settings_ReportIssue" xml:space="preserve">
+    <value>反馈问题/建议</value>
+  </data>
+  <data name="Settings_Afdian" xml:space="preserve">
+    <value>爱发电</value>
+  </data>
+  <data name="Settings_ContactUs" xml:space="preserve">
+    <value>联系我们</value>
+  </data>
+  <data name="InvalidGamePath" xml:space="preserve">
+    <value>游戏文件夹路径无效，请重新设置</value>
+  </data>
+  <data name="Initialization_Next" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="Initialization_Previous" xml:space="preserve">
+    <value>上一步</value>
+  </data>
+  <data name="AppUpdate_Checking" xml:space="preserve">
+    <value>正在检查更新</value>
+  </data>
+  <data name="AppUpdate_CheckWaitDetails" xml:space="preserve">
+    <value>请稍候，由于网络原因这可能需要一些时间...</value>
+  </data>
+  <data name="AppUpdate_NewVersionAvailable" xml:space="preserve">
+    <value>发现新版本</value>
+  </data>
+  <data name="AppUpdate_RecommendUpdate" xml:space="preserve">
+    <value>建议您尽快更新至最新版本以获得最佳体验</value>
+  </data>
+  <data name="AppUpdate_StartUpdate" xml:space="preserve">
+    <value>开始更新</value>
+  </data>
+  <data name="AppUpdate_Downloading" xml:space="preserve">
+    <value>正在下载更新</value>
+  </data>
+  <data name="AppUpdate_DownloadProgress" xml:space="preserve">
+    <value>下载进度</value>
+  </data>
+  <data name="ProjectList_RemoveFromList" xml:space="preserve">
+    <value>从列表移除</value>
+  </data>
+  <data name="ProjectList_CopyPath" xml:space="preserve">
+    <value>复制路径</value>
+  </data>
+  <data name="ProjectList_SearchPlaceholder" xml:space="preserve">
+    <value>搜索项目名称...</value>
+  </data>
+  <data name="ProjectList_CreateProject" xml:space="preserve">
+    <value>新建项目</value>
+  </data>
+  <data name="ProjectList_OpenProject" xml:space="preserve">
+    <value>打开项目</value>
+  </data>
+  <data name="ProjectList_PathInvalid" xml:space="preserve">
+    <value>路径失效</value>
+  </data>
+  <data name="Settings_GridWidth" xml:space="preserve">
+    <value>网格宽度</value>
+  </data>
+<data name="Setting" xml:space="preserve"><value>设置</value></data>
+  <data name="LocalizationManager_Title" xml:space="preserve">
+    <value>本地化管理器</value>
+  </data>
+  <data name="NotSupportInfoControl_Title" xml:space="preserve">
+    <value>暂不支持该文件类型</value>
+  </data>
+  <data name="NotSupportInfoControl_Body" xml:space="preserve">
+    <value>此文件类型暂时无法在编辑器中打开</value>
+  </data>
+  <data name="MainSettings_Project" xml:space="preserve">
+    <value>项目</value>
+  </data>
+  <data name="MainSettings_App" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="ExportFocusTreeImage" xml:space="preserve">
+    <value>导出截图</value>
+  </data>
+  <data name="Settings_GridSize" xml:space="preserve">
+    <value>网格大小</value>
+  </data>
+  <data name="Settings_GridHeight" xml:space="preserve">
+    <value>网格长度</value>
+  </data>
+  <data name="Settings_SupportedLanguages_Header" xml:space="preserve">
+    <value>项目支持本地化语言</value>
+  </data>
+  <data name="Settings_SupportedLanguages_Description" xml:space="preserve">
+    <value>决定国策本地化的可选项 *重启应用后生效</value>
+  </data>
+  <data name="Settings_CurrentLanguagePlaceholder" xml:space="preserve">
+    <value>当前语言...</value>
+  </data>
+  <data name="Settings_ComputeFilesSize" xml:space="preserve">
+    <value>计算文件大小</value>
+  </data>
+  <data name="Settings_HasDependencies_Header" xml:space="preserve">
+    <value>有依赖模组</value>
+  </data>
+  <data name="Settings_AddModPath" xml:space="preserve">
+    <value>添加模组路径</value>
+  </data>
+  <data name="Settings_AddModPath_Description" xml:space="preserve">
+    <value>*修改后重启应用生效</value>
+  </data>
+  <data name="Settings_SelectPath" xml:space="preserve">
+    <value>选择路径</value>
+  </data>
+  <data name="EulaView_Title" xml:space="preserve">
+    <value>用户协议</value>
+  </data>
+  <data name="EulaView_UpdateTip" xml:space="preserve">
+    <value>协议内容有更新, 请重新查看</value>
+  </data>
+  <data name="EulaView_Description" xml:space="preserve">
+    <value>请完整阅读协议内容。继续使用本应用即表示您理解并同意相关条款。</value>
+  </data>
+  <data name="EulaView_ConfirmTip" xml:space="preserve">
+    <value>建议在继续前确认您已阅读全部条款</value>
+  </data>
+  <data name="EulaView_DeclineAndExit" xml:space="preserve">
+    <value>拒绝并退出</value>
+  </data>
+  <data name="EulaView_AgreeAndContinue" xml:space="preserve">
+    <value>同意并继续</value>
+  </data>
+  <data name="StatusBar_FocusSum" xml:space="preserve">
+    <value>国策总数: {0}</value>
+  </data>
+  <data name="StatusBar_RAM" xml:space="preserve">
+    <value>内存使用: {0}</value>
+  </data>
+  <data name="AppUpdate_NewVersion" xml:space="preserve">
+    <value>新版本: {0}, 当前版本: {1}</value>
+  </data>
+  <data name="AppUpdate_UpgradePackageSize" xml:space="preserve">
+    <value>升级包体积: {0}</value>
+  </data>
+  <data name="FileService_OpenFolder" xml:space="preserve">
+    <value>打开文件夹</value>
+  </data>
+  <data name="ProjectSettings_SelectDependencyModFolder" xml:space="preserve">
+    <value>选择依赖模组的根目录</value>
+  </data>
+  <data name="ProjectList_SelectModRootFolder" xml:space="preserve">
+    <value>选择模组根目录</value>
+  </data>
+  <data name="SavedSuccessfully" xml:space="preserve">
+    <value>保存成功</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="CopiedToClipboard" xml:space="preserve">
+    <value>已复制到剪切板</value>
+  </data>
+  <data name="SaveFailed" xml:space="preserve">
+    <value>保存失败</value>
+  </data>
+  <data name="CreateNewProject_ModName" xml:space="preserve">
+    <value>模组名称</value>
+  </data>
+  <data name="CreateNewProject_FolderName" xml:space="preserve">
+    <value>模组文件夹名称</value>
+  </data>
+  <data name="CreateNewProject_SupportedVersion" xml:space="preserve">
+    <value>支持版本</value>
+  </data>
+  <data name="CreateNewProject_SupportedLanguages" xml:space="preserve">
+    <value>国策本地化支持语言</value>
+  </data>
+  <data name="CreateNewProject_Tags" xml:space="preserve">
+    <value>Tags</value>
+  </data>
+  <data name="NewFocus" xml:space="preserve">
+    <value>新建国策</value>
+  </data>
+  <data name="SetRelativePosition" xml:space="preserve">
+    <value>设置相对位置</value>
+  </data>
+  <data name="ConvertToAbsolutePosition" xml:space="preserve">
+    <value>转换为绝对位置</value>
+  </data>
+  <data name="ParsingFocusTreeFile" xml:space="preserve">
+    <value>正在解析国策文件...</value>
+  </data>
+  <data name="SetPrerequisiteFocus" xml:space="preserve">
+    <value>设置前置国策</value>
+  </data>
+  <data name="SetMutuallyExclusiveFocus" xml:space="preserve">
+    <value>设置互斥国策</value>
+  </data>
+  <data name="ExportImageSuccessfully" xml:space="preserve">
+    <value>导出图片成功</value>
+  </data>
+  <data name="ExportImageTitle" xml:space="preserve">
+    <value>导出国策树为图片</value>
+  </data>
+  <data name="ImportFocusIcon" xml:space="preserve">
+    <value>导入国策Icon</value>
+  </data>
+  <data name="FocusCondition" xml:space="preserve">
+    <value>条件</value>
+  </data>
+  <data name="GameLocalizationFilesInfo" xml:space="preserve">
+    <value>本地化文件数量: {0}, 总大小: {1}</value>
+  </data>
+  <data name="NotCalculated" xml:space="preserve">
+    <value>未计算</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>天</value>
+  </data>
+  <data name="AbsolutePosition" xml:space="preserve">
+    <value>绝对位置</value>
+  </data>
+  <data name="RelativePosition" xml:space="preserve">
+    <value>相对位置</value>
+  </data>
+  <data name="Localization" xml:space="preserve">
+    <value>本地化</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="CompletionEffect" xml:space="preserve">
+    <value>完成效果</value>
+  </data>
+  <data name="FocusInfoCard_PositioningSystem" xml:space="preserve">
+    <value>定位系统: </value>
+  </data>
+  <data name="FocusInfoCard_PositionRelativeTo" xml:space="preserve">
+    <value>位置相对于: </value>
+  </data>
+  <data name="FocusInfoCard_Prerequisites" xml:space="preserve">
+    <value>前提条件</value>
+  </data>
+  <data name="FocusInfoCard_MutualExclusion" xml:space="preserve">
+    <value>互斥条件</value>
+  </data>
+  <data name="FocusInfoCard_CancelIfInvalid" xml:space="preserve">
+    <value>条件不满足时取消</value>
+  </data>
+  <data name="FocusInfoCard_ContinueIfInvalid" xml:space="preserve">
+    <value>条件不满足时仍然继续</value>
+  </data>
+  <data name="FocusInfoCard_PrerequisitesTip" xml:space="preserve">
+    <value>前置条件组 (任意达成)</value>
+  </data>
 </root>

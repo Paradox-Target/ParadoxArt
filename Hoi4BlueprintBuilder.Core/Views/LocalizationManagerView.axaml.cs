@@ -7,14 +7,17 @@ using Avalonia.Layout;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Models.Localization;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using Hoi4BlueprintBuilder.Localization.Strings;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
 [RegisterTransient<LocalizationManagerView>]
 public sealed partial class LocalizationManagerView : UserControl, ITabViewItem
 {
-    public string Header => "本地化编辑器";
-    public string ToolTip => "Manage all localizations in the current MOD";
+    public string Header => LangResources.LocalizationManager_Title;
+    public string ToolTip => LangResources.LocalizationManager_ToolTip;
+
+    // TODO: 排除还是打开?
     public string FilePath => "internal://localization_manager";
     public FAIconSource? TabIcon { get; } = new FASymbolIconSource { Symbol = FASymbol.Character };
 

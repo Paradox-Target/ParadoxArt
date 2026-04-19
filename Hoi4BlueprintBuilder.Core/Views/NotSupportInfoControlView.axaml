@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -18,14 +19,14 @@
                 Margin="0,12,0,0"
                 HorizontalAlignment="Center"
                 Classes="TitleTextBlock"
-                Text="暂不支持该文件类型" />
+                Text="{x:Static lang:LangResources.NotSupportInfoControl_Title}" />
 
             <TextBlock
                 Margin="0,4,0,0"
                 HorizontalAlignment="Center"
                 Classes="BodyTextBlock"
                 Opacity="0.6"
-                Text="此文件类型暂时无法在编辑器中打开"
+                Text="{x:Static lang:LangResources.NotSupportInfoControl_Body}"
                 TextAlignment="Center"
                 TextWrapping="Wrap" />
 

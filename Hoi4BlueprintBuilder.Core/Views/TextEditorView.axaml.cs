@@ -48,12 +48,12 @@ public sealed partial class TextEditorView : UserControl, ITabViewItem, ISave
                 File.WriteAllText(FilePath, TextEditor.Text, App.Utf8EncodingWithoutBom);
             }
 
-            _notificationService.Show("保存成功", "成功", NotificationType.Success);
+            _notificationService.Show(LangResources.SavedSuccessfully, LangResources.Success, NotificationType.Success);
         }
         catch (Exception e)
         {
             Log.Error(e, "保存文件失败");
-            _notificationService.Show("保存失败", LangResources.Common_Error, NotificationType.Error);
+            _notificationService.Show(LangResources.SaveFailed, LangResources.Common_Error, NotificationType.Error);
         }
     }
 }

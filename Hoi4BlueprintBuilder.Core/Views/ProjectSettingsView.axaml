@@ -13,43 +13,43 @@
     x:DataType="vms:ProjectSettingsViewModel"
     mc:Ignorable="d">
     <StackPanel Spacing="4">
-        <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="网格大小">
+        <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_Must_Reset}" Header="{x:Static lang:LangResources.Settings_GridSize}">
             <fa:FASettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF0E2;" />
             </fa:FASettingsExpander.IconSource>
 
-            <fa:FASettingsExpanderItem Content="网格宽度">
+            <fa:FASettingsExpanderItem Content="{x:Static lang:LangResources.Settings_GridWidth}">
                 <fa:FASettingsExpanderItem.Footer>
                     <fa:FANumberBox Minimum="80" Value="{Binding FocusCellWidth}" />
                 </fa:FASettingsExpanderItem.Footer>
             </fa:FASettingsExpanderItem>
 
-            <fa:FASettingsExpanderItem Content="网格长度">
+            <fa:FASettingsExpanderItem Content="{x:Static lang:LangResources.Settings_GridHeight}">
                 <fa:FASettingsExpanderItem.Footer>
                     <fa:FANumberBox Minimum="110" Value="{Binding FocusCellHeight}" />
                 </fa:FASettingsExpanderItem.Footer>
             </fa:FASettingsExpanderItem>
         </fa:FASettingsExpander>
 
-        <fa:FASettingsExpander Description="决定国策本地化的可选项 *重启应用后生效" Header="项目支持本地化语言">
+        <fa:FASettingsExpander Description="{x:Static lang:LangResources.Settings_SupportedLanguages_Description}" Header="{x:Static lang:LangResources.Settings_SupportedLanguages_Header}">
             <fa:FASettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF2B7;" />
             </fa:FASettingsExpander.IconSource>
             <fa:FASettingsExpander.Footer>
                 <control:MultiComboBox
                     ItemsSource="{Binding GameLanguages, Mode=OneTime}"
-                    PlaceholderText="当前语言..."
+                    PlaceholderText="{x:Static lang:LangResources.Settings_CurrentLanguagePlaceholder}"
                     SelectedItems="{Binding SupportedLanguages}" />
             </fa:FASettingsExpander.Footer>
 
             <fa:FASettingsExpanderItem Content="{Binding GameLocalizationFilesInfo}">
                 <fa:FASettingsExpanderItem.Footer>
-                    <Button Command="{Binding ComputeFilesSumCommand}" Content="计算文件大小" />
+                    <Button Command="{Binding ComputeFilesSumCommand}" Content="{x:Static lang:LangResources.Settings_ComputeFilesSize}" />
                 </fa:FASettingsExpanderItem.Footer>
             </fa:FASettingsExpanderItem>
         </fa:FASettingsExpander>
 
-        <fa:FASettingsExpander x:Name="SubModExpander" Header="有依赖模组">
+        <fa:FASettingsExpander x:Name="SubModExpander" Header="{x:Static lang:LangResources.Settings_HasDependencies_Header}">
             <fa:FASettingsExpander.IconSource>
                 <control:FontIconSource Glyph="&#xF003;" />
             </fa:FASettingsExpander.IconSource>
@@ -61,11 +61,11 @@
                     IsCheckedChanged="HasDepsToggleSwitch_OnIsCheckedChanged" />
             </fa:FASettingsExpander.Footer>
             <fa:FASettingsExpanderItem
-                Content="添加模组路径"
-                Description="*修改后重启应用生效"
+                Content="{x:Static lang:LangResources.Settings_AddModPath}"
+                Description="{x:Static lang:LangResources.Settings_AddModPath_Description}"
                 IsEnabled="{Binding #HasDepsToggleSwitch.IsChecked}">
                 <fa:FASettingsExpanderItem.Footer>
-                    <Button Command="{Binding PickDependencyModDirectoryCommand}" Content="选择路径" />
+                    <Button Command="{Binding PickDependencyModDirectoryCommand}" Content="{x:Static lang:LangResources.Settings_SelectPath}" />
                 </fa:FASettingsExpanderItem.Footer>
                 <fa:FASettingsExpanderItem.IconSource>
                     <fa:FASymbolIconSource Symbol="OpenFolder" />

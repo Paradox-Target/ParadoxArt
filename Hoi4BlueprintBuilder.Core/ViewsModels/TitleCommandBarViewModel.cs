@@ -147,7 +147,10 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         string filePath = viewModel.FinalFilePath;
         if (File.Exists(filePath))
         {
-            await _messageBoxService.ShowErrorAsync("文件已存在, 无法创建同名文件.", "创建失败");
+            await _messageBoxService.ShowErrorAsync(
+                LangResources.TitleCommandBar_FileExistsCannotCreate,
+                LangResources.TitleCommandBar_CreateFailed
+            );
             return;
         }
 
@@ -165,7 +168,10 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         catch (Exception e)
         {
             Log.Error(e, "创建国策树文件失败");
-            await _messageBoxService.ShowErrorAsync($"创建国策树文件失败: {e.Message}", "创建失败");
+            await _messageBoxService.ShowErrorAsync(
+                string.Format(LangResources.TitleCommandBar_CreateFocusTreeMessageFailed, e.Message),
+                LangResources.TitleCommandBar_CreateFailed
+            );
         }
     }
 
@@ -230,13 +236,16 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         string path = imageFile.TryGetLocalPath() ?? throw new PlatformNotSupportedException();
         if (!ImageHelper.IsValidFocusImageFormat(path))
         {
-            _ = _messageBoxService.ShowErrorAsync("不支持的图像格式", "导入图片失败");
+            _ = _messageBoxService.ShowErrorAsync(
+                LangResources.TitleCommandBar_UnsupportedImageFormat,
+                LangResources.TitleCommandBar_ImportImageFailed
+            );
             return;
         }
 
         var result = _fileResourceService.RegisterFocusIcon(path);
         _ = _messageBoxService.ShowAsync(
-            $"导入成功, 导入路径: \n{result.DestFilePath} \nSpriteName: {result.SpriteName}"
+            string.Format(LangResources.TitleCommandBar_ImportSuccess, result.DestFilePath, result.SpriteName)
         );
     }
 }

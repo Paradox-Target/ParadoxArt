@@ -48,11 +48,7 @@ public sealed class MessageBoxService
         var lifetime = App.Current.ApplicationLifetime;
         Task<ButtonResult> showTask;
 
-        if (lifetime is ISingleViewApplicationLifetime)
-        {
-            showTask = box.ShowAsync();
-        }
-        else if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
+        if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
         {
             showTask = box.ShowWindowDialogAsync(desktop.MainWindow);
         }

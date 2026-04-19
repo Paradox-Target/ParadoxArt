@@ -16,12 +16,12 @@
 
     <UserControl.Resources>
         <fa:FAMenuFlyout x:Key="ProjectItemContextMenu" x:DataType="vms:ProjectListViewModel">
-            <fa:FAMenuFlyoutItem Command="{Binding RemoveProjectItemCommand}" Text="从列表移除">
+            <fa:FAMenuFlyoutItem Command="{Binding RemoveProjectItemCommand}" Text="{x:Static lang:LangResources.ProjectList_RemoveFromList}">
                 <fa:FAMenuFlyoutItem.IconSource>
                     <fa:FASymbolIconSource Symbol="Delete" />
                 </fa:FAMenuFlyoutItem.IconSource>
             </fa:FAMenuFlyoutItem>
-            <fa:FAMenuFlyoutItem Command="{Binding CopyProjectPathCommand}" Text="复制路径">
+            <fa:FAMenuFlyoutItem Command="{Binding CopyProjectPathCommand}" Text="{x:Static lang:LangResources.ProjectList_CopyPath}">
                 <fa:FAMenuFlyoutItem.IconSource>
                     <fa:FASymbolIconSource Symbol="Copy" />
                 </fa:FAMenuFlyoutItem.IconSource>
@@ -73,7 +73,7 @@
                 Grid.Column="0"
                 Height="36"
                 VerticalContentAlignment="Center"
-                PlaceholderText="搜索项目名称..."
+                PlaceholderText="{x:Static lang:LangResources.ProjectList_SearchPlaceholder}"
                 Text="{Binding SearchText.Value, UpdateSourceTrigger=PropertyChanged}">
                 <TextBox.InnerLeftContent>
                     <controls:FontIcon
@@ -94,7 +94,7 @@
                     Command="{Binding CreateNewProjectCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:FontIcon FontSize="14" Glyph="&#xE710;" />
-                        <TextBlock VerticalAlignment="Center" Text="新建项目" />
+                        <TextBlock VerticalAlignment="Center" Text="{x:Static lang:LangResources.ProjectList_CreateProject}" />
                     </StackPanel>
                 </Button>
                 <Button
@@ -103,7 +103,7 @@
                     Command="{Binding OpenProjectCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <controls:FontIcon FontSize="14" Glyph="&#xE8E5;" />
-                        <TextBlock VerticalAlignment="Center" Text="打开项目" />
+                        <TextBlock VerticalAlignment="Center" Text="{x:Static lang:LangResources.ProjectList_OpenProject}" />
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -160,7 +160,7 @@
                                                 FontSize="12"
                                                 FontWeight="SemiBold"
                                                 Foreground="{DynamicResource SystemFillColorCriticalBrush}"
-                                                Text="路径失效" />
+                                                Text="{x:Static lang:LangResources.ProjectList_PathInvalid}" />
                                         </Border>
                                     </StackPanel>
                                 </Grid>

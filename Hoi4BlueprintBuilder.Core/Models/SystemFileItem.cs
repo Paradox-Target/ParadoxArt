@@ -185,7 +185,7 @@ public sealed partial class SystemFileItem : ObservableObject
     private async Task CopyPath()
     {
         await CopyToClipboard(FullPath).ConfigureAwait(false);
-        NotificationService.Show("已复制到剪切板", "成功");
+        NotificationService.Show(LangResources.CopiedToClipboard, LangResources.Success);
     }
 
     [RelayCommand]
@@ -193,7 +193,7 @@ public sealed partial class SystemFileItem : ObservableObject
     {
         string relativePath = Path.GetRelativePath(AppSettingService.ModRootFolderPath, FullPath);
         await CopyToClipboard(relativePath).ConfigureAwait(false);
-        NotificationService.Show("已复制到剪切板", "成功");
+        NotificationService.Show(LangResources.CopiedToClipboard, LangResources.Success);
     }
 
     private static Task CopyToClipboard(string path)

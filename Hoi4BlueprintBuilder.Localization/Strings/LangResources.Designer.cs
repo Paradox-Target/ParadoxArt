@@ -69,6 +69,159 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AbsolutePosition.
+        /// </summary>
+        public static string AbsolutePosition {
+            get {
+                return ResourceManager.GetString("AbsolutePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppSettings_Hoi4ExeNotFound.
+        /// </summary>
+        public static string AppSettings_Hoi4ExeNotFound {
+            get {
+                return ResourceManager.GetString("AppSettings_Hoi4ExeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppSettings_OpenConfigFolderFailed.
+        /// </summary>
+        public static string AppSettings_OpenConfigFolderFailed {
+            get {
+                return ResourceManager.GetString("AppSettings_OpenConfigFolderFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppSettings_OpenConfigFolderFailed_Title.
+        /// </summary>
+        public static string AppSettings_OpenConfigFolderFailed_Title {
+            get {
+                return ResourceManager.GetString("AppSettings_OpenConfigFolderFailed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppSettings_OpenEulaFailed.
+        /// </summary>
+        public static string AppSettings_OpenEulaFailed {
+            get {
+                return ResourceManager.GetString("AppSettings_OpenEulaFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppSettings_OpenLogFolderFailed.
+        /// </summary>
+        public static string AppSettings_OpenLogFolderFailed {
+            get {
+                return ResourceManager.GetString("AppSettings_OpenLogFolderFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppSettings_OpenLogFolderFailed_Title.
+        /// </summary>
+        public static string AppSettings_OpenLogFolderFailed_Title {
+            get {
+                return ResourceManager.GetString("AppSettings_OpenLogFolderFailed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppUpdate_Checking.
+        /// </summary>
+        public static string AppUpdate_Checking {
+            get {
+                return ResourceManager.GetString("AppUpdate_Checking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppUpdate_CheckUpdateFailed.
+        /// </summary>
+        public static string AppUpdate_CheckUpdateFailed {
+            get {
+                return ResourceManager.GetString("AppUpdate_CheckUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please wait, this may take some time due to network conditions....
+        /// </summary>
+        public static string AppUpdate_CheckWaitDetails {
+            get {
+                return ResourceManager.GetString("AppUpdate_CheckWaitDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading update.
+        /// </summary>
+        public static string AppUpdate_Downloading {
+            get {
+                return ResourceManager.GetString("AppUpdate_Downloading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download progress.
+        /// </summary>
+        public static string AppUpdate_DownloadProgress {
+            get {
+                return ResourceManager.GetString("AppUpdate_DownloadProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppUpdate_NewVersion.
+        /// </summary>
+        public static string AppUpdate_NewVersion {
+            get {
+                return ResourceManager.GetString("AppUpdate_NewVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New version available.
+        /// </summary>
+        public static string AppUpdate_NewVersionAvailable {
+            get {
+                return ResourceManager.GetString("AppUpdate_NewVersionAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is recommended to update to the latest version as soon as possible for the best experience.
+        /// </summary>
+        public static string AppUpdate_RecommendUpdate {
+            get {
+                return ResourceManager.GetString("AppUpdate_RecommendUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start update.
+        /// </summary>
+        public static string AppUpdate_StartUpdate {
+            get {
+                return ResourceManager.GetString("AppUpdate_StartUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppUpdate_UpgradePackageSize.
+        /// </summary>
+        public static string AppUpdate_UpgradePackageSize {
+            get {
+                return ResourceManager.GetString("AppUpdate_UpgradePackageSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AppUpdateChannel.
         /// </summary>
         public static string AppUpdateChannel {
@@ -83,6 +236,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         public static string Common_Cancel {
             get {
                 return ResourceManager.GetString("Common_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Common_ConfirmDelete.
+        /// </summary>
+        public static string Common_ConfirmDelete {
+            get {
+                return ResourceManager.GetString("Common_ConfirmDelete", resourceCulture);
             }
         }
         
@@ -105,6 +267,33 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Common_ExportImageFailed.
+        /// </summary>
+        public static string Common_ExportImageFailed {
+            get {
+                return ResourceManager.GetString("Common_ExportImageFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Common_LoadFocusTreeFailed.
+        /// </summary>
+        public static string Common_LoadFocusTreeFailed {
+            get {
+                return ResourceManager.GetString("Common_LoadFocusTreeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Common_NoFocusToDisplay.
+        /// </summary>
+        public static string Common_NoFocusToDisplay {
+            get {
+                return ResourceManager.GetString("Common_NoFocusToDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Common_Ok.
         /// </summary>
         public static string Common_Ok {
@@ -114,11 +303,56 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Common_OpenFailed.
+        /// </summary>
+        public static string Common_OpenFailed {
+            get {
+                return ResourceManager.GetString("Common_OpenFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Common_Prompt.
+        /// </summary>
+        public static string Common_Prompt {
+            get {
+                return ResourceManager.GetString("Common_Prompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Common_Rename.
         /// </summary>
         public static string Common_Rename {
             get {
                 return ResourceManager.GetString("Common_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CompletionEffect.
+        /// </summary>
+        public static string CompletionEffect {
+            get {
+                return ResourceManager.GetString("CompletionEffect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ConvertToAbsolutePosition.
+        /// </summary>
+        public static string ConvertToAbsolutePosition {
+            get {
+                return ResourceManager.GetString("ConvertToAbsolutePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CopyToClipboard.
+        /// </summary>
+        public static string CopiedToClipboard {
+            get {
+                return ResourceManager.GetString("CopiedToClipboard", resourceCulture);
             }
         }
         
@@ -231,11 +465,65 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CreateNewProject_FolderName.
+        /// </summary>
+        public static string CreateNewProject_FolderName {
+            get {
+                return ResourceManager.GetString("CreateNewProject_FolderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CreateNewProject_ModName.
+        /// </summary>
+        public static string CreateNewProject_ModName {
+            get {
+                return ResourceManager.GetString("CreateNewProject_ModName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CreateNewProject_SupportedLanguages.
+        /// </summary>
+        public static string CreateNewProject_SupportedLanguages {
+            get {
+                return ResourceManager.GetString("CreateNewProject_SupportedLanguages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CreateNewProject_SupportedVersion.
+        /// </summary>
+        public static string CreateNewProject_SupportedVersion {
+            get {
+                return ResourceManager.GetString("CreateNewProject_SupportedVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CreateNewProject_Tags.
+        /// </summary>
+        public static string CreateNewProject_Tags {
+            get {
+                return ResourceManager.GetString("CreateNewProject_Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CreateNewProject_Title.
         /// </summary>
         public static string CreateNewProject_Title {
             get {
                 return ResourceManager.GetString("CreateNewProject_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Day {
+            get {
+                return ResourceManager.GetString("Day", resourceCulture);
             }
         }
         
@@ -276,6 +564,96 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EulaView_AgreeAndContinue.
+        /// </summary>
+        public static string EulaView_AgreeAndContinue {
+            get {
+                return ResourceManager.GetString("EulaView_AgreeAndContinue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EulaView_ConfirmTip.
+        /// </summary>
+        public static string EulaView_ConfirmTip {
+            get {
+                return ResourceManager.GetString("EulaView_ConfirmTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EulaView_DeclineAndExit.
+        /// </summary>
+        public static string EulaView_DeclineAndExit {
+            get {
+                return ResourceManager.GetString("EulaView_DeclineAndExit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EulaView_Description.
+        /// </summary>
+        public static string EulaView_Description {
+            get {
+                return ResourceManager.GetString("EulaView_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EulaView_Title.
+        /// </summary>
+        public static string EulaView_Title {
+            get {
+                return ResourceManager.GetString("EulaView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EulaView_UpdateTip.
+        /// </summary>
+        public static string EulaView_UpdateTip {
+            get {
+                return ResourceManager.GetString("EulaView_UpdateTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExportFocusTreeImage.
+        /// </summary>
+        public static string ExportFocusTreeImage {
+            get {
+                return ResourceManager.GetString("ExportFocusTreeImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExportImageSuccessfully.
+        /// </summary>
+        public static string ExportImageSuccessfully {
+            get {
+                return ResourceManager.GetString("ExportImageSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExportImageTitle.
+        /// </summary>
+        public static string ExportImageTitle {
+            get {
+                return ResourceManager.GetString("ExportImageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File_NameAlreadyExists.
         /// </summary>
         public static string File_NameAlreadyExists {
@@ -290,6 +668,195 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         public static string File_OpenInExplorer {
             get {
                 return ResourceManager.GetString("File_OpenInExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FileService_OpenFolder.
+        /// </summary>
+        public static string FileService_OpenFolder {
+            get {
+                return ResourceManager.GetString("FileService_OpenFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusCondition.
+        /// </summary>
+        public static string FocusCondition {
+            get {
+                return ResourceManager.GetString("FocusCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusInfoCard_CancelIfInvalid.
+        /// </summary>
+        public static string FocusInfoCard_CancelIfInvalid {
+            get {
+                return ResourceManager.GetString("FocusInfoCard_CancelIfInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusInfoCard_ContinueIfInvalid.
+        /// </summary>
+        public static string FocusInfoCard_ContinueIfInvalid {
+            get {
+                return ResourceManager.GetString("FocusInfoCard_ContinueIfInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusInfoCard_MutualExclusion.
+        /// </summary>
+        public static string FocusInfoCard_MutualExclusion {
+            get {
+                return ResourceManager.GetString("FocusInfoCard_MutualExclusion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusInfoCard_PositioningSystem.
+        /// </summary>
+        public static string FocusInfoCard_PositioningSystem {
+            get {
+                return ResourceManager.GetString("FocusInfoCard_PositioningSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusInfoCard_PositionRelativeTo.
+        /// </summary>
+        public static string FocusInfoCard_PositionRelativeTo {
+            get {
+                return ResourceManager.GetString("FocusInfoCard_PositionRelativeTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusInfoCard_Prerequisites.
+        /// </summary>
+        public static string FocusInfoCard_Prerequisites {
+            get {
+                return ResourceManager.GetString("FocusInfoCard_Prerequisites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusInfoCard_PrerequisitesTip.
+        /// </summary>
+        public static string FocusInfoCard_PrerequisitesTip {
+            get {
+                return ResourceManager.GetString("FocusInfoCard_PrerequisitesTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusTreeEditor_DeleteRelativePositionImpactWarning.
+        /// </summary>
+        public static string FocusTreeEditor_DeleteRelativePositionImpactWarning {
+            get {
+                return ResourceManager.GetString("FocusTreeEditor_DeleteRelativePositionImpactWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameLocalizationFilesInfo.
+        /// </summary>
+        public static string GameLocalizationFilesInfo {
+            get {
+                return ResourceManager.GetString("GameLocalizationFilesInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GameRootPath.
+        /// </summary>
+        public static string GameRootPath {
+            get {
+                return ResourceManager.GetString("GameRootPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ImportFocusIcon.
+        /// </summary>
+        public static string ImportFocusIcon {
+            get {
+                return ResourceManager.GetString("ImportFocusIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initialization_Next.
+        /// </summary>
+        public static string Initialization_Next {
+            get {
+                return ResourceManager.GetString("Initialization_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Initialization_Previous.
+        /// </summary>
+        public static string Initialization_Previous {
+            get {
+                return ResourceManager.GetString("Initialization_Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid_Game_Path.
+        /// </summary>
+        public static string InvalidGamePath {
+            get {
+                return ResourceManager.GetString("InvalidGamePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Localization.
+        /// </summary>
+        public static string Localization {
+            get {
+                return ResourceManager.GetString("Localization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LocalizationManager_Title.
+        /// </summary>
+        public static string LocalizationManager_Title {
+            get {
+                return ResourceManager.GetString("LocalizationManager_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LocalizationManager_ToolTip.
+        /// </summary>
+        public static string LocalizationManager_ToolTip {
+            get {
+                return ResourceManager.GetString("LocalizationManager_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MainSettings_App.
+        /// </summary>
+        public static string MainSettings_App {
+            get {
+                return ResourceManager.GetString("MainSettings_App", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MainSettings_Project.
+        /// </summary>
+        public static string MainSettings_Project {
+            get {
+                return ResourceManager.GetString("MainSettings_Project", resourceCulture);
             }
         }
         
@@ -357,6 +924,177 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NewFocus.
+        /// </summary>
+        public static string NewFocus {
+            get {
+                return ResourceManager.GetString("NewFocus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotCalculated.
+        /// </summary>
+        public static string NotCalculated {
+            get {
+                return ResourceManager.GetString("NotCalculated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotSupportInfoControl_Body.
+        /// </summary>
+        public static string NotSupportInfoControl_Body {
+            get {
+                return ResourceManager.GetString("NotSupportInfoControl_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NotSupportInfoControl_Title.
+        /// </summary>
+        public static string NotSupportInfoControl_Title {
+            get {
+                return ResourceManager.GetString("NotSupportInfoControl_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ParsingFocusTreeFile.
+        /// </summary>
+        public static string ParsingFocusTreeFile {
+            get {
+                return ResourceManager.GetString("ParsingFocusTreeFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy path.
+        /// </summary>
+        public static string ProjectList_CopyPath {
+            get {
+                return ResourceManager.GetString("ProjectList_CopyPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Project.
+        /// </summary>
+        public static string ProjectList_CreateProject {
+            get {
+                return ResourceManager.GetString("ProjectList_CreateProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectList_InvalidModFolder.
+        /// </summary>
+        public static string ProjectList_InvalidModFolder {
+            get {
+                return ResourceManager.GetString("ProjectList_InvalidModFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Project.
+        /// </summary>
+        public static string ProjectList_OpenProject {
+            get {
+                return ResourceManager.GetString("ProjectList_OpenProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectList_OpenProjectFailed.
+        /// </summary>
+        public static string ProjectList_OpenProjectFailed {
+            get {
+                return ResourceManager.GetString("ProjectList_OpenProjectFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid path.
+        /// </summary>
+        public static string ProjectList_PathInvalid {
+            get {
+                return ResourceManager.GetString("ProjectList_PathInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectList_ProjectNotFound.
+        /// </summary>
+        public static string ProjectList_ProjectNotFound {
+            get {
+                return ResourceManager.GetString("ProjectList_ProjectNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectList_ProjectNotFoundRemovePrompt.
+        /// </summary>
+        public static string ProjectList_ProjectNotFoundRemovePrompt {
+            get {
+                return ResourceManager.GetString("ProjectList_ProjectNotFoundRemovePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove from list.
+        /// </summary>
+        public static string ProjectList_RemoveFromList {
+            get {
+                return ResourceManager.GetString("ProjectList_RemoveFromList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search project name....
+        /// </summary>
+        public static string ProjectList_SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("ProjectList_SearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectList_SelectModRootFolder.
+        /// </summary>
+        public static string ProjectList_SelectModRootFolder {
+            get {
+                return ResourceManager.GetString("ProjectList_SelectModRootFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectList_SubmodDependencyDetected.
+        /// </summary>
+        public static string ProjectList_SubmodDependencyDetected {
+            get {
+                return ResourceManager.GetString("ProjectList_SubmodDependencyDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProjectSettings_SelectDependencyModFolder.
+        /// </summary>
+        public static string ProjectSettings_SelectDependencyModFolder {
+            get {
+                return ResourceManager.GetString("ProjectSettings_SelectDependencyModFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RelativePosition.
+        /// </summary>
+        public static string RelativePosition {
+            get {
+                return ResourceManager.GetString("RelativePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to RenameFile_ErrorOccurs.
         /// </summary>
         public static string RenameFile_ErrorOccurs {
@@ -384,11 +1122,416 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SavedSuccessfully.
+        /// </summary>
+        public static string SavedSuccessfully {
+            get {
+                return ResourceManager.GetString("SavedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SaveFailed.
+        /// </summary>
+        public static string SaveFailed {
+            get {
+                return ResourceManager.GetString("SaveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetMutuallyExclusiveFocus.
+        /// </summary>
+        public static string SetMutuallyExclusiveFocus {
+            get {
+                return ResourceManager.GetString("SetMutuallyExclusiveFocus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetPrerequisiteFocus.
+        /// </summary>
+        public static string SetPrerequisiteFocus {
+            get {
+                return ResourceManager.GetString("SetPrerequisiteFocus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SetRelativePosition.
+        /// </summary>
+        public static string SetRelativePosition {
+            get {
+                return ResourceManager.GetString("SetRelativePosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting.
+        /// </summary>
+        public static string Setting {
+            get {
+                return ResourceManager.GetString("Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_AddModPath.
+        /// </summary>
+        public static string Settings_AddModPath {
+            get {
+                return ResourceManager.GetString("Settings_AddModPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_AddModPath_Description.
+        /// </summary>
+        public static string Settings_AddModPath_Description {
+            get {
+                return ResourceManager.GetString("Settings_AddModPath_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Afdian.
+        /// </summary>
+        public static string Settings_Afdian {
+            get {
+                return ResourceManager.GetString("Settings_Afdian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to App font.
+        /// </summary>
+        public static string Settings_AppFont_Header {
+            get {
+                return ResourceManager.GetString("Settings_AppFont_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to App Language.
+        /// </summary>
+        public static string Settings_AppLanguage_Header {
+            get {
+                return ResourceManager.GetString("Settings_AppLanguage_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using DDS format helps speed up game loading times.
+        /// </summary>
+        public static string Settings_AutoDDS_Description {
+            get {
+                return ResourceManager.GetString("Settings_AutoDDS_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically convert PNG to DDS format when importing.
+        /// </summary>
+        public static string Settings_AutoDDS_Header {
+            get {
+                return ResourceManager.GetString("Settings_AutoDDS_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically open the focus information card for editing after creating a new focus.
+        /// </summary>
+        public static string Settings_AutoOpenCard_Description {
+            get {
+                return ResourceManager.GetString("Settings_AutoOpenCard_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically open focus information card.
+        /// </summary>
+        public static string Settings_AutoOpenCard_Header {
+            get {
+                return ResourceManager.GetString("Settings_AutoOpenCard_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code editor font.
+        /// </summary>
+        public static string Settings_CodeEditorFont_Header {
+            get {
+                return ResourceManager.GetString("Settings_CodeEditorFont_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_ComputeFilesSize.
+        /// </summary>
+        public static string Settings_ComputeFilesSize {
+            get {
+                return ResourceManager.GetString("Settings_ComputeFilesSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_ContactUs.
+        /// </summary>
+        public static string Settings_ContactUs {
+            get {
+                return ResourceManager.GetString("Settings_ContactUs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_CurrentLanguagePlaceholder.
+        /// </summary>
+        public static string Settings_CurrentLanguagePlaceholder {
+            get {
+                return ResourceManager.GetString("Settings_CurrentLanguagePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End User License Agreement (EULA).
+        /// </summary>
+        public static string Settings_EULA {
+            get {
+                return ResourceManager.GetString("Settings_EULA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Game localization language.
+        /// </summary>
+        public static string Settings_GameLanguage_Header {
+            get {
+                return ResourceManager.GetString("Settings_GameLanguage_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_GridHeight.
+        /// </summary>
+        public static string Settings_GridHeight {
+            get {
+                return ResourceManager.GetString("Settings_GridHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_GridSize.
+        /// </summary>
+        public static string Settings_GridSize {
+            get {
+                return ResourceManager.GetString("Settings_GridSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_GridWidth.
+        /// </summary>
+        public static string Settings_GridWidth {
+            get {
+                return ResourceManager.GetString("Settings_GridWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_HasDependencies_Header.
+        /// </summary>
+        public static string Settings_HasDependencies_Header {
+            get {
+                return ResourceManager.GetString("Settings_HasDependencies_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings_Must_Reset.
         /// </summary>
         public static string Settings_Must_Reset {
             get {
                 return ResourceManager.GetString("Settings_Must_Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open configuration folder.
+        /// </summary>
+        public static string Settings_OpenConfigFolder_Header {
+            get {
+                return ResourceManager.GetString("Settings_OpenConfigFolder_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open logs folder.
+        /// </summary>
+        public static string Settings_OpenLogFolder_Header {
+            get {
+                return ResourceManager.GetString("Settings_OpenLogFolder_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open source libraries.
+        /// </summary>
+        public static string Settings_OpenSourceLibrary_Header {
+            get {
+                return ResourceManager.GetString("Settings_OpenSourceLibrary_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_RePick.
+        /// </summary>
+        public static string Settings_RePick {
+            get {
+                return ResourceManager.GetString("Settings_RePick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_ReportIssue.
+        /// </summary>
+        public static string Settings_ReportIssue {
+            get {
+                return ResourceManager.GetString("Settings_ReportIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_SelectPath.
+        /// </summary>
+        public static string Settings_SelectPath {
+            get {
+                return ResourceManager.GetString("Settings_SelectPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_SupportedLanguages_Description.
+        /// </summary>
+        public static string Settings_SupportedLanguages_Description {
+            get {
+                return ResourceManager.GetString("Settings_SupportedLanguages_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_SupportedLanguages_Header.
+        /// </summary>
+        public static string Settings_SupportedLanguages_Header {
+            get {
+                return ResourceManager.GetString("Settings_SupportedLanguages_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_Telemetry_Description.
+        /// </summary>
+        public static string Settings_Telemetry_Description {
+            get {
+                return ResourceManager.GetString("Settings_Telemetry_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_Telemetry_Header.
+        /// </summary>
+        public static string Settings_Telemetry_Header {
+            get {
+                return ResourceManager.GetString("Settings_Telemetry_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings_ThemeMode_Header.
+        /// </summary>
+        public static string Settings_ThemeMode_Header {
+            get {
+                return ResourceManager.GetString("Settings_ThemeMode_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StatusBar_FocusSum.
+        /// </summary>
+        public static string StatusBar_FocusSum {
+            get {
+                return ResourceManager.GetString("StatusBar_FocusSum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to StatusBar_RAM.
+        /// </summary>
+        public static string StatusBar_RAM {
+            get {
+                return ResourceManager.GetString("StatusBar_RAM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TitleCommandBar_CreateFailed.
+        /// </summary>
+        public static string TitleCommandBar_CreateFailed {
+            get {
+                return ResourceManager.GetString("TitleCommandBar_CreateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TitleCommandBar_CreateFocusTreeMessageFailed.
+        /// </summary>
+        public static string TitleCommandBar_CreateFocusTreeMessageFailed {
+            get {
+                return ResourceManager.GetString("TitleCommandBar_CreateFocusTreeMessageFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TitleCommandBar_FileExistsCannotCreate.
+        /// </summary>
+        public static string TitleCommandBar_FileExistsCannotCreate {
+            get {
+                return ResourceManager.GetString("TitleCommandBar_FileExistsCannotCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TitleCommandBar_ImportImageFailed.
+        /// </summary>
+        public static string TitleCommandBar_ImportImageFailed {
+            get {
+                return ResourceManager.GetString("TitleCommandBar_ImportImageFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TitleCommandBar_ImportSuccess.
+        /// </summary>
+        public static string TitleCommandBar_ImportSuccess {
+            get {
+                return ResourceManager.GetString("TitleCommandBar_ImportSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TitleCommandBar_UnsupportedImageFormat.
+        /// </summary>
+        public static string TitleCommandBar_UnsupportedImageFormat {
+            get {
+                return ResourceManager.GetString("TitleCommandBar_UnsupportedImageFormat", resourceCulture);
             }
         }
     }

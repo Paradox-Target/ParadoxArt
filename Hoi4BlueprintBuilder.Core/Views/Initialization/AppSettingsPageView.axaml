@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="clr-namespace:Hoi4BlueprintBuilder.Core.Models"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Initialization"
@@ -60,7 +61,7 @@
                 HorizontalAlignment="Right"
                 Classes="SettingsStepButton"
                 Click="Previous_OnClick"
-                Content="上一步" />
+                Content="{x:Static lang:LangResources.Initialization_Previous}" />
         </StackPanel>
         <StackPanel
             Grid.Row="3"

@@ -5,6 +5,7 @@
     xmlns:control="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs"
     MinWidth="500"
     d:DesignHeight="450"
@@ -45,7 +46,7 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Classes="Label"
-                Text="Mod 名称" />
+                Text="{x:Static lang:LangResources.CreateNewProject_ModName}" />
             <TextBox
                 Grid.Row="0"
                 Grid.Column="1"
@@ -58,7 +59,7 @@
                 Margin="0,8,24,16"
                 VerticalAlignment="Top"
                 Classes="Label"
-                Text="Mod 文件夹名称" />
+                Text="{x:Static lang:LangResources.CreateNewProject_FolderName}" />
             <StackPanel
                 Grid.Row="1"
                 Grid.Column="1"
@@ -76,7 +77,7 @@
                 Grid.Row="2"
                 Grid.Column="0"
                 Classes="Label"
-                Text="支持版本" />
+                Text="{x:Static lang:LangResources.CreateNewProject_SupportedVersion}" />
             <TextBox
                 Grid.Row="2"
                 Grid.Column="1"
@@ -87,7 +88,7 @@
                 Grid.Row="3"
                 Grid.Column="0"
                 Classes="Label"
-                Text="国策本地化支持语言" />
+                Text="{x:Static lang:LangResources.CreateNewProject_SupportedLanguages}" />
             <control:MultiComboBox
                 Grid.Row="3"
                 Grid.Column="1"
@@ -101,7 +102,7 @@
                 Margin="0,8,24,0"
                 VerticalAlignment="Top"
                 Classes="Label"
-                Text="Tags" />
+                Text="{x:Static lang:LangResources.CreateNewProject_Tags}" />
             <StackPanel Grid.Row="4" Grid.Column="1">
                 <TextBlock
                     Margin="0,0,0,8"

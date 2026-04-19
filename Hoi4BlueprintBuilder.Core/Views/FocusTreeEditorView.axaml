@@ -6,6 +6,7 @@
     xmlns:controls="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Hoi4BlueprintBuilder.Core.Views"
     xmlns:vms="clr-namespace:Hoi4BlueprintBuilder.Core.ViewsModels"
@@ -18,32 +19,32 @@
     <Grid x:Name="MainGrid" ClipToBounds="True">
         <Grid.ContextFlyout>
             <fa:FAMenuFlyout x:DataType="views:FocusTreeEditorView" Opening="ContextMenu_OnOpening">
-                <fa:FAMenuFlyoutItem Command="{Binding CreateNewFocusCommand}" Text="新建国策">
+                <fa:FAMenuFlyoutItem Command="{Binding CreateNewFocusCommand}" Text="{x:Static lang:LangResources.NewFocus}">
                     <fa:FAMenuFlyoutItem.IconSource>
                         <fa:FASymbolIconSource Symbol="Add" />
                     </fa:FAMenuFlyoutItem.IconSource>
                 </fa:FAMenuFlyoutItem>
-                <fa:FAMenuFlyoutItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Text="设置互斥国策">
+                <fa:FAMenuFlyoutItem Command="{Binding SetMutuallyExclusiveFocusCommand}" Text="{x:Static lang:LangResources.SetMutuallyExclusiveFocus}">
                     <fa:FAMenuFlyoutItem.IconSource>
                         <fa:FASymbolIconSource Symbol="Cancel" />
                     </fa:FAMenuFlyoutItem.IconSource>
                 </fa:FAMenuFlyoutItem>
-                <fa:FAMenuFlyoutItem Command="{Binding SetPrerequisiteFocusCommand}" Text="设置前置国策">
+                <fa:FAMenuFlyoutItem Command="{Binding SetPrerequisiteFocusCommand}" Text="{x:Static lang:LangResources.SetPrerequisiteFocus}">
                     <fa:FAMenuFlyoutItem.IconSource>
                         <fa:FASymbolIconSource Symbol="Link" />
                     </fa:FAMenuFlyoutItem.IconSource>
                 </fa:FAMenuFlyoutItem>
-                <fa:FAMenuFlyoutItem Command="{Binding DeleteFocusNodeCommand}" Text="删除">
+                <fa:FAMenuFlyoutItem Command="{Binding DeleteFocusNodeCommand}" Text="{x:Static lang:LangResources.Common_Delete}">
                     <fa:FAMenuFlyoutItem.IconSource>
                         <fa:FASymbolIconSource Symbol="Delete" />
                     </fa:FAMenuFlyoutItem.IconSource>
                 </fa:FAMenuFlyoutItem>
-                <fa:FAMenuFlyoutItem Command="{Binding ConvertToAbsolutePositionCommand}" Text="转换为绝对位置">
+                <fa:FAMenuFlyoutItem Command="{Binding ConvertToAbsolutePositionCommand}" Text="{x:Static lang:LangResources.ConvertToAbsolutePosition}">
                     <fa:FAMenuFlyoutItem.IconSource>
                         <fa:FASymbolIconSource Symbol="MapPin" />
                     </fa:FAMenuFlyoutItem.IconSource>
                 </fa:FAMenuFlyoutItem>
-                <fa:FAMenuFlyoutItem Command="{Binding SetRelativePositionCommand}" Text="设置相对位置">
+                <fa:FAMenuFlyoutItem Command="{Binding SetRelativePositionCommand}" Text="{x:Static lang:LangResources.SetRelativePosition}">
                     <fa:FAMenuFlyoutItem.IconSource>
                         <fa:FASymbolIconSource Symbol="Previous" />
                     </fa:FAMenuFlyoutItem.IconSource>
@@ -119,7 +120,7 @@
 
         <controls:LoadingMaskControl
             IsVisible="{Binding IsLoading}"
-            Message="正在解析国策文件..."
+            Message="{x:Static lang:LangResources.ParsingFocusTreeFile}"
             ZIndex="1000" />
     </Grid>
 </UserControl>

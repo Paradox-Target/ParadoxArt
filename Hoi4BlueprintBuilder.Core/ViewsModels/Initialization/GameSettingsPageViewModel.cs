@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views.Initialization;
+using Hoi4BlueprintBuilder.Localization.Strings;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels.Initialization;
 
@@ -35,7 +36,7 @@ public sealed partial class GameSettingsPageViewModel(
             if (!isExist)
             {
                 await messageBoxService
-                    .ShowErrorAsync("未在选择目录中找到 hoi4.exe 文件, 请确认当前目录是游戏根目录")
+                    .ShowErrorAsync(LangResources.AppSettings_Hoi4ExeNotFound)
                     .ConfigureAwait(false);
                 return;
             }

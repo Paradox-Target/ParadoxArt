@@ -8,10 +8,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
-using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -154,13 +152,13 @@ public sealed class App : Application
 
     private static void OnOSShutdownRequested(object? sender, ShutdownRequestedEventArgs e)
     {
-        if (OperatingSystem.IsWindows())
-        {
-            // 设置 Cancel = true，这会告诉 Windows 终止关机流程
-            e.Cancel = true;
-            var service = Current.Services.GetRequiredService<IOperatingSystemService>();
-            service.ShutdownBlockReasonCreate("有工作正在进行中...");
-        }
+        // if (OperatingSystem.IsWindows())
+        // {
+        //     // 设置 Cancel = true，这会告诉 Windows 终止关机流程
+        //     e.Cancel = true;
+        //     var service = Current.Services.GetRequiredService<IOperatingSystemService>();
+        //     service.ShutdownBlockReasonCreate("有工作正在进行中...");
+        // }
     }
 
     public void UpdateApplicationFont(string? fontName)

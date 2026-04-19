@@ -9,6 +9,7 @@ using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using LiveMarkdown.Avalonia;
 using NLog;
 using ZLinq;
@@ -171,7 +172,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
             if (!isExist)
             {
                 await _messageBoxService
-                    .ShowErrorAsync("未在选择目录中找到 hoi4.exe 文件, 请确认当前目录是游戏根目录")
+                    .ShowErrorAsync(LangResources.AppSettings_Hoi4ExeNotFound)
                     .ConfigureAwait(false);
                 return;
             }
@@ -189,7 +190,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            await _messageBoxService.ShowErrorAsync("无法打开配置文件夹，可能文件夹不存在。", "打开配置文件夹失败").ConfigureAwait(false);
+            await _messageBoxService.ShowErrorAsync(LangResources.AppSettings_OpenConfigFolderFailed, LangResources.AppSettings_OpenConfigFolderFailed_Title).ConfigureAwait(false);
             Log.Error(e, "打开配置文件夹失败: {ConfigFolder}", configFolder);
         }
     }
@@ -204,7 +205,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            await _messageBoxService.ShowErrorAsync("无法打开日志文件夹，可能文件夹不存在。", "打开日志文件夹失败").ConfigureAwait(false);
+            await _messageBoxService.ShowErrorAsync(LangResources.AppSettings_OpenLogFolderFailed, LangResources.AppSettings_OpenLogFolderFailed_Title).ConfigureAwait(false);
             Log.Error(e, "打开日志文件夹失败: {LogsFolder}", logsFolder);
         }
     }
@@ -231,7 +232,7 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            await _messageBoxService.ShowErrorAsync("无法打开用户协议文本。", "打开失败").ConfigureAwait(false);
+            await _messageBoxService.ShowErrorAsync(LangResources.AppSettings_OpenEulaFailed, LangResources.Common_OpenFailed).ConfigureAwait(false);
             Log.Error(e, "打开用户协议失败");
         }
     }

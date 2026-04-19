@@ -1,8 +1,11 @@
 ﻿using ByteSizeLib;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Cysharp.Text;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using UtfUnknown;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -26,12 +29,13 @@ public sealed partial class StatusBarViewModel : ObservableObject
     {
         statusBarService.UpdateFocusCount += count =>
         {
-            FocusCountText = $"国策总数: {count}";
+            FocusCountText = ZString.Format(LangResources.StatusBar_FocusSum, count);
         };
         statusBarService.UpdateRamBytesUsage += ram =>
         {
+            // TODO: humanized?
             double mb = ByteSize.FromBytes(ram).MebiBytes;
-            RamUsage = $"内存使用: {mb:F1} MB";
+            RamUsage = $"{string.Format(LangResources.StatusBar_RAM, mb.ToString("F1"))} MB";
         };
 
         tabViewService.CurrentItemChanged += currentItem =>
@@ -54,7 +58,7 @@ public sealed partial class StatusBarViewModel : ObservableObject
             {
                 string encodingName = result.Detected.EncodingName;
                 // 将 ASCII 视为 UTF-8
-                if (encodingName.Equals("ascii", StringComparison.OrdinalIgnoreCase))
+                if (encodingName.EqualsIgnoreCase("ascii"))
                 {
                     encodingName = "UTF-8";
                 }

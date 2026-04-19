@@ -1,5 +1,6 @@
 ﻿using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;
 using FontIconSource = Hoi4BlueprintBuilder.Core.Controls.FontIconSource;
 
@@ -8,8 +9,8 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 [RegisterTransient<MainSettingsView>]
 public sealed partial class MainSettingsView : UserControl, ITabViewItem
 {
-    public string Header => "设置";
-    public string FilePath => "SettingsView";
+    public string Header => LangResources.Setting;
+    public string FilePath => "internal://settings_view";
     public string ToolTip => Header;
     public FAIconSource TabIcon { get; } = new FontIconSource { Glyph = "\uE713" };
 

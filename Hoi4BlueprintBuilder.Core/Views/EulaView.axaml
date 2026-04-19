@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
     d:DesignHeight="450"
@@ -42,16 +43,16 @@
                     BorderThickness="0,0,0,1"
                     CornerRadius="12,12,0,0">
                     <StackPanel Spacing="6">
-                        <TextBlock Classes="TitleTextBlock" Text="用户协议" />
+                        <TextBlock Classes="TitleTextBlock" Text="{x:Static lang:LangResources.EulaView_Title}" />
                         <TextBlock
                             x:Name="AgainCheckTipTextBlock"
                             Classes="BodyTextBlock"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="协议内容有更新, 请重新查看" />
+                            Text="{x:Static lang:LangResources.EulaView_UpdateTip}" />
                         <TextBlock
                             Classes="BodyTextBlock"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="请完整阅读协议内容。继续使用本应用即表示您理解并同意相关条款。" />
+                            Text="{x:Static lang:LangResources.EulaView_Description}" />
                     </StackPanel>
                 </Border>
 
@@ -80,19 +81,19 @@
                             VerticalAlignment="Center"
                             Classes="BodyStrongTextBlock"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="建议在继续前确认您已阅读全部条款" />
+                            Text="{x:Static lang:LangResources.EulaView_ConfirmTip}" />
 
                         <Button
                             Grid.Column="1"
                             Classes="EulaActionButton"
                             Click="ExitApp"
-                            Content="拒绝并退出" />
+                            Content="{x:Static lang:LangResources.EulaView_DeclineAndExit}" />
 
                         <Button
                             Grid.Column="2"
                             Classes="EulaActionButton accent"
                             Click="NextStep"
-                            Content="同意并继续" />
+                            Content="{x:Static lang:LangResources.EulaView_AgreeAndContinue}" />
                     </Grid>
                 </Border>
             </Grid>

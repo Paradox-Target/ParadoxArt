@@ -120,7 +120,10 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
                 .SafeFireAndForget(exception =>
                 {
                     Log.Error(exception, "加载国策树文件失败");
-                    _messageBox.ShowErrorAsync("加载国策树文件失败", LangResources.Common_Error);
+                    _messageBox.ShowErrorAsync(
+                        LangResources.Common_LoadFocusTreeFailed,
+                        LangResources.Common_Error
+                    );
                 });
         }
     }
@@ -169,14 +172,17 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         var nodes = ViewModel.Nodes;
         if (nodes.Count == 0)
         {
-            await _messageBox.ShowErrorAsync("没有可显示的国策", LangResources.Common_Error);
+            await _messageBox.ShowErrorAsync(
+                LangResources.Common_NoFocusToDisplay,
+                LangResources.Common_Error
+            );
             return;
         }
 
         using var file = await _fileService.SaveFileAsync(
             new FilePickerSaveOptions
             {
-                Title = "导出国策树为图片",
+                Title = LangResources.ExportImageTitle,
                 DefaultExtension = ".png",
                 SuggestedFileName = "FocusTree.png",
                 FileTypeChoices =
@@ -198,12 +204,15 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         {
             await _screenshotService.SaveFocusTreeScreenshotAsync(nodes, file);
             Log.Info("已导出图片: {FileName}", file.Path.LocalPath);
-            notificationService.Show("导出图片成功");
+            notificationService.Show(LangResources.ExportImageSuccessfully);
         }
         catch (Exception ex)
         {
             Log.Error(ex, "导出国策树图片失败");
-            await _messageBox.ShowErrorAsync("导出图片失败", LangResources.Common_Error);
+            await _messageBox.ShowErrorAsync(
+                LangResources.Common_ExportImageFailed,
+                LangResources.Common_Error
+            );
         }
     }
 
@@ -312,8 +321,11 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
                 .Select(f => _localizationFormatService.GetFormatText(f.Id))
                 .JoinToString('\n');
             var result = await _messageBox.ShowAsync(
-                $"有其他国策使用这个国策的相对位置, 删除后会导致这些国策的位置变更为绝对位置, 是否确认删除?\n\n受影响节点:\n\n{impactedFocusIds}",
-                "确认删除",
+                string.Format(
+                    LangResources.FocusTreeEditor_DeleteRelativePositionImpactWarning,
+                    impactedFocusIds
+                ),
+                LangResources.Common_ConfirmDelete,
                 MessageBoxIcon.Warning,
                 MessageBoxButtons.YesNo
             );

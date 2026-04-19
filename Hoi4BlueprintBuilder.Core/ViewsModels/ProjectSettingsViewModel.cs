@@ -9,6 +9,7 @@ using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -33,7 +34,7 @@ public sealed partial class ProjectSettingsViewModel : ObservableObject
     public AvaloniaList<GameLanguage> SupportedLanguages { get; }
 
     [ObservableProperty]
-    private string _gameLocalizationFilesInfo = "未计算";
+    private string _gameLocalizationFilesInfo = LangResources.NotCalculated;
 
     [ObservableProperty]
     private bool _isEnabledHasDepsToggleSwitch;
@@ -85,14 +86,19 @@ public sealed partial class ProjectSettingsViewModel : ObservableObject
             }
         });
 
-        GameLocalizationFilesInfo =
-            $"本地化文件数量: {filesCount}, 总大小: {ByteSize.FromBytes(filesByteSum).MebiBytes:F1} MB";
+        GameLocalizationFilesInfo = string.Format(
+            LangResources.GameLocalizationFilesInfo,
+            filesCount.ToString(),
+            $"{ByteSize.FromBytes(filesByteSum).MebiBytes:F1} MB"
+        );
     }
 
     [RelayCommand]
     private async Task PickDependencyModDirectory()
     {
-        using var storageFolder = await _fileService.OpenFolderAsync("选择依赖模组的根目录");
+        using var storageFolder = await _fileService.OpenFolderAsync(
+            LangResources.ProjectSettings_SelectDependencyModFolder
+        );
         if (storageFolder is null)
         {
             return;

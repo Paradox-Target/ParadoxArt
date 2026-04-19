@@ -9,6 +9,7 @@ using Hoi4BlueprintBuilder.Core.Models.Localization;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using Hoi4BlueprintBuilder.Core.Views;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using NLog;
 using R3;
 using ZLinq;
@@ -110,7 +111,7 @@ public sealed partial class LocalizationManagerViewModel : ObservableObject, ICl
         }
 
         StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
-        _notificationService.Show("保存成功");
+        _notificationService.Show(LangResources.SavedSuccessfully);
     }
 
     public void Close()

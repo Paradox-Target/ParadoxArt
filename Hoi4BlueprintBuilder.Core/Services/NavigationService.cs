@@ -1,6 +1,7 @@
 using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Initialization;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
@@ -61,7 +62,11 @@ public sealed class NavigationService(IServiceProvider serviceProvider)
             }
             else
             {
-                messageBox.ShowAsync("游戏文件夹路径无效，请重新设置", "路径无效", MessageBoxIcon.Warning);
+                messageBox.ShowAsync(
+                    LangResources.InvalidGamePath,
+                    LangResources.Common_Error,
+                    MessageBoxIcon.Warning
+                );
                 NavigateTo<MainWelcomeView>();
             }
         }

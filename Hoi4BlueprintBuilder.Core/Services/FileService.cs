@@ -2,6 +2,8 @@ using System.Diagnostics;
 using Avalonia.Platform.Storage;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Views;
+using Hoi4BlueprintBuilder.Localization.Strings;
+using JetBrains.Annotations;
 using Microsoft.VisualBasic.FileIO;
 using NLog;
 
@@ -12,7 +14,7 @@ public sealed class FileService(MainWindow mainWindow, TelemetryService telemetr
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public Task<IStorageFile?> OpenFileAsync(string title = "Open File")
+    public Task<IStorageFile?> OpenFileAsync([LocalizationRequired] string title = "Open File")
     {
         return OpenFileAsync(new FilePickerOpenOptions { Title = title, AllowMultiple = false });
     }
@@ -24,8 +26,10 @@ public sealed class FileService(MainWindow mainWindow, TelemetryService telemetr
         return files.Count >= 1 ? files[0] : null;
     }
 
-    public async Task<IStorageFolder?> OpenFolderAsync(string title = "Open Folder")
+    public async Task<IStorageFolder?> OpenFolderAsync([LocalizationRequired] string? title = null)
     {
+        title ??= LangResources.FileService_OpenFolder;
+
         var folders = await mainWindow.StorageProvider.OpenFolderPickerAsync(
             new FolderPickerOpenOptions { Title = title, AllowMultiple = false }
         );

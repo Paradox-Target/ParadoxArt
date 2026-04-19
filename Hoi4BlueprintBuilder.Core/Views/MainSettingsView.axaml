@@ -3,12 +3,13 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <TabControl x:Name="SettingsTabs">
-        <TabItem x:Name="ProjectSettingsTab" Header="项目" />
-        <TabItem x:Name="AppSettingsTab" Header="应用" />
+        <TabItem x:Name="ProjectSettingsTab" Header="{x:Static lang:LangResources.MainSettings_Project}" />
+        <TabItem x:Name="AppSettingsTab" Header="{x:Static lang:LangResources.MainSettings_App}" />
     </TabControl>
 </UserControl>
