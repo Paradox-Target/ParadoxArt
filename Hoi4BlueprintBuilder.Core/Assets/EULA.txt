@@ -1,12 +1,12 @@
-# 最终用户许可协议 (EULA) - 简体中文
+### **最终用户许可协议 (EULA)**
 
-**Paradox Art**
+#### **简体中文版 (Simplified Chinese)**
 
 **1. 协议的接受与条款的确认**
 本最终用户许可协议（“EULA”）是您（个人或实体，“用户”）与 Paradox Target（“许可方”或“我们”）之间就用户使用 Paradox Art（“应用”）所达成的具有法律约束力的协议。通过下载、安装、复制或以其他方式使用本应用，即表示您已阅读、理解并同意受本 EULA 所有条款的约束。如果您不同意本 EULA 的条款，请不要安装或使用本应用。
 
 **2. 许可的授予**
-2.1. 许可授予。许可方特此授予您一项有限的、非排他性的、不可转让的许可，允许您在一台您拥有或控制的计算机设备上安装和使用本应用，且仅供您个人使用或内部业务运营使用。
+2.1. 许可授予。许可方特此授予您一项有限加、非排他性的、不可转让的许可，允许您在一台您拥有或控制的计算机设备上安装和使用本应用，且仅供您个人使用或内部业务运营使用。
 2.2. 范围。本应用旨在协助用户制作、编辑和管理《钢铁雄心 IV》相关的游戏文件，特别是国策树文件。本许可不授予您对本应用任何源代码的权利。
 
 **3. 限制与禁止行为**
@@ -16,11 +16,10 @@
 本应用及其所有副本（包括但不限于所有版权、商标、商业秘密和其他知识产权）均由许可方拥有并保留所有权利。本 EULA 仅授予您使用本应用的有限许可，并未向您转让本应用的任何所有权。
 
 **5. 遥测与数据收集**
-为了优化软件性能并改进用户体验，应用会以匿名方式收集特定数据，包括但不限于：(a) 硬件数据（如 CPU 核心数、内存 RAM 大小等）；(b) 仅限于本应用内的用户操作行为；(c) 用户正在编辑的模组名称及项目信息。许可方明确声明，尽管本应用会在本地读取您的模组文件以提供编辑功能，但绝不会收集或上传用户模组的具体文件内容或任何实质性游戏脚本数据。这些数据将通过第三方遥测平台进行传输和存储。所收集的数据仅用于软件改进之目的。我们承诺将妥善保管此类数据。
+为了优化软件性能并改进用户体验，应用会以匿名方式收集特定数据，包括但不限于：(a) 硬件数据（如 CPU 核心数、内存 RAM 大小等）；(b) 仅限于本应用内的用户操作行为；(c) 用户正在编辑的模组名称及项目信息。许可方明确声明，尽管本应用会在本地读取您的模组文件以提供编辑功能，但绝不会收集或上传用户模组的具体文件内容或任何实质性游戏脚本数据。这些数据将通过第三方遥测平台进行传输和存储。所收集的数据仅用于软件改进之目的。我们承诺将妥善保管此类数据。**用户有权在应用设置中随时关闭遥测数据收集功能，这不会影响应用核心功能的使用。**
 
-**6. 盈利模式与买断条款**
-6.1. 广告：本应用包含广告内容。您理解并同意在使用时可能会显示第三方广告。
-6.2. 广告买断（去广告功能）：许可方可能提供一个“买断”选项，该功能为一次性付费购买，仅影响广告显示。买断该功能不影响或改变本应用的核心功能，所有核心功能对所有用户均完全可用。一旦激活，除非法律要求，购买费用通常不予退还。
+**6. 非商业化性质**
+本应用为免费工具。许可方不就本应用的核心功能向用户收取任何费用，亦不通过本应用展示第三方广告或提供付费增值服务。
 
 **7. 与《钢铁雄心 IV》的关系**
 本应用是一个非官方的第三方工具，不由 Paradox Interactive AB 赞助、认可或附属。使用本应用创建的内容必须遵守 Paradox Interactive AB 关于其游戏内容的相关政策。
@@ -39,16 +38,14 @@
 
 ---
 
-# 最終用戶授權協議 (EULA) - 繁體中文
-
-**Paradox Art**
+#### **最終用戶授權協議 (繁體中文 / Traditional Chinese)**
 
 **1. 協議的接受與條款的確認**
 本最終用戶授權協議（“EULA”）是您（個人或實體，“用戶”）與 Paradox Target（“授權方”或“我們”）之間就用戶使用 Paradox Art（“應用程式”）所達成的具有法律約束力的協議。通過下載、安裝、複製或以其他方式使用本應用程式，即表示您已閱讀、理解並同意受本 EULA 所有條款的約束。如果您不同意本 EULA 的條款，請不要安裝或使用本應用程式。
 
 **2. 授權的授予**
 2.1. 授權授予。授權方特此授予您一項有限的、非排他性的、不可轉讓的授權，允許您在一台您擁有或控制的電腦設備上安裝和使用本應用程式，且僅供您個人使用或內部業務營運使用。
-2.2. 範圍。本應用程式旨在協助用戶製作、編輯和管理《鋼鐵雄心 IV》相關的遊戲檔案，特別是國策樹檔案。本授權不授予您對本應用程式任何原始碼的權利。
+2.2. 範圍。本應用程式旨在協助用戶製作、編輯和管理《鋼鐵雄心 IV》相關的檔案，特別是國策樹檔案。本授權不授予您對本應用程式任何原始碼的權利。
 
 **3. 限制與禁止行為**
 您不得且同意不執行以下操作：複製或分發本應用程式；修改、改編、翻譯或創作本應用程式的衍生作品；對本應用程式進行反向工程、反向編譯或反向彙編；出租、租賃、出借、出售、再授權或分發本應用程式；規避或禁用本應用程式中包含的任何技術保護措施；將本應用程式用於任何非法目的。
@@ -57,11 +54,10 @@
 本應用程式及其所有副本（包括但不限於所有版權、商標、商業機密和其他智慧財產權）均由授權方擁有並保留所有權利。本 EULA 僅授予您使用本應用程式的有限授權，並未向您轉讓本應用程式的任何所有權。
 
 **5. 遙測與資料收集**
-為了優化軟體性能並改進用戶體驗，應用程式會以匿名方式收集特定資料，包括但不限於：(a) 硬體資料（如 CPU 核心數、記憶體 RAM 大小等）；(b) 僅限於本應用程式內的用戶操作行為；(c) 用戶正在編輯的模組名稱及專案資訊。授權方明確聲明，儘管本應用程式會在本地讀取您的模組檔案以提供編輯功能，但絕不會收集或上傳用戶模組的具體檔案內容或任何實質性遊戲腳本資料。這些資料將透過第三方遙測平台進行傳輸與存儲。所收集的資料僅用於軟體改進之目的。我們承諾將妥善保管此類資料。
+為了優化軟體性能並改進用戶體驗，應用程式會以匿名方式收集特定資料，包括但不限於：(a) 硬體資料（如 CPU 核心數、記憶體 RAM 大小等）；(b) 僅限於本應用程式內的用戶操作行為；(c) 用戶正在編輯的模組名稱及專案資訊。授權方明確聲明，儘管本應用程式會在本地讀取您的模組檔案以提供編輯功能，但絕不會收集或上傳用戶模組的具體檔案內容或任何實質性遊戲腳本資料。這些資料將透過第三方遙測平台進行傳輸與存儲。所收集的資料僅用於軟體改進之目的。我們承諾將妥善保管此類資料。**用戶有權在應用程式設定中隨時關閉遙測資料收集功能，這不會影響應用程式核心功能的使用。**
 
-**6. 盈利模式與買斷條款**
-6.1. 廣告：本應用程式包含廣告內容。您理解並同意在使用時可能會顯示第三方廣告。
-6.2. 廣告買斷（移除廣告功能）：授權方可能提供一個「買斷」選項，該功能為一次性付費購買，僅影響廣告顯示。買斷該功能不影響或改變本應用程式的核心功能，所有核心功能對所有用戶均完全可用。一旦啟動，除非法律要求，購買費用通常不予退還。
+**6. 非商業化性質**
+本應用程式為免費工具。授權方不就本應用程式的核心功能向用戶收取任何費用，亦不通過本應用程式展示第三方廣告或提供付費增值服務。
 
 **7. 與《鋼鐵雄心 IV》的關係**
 本應用程式是一個非官方的第三方工具，不由 Paradox Interactive AB 贊助、認可或附屬。使用本應用程式創建的內容必須遵守 Paradox Interactive AB 關於其遊戲內容的相關政策。
@@ -80,9 +76,7 @@
 
 ---
 
-# END-USER LICENSE AGREEMENT (EULA) - ENGLISH
-
-**Paradox Art**
+#### **END-USER LICENSE AGREEMENT (ENGLISH)**
 
 **1. ACCEPTANCE AND CONFIRMATION OF TERMS**
 This End-User License Agreement ("EULA") is a legally binding agreement between you (an individual or entity, the "User") and Paradox Target ("Licensor" or "We") regarding the User's use of Paradox Art (the "Application"). By downloading, installing, copying, or otherwise using the Application, you acknowledge that you have read, understood, and agree to be bound by all terms of this EULA. If you do not agree to the terms of this EULA, do not install or use the Application.
@@ -98,11 +92,10 @@ You agree not to: copy or distribute the Application; modify, adapt, translate, 
 The Application and all copies thereof are owned by the Licensor, which reserves all rights therein. This EULA only grants you a limited license and does not transfer any ownership of the Application to you.
 
 **5. TELEMETRY AND DATA COLLECTION**
-To optimize software performance and improve user experience, the Application collects certain data anonymously, including but not limited to: (a) hardware data (such as CPU core count, RAM size, etc.); (b) user behavior and actions limited to within the Application; and (c) the name and project information of the mod currently being edited. The Licensor expressly declares that while the Application reads your mod files locally to provide editing features, it will under no circumstances collect or upload the specific file contents or any substantive game script data of the user's mods. This data will be transmitted to and stored by third-party telemetry platforms. Such data is used exclusively for the purpose of software improvement. We commit to safeguarding such data.
+To optimize software performance and improve user experience, the Application collects certain data anonymously, including but not limited to: (a) hardware data (such as CPU core count, RAM size, etc.); (b) user behavior and actions limited to within the Application; and (c) the name and project information of the mod currently being edited. The Licensor expressly declares that while the Application reads your mod files locally to provide editing features, it will under no circumstances collect or upload the specific file contents or any substantive game script data of the user's mods. This data will be transmitted to and stored by third-party telemetry platforms. Such data is used exclusively for the purpose of software improvement. We commit to safeguarding such data. **Users have the right to disable telemetry data collection at any time in the Application settings, which will not affect the use of the Application's core functions.**
 
-**6. MONETIZATION MODEL AND BUYOUT CLAUSE**
-6.1. Advertisements: The Application contains third-party advertising. You agree that ads may be displayed during use.
-6.2. Ad Buyout (Ad-Removal Feature): The Licensor may offer an "Ad Buyout" option for a one-time fee. This feature only affects the display of advertisements and does not change the core functions of the Application, which remain fully available to all users. Once activated, the fee is generally non-refundable unless required by law.
+**6. NON-COMMERCIAL NATURE**
+The Application is a free tool. The Licensor does not charge users any fees for the core functions of the Application, nor does it display third-party advertisements or offer paid value-added services through the Application.
 
 **7. RELATIONSHIP WITH HEARTS OF IRON IV**
 The Application is an unofficial third-party tool and is not sponsored, endorsed, or affiliated with Paradox Interactive AB. Content created must comply with Paradox Interactive AB's relevant policies regarding game content.
