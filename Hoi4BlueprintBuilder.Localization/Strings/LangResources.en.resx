@@ -514,7 +514,7 @@
         <value>Failed to open log folder</value>
     </data>
     <data name="AppSettings_Hoi4ExeNotFound" xml:space="preserve">
-        <value>Could not find hoi4.exe. Please ensure you have selected the game's root folder.</value>
+        <value>Could not find {0}. Please ensure you have selected the game's root folder.</value>
     </data>
     <data name="AppSettings_OpenConfigFolderFailed" xml:space="preserve">
         <value>Could not open configuration folder. It may not exist.</value>

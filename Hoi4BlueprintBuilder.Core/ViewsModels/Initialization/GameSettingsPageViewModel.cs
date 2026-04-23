@@ -3,6 +3,7 @@ using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views.Initialization;
 using Hoi4BlueprintBuilder.Localization.Strings;
@@ -31,12 +32,16 @@ public sealed partial class GameSettingsPageViewModel(
 
         if (storageFolder is not null)
         {
-            //TODO: 如果要新增其他平台支持, 这一块需要改
-            bool isExist = await storageFolder.GetFileAsync("hoi4.exe") is not null;
+            bool isExist = await FileCheckHelper.IsValidGameRootDirectoryAsync(storageFolder);
             if (!isExist)
             {
                 await messageBoxService
-                    .ShowErrorAsync(LangResources.AppSettings_Hoi4ExeNotFound)
+                    .ShowErrorAsync(
+                        string.Format(
+                            LangResources.AppSettings_Hoi4ExeNotFound,
+                            FileCheckHelper.GameExeFileName
+                        )
+                    )
                     .ConfigureAwait(false);
                 return;
             }

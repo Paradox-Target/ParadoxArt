@@ -276,7 +276,7 @@ SpriteName: {1}</value>
     <value>项目不存在</value>
   </data>
   <data name="AppSettings_Hoi4ExeNotFound" xml:space="preserve">
-    <value>未找到 hoi4.exe。请确认选择的目录是游戏根目录</value>
+    <value>未找到 {0}。请确认选择的目录是游戏根目录</value>
   </data>
   <data name="AppSettings_OpenConfigFolderFailed" xml:space="preserve">
     <value>无法打开配置文件夹，可能是文件夹不存在。</value>

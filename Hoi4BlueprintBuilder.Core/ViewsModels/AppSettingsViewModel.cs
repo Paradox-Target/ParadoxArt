@@ -168,11 +168,16 @@ public sealed partial class AppSettingsViewModel : ObservableObject
 
         if (storageFolder is not null)
         {
-            bool isExist = await storageFolder.GetFileAsync("hoi4.exe") is not null;
+            bool isExist = await FileCheckHelper.IsValidGameRootDirectoryAsync(storageFolder);
             if (!isExist)
             {
                 await _messageBoxService
-                    .ShowErrorAsync(LangResources.AppSettings_Hoi4ExeNotFound)
+                    .ShowErrorAsync(
+                        string.Format(
+                            LangResources.AppSettings_Hoi4ExeNotFound,
+                            FileCheckHelper.GameExeFileName
+                        )
+                    )
                     .ConfigureAwait(false);
                 return;
             }
@@ -190,7 +195,12 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            await _messageBoxService.ShowErrorAsync(LangResources.AppSettings_OpenConfigFolderFailed, LangResources.AppSettings_OpenConfigFolderFailed_Title).ConfigureAwait(false);
+            await _messageBoxService
+                .ShowErrorAsync(
+                    LangResources.AppSettings_OpenConfigFolderFailed,
+                    LangResources.AppSettings_OpenConfigFolderFailed_Title
+                )
+                .ConfigureAwait(false);
             Log.Error(e, "打开配置文件夹失败: {ConfigFolder}", configFolder);
         }
     }
@@ -205,7 +215,12 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            await _messageBoxService.ShowErrorAsync(LangResources.AppSettings_OpenLogFolderFailed, LangResources.AppSettings_OpenLogFolderFailed_Title).ConfigureAwait(false);
+            await _messageBoxService
+                .ShowErrorAsync(
+                    LangResources.AppSettings_OpenLogFolderFailed,
+                    LangResources.AppSettings_OpenLogFolderFailed_Title
+                )
+                .ConfigureAwait(false);
             Log.Error(e, "打开日志文件夹失败: {LogsFolder}", logsFolder);
         }
     }
@@ -232,7 +247,9 @@ public sealed partial class AppSettingsViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            await _messageBoxService.ShowErrorAsync(LangResources.AppSettings_OpenEulaFailed, LangResources.Common_OpenFailed).ConfigureAwait(false);
+            await _messageBoxService
+                .ShowErrorAsync(LangResources.AppSettings_OpenEulaFailed, LangResources.Common_OpenFailed)
+                .ConfigureAwait(false);
             Log.Error(e, "打开用户协议失败");
         }
     }
