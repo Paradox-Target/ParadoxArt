@@ -38,7 +38,9 @@ public sealed class MainViewModel
 
             if (!string.IsNullOrWhiteSpace(descriptorService.SteamWorkshopId))
             {
+                string path = Path.Combine("workshop", "content", "394360");
                 properties["SteamWorkshopId"] = descriptorService.SteamWorkshopId;
+                properties["IsDocumentsMod"] = (!settingsService.ModRootFolderPath.Contains(path)).ToString();
             }
 
             properties["Replace_Path_Count"] = descriptorService.ReplacePaths.Count.ToString();

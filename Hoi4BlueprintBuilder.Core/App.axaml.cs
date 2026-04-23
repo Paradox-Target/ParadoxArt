@@ -152,9 +152,9 @@ public sealed class App : Application
 
     private static void OnOSShutdownRequested(object? sender, ShutdownRequestedEventArgs e)
     {
+        //TODO: FIX
         // if (OperatingSystem.IsWindows())
         // {
-        //     // 设置 Cancel = true，这会告诉 Windows 终止关机流程
         //     e.Cancel = true;
         //     var service = Current.Services.GetRequiredService<IOperatingSystemService>();
         //     service.ShutdownBlockReasonCreate("有工作正在进行中...");

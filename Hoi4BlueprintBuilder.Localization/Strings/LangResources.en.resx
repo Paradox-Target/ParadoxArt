@@ -541,7 +541,7 @@
         <value>Saved successfully</value>
     </data>
     <data name="ImportFocusIcon" xml:space="preserve">
-        <value>Inport focus icon</value>
+        <value>Import focus icon</value>
     </data>
     <data name="InvalidGamePath" xml:space="preserve">
         <value>Invalid game path. Please reset it.</value>
