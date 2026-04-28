@@ -82,11 +82,13 @@ public sealed class LocalizationService
             YAMLLocalisationParser.LocFile? result;
             if (File.Exists(filePath) && (result = GetParseResult(filePath)) is not null)
             {
-                var currentLocalisation = result.Entries.ToDictionary(
-                    static entry => entry.Key,
-                    static entry => entry.Desc,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                var currentLocalisation = new Dictionary<string, string>();
+
+                foreach (var entry in result.Entries)
+                {
+                    currentLocalisation[entry.Key] = entry.Desc;
+                }
+
                 foreach (var content in userLocalisation)
                 {
                     currentLocalisation[content.Key] = content.Value;
