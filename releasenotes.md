@@ -1,13 +1,11 @@
 [爱发电打赏](https://afdian.tv/a/textGamex/plan)
 
-# 0.19.1
+# 0.19.2
 
 ## Chinese
 
-- 修改了 EULA
-- fix: 修复 Linux 平台上错误的文件可执行文件后缀检查
+- fix: 本地本地化文件中有重复的本地化键会导致程序闪退
 
 ## English
 
-- Updated EULA
-- fix: Fixed incorrect executable file suffix check on Linux platform
+- fix: Duplicate localization keys in local localization files can cause the program to crash
