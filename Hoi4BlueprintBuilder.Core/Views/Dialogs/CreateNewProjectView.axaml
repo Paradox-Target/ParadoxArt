@@ -17,6 +17,11 @@
         <Style Selector="TextBox">
             <Setter Property="MinWidth" Value="250" />
         </Style>
+        <Style Selector="control|MultiComboBoxItem">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinHeight" Value="30"/>
+        </Style>
     </UserControl.Styles>
 
     <Border Padding="24" CornerRadius="8">
@@ -94,6 +99,7 @@
                 Grid.Column="1"
                 ItemsSource="{Binding Languages, Mode=OneTime}"
                 SelectedItems="{Binding SupportedLanguages}" />
+            
 
             <!--  5. Tags  -->
             <TextBlock

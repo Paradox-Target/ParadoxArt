@@ -171,6 +171,8 @@
                     </StackPanel>
                 </fa:FASettingsExpanderItem>
             </fa:FASettingsExpander>
+            
+            
 
             <fa:FASettingsExpander Margin="0,0,0,8" Header="{x:Static lang:LangResources.Settings_OpenSourceLibrary_Header}">
                 <fa:FASettingsExpander.IconSource>
