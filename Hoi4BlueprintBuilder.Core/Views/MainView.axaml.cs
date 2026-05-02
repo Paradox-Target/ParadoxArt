@@ -129,7 +129,7 @@ public sealed partial class MainView : UserControl
         return animation;
     }
 
-    private void MainTabView_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+    private void MainTabView_OnTabCloseRequested(FATabView sender, FATabViewTabCloseRequestedEventArgs args)
     {
         bool isRemoved = _tabViewService.RemoveTab(args.Tab);
         Debug.Assert(isRemoved);

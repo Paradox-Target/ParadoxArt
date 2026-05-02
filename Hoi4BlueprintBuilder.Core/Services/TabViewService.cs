@@ -12,23 +12,23 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<TabViewService>]
 public sealed class TabViewService(IServiceProvider serviceProvider)
 {
-    public ITabViewItem? CurrentItem => ((TabViewItem?)_tabView?.SelectedItem)?.Content as ITabViewItem;
+    public ITabViewItem? CurrentItem => ((FATabViewItem?)_tabView?.SelectedItem)?.Content as ITabViewItem;
     public event Action<ITabViewItem?>? CurrentItemChanged;
 
-    private TabView TabView => _tabView ?? throw new InvalidOperationException("TabViewService 未初始化");
-    private TabView? _tabView;
+    private FATabView TabView => _tabView ?? throw new InvalidOperationException("TabViewService 未初始化");
+    private FATabView? _tabView;
     private Func<double>? _tabContentHeight;
     private Func<double>? _tabContentWight;
-    private readonly AvaloniaList<TabViewItem> _openedTabFileItems = [];
+    private readonly AvaloniaList<FATabViewItem> _openedTabFileItems = [];
 
     // 高: 32, padding: 8
     private const double TabHeight = 40;
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public void Initialize(TabView tabView, Func<double> tabContentWight, Func<double> tabContentHeight)
+    public void Initialize(FATabView tabView, Func<double> tabContentWight, Func<double> tabContentHeight)
     {
         _tabView = tabView;
-        tabView.TabItems = _openedTabFileItems;
+        tabView.TabItemsSource = _openedTabFileItems;
         _tabContentHeight = tabContentHeight;
         _tabContentWight = tabContentWight;
 
@@ -95,12 +95,12 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
         AddTabCore(openedTabFileItem, serviceProvider.GetRequiredService<TType>);
     }
 
-    private void AddTabCore(TabViewItem? tabViewItem, Func<ITabViewItem> action)
+    private void AddTabCore(FATabViewItem? tabViewItem, Func<ITabViewItem> action)
     {
         if (tabViewItem is null)
         {
             var content = action();
-            tabViewItem = new TabViewItem
+            tabViewItem = new FATabViewItem
             {
                 Header = content.Header,
                 Content = content,
@@ -115,7 +115,7 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
         TabView.SelectedItem = tabViewItem;
     }
 
-    public bool RemoveTab(TabViewItem content)
+    public bool RemoveTab(FATabViewItem content)
     {
         if (content.Content is IClosed closed)
         {
@@ -136,7 +136,7 @@ public sealed class TabViewService(IServiceProvider serviceProvider)
         if (
             _tabContentHeight is null
             || _tabContentWight is null
-            || TabView.SelectedItem is not TabViewItem { Content: Control control }
+            || TabView.SelectedItem is not FATabViewItem { Content: Control control }
         )
         {
             return;

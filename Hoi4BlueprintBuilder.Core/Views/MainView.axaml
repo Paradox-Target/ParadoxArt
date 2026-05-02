@@ -53,7 +53,7 @@
 
                 <ContentControl x:Name="FileTreeView" Grid.Column="0" />
                 <GridSplitter x:Name="MainGridSplitter" Grid.Column="1" />
-                <fa:TabView
+                <fa:FATabView
                     x:Name="MainTabView"
                     Grid.Column="2"
                     IsAddTabButtonVisible="False"

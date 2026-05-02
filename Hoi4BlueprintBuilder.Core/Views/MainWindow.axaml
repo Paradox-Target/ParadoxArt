@@ -14,6 +14,7 @@
     x:DataType="vms:MainWindowViewModel"
     FontFamily="{DynamicResource MainFontFamily}"
     Icon="/Assets/logo.ico"
+    WindowDecorationProperties.ElementRole="TitleBar"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
@@ -29,12 +30,13 @@
                 Height="32"
                 Margin="2"
                 Source="../Assets/logo.ico" />
-            <views:TitleCommandBarView x:Name="TitleCommandBar" />
+            <views:TitleCommandBarView x:Name="TitleCommandBar" WindowDecorationProperties.ElementRole="User" />
         </StackPanel>
         <ContentControl
             x:Name="MainContent"
             Grid.Row="1"
-            Content="{Binding CurrentView, Mode=OneWay}" />
+            Content="{Binding CurrentView, Mode=OneWay}"
+            WindowDecorationProperties.ElementRole="User" />
     </Grid>
 
 </faWindow:FAAppWindow>
