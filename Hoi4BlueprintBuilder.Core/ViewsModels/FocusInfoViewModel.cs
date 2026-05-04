@@ -72,6 +72,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private int _selectedLanguageIndex;
     private bool _isSkipNotify;
+    private bool _isUpdatingLanguage;
     private string FocusDescriptionKey => $"{FocusNode.Id}_desc";
 
     private static int _lastSelectedLanguageIndex;
@@ -163,8 +164,6 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
             value
         );
     }
-
-    private bool _isUpdatingLanguage;
 
     partial void OnSelectedLanguageIndexChanged(int value)
     {
