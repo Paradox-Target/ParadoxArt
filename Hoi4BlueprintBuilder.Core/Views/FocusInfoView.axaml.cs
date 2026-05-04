@@ -81,10 +81,6 @@ public sealed partial class FocusInfoView : UserControl
 
         CompletionRewardEditor.TextChanged += OnCompletionRewardTextChanged;
 
-        // 绑定 LostFocus 事件以模拟 UpdateSourceTrigger=LostFocus
-        IdTextBox.LostFocus += IdTextBox_OnLostFocus;
-        DescriptionTextBox.LostFocus += DescriptionTextBox_OnLostFocus;
-
         SizeChanged += (_, args) =>
         {
             if (args.NewSize.Width > 1)
@@ -271,24 +267,6 @@ public sealed partial class FocusInfoView : UserControl
         if (_viewModel is not null)
         {
             _viewModel.FocusNode.CompletionReward = CompletionRewardEditor.Text;
-        }
-    }
-
-    private void IdTextBox_OnLostFocus(object? sender, RoutedEventArgs e)
-    {
-        // Avalonia 的 TextBox 绑定默认是 PropertyChanged 模式
-        // 这里手动触发 ViewModel 更新以模拟 LostFocus 行为
-        if (_viewModel is not null && sender is TextBox textBox)
-        {
-            _viewModel.IdText = textBox.Text ?? string.Empty;
-        }
-    }
-
-    private void DescriptionTextBox_OnLostFocus(object? sender, RoutedEventArgs e)
-    {
-        if (_viewModel is not null && sender is TextBox textBox)
-        {
-            _viewModel.DescriptionText = textBox.Text ?? string.Empty;
         }
     }
 

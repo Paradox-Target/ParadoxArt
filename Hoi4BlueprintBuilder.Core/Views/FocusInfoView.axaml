@@ -235,21 +235,17 @@
 
                     <StackPanel>
                         <TextBlock Text="Text" />
-                        <TextBox
-                            x:Name="IdTextBox"
-                            Margin="0,4,0,0"
-                            Text="{Binding IdText, Mode=TwoWay}" />
+                        <TextBox Margin="0,4,0,0" Text="{Binding IdText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                     </StackPanel>
 
                     <StackPanel>
                         <TextBlock Text="{x:Static lang:LangResources.Description}" />
 
                         <TextBox
-                            x:Name="DescriptionTextBox"
                             Margin="0,8,0,0"
                             VerticalAlignment="Top"
                             AcceptsReturn="True"
-                            Text="{Binding DescriptionText, Mode=TwoWay}"
+                            Text="{Binding DescriptionText, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </StackPanel>
