@@ -14,29 +14,34 @@
     x:DataType="vms:MainWindowViewModel"
     FontFamily="{DynamicResource MainFontFamily}"
     Icon="/Assets/logo.ico"
-    WindowDecorationProperties.ElementRole="TitleBar"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
     <Grid RowDefinitions="Auto,*">
-        <StackPanel
+        <Grid
             Grid.Row="0"
             Margin="0,0,0,4"
-            Orientation="Horizontal"
-            Spacing="4">
+            ColumnDefinitions="Auto, Auto, *">
             <Image
                 x:Name="LogoImage"
+                Grid.Column="0"
                 Width="32"
                 Height="32"
                 Margin="2"
                 Source="../Assets/logo.ico" />
-            <views:TitleCommandBarView x:Name="TitleCommandBar" WindowDecorationProperties.ElementRole="User" />
-        </StackPanel>
+            <views:TitleCommandBarView
+                x:Name="TitleCommandBar"
+                Grid.Column="1"
+                Margin="4,0" />
+            <Border
+                Grid.Column="2"
+                Background="Transparent"
+                WindowDecorationProperties.ElementRole="TitleBar" />
+        </Grid>
         <ContentControl
             x:Name="MainContent"
             Grid.Row="1"
-            Content="{Binding CurrentView, Mode=OneWay}"
-            WindowDecorationProperties.ElementRole="User" />
+            Content="{Binding CurrentView, Mode=OneWay}" />
     </Grid>
 
 </faWindow:FAAppWindow>
