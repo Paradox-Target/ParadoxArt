@@ -324,6 +324,11 @@ public sealed partial class FocusInfoView : UserControl
 
     private void SetImage(Bitmap? bitmap)
     {
+        if (FocusIcon.Source is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
         FocusIcon.Source = bitmap;
         FocusIcon.Width = bitmap?.PixelSize.Width ?? 0;
         FocusIcon.Height = bitmap?.PixelSize.Height ?? 0;
