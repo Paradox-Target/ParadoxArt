@@ -118,5 +118,6 @@ public sealed partial class LocalizationManagerViewModel : ObservableObject, ICl
     {
         _disposable.Dispose();
         SearchText.Dispose();
+        _allRowsCache.Dispose();
     }
 }
