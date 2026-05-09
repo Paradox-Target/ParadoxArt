@@ -16,10 +16,12 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<ImageService>]
 public sealed class ImageService : IDisposable
 {
+    // TODO: Pin 在内存中会导致内存碎片化, 直接保存 byte 数组?
     private readonly Dictionary<string, DdsMeta> _ddsHandles = [];
     private readonly SpriteService _spriteService;
     private readonly FileSystemSafeWatcher _fileSystemWatcher;
 
+    private const string Unknown = "GFX_goal_unknown";
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public ImageService(SpriteService spriteService, SettingsService settingsService)
@@ -47,8 +49,6 @@ public sealed class ImageService : IDisposable
         _ddsHandles.Remove(e.FullPath);
         StrongReferenceMessenger.Default.Send(new DeleteImageResourceMessage(meta.SpriteName));
     }
-
-    private const string Unknown = "GFX_goal_unknown";
 
     public Bitmap? GetFocusIconByName(string spriteName)
     {

@@ -32,6 +32,7 @@ public sealed class SpriteService
     private ICollection<FrozenDictionary<string, SpriteInfo>> Sprites => Resources.Values;
     private readonly GameResourcesPathService _pathService;
 
+    // TODO: 改进识别方法
     public IEnumerable<string> GetAllFocusIconNames() =>
         Sprites.SelectMany(x => x.Keys).Where(x => x.StartsWith("GFX_focus_") && !x.EndsWith("_shine"));
 
