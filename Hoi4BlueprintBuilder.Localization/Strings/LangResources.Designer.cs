@@ -339,6 +339,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Common_Select.
+        /// </summary>
+        public static string Common_Select {
+            get {
+                return ResourceManager.GetString("Common_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CompletionEffect.
         /// </summary>
         public static string CompletionEffect {
@@ -704,6 +713,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         public static string FocusCondition {
             get {
                 return ResourceManager.GetString("FocusCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconSum.
+        /// </summary>
+        public static string FocusIconSum {
+            get {
+                return ResourceManager.GetString("FocusIconSum", resourceCulture);
             }
         }
         

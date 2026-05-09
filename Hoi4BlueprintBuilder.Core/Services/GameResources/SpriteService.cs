@@ -32,6 +32,9 @@ public sealed class SpriteService
     private ICollection<FrozenDictionary<string, SpriteInfo>> Sprites => Resources.Values;
     private readonly GameResourcesPathService _pathService;
 
+    public IEnumerable<string> GetAllFocusIconNames() =>
+        Sprites.SelectMany(x => x.Keys).Where(x => x.StartsWith("GFX_focus_") && !x.EndsWith("_shine"));
+
     public bool TryGetSpriteInfo(string spriteTypeName, [NotNullWhen(true)] out SpriteInfo? info)
     {
         foreach (var sprite in Sprites)

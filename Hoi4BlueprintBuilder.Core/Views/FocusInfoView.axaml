@@ -43,6 +43,10 @@
                             x:Name="FocusIcon"
                             Margin="0,0,0,8"
                             ToolTip.Tip="{Binding IconPath}" />
+                        <Button
+                            HorizontalAlignment="Center"
+                            Click="Button_OnClick"
+                            Content="{x:Static lang:LangResources.Common_Select}" />
                         <TextBox Text="{Binding FocusNode.Icon, Mode=TwoWay}" />
                     </StackPanel>
 

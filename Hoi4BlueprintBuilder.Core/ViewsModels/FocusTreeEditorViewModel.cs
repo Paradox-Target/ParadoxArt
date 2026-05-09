@@ -13,6 +13,7 @@ using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using MethodTimer;
 using NLog;
 using ParadoxPower.CSharpExtensions;
@@ -304,7 +305,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             Log.Debug("已保存国策树文件: {FilePath}", filePath);
         }
 
-        _notificationService.Show("成功保存国策树");
+        _notificationService.Show(LangResources.SavedSuccessfully);
     }
 
     private void Save(string filePath, Dictionary<string, FocusNode> editorNodesMap)

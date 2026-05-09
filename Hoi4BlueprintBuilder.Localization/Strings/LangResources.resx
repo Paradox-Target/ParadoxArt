@@ -615,4 +615,10 @@
   <data name="CreateNewFocus" xml:space="preserve">
     <value>CreateNewFocus</value>
   </data>
+  <data name="FocusIconSum" xml:space="preserve">
+    <value>FocusIconSum</value>
+  </data>
+  <data name="Common_Select" xml:space="preserve">
+    <value>Common_Select</value>
+  </data>
 </root>

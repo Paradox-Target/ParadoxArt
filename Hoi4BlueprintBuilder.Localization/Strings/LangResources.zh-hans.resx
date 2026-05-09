@@ -619,4 +619,10 @@ SpriteName: {1}</value>
   <data name="CreateNewFocus" xml:space="preserve">
     <value>新建国策</value>
   </data>
+  <data name="FocusIconSum" xml:space="preserve">
+    <value>共 {0} 个图标</value>
+  </data>
+  <data name="Common_Select" xml:space="preserve">
+    <value>选择</value>
+  </data>
 </root>

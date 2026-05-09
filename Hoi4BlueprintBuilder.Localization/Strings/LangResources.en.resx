@@ -617,4 +617,10 @@ Sprite Name: {1}</value>
     <data name="CreateNewFocus" xml:space="preserve">
         <value>Create New Focus</value>
     </data>
+    <data name="FocusIconSum" xml:space="preserve">
+        <value> {0} Icons</value>
+    </data>
+    <data name="Common_Select" xml:space="preserve">
+        <value>Select</value>
+    </data>
 </root>

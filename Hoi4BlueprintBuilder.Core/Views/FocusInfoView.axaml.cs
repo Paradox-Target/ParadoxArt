@@ -6,6 +6,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.Messaging;
+using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Messages;
@@ -13,6 +14,7 @@ using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using Hoi4BlueprintBuilder.Localization.Strings;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
@@ -352,5 +354,32 @@ public sealed partial class FocusInfoView : UserControl
     {
         ResizeThumbLeft_OnDragDelta(sender, e);
         ResizeThumbBottom_OnDragDelta(sender, e);
+    }
+
+    private async void Button_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var viewModel = App.Current.Services.GetRequiredService<FocusIconPickerViewModel>();
+            var dia = new FAContentDialog
+            {
+                Content = new FocusIconPickerView { DataContext = viewModel },
+                PrimaryButtonText = LangResources.Common_Ok,
+                SecondaryButtonText = LangResources.Common_Cancel
+            };
+            var result = await dia.ShowAsync();
+
+            if (result != FAContentDialogResult.Primary || string.IsNullOrEmpty(viewModel.SelectedFocusIcon))
+            {
+                return;
+            }
+
+            _viewModel?.FocusNode.Icon = viewModel.SelectedFocusIcon;
+        }
+        catch (Exception exception)
+        {
+            Log.Error(exception, "选择图标失败");
+            _notificationService.Show("选择图标失败");
+        }
     }
 }
