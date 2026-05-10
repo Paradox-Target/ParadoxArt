@@ -16,8 +16,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<ImageService>]
 public sealed class ImageService : IDisposable
 {
-    // TODO: Pin 在内存中会导致内存碎片化, 直接保存 byte 数组?
-    private readonly Dictionary<string, DdsMeta> _ddsHandles = [];
+    private readonly Dictionary<string, DdsMeta> _ddsCache = [];
     private readonly SpriteService _spriteService;
     private readonly FileSystemSafeWatcher _fileSystemWatcher;
 
@@ -40,13 +39,12 @@ public sealed class ImageService : IDisposable
 
     private void OnDeleted(object _, FileSystemEventArgs e)
     {
-        if (!_ddsHandles.TryGetValue(e.FullPath, out var meta))
+        if (!_ddsCache.TryGetValue(e.FullPath, out var meta))
         {
             return;
         }
 
-        meta.Handle.Free();
-        _ddsHandles.Remove(e.FullPath);
+        _ddsCache.Remove(e.FullPath);
         StrongReferenceMessenger.Default.Send(new DeleteImageResourceMessage(meta.SpriteName));
     }
 
@@ -103,32 +101,37 @@ public sealed class ImageService : IDisposable
 
     private Bitmap GetImageSourceFromDds(string spriteName, string filePath)
     {
-        if (!_ddsHandles.TryGetValue(filePath, out var meta))
+        if (!_ddsCache.TryGetValue(filePath, out var meta))
         {
             using var image = Pfimage.FromFile(filePath);
-            var pinnedArray = GCHandle.Alloc(image.Data, GCHandleType.Pinned);
             meta = new DdsMeta(
                 spriteName,
-                pinnedArray,
+                image.Data,
                 image.Width,
                 image.Height,
                 GetPixelFormat(image),
                 image.Stride
             );
-            _ddsHandles.Add(filePath, meta);
+            _ddsCache.Add(filePath, meta);
         }
 
-        IntPtr addr = meta.Handle.AddrOfPinnedObject();
-        var bsource = new Bitmap(
-            meta.Format,
-            AlphaFormat.Unpremul,
-            addr,
-            new PixelSize(meta.Width, meta.Height),
-            new Vector(96, 96),
-            meta.Stride
-        );
-
-        return bsource;
+        var handle = GCHandle.Alloc(meta.Data, GCHandleType.Pinned);
+        try
+        {
+            IntPtr addr = handle.AddrOfPinnedObject();
+            return new Bitmap(
+                meta.Format,
+                AlphaFormat.Unpremul,
+                addr,
+                new PixelSize(meta.Width, meta.Height),
+                new Vector(96, 96),
+                meta.Stride
+            );
+        }
+        finally
+        {
+            handle.Free();
+        }
     }
 
     private static PixelFormat GetPixelFormat(IImage image)
@@ -146,7 +149,7 @@ public sealed class ImageService : IDisposable
 
     private sealed record DdsMeta(
         string SpriteName,
-        GCHandle Handle,
+        byte[] Data,
         int Width,
         int Height,
         PixelFormat Format,
