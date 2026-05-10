@@ -153,10 +153,11 @@ public sealed partial class AppUpdateViewModel : ObservableObject
                     App.Version
                 );
             }
-            TotalPackagesSize = string.Format(
+            TotalPackagesSize =
+                $"{string.Format(
                 LangResources.AppUpdate_UpgradePackageSize,
                 ByteSize.FromBytes(totalBytes).MebiBytes.ToString("F2", CultureInfo.InvariantCulture)
-            );
+            )} MB";
 
             Log.Info("需要更新, 更新包数量: {Count}", _updateInfo.DeltasToTarget.Length);
         }
