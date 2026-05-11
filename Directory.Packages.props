@@ -47,7 +47,7 @@
     <PackageVersion Include="Ardalis.SmartEnum" Version="8.2.0" />
     <PackageVersion Include="Enums.NET" Version="5.0.0" />
     <PackageVersion Include="NLua" Version="1.7.9" />
-    <PackageVersion Include="Injectio" Version="5.2.2" />
+    <PackageVersion Include="Injectio" Version="6.0.0" />
     <PackageVersion Include="Fody" Version="6.9.3" />
     <PackageVersion Include="MethodTimer.Fody" Version="3.2.3" />
     <PackageVersion Include="HotAvalonia" Version="3.1.0" />
