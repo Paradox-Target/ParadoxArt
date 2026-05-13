@@ -40,6 +40,7 @@
 <!--        需要等待适配-->
 <!--        <PackageReference Include="MessageBox.Avalonia" />-->
         <PackageReference Include="Microsoft.ApplicationInsights" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
         <PackageReference Include="ParadoxPower.ZLinq" />

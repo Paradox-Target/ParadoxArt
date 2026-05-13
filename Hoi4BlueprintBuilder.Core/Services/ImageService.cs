@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media.Imaging;
@@ -8,6 +9,7 @@ using Hoi4BlueprintBuilder.Core.Infrastructure;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
+using Microsoft.Extensions.Caching.Memory;
 using NLog;
 using Pfim;
 
@@ -16,7 +18,7 @@ namespace Hoi4BlueprintBuilder.Core.Services;
 [RegisterSingleton<ImageService>]
 public sealed class ImageService : IDisposable
 {
-    private readonly Dictionary<string, DdsMeta> _ddsCache = [];
+    private readonly MemoryCache _ddsCache = new(new MemoryCacheOptions());
     private readonly SpriteService _spriteService;
     private readonly FileSystemSafeWatcher _fileSystemWatcher;
 
@@ -31,6 +33,7 @@ public sealed class ImageService : IDisposable
         {
             Directory.CreateDirectory(path);
         }
+
         _fileSystemWatcher = new FileSystemSafeWatcher(path, "*.dds");
         _fileSystemWatcher.Deleted += OnDeleted;
         _fileSystemWatcher.EnableRaisingEvents = true;
@@ -39,13 +42,13 @@ public sealed class ImageService : IDisposable
 
     private void OnDeleted(object _, FileSystemEventArgs e)
     {
-        if (!_ddsCache.TryGetValue(e.FullPath, out var meta))
+        if (!_ddsCache.TryGetValue<DdsMeta>(e.FullPath, out var meta))
         {
             return;
         }
 
+        StrongReferenceMessenger.Default.Send(new DeleteImageResourceMessage(meta!.SpriteName));
         _ddsCache.Remove(e.FullPath);
-        StrongReferenceMessenger.Default.Send(new DeleteImageResourceMessage(meta.SpriteName));
     }
 
     public Bitmap? GetFocusIconByName(string spriteName)
@@ -101,21 +104,27 @@ public sealed class ImageService : IDisposable
 
     private Bitmap GetImageSourceFromDds(string spriteName, string filePath)
     {
-        if (!_ddsCache.TryGetValue(filePath, out var meta))
-        {
-            using var image = Pfimage.FromFile(filePath);
-            meta = new DdsMeta(
-                spriteName,
-                image.Data,
-                image.Width,
-                image.Height,
-                GetPixelFormat(image),
-                image.Stride
-            );
-            _ddsCache.Add(filePath, meta);
-        }
+        var meta = _ddsCache.GetOrCreate(
+            filePath,
+            entry =>
+            {
+                using var image = Pfimage.FromFile(filePath);
+                var meta = new DdsMeta(
+                    spriteName,
+                    image.Data,
+                    image.Width,
+                    image.Height,
+                    GetPixelFormat(image),
+                    image.Stride
+                );
+                entry.Value = meta;
+                entry.Size = meta.Data.Length;
+                entry.SlidingExpiration = TimeSpan.FromMinutes(10);
+                return meta;
+            }
+        );
 
-        var handle = GCHandle.Alloc(meta.Data, GCHandleType.Pinned);
+        var handle = GCHandle.Alloc(meta!.Data, GCHandleType.Pinned);
         try
         {
             IntPtr addr = handle.AddrOfPinnedObject();
@@ -159,5 +168,6 @@ public sealed class ImageService : IDisposable
     public void Dispose()
     {
         _fileSystemWatcher.Dispose();
+        _ddsCache.Dispose();
     }
 }
