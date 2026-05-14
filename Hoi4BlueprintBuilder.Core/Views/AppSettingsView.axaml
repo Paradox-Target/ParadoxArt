@@ -161,6 +161,7 @@
                 <fa:FASettingsExpanderItem Content=".NET Version" Footer="{x:Static vms:AppSettingsViewModel.DotNetVersion}" />
                 <fa:FASettingsExpanderItem>
                     <StackPanel Orientation="Horizontal" Spacing="8">
+                        <HyperlinkButton Content="{x:Static lang:LangResources.AppSettings_OfficialWebsite}" NavigateUri="https://www.paradoxtarget.top/" />
                         <HyperlinkButton Command="{Binding OpenEulaCommand}" Content="{x:Static lang:LangResources.Settings_EULA}" />
                         <HyperlinkButton Content="{x:Static lang:LangResources.Settings_ReportIssue}" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
                         <HyperlinkButton Content="{x:Static lang:LangResources.Settings_Afdian}" NavigateUri="https://ifdian.net/a/textGamex" />

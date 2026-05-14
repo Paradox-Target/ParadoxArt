@@ -627,4 +627,7 @@
   <data name="LocalizationManager_SearchPlaceholderText" xml:space="preserve">
     <value>LocalizationManager_SearchPlaceholderText</value>
   </data>
+  <data name="AppSettings_OfficialWebsite" xml:space="preserve">
+    <value>AppSettings_OfficialWebsite</value>
+  </data>
 </root>

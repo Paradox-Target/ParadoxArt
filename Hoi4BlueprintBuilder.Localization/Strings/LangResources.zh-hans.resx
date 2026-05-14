@@ -631,4 +631,7 @@ SpriteName: {1}</value>
   <data name="LocalizationManager_SearchPlaceholderText" xml:space="preserve">
     <value>搜索 Key 或者 Value...</value>
   </data>
+  <data name="AppSettings_OfficialWebsite" xml:space="preserve">
+    <value>官网</value>
+  </data>
 </root>

@@ -87,6 +87,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AppSettings_OfficialWebsite.
+        /// </summary>
+        public static string AppSettings_OfficialWebsite {
+            get {
+                return ResourceManager.GetString("AppSettings_OfficialWebsite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AppSettings_OpenConfigFolderFailed.
         /// </summary>
         public static string AppSettings_OpenConfigFolderFailed {
