@@ -4,10 +4,10 @@
 
 ## Chinese
 
-- feat: 国策 Icon 新增预览选择功能
-- fix: 修复内存泄漏问题
+- perf: 优化预览 Icon 时的内存使用
+- fix: 修复更新信息页面上, 更新包大小不显示单位的问题
 
 ## English
 
-- feat: Added preview selection for national focus icons
-- fix: Fixed memory leak issue
+- perf: Optimized memory usage when previewing icons
+- fix: Fixed the issue where the update package size did not display units on the update information page

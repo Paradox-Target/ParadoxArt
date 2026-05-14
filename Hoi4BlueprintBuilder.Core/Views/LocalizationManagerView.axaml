@@ -15,19 +15,25 @@
         <!--  顶部工具栏  -->
         <Border
             Grid.Row="0"
-            Padding="10"
+            Padding="8"
             Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
-            <Grid ColumnDefinitions="*,Auto">
-                <TextBox
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <TextBlock
                     Grid.Column="0"
-                    Margin="0,0,10,0"
+                    Margin="0,0,8,0"
                     VerticalAlignment="Center"
-                    PlaceholderText="搜索 Key 或者 Value..."
+                    Text="{Binding LocalizationCount}" />
+
+                <TextBox
+                    Grid.Column="1"
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    PlaceholderText="{x:Static lang:LangResources.LocalizationManager_SearchPlaceholderText}"
                     Text="{Binding SearchText.Value}" />
 
                 <Button
-                    Grid.Column="1"
-                    Margin="0,0,10,0"
+                    Grid.Column="2"
+                    Margin="0,0,8,0"
                     Command="{Binding SaveCommand}"
                     Content="{x:Static lang:LangResources.Menu_Save}"
                     HotKey="Ctrl+S" />

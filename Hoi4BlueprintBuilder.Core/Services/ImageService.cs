@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media.Imaging;

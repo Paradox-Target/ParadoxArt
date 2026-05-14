@@ -625,4 +625,10 @@ SpriteName: {1}</value>
   <data name="Common_Select" xml:space="preserve">
     <value>选择</value>
   </data>
+  <data name="LocalizationManager_RowCount" xml:space="preserve">
+    <value>本地化总数: {0}</value>
+  </data>
+  <data name="LocalizationManager_SearchPlaceholderText" xml:space="preserve">
+    <value>搜索 Key 或者 Value...</value>
+  </data>
 </root>

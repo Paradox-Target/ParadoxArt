@@ -621,4 +621,10 @@
   <data name="Common_Select" xml:space="preserve">
     <value>Common_Select</value>
   </data>
+  <data name="LocalizationManager_RowCount" xml:space="preserve">
+    <value>LocalizationManager_RowCount</value>
+  </data>
+  <data name="LocalizationManager_SearchPlaceholderText" xml:space="preserve">
+    <value>LocalizationManager_SearchPlaceholderText</value>
+  </data>
 </root>

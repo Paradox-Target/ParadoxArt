@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using DynamicData;
+using DynamicData.Aggregation;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Localization;
@@ -26,6 +27,9 @@ public sealed partial class LocalizationManagerViewModel : ObservableObject, ICl
 
     // 根据支持的语言动态构成的列模型（方便View绑定）
     public IReadOnlyList<GameLanguage> SupportedLanguages { get; }
+
+    [ObservableProperty]
+    private string _localizationCount = string.Empty;
 
     private readonly SourceList<LocalizationRow> _allRowsCache = new();
     private readonly IDisposable _disposable;
@@ -51,12 +55,18 @@ public sealed partial class LocalizationManagerViewModel : ObservableObject, ICl
             .DistinctUntilChanged()
             .Select(Filter)
             .AsSystemObservable();
-        _disposable = _allRowsCache
-            .Connect()
-            .RefCount()
-            .Filter(predicate)
-            .Bind(out _localizationRows)
-            .Subscribe();
+        var filteredConnection = _allRowsCache.Connect().RefCount().Filter(predicate);
+        _disposable = Disposable.Combine(
+            filteredConnection.Bind(out _localizationRows).Subscribe(),
+            filteredConnection
+                .Count()
+                .Subscribe(count =>
+                    LocalizationCount = string.Format(
+                        LangResources.LocalizationManager_RowCount,
+                        count.ToString()
+                    )
+                )
+        );
         return;
 
         Func<LocalizationRow, bool> Filter(string text) =>

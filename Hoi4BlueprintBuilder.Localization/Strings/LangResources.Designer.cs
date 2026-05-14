@@ -861,6 +861,24 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LocalizationManager_RowCount.
+        /// </summary>
+        public static string LocalizationManager_RowCount {
+            get {
+                return ResourceManager.GetString("LocalizationManager_RowCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LocalizationManager_SearchPlaceholderText.
+        /// </summary>
+        public static string LocalizationManager_SearchPlaceholderText {
+            get {
+                return ResourceManager.GetString("LocalizationManager_SearchPlaceholderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LocalizationManager_Title.
         /// </summary>
         public static string LocalizationManager_Title {

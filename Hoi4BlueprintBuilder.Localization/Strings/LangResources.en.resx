@@ -623,4 +623,10 @@ Sprite Name: {1}</value>
     <data name="Common_Select" xml:space="preserve">
         <value>Select</value>
     </data>
+    <data name="LocalizationManager_RowCount" xml:space="preserve">
+        <value>Rows: {0}</value>
+    </data>
+    <data name="LocalizationManager_SearchPlaceholderText" xml:space="preserve">
+        <value>Search Key or Value...</value>
+    </data>
 </root>
