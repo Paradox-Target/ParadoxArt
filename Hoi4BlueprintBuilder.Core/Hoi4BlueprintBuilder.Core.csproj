@@ -41,6 +41,7 @@
 <!--        <PackageReference Include="MessageBox.Avalonia" />-->
         <PackageReference Include="Microsoft.ApplicationInsights" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
         <PackageReference Include="ParadoxPower.ZLinq" />
@@ -61,7 +62,10 @@
         <PackageReference Include="Ardalis.SmartEnum" />
         <PackageReference Include="Enums.NET" />
         <PackageReference Include="NLua" />
-        <PackageReference Include="Injectio" />
+        <PackageReference Include="Injectio">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Fody">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
