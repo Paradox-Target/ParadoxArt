@@ -46,6 +46,8 @@ public sealed partial class FocusInfoView : UserControl
         App.Current.Services.GetRequiredService<NotificationService>();
     private readonly SettingsService _settingsService =
         App.Current.Services.GetRequiredService<SettingsService>();
+    private readonly TelemetryService _telemetryService =
+        App.Current.Services.GetRequiredService<TelemetryService>();
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     static FocusInfoView()
@@ -360,6 +362,7 @@ public sealed partial class FocusInfoView : UserControl
     {
         try
         {
+            _telemetryService.TrackEvent("OpenFocusIconPickerView");
             var viewModel = App.Current.Services.GetRequiredService<FocusIconPickerViewModel>();
             var dia = new FAContentDialog
             {
