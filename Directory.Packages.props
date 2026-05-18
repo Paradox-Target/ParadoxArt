@@ -53,7 +53,7 @@
     <PackageVersion Include="Fody" Version="6.9.3" />
     <PackageVersion Include="MethodTimer.Fody" Version="3.2.3" />
     <PackageVersion Include="HotAvalonia" Version="3.1.0" />
-    <PackageVersion Include="Vanara.Windows.Shell" Version="5.0.4" />
+    <PackageVersion Include="Vanara.Windows.Shell" Version="5.0.5" />
     <PackageVersion Include="ZString" Version="2.6.0" />
     <!-- 单元测试 -->
     <PackageVersion Include="coverlet.collector" Version="10.0.0" />
