@@ -193,18 +193,19 @@ public sealed partial class AppUpdateViewModel : ObservableObject
         }
         // 字节/秒
         double speedBps = totalBytes / elapsedSeconds;
-        // 记录三个指标：速度(标准化)、耗时、大小
-        var metrics = new Dictionary<string, double>
-        {
-            { "update_download_speed_bps", speedBps },
-            { "update_download_duration_seconds", elapsedSeconds },
-            { "update_package_size_bytes", totalBytes }
-        };
+        // 记录：速度(标准化)、耗时、大小, 以及目标版本号（以确认用户最终更新到了哪个版本）
         var properties = new Dictionary<string, string>
         {
+            { "update_download_speed_bps", speedBps.ToString("F2", CultureInfo.InvariantCulture) },
+            {
+                "update_download_duration_seconds",
+                elapsedSeconds.ToString("F2", CultureInfo.InvariantCulture)
+            },
+            { "update_package_size_bytes", totalBytes.ToString() },
             { "target_version", _updateInfo.TargetFullRelease.Version.ToString() }
         };
-        _telemetryService.TrackEvent("update_packages_download_performance", properties, metrics);
+
+        _telemetryService.TrackEvent("update_packages_download_performance", properties);
 
         Log.Info("更新包下载完成");
         await App.Current.Services.DisposeAsync();

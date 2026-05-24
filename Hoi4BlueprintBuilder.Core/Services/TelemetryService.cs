@@ -31,7 +31,7 @@ public sealed class TelemetryService : IDisposable
         _client.Context.User.Id = deviceService.GetDeviceId();
 
         _client.Context.Session.Id = Guid.NewGuid().ToString();
-        _client.Context.Session.IsFirst = settingsService.IsFirstRun;
+
         statusBarService.UpdateRamBytesUsage += ram =>
         {
             double mb = ByteSize.FromBytes(ram).MebiBytes;
@@ -40,23 +40,19 @@ public sealed class TelemetryService : IDisposable
         };
     }
 
-    public void TrackEvent(
-        string eventName,
-        IDictionary<string, string>? properties = null,
-        IDictionary<string, double>? metrics = null
-    )
+    public void TrackEvent(string eventName, IDictionary<string, string>? properties = null)
     {
-        _client.TrackEvent(eventName, properties, metrics);
+        _client.TrackEvent(eventName, properties);
     }
 
-    public void TrackMetric(string name, double value)
+    public void TrackMetric(string name, double value, IDictionary<string, string>? properties = null)
     {
-        _client.TrackMetric(name, value);
+        _client.TrackMetric(name, value, properties);
     }
 
     public void TrackException(Exception exception, string message)
     {
-        _client.TrackException(exception, new Dictionary<string, string> { { "message", message } });
+        TrackException(exception, new Dictionary<string, string> { { "message", message } });
     }
 
     public void TrackException(Exception exception, IDictionary<string, string>? properties = null)
