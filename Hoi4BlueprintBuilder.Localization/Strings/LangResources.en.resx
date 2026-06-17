@@ -632,4 +632,7 @@ Sprite Name: {1}</value>
     <data name="AppSettings_OfficialWebsite" xml:space="preserve">
         <value>Official Website</value>
     </data>
+    <data name="SourceRepository" xml:space="preserve">
+        <value>Source Repository</value>
+    </data>
 </root>

@@ -1518,6 +1518,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SourceRepository.
+        /// </summary>
+        public static string SourceRepository {
+            get {
+                return ResourceManager.GetString("SourceRepository", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to StatusBar_FocusSum.
         /// </summary>
         public static string StatusBar_FocusSum {

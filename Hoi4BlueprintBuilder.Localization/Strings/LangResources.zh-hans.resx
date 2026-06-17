@@ -634,4 +634,7 @@ SpriteName: {1}</value>
   <data name="AppSettings_OfficialWebsite" xml:space="preserve">
     <value>官网</value>
   </data>
+  <data name="SourceRepository" xml:space="preserve">
+    <value>源代码</value>
+  </data>
 </root>

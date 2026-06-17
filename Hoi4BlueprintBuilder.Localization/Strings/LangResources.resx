@@ -630,4 +630,7 @@
   <data name="AppSettings_OfficialWebsite" xml:space="preserve">
     <value>AppSettings_OfficialWebsite</value>
   </data>
+  <data name="SourceRepository" xml:space="preserve">
+    <value>SourceRepository</value>
+  </data>
 </root>
