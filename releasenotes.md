@@ -4,16 +4,17 @@
 
 ---
 
-# 0.20.1
+# 0.21.0
 
 ## Chinese
 
-- feat: 本地化管理器添加本地化条目总数显示
-- perf: 优化预览 Icon 时的内存使用
-- fix: 修复更新信息页面上, 更新包大小不显示单位的问题
+**本软件现在在 [GitHub](https://github.com/Paradox-Target/ParadoxArt) 开放源代码.**
+
+- feat: 软件内添加官网地址
+
 
 ## English
 
-- feat: Added total number of localization entries display to the localization manager
-- perf: Optimized memory usage when previewing icons
-- fix: Fixed the issue where the update package size did not display units on the update information page
+**This software is now open-sourced on [GitHub](https://github.com/Paradox-Target/ParadoxArt).**
+
+- feat: Add official website link in the app

@@ -6,7 +6,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
         <AssemblyName>ParadoxArt.Core</AssemblyName>
-        <Version>0.20.1</Version>
+        <Version>0.21.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
