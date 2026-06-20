@@ -33,7 +33,8 @@ public sealed class ParadoxRegistryOptions(ThemeVariant? themeVariant, RegistryO
             return GetDefaultTheme();
         }
 
-        return ThemeReader.ReadThemeSync(new StreamReader(AssetLoader.Open(new Uri(path))));
+        using var reader = new StreamReader(AssetLoader.Open(new Uri(path)));
+        return ThemeReader.ReadThemeSync(reader);
     }
 
     public IRawGrammar GetGrammar(string scopeName)
@@ -53,7 +54,8 @@ public sealed class ParadoxRegistryOptions(ThemeVariant? themeVariant, RegistryO
         {
             path = string.Join('/', GrammarsFolderPath, "paradox.tmLanguage.json");
         }
-        return GrammarReader.ReadGrammarSync(new StreamReader(AssetLoader.Open(new Uri(path))));
+        using var grammarReader = new StreamReader(AssetLoader.Open(new Uri(path)));
+        return GrammarReader.ReadGrammarSync(grammarReader);
     }
 
     public ICollection<string>? GetInjections(string scopeName)
@@ -64,13 +66,15 @@ public sealed class ParadoxRegistryOptions(ThemeVariant? themeVariant, RegistryO
     public IRawTheme GetDefaultTheme()
     {
         var uri = new Uri(string.Join('/', ThemesFolderPath, GetThemeFileName(themeVariant)));
-        return ThemeReader.ReadThemeSync(new StreamReader(AssetLoader.Open(uri)));
+        using var reader = new StreamReader(AssetLoader.Open(uri));
+        return ThemeReader.ReadThemeSync(reader);
     }
 
     public IRawTheme LoadTheme(ThemeVariant theme)
     {
         var uri = new Uri(string.Join('/', ThemesFolderPath, GetThemeFileName(theme)));
-        return ThemeReader.ReadThemeSync(new StreamReader(AssetLoader.Open(uri)));
+        using var reader = new StreamReader(AssetLoader.Open(uri));
+        return ThemeReader.ReadThemeSync(reader);
     }
 
     private static string GetThemeFileName(ThemeVariant? theme)
