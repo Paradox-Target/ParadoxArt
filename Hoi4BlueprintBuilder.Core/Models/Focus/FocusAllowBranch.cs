@@ -7,7 +7,6 @@ public sealed partial class FocusAllowBranch(IConditionExpression? expression)
         IFocusTrigger
 {
     [ObservableProperty]
-    private bool _isEnabled;
-
+    public partial bool IsEnabled { get; set; }
     public IConditionExpression? Expression { get; } = expression;
 }

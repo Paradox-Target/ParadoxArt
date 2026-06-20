@@ -30,7 +30,7 @@ public sealed partial class SystemFileItem : ObservableObject
     private readonly AvaloniaList<SystemFileItem> _children = [];
 
     [ObservableProperty]
-    private bool _isExpanded;
+    public partial bool IsExpanded { get; set; }
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 

@@ -23,7 +23,7 @@ public sealed partial class GameSettingsPageViewModel(
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(GoToNextPageCommand))]
-    private string _gamePath = string.Empty;
+    public partial string GamePath { get; set; } = string.Empty;
 
     [RelayCommand]
     private async Task PickGamePath()

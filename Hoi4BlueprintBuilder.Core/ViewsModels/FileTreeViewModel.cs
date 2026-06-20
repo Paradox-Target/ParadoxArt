@@ -15,7 +15,7 @@ public sealed partial class FileTreeViewModel : ObservableObject
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     [ObservableProperty]
-    private IReadOnlyList<SystemFileItem> _items = [];
+    public partial IReadOnlyList<SystemFileItem> Items { get; set; } = [];
 
     public FileTreeViewModel(SettingsService settingService, IFileSortComparer fileSortComparer)
     {

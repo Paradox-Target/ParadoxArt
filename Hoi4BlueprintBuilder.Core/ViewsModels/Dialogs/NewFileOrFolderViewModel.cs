@@ -13,8 +13,7 @@ public sealed partial class NewFileOrFolderViewModel : ObservableValidator
     [ValidFileName]
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    private string _newName;
-
+    public partial string NewName { get; set; }
     public int SelectionEnd { get; }
 
     private readonly FAContentDialog _dialog;

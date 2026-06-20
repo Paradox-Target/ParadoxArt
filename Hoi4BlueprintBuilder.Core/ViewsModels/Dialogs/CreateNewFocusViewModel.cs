@@ -22,17 +22,17 @@ public sealed partial class CreateNewFocusViewModel : ObservableValidator
     [Required]
     [CustomValidation(typeof(CreateNewFocusViewModel), nameof(FocusIdShouldIsUnique))]
     [NotifyDataErrorInfo]
-    private string _focusId = string.Empty;
+    public partial string FocusId { get; set; } = string.Empty;
 
     [ObservableProperty]
     [Range(0, int.MaxValue)]
     [NotifyDataErrorInfo]
-    private int _selectedFocusTypeIndex;
+    public partial int SelectedFocusTypeIndex { get; set; }
 
     [ObservableProperty]
     [Range(0, int.MaxValue)]
     [NotifyDataErrorInfo]
-    private int _selectedFocusFileNameIndex;
+    public partial int SelectedFocusFileNameIndex { get; set; }
 
     private bool IsValid => SelectedFocusFileNameIndex >= 0 && !HasErrors;
 
@@ -55,11 +55,11 @@ public sealed partial class CreateNewFocusViewModel : ObservableValidator
 
         if (FocusFileNames.Length == 1)
         {
-            _selectedFocusFileNameIndex = 0;
+            SelectedFocusFileNameIndex = 0;
         }
         else
         {
-            _selectedFocusFileNameIndex = -1;
+            SelectedFocusFileNameIndex = -1;
         }
 
         PropertyChanged += (_, _) => _setPrimaryEnableAction?.Invoke(IsValid);

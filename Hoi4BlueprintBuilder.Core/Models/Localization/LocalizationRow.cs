@@ -38,7 +38,7 @@ public sealed partial class LocalizationLanguageItem(GameLanguage language, stri
     public bool IsChanged { get; set; }
 
     [ObservableProperty]
-    private string _value = value;
+    public partial string Value { get; set; } = value;
 
     partial void OnValueChanged(string value)
     {

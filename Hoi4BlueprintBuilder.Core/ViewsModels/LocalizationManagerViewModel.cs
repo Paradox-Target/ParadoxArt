@@ -29,7 +29,7 @@ public sealed partial class LocalizationManagerViewModel : ObservableObject, ICl
     public IReadOnlyList<GameLanguage> SupportedLanguages { get; }
 
     [ObservableProperty]
-    private string _localizationCount = string.Empty;
+    public partial string LocalizationCount { get; set; } = string.Empty;
 
     private readonly SourceList<LocalizationRow> _allRowsCache = new();
     private readonly IDisposable _disposable;

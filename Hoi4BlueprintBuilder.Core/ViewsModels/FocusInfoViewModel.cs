@@ -64,13 +64,14 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     public IReadOnlyList<GameLanguage> Languages { get; }
 
     [ObservableProperty]
-    private string _idText;
+    public partial string IdText { get; set; }
 
     [ObservableProperty]
-    private string _descriptionText;
+    public partial string DescriptionText { get; set; }
 
     [ObservableProperty]
-    private int _selectedLanguageIndex;
+    public partial int SelectedLanguageIndex { get; set; }
+
     private bool _isSkipNotify;
     private bool _isUpdatingLanguage;
     private string FocusDescriptionKey => $"{FocusNode.Id}_desc";
@@ -89,13 +90,13 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     public FocusInfoViewModel(FocusNode focusNode)
     {
         FocusNode = focusNode;
+        Languages = App.Current.Services.GetRequiredService<ProjectConfigService>().SupportedLanguages;
 
-        _idText = LocalizationFormatService.GetFormatText(FocusNode.Id);
-        _descriptionText = LocalizationFormatService.GetFormatText(FocusDescriptionKey);
-        _selectedLanguageIndex = _lastSelectedLanguageIndex;
+        IdText = LocalizationFormatService.GetFormatText(FocusNode.Id);
+        DescriptionText = LocalizationFormatService.GetFormatText(FocusDescriptionKey);
+        SelectedLanguageIndex = _lastSelectedLanguageIndex;
 
         FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
-        Languages = App.Current.Services.GetRequiredService<ProjectConfigService>().SupportedLanguages;
     }
 
     private void FocusNodeOnPropertyChanged(object? sender, PropertyChangedEventArgs e)

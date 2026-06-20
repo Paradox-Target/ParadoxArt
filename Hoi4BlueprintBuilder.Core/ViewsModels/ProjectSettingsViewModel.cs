@@ -34,10 +34,10 @@ public sealed partial class ProjectSettingsViewModel : ObservableObject
     public AvaloniaList<GameLanguage> SupportedLanguages { get; }
 
     [ObservableProperty]
-    private string _gameLocalizationFilesInfo = LangResources.NotCalculated;
+    public partial string GameLocalizationFilesInfo { get; set; } = LangResources.NotCalculated;
 
     [ObservableProperty]
-    private bool _isEnabledHasDepsToggleSwitch;
+    public partial bool IsEnabledHasDepsToggleSwitch { get; set; }
 
     private readonly ProjectConfigService _projectConfigService;
     private readonly GameResourcesPathService _gameResourcesPathService;

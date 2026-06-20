@@ -24,22 +24,21 @@ public sealed partial class AppUpdateViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowUpdateLog))]
-    private bool _hasUpdates;
+    public partial bool HasUpdates { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowUpdateLog))]
-    private bool _isDownloading;
+    public partial bool IsDownloading { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ProgressText))]
-    private double _progress;
+    public partial double Progress { get; set; }
 
     [ObservableProperty]
-    private string _totalPackagesSize = string.Empty;
+    public partial string TotalPackagesSize { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _newVersionText = string.Empty;
-
+    public partial string NewVersionText { get; set; } = string.Empty;
     public ObservableStringBuilder UpdateLog { get; } = new();
 
     private readonly UpdateManager _updateManager;

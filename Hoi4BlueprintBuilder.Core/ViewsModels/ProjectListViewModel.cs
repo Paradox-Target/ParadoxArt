@@ -25,11 +25,11 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class ProjectListViewModel : ObservableObject
 {
     [ObservableProperty]
-    private IEnumerable<ProjectItem> _projects;
+    public partial IEnumerable<ProjectItem> Projects { get; set; }
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CopyProjectPathCommand), nameof(OpenProjectFolderInExplorerCommand))]
-    private ProjectItem? _rightClickedItem;
+    public partial ProjectItem? RightClickedItem { get; set; }
     public BindableReactiveProperty<string> SearchText { get; } = new(string.Empty);
 
     private readonly SettingsService _settingsService;

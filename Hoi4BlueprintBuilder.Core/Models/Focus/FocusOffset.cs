@@ -11,5 +11,5 @@ public sealed partial class FocusOffset(FocusPoint offset, IConditionExpression?
     public IConditionExpression? Expression { get; } = expression;
 
     [ObservableProperty]
-    private bool _isEnabled;
+    public partial bool IsEnabled { get; set; }
 }

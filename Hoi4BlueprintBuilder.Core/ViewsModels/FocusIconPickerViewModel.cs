@@ -20,8 +20,7 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
     private readonly ReadOnlyObservableCollection<FocusIcon> _focusIcons;
 
     [ObservableProperty]
-    private string _sum = string.Empty;
-
+    public partial string Sum { get; set; } = string.Empty;
     public BindableReactiveProperty<string> SearchText { get; } = new(string.Empty);
     private readonly SourceList<FocusIcon> _focusIconsSource = new();
     private ToggleButton? _selectedIconButton;

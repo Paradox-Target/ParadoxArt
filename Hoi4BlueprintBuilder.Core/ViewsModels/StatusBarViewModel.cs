@@ -14,16 +14,16 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class StatusBarViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _focusCountText = string.Empty;
+    public partial string FocusCountText { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isVisibleFocusCountText;
+    public partial bool IsVisibleFocusCountText { get; set; }
 
     [ObservableProperty]
-    private string _ramUsage = "RAM: 0 MB";
+    public partial string RamUsage { get; set; } = "RAM: 0 MB";
 
     [ObservableProperty]
-    private string _textEncoding = string.Empty;
+    public partial string TextEncoding { get; set; } = string.Empty;
 
     public StatusBarViewModel(StatusBarService statusBarService, TabViewService tabViewService)
     {

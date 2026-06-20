@@ -18,20 +18,20 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
     [CustomValidation(typeof(CreateNewFocusTreeFileViewModel), nameof(FileShouldNotExist))]
     [ValidFileName]
     [NotifyDataErrorInfo]
-    private string _fileName = string.Empty;
+    public partial string FileName { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [CustomValidation(typeof(CreateNewFocusTreeFileViewModel), nameof(CountryTagShouldExist))]
-    private string _countryTag = string.Empty;
+    public partial string CountryTag { get; set; } = string.Empty;
 
     [ObservableProperty]
     [Required]
     [NotifyDataErrorInfo]
-    private string _id = string.Empty;
+    public partial string Id { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isDefaultFocusTree;
+    public partial bool IsDefaultFocusTree { get; set; }
 
     public event Action<bool>? PrimaryEnableChanged;
 

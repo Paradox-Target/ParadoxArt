@@ -27,7 +27,7 @@ public abstract partial class ConditionItem(string scopeName, string nodeContent
     /// 条件是否被用户标记为 true
     /// </summary>
     [ObservableProperty]
-    private bool _isEnabled;
+    public partial bool IsEnabled { get; set; }
 
     public override string ToString() => DisplayContent;
 }

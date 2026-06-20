@@ -12,7 +12,7 @@ public sealed partial class MainWindowViewModel : ObservableObject
     private readonly NavigationService _navigationService;
 
     [ObservableProperty]
-    private object? _currentView;
+    public partial object? CurrentView { get; set; }
 
     public MainWindowViewModel(NavigationService navigationService, SettingsService settingsService)
     {

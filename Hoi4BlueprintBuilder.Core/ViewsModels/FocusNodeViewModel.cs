@@ -15,31 +15,31 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     public FocusNode Node { get; }
 
     [ObservableProperty]
-    private Bitmap? _bitmap;
+    public partial Bitmap? Bitmap { get; set; }
 
     [ObservableProperty]
-    private double _width;
+    public partial double Width { get; set; }
 
     [ObservableProperty]
-    private double _height;
+    public partial double Height { get; set; }
 
     /// <summary>
     /// 是否被选中
     /// </summary>
     [ObservableProperty]
-    private bool _isSelected;
+    public partial bool IsSelected { get; set; }
 
     /// <summary>
     /// 该 Focus 是否已完成 (用于条件求值)
     /// </summary>
     [ObservableProperty]
-    private bool _isCompleted;
+    public partial bool IsCompleted { get; set; }
 
     /// <summary>
     /// 是否显示完成 CheckBox (仅当 has_completed_focus 条件引用了此 Focus 时)
     /// </summary>
     [ObservableProperty]
-    private bool _showCompletedCheckbox;
+    public partial bool ShowCompletedCheckbox { get; set; }
 
     public double FocusCellWidth => ProjectConfigService.FocusCellWidth;
     public double FocusCellHeight => ProjectConfigService.FocusCellHeight;

@@ -39,7 +39,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     public HashSet<string> CompletedFocusIds => _completedFocusIds;
 
     [ObservableProperty]
-    private bool _isLoading;
+    public partial bool IsLoading { get; set; }
 
     private readonly AvaloniaList<FocusNodeViewModel> _nodes = [];
 

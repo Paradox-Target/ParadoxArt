@@ -10,11 +10,10 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels.Initialization;
 public sealed partial class AppSettingsPageViewModel(SettingsService settings) : ObservableObject
 {
     [ObservableProperty]
-    private int _selectedIndex;
+    public partial int SelectedIndex { get; set; }
 
     [ObservableProperty]
-    private int _selectedGameLanguageIndex;
-
+    public partial int SelectedGameLanguageIndex { get; set; }
     public LanguageInfo[] Languages { get; } = LanguageHelper.AppLanguages;
     public IReadOnlyList<GameLanguage> GameLanguages { get; } = Enums.GetValues<GameLanguage>();
 
