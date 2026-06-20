@@ -7,9 +7,6 @@ namespace Hoi4BlueprintBuilder.Core.Controls;
 
 public sealed class MultiComboBoxItem : ContentControl
 {
-    private MultiComboBox? _parent;
-    private bool _updateInternal;
-
     public static readonly StyledProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<
         MultiComboBoxItem,
         bool
@@ -20,6 +17,9 @@ public sealed class MultiComboBoxItem : ContentControl
         get => GetValue(IsSelectedProperty);
         set => SetValue(IsSelectedProperty, value);
     }
+
+    private MultiComboBox? _parent;
+    private bool _updateInternal;
 
     static MultiComboBoxItem()
     {
@@ -45,9 +45,9 @@ public sealed class MultiComboBoxItem : ContentControl
         }
 
         var parent = this.FindLogicalAncestorOfType<MultiComboBox>();
-        var dataContext = this.DataContext;
+        var dataContext = DataContext;
 
-        if (parent?.SelectedItems != null && dataContext != null)
+        if (parent?.SelectedItems is not null && dataContext is not null)
         {
             if (isSelected)
             {
@@ -74,10 +74,10 @@ public sealed class MultiComboBoxItem : ContentControl
         _parent = this.FindLogicalAncestorOfType<MultiComboBox>();
 
         if (
-            this.IsSelected
-            && _parent?.SelectedItems != null
-            && this.DataContext != null
-            && !_parent.SelectedItems.Contains(this.DataContext)
+            IsSelected
+            && _parent?.SelectedItems is not null
+            && DataContext is not null
+            && !_parent.SelectedItems.Contains(DataContext)
         )
         {
             _parent.SelectedItems.Add(this.DataContext);
@@ -108,7 +108,7 @@ public sealed class MultiComboBoxItem : ContentControl
     internal void UpdateSelection()
     {
         _updateInternal = true;
-        if (_parent != null && DataContext != null)
+        if (_parent is not null && DataContext is not null)
         {
             SetCurrentValue(IsSelectedProperty, _parent.SelectedItems?.Contains(DataContext) ?? false);
         }
