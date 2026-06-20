@@ -15,13 +15,13 @@ public sealed partial class FocusNodeViewModel : ObservableObject, IDisposable
     public FocusNode Node { get; }
 
     [ObservableProperty]
-    public partial Bitmap? Bitmap { get; set; }
+    public partial Bitmap? Bitmap { get; private set; }
 
     [ObservableProperty]
-    public partial double Width { get; set; }
+    public partial double Width { get; private set; }
 
     [ObservableProperty]
-    public partial double Height { get; set; }
+    public partial double Height { get; private set; }
 
     /// <summary>
     /// 是否被选中

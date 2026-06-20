@@ -15,8 +15,7 @@ public sealed partial class RenameFileViewModel : ObservableValidator
     [ValidFileName]
     [ObservableProperty]
     [NotifyDataErrorInfo]
-    private string _newName;
-
+    public partial string NewName { get; private set; }
     public int SelectionEnd { get; }
 
     private readonly FAContentDialog _dialog;

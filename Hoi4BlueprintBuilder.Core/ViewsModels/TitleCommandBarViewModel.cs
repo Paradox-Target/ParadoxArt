@@ -28,10 +28,10 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     public IReadOnlyList<ConditionItem> ConditionItems => GetConditionItems();
 
     [ObservableProperty]
-    public partial bool IsVisibleForTitleCommandBar { get; set; }
+    public partial bool IsVisibleForTitleCommandBar { get; private set; }
 
     [ObservableProperty]
-    public partial bool IsFocusTreeEditorAtCurrent { get; set; }
+    public partial bool IsFocusTreeEditorAtCurrent { get; private set; }
 
     private bool CanSave => _tabViewService.CurrentItem is ISave;
 
