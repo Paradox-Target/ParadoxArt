@@ -1,0 +1,18 @@
+name: "💡Features and suggestions / 功能建议"
+title: "[Feature]: "
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "前置检查 / Checklist"
+      options:
+        - label: "您要提交的建议或要求的功能在先前的issues中不存在？ / Is the feature or suggestion you are submitting non-existent in previous issues?"
+          required: true
+        - label: "您确保要提交的建议或要求的功能是切于实际的？ / Are you sure the feature or suggestion you are submitting is practical?"
+          required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: "问题/建议/功能内容 / Issue/Suggestion/Feature Content"
+    validations:
+      required: true

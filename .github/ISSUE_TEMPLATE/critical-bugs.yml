@@ -1,0 +1,26 @@
+name: "Critical bugs / 严重Bug"
+title: "[Critical Bug]: "
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "前置检查 / Checklist"
+      options:
+        - label: "您要提交的相似问题在issues中是否不存在？ / Is the similar issue you are submitting non-existent in previous issues?"
+          required: true
+        - label: "您认可在issues中提交的文件中可能包含部分隐私，包括但不限于您电脑的账户名称，模组项目名称和文件路径等。 / Do you acknowledge that the files submitted in issues may contain partial privacy, including but not limited to your computer account name, MOD project name, and its file paths?"
+          required: true
+        - label: "您确认这个Bug已经引起严重问题，即包括但不限于：完全无法进行编辑，无法打开软件，导致系统崩溃（蓝屏，内存溢出，严重卡顿等）。 / Do you confirm that this bug has caused critical issues, including but not limited to: complete inability to edit, inability to open the software, or causing system crashes (blue screen, OOM, severe lagging, etc.)?"
+          required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: "问题/建议/功能内容 / Issue/Suggestion/Feature Content"
+    validations:
+      required: true
+  - type: file
+    id: attachment
+    attributes:
+      label: "附件 / Attachment"
+    validations:
+      required: true
