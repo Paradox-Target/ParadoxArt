@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using CommunityToolkit.Mvvm.Messaging;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Helpers;
@@ -15,6 +14,7 @@ using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
@@ -48,6 +48,9 @@ public sealed partial class FocusInfoView : UserControl
         App.Current.Services.GetRequiredService<SettingsService>();
     private readonly TelemetryService _telemetryService =
         App.Current.Services.GetRequiredService<TelemetryService>();
+    private readonly IPublisher<RedrawFocusConnectionLinesMessage> _redrawFocusConnectionLinesMessagePublisher =
+        App.Current.Services.GetRequiredService<IPublisher<RedrawFocusConnectionLinesMessage>>();
+
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     static FocusInfoView()
@@ -142,7 +145,7 @@ public sealed partial class FocusInfoView : UserControl
         Debug.Assert(focusNode is not null);
         focusNode?.RemoveMutuallyExclusive(node);
 
-        StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+        _redrawFocusConnectionLinesMessagePublisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
     }
 
     // 通过前端绑定

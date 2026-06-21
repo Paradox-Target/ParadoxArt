@@ -88,6 +88,7 @@ public sealed class App : Application
             return ProjectConfigService.Load(settings);
         });
         _serviceCollection.AddParadoxArtCore();
+        _serviceCollection.AddMessagePipe();
     }
 
     public override void OnFrameworkInitializationCompleted()

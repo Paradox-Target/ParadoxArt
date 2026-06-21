@@ -2,10 +2,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
+using MessagePipe;
+using Microsoft.Extensions.DependencyInjection;
 using R3;
 using ZLinq;
 
@@ -24,7 +25,7 @@ public sealed partial class FocusNode(string path, FocusType type)
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LocalizedName))]
-    private string _id = string.Empty;
+    public partial string Id { get; set; } = string.Empty;
     public FocusType Type { get; } = type;
 
     /// <summary>
@@ -35,6 +36,8 @@ public sealed partial class FocusNode(string path, FocusType type)
         _localizationFormatService is null ? Id : _localizationFormatService.GetFormatText(Id);
 
     private static LocalizationFormatService? _localizationFormatService;
+    private static readonly IPublisher<RedrawFocusConnectionLinesMessage> Publisher =
+        App.Current.Services.GetRequiredService<IPublisher<RedrawFocusConnectionLinesMessage>>();
 
     public static void SetLocalizationFormatService(LocalizationFormatService service)
     {
@@ -269,7 +272,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     public void RemovePrerequisite(FocusNode focusNode)
     {
         InternalRemovePrerequisite(focusNode, true);
-        StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+        Publisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
     }
 
     public void ClearChildren()
@@ -391,7 +394,7 @@ public sealed partial class FocusNode(string path, FocusType type)
             || Children.IsNotEmpty
         )
         {
-            StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+            Publisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
         }
     }
 

@@ -3,11 +3,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using ZLinq;
 
@@ -73,6 +73,13 @@ public sealed class FocusConnectionLinesControl : Control
         get => GetValue(TranslateYProperty);
         set => SetValue(TranslateYProperty, value);
     }
+
+    private IDisposable? _subscription;
+
+    /// <summary>
+    /// 重绘脏标记, 用于合并高频重绘请求, 每帧最多触发一次 InvalidateVisual
+    /// </summary>
+    private bool _isDirty;
 
     private static readonly ProjectConfigService ProjectConfigService =
         App.Current.Services.GetRequiredService<ProjectConfigService>();
@@ -206,7 +213,7 @@ public sealed class FocusConnectionLinesControl : Control
 
     protected override void OnUnloaded(RoutedEventArgs e)
     {
-        StrongReferenceMessenger.Default.UnregisterAll(this);
+        _subscription?.Dispose();
 
         base.OnUnloaded(e);
     }
@@ -215,18 +222,27 @@ public sealed class FocusConnectionLinesControl : Control
     {
         base.OnLoaded(e);
 
-        StrongReferenceMessenger.Default.Register<RedrawFocusConnectionLinesMessage>(this, Handler);
+        // 再释放一次, 防止资源泄漏
+        _subscription?.Dispose();
+        _subscription = App
+            .Current.Services.GetRequiredService<ISubscriber<RedrawFocusConnectionLinesMessage>>()
+            .Subscribe(Handle);
     }
 
-    private void Handler(object o, RedrawFocusConnectionLinesMessage redrawFocusConnectionLinesMessage)
+    private void Handle(RedrawFocusConnectionLinesMessage _)
     {
-        if (Dispatcher.UIThread.CheckAccess())
+        if (Interlocked.Exchange(ref _isDirty, true))
         {
-            InvalidateVisual();
+            return;
         }
-        else
-        {
-            Dispatcher.UIThread.Post(InvalidateVisual);
-        }
+
+        Dispatcher.UIThread.Post(
+            () =>
+            {
+                _isDirty = false;
+                InvalidateVisual();
+            },
+            DispatcherPriority.Background
+        );
     }
 }

@@ -1,0 +1,24 @@
+{
+    // 使用 IntelliSense 了解相关属性。
+    // 悬停以查看现有属性的描述。
+    // 有关详细信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // 使用 dotnet run 启动 Windows 端 (编译并运行, 不附加调试器)
+            // Trae/VSCodium 不支持 coreclr 调试, 改用 node 类型调用 dotnet
+            "name": "Windows (dotnet run)",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "dotnet",
+            "runtimeArgs": [
+                "run",
+                "--project",
+                "${workspaceFolder}/Hoi4BlueprintBuilder.Windows/Hoi4BlueprintBuilder.Windows.csproj"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "skipFiles": []
+        }
+    ]
+}

@@ -14,6 +14,7 @@ using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using MessagePipe;
 using MethodTimer;
 using NLog;
 using ParadoxPower.CSharpExtensions;
@@ -59,6 +60,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     private readonly SettingsService _settingsService;
     private readonly NotificationService _notificationService;
     private readonly FocusTreeFileService _focusTreeFileService;
+    private readonly IPublisher<RedrawFocusConnectionLinesMessage> _redrawFocusConnectionLinesMessagePublisher;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -67,13 +69,15 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         SettingsService settingsService,
         NotificationService notificationService,
         StatusBarService statusBarService,
-        FocusTreeFileService focusTreeFileService
+        FocusTreeFileService focusTreeFileService,
+        IPublisher<RedrawFocusConnectionLinesMessage> redrawFocusConnectionLinesMessagePublisher
     )
     {
         _pathService = pathService;
         _settingsService = settingsService;
         _notificationService = notificationService;
         _focusTreeFileService = focusTreeFileService;
+        _redrawFocusConnectionLinesMessagePublisher = redrawFocusConnectionLinesMessagePublisher;
 
         _nodes.CollectionChanged += (_, _) => statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
@@ -179,7 +183,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             // 设置哪些 focus 节点显示完成 checkbox
             SetupFocusCompletedCheckboxVisibility(conditionItems);
 
-            StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+            _redrawFocusConnectionLinesMessagePublisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
 
             Log.Info("已加载国策树文件: {FilePath}", filePath);
             Log.Info(
@@ -437,7 +441,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 
         if (changed)
         {
-            StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+            _redrawFocusConnectionLinesMessagePublisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
         }
     }
 
@@ -471,7 +475,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             return;
         }
 
-        StrongReferenceMessenger.Default.Send(RedrawFocusConnectionLinesMessage.Instance);
+        _redrawFocusConnectionLinesMessagePublisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
     }
 
     public void Close()
