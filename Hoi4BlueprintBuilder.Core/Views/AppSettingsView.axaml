@@ -206,6 +206,7 @@
                     <HyperlinkButton Content="ByteSize" NavigateUri="https://github.com/omar/ByteSize" />
                     <HyperlinkButton Content="UTF.Unknown" NavigateUri="https://github.com/CharsetDetector/UTF-unknown" />
                     <HyperlinkButton Content="R3" NavigateUri="https://github.com/Cysharp/R3" />
+                    <HyperlinkButton Content="MessagePipe" NavigateUri="https://github.com/Cysharp/MessagePipe" />
                     <HyperlinkButton Content="DynamicData" NavigateUri="https://github.com/reactiveui/DynamicData" />
                     <HyperlinkButton Content="Vanara" NavigateUri="https://github.com/dahall/vanara" />
                     <HyperlinkButton Content="Velopack" NavigateUri="https://github.com/velopack/velopack" />
