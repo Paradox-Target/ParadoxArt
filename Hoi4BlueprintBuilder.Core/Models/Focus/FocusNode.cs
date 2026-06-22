@@ -3,10 +3,7 @@ using System.Diagnostics;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Hoi4BlueprintBuilder.Core.Extensions;
-using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
-using MessagePipe;
-using Microsoft.Extensions.DependencyInjection;
 using R3;
 using ZLinq;
 
@@ -36,8 +33,6 @@ public sealed partial class FocusNode(string path, FocusType type)
         _localizationFormatService is null ? Id : _localizationFormatService.GetFormatText(Id);
 
     private static LocalizationFormatService? _localizationFormatService;
-    private static readonly IPublisher<RedrawFocusConnectionLinesMessage> Publisher =
-        App.Current.Services.GetRequiredService<IPublisher<RedrawFocusConnectionLinesMessage>>();
 
     public static void SetLocalizationFormatService(LocalizationFormatService service)
     {
@@ -46,6 +41,11 @@ public sealed partial class FocusNode(string path, FocusType type)
         // 仅设置一次
         _localizationFormatService ??= service;
     }
+
+    /// <summary>
+    /// 当前节点的连接关系发生变化，需要重绘连线时触发。
+    /// </summary>
+    public event EventHandler? ConnectionLinesNeedRedraw;
 
     public IReadOnlyList<FocusNode> MutuallyExclusive => _mutuallyExclusive;
     private readonly AvaloniaList<FocusNode> _mutuallyExclusive = [];
@@ -272,7 +272,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     public void RemovePrerequisite(FocusNode focusNode)
     {
         InternalRemovePrerequisite(focusNode, true);
-        Publisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
+        OnConnectionLinesNeedRedraw();
     }
 
     public void ClearChildren()
@@ -394,8 +394,13 @@ public sealed partial class FocusNode(string path, FocusType type)
             || Children.IsNotEmpty
         )
         {
-            Publisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
+            OnConnectionLinesNeedRedraw();
         }
+    }
+
+    private void OnConnectionLinesNeedRedraw()
+    {
+        ConnectionLinesNeedRedraw?.Invoke(this, EventArgs.Empty);
     }
 
     public void RefreshIcon()

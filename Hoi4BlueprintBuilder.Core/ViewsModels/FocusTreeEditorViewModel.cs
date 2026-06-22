@@ -82,6 +82,21 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _nodes.CollectionChanged += (_, _) => statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
 
+    private void SubscribeNodeEvents(FocusNode node)
+    {
+        node.ConnectionLinesNeedRedraw += OnNodeConnectionLinesNeedRedraw;
+    }
+
+    private void UnsubscribeNodeEvents(FocusNode node)
+    {
+        node.ConnectionLinesNeedRedraw -= OnNodeConnectionLinesNeedRedraw;
+    }
+
+    private void OnNodeConnectionLinesNeedRedraw(object? sender, EventArgs e)
+    {
+        _redrawFocusConnectionLinesMessagePublisher.Publish(RedrawFocusConnectionLinesMessage.Instance);
+    }
+
     public void OnLoaded()
     {
         StrongReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
@@ -117,6 +132,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
                     RawPosition = message.Position,
                     Id = message.FocusId
                 };
+                SubscribeNodeEvents(focus);
                 Dispatcher.UIThread.Post(() =>
                 {
                     _nodes.Add(new FocusNodeViewModel(focus));
@@ -157,6 +173,10 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             var (focusNodes, filePaths, conditionItems) = result.Value;
             _editorNodesMap = focusNodes;
             _focusTreeFiles.AddRange(filePaths);
+            foreach (var focusNode in _editorNodesMap.Values)
+            {
+                SubscribeNodeEvents(focusNode);
+            }
             _nodes.AddRange(
                 _editorNodesMap.Values.Select(static focusNode => new FocusNodeViewModel(focusNode))
             );
@@ -264,6 +284,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     {
         foreach (var node in _nodes)
         {
+            UnsubscribeNodeEvents(node.Node);
             node.Dispose();
         }
         _nodes.Clear();
@@ -452,6 +473,8 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             Log.Warn("删除Focus失败, 未在映射表中找到对应的 FocusNode: {FocusId}", deletedFocusNode.Id);
             return;
         }
+
+        UnsubscribeNodeEvents(deletedFocusNode);
 
         FocusNodeViewModel? viewModel = null;
         int index = 0;
