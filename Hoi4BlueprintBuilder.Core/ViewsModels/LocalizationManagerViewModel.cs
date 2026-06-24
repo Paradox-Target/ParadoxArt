@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using DynamicData;
 using DynamicData.Aggregation;
 using Hoi4BlueprintBuilder.Core.Messages;
@@ -11,6 +10,7 @@ using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
 using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using MessagePipe;
 using NLog;
 using R3;
 using ZLinq;
@@ -35,17 +35,20 @@ public sealed partial class LocalizationManagerViewModel : ObservableObject, ICl
     private readonly IDisposable _disposable;
     private readonly LocalizationService _localizationService;
     private readonly NotificationService _notificationService;
+    private readonly IPublisher<SaveLocalizationMessage> _saveLocalizationPublisher;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     public LocalizationManagerViewModel(
         LocalizationService localizationService,
         ProjectConfigService projectConfigService,
-        NotificationService notificationService
+        NotificationService notificationService,
+        IPublisher<SaveLocalizationMessage> saveLocalizationPublisher
     )
     {
         _localizationService = localizationService;
         _notificationService = notificationService;
+        _saveLocalizationPublisher = saveLocalizationPublisher;
         SupportedLanguages = projectConfigService.SupportedLanguages;
 
         LoadData();
@@ -120,7 +123,7 @@ public sealed partial class LocalizationManagerViewModel : ObservableObject, ICl
             }
         }
 
-        StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
+        _saveLocalizationPublisher.Publish(new SaveLocalizationMessage());
         _notificationService.Show(LangResources.SavedSuccessfully);
     }
 

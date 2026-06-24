@@ -5,7 +5,6 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
@@ -16,6 +15,7 @@ using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ZLinq;
@@ -38,8 +38,12 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
     private readonly FileService _fileService;
     private readonly SettingsService _settingsService;
     private readonly ProjectConfigService _projectConfigService;
+    private readonly ISubscriber<SaveFocusTreeToPngMessage> _saveFocusTreeToPngSubscriber;
+    private readonly IAsyncRequestHandler<CreateNewFocusMessage, FocusNode> _createNewFocusHandler;
     private CanvasInteractionManager? _interactionManager;
     private readonly Dictionary<StandardCursorType, Cursor> _cursorCache = new();
+
+    private IDisposable? _saveFocusTreeToPngSubscription;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -69,7 +73,9 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         FileService fileService,
         UserStatusService userStatusService,
         SettingsService settingsService,
-        ProjectConfigService projectConfigService
+        ProjectConfigService projectConfigService,
+        ISubscriber<SaveFocusTreeToPngMessage> saveFocusTreeToPngSubscriber,
+        IAsyncRequestHandler<CreateNewFocusMessage, FocusNode> createNewFocusHandler
     )
     {
         InitializeComponent();
@@ -91,6 +97,8 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         _fileService = fileService;
         _settingsService = settingsService;
         _projectConfigService = projectConfigService;
+        _saveFocusTreeToPngSubscriber = saveFocusTreeToPngSubscriber;
+        _createNewFocusHandler = createNewFocusHandler;
         DataContext = ViewModel;
         if (userStatusService.CurrentSelectedFile is null)
         {
@@ -104,13 +112,14 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
 
     private void OnUnloaded(object? sender, RoutedEventArgs e)
     {
-        StrongReferenceMessenger.Default.UnregisterAll(this);
+        _saveFocusTreeToPngSubscription?.Dispose();
         ViewModel.OnUnLoaded();
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        StrongReferenceMessenger.Default.Register<SaveFocusTreeToPngMessage>(this, SaveToPng);
+        _saveFocusTreeToPngSubscription?.Dispose();
+        _saveFocusTreeToPngSubscription = _saveFocusTreeToPngSubscriber.Subscribe(SaveToPng);
         ViewModel.OnLoaded();
         if (!_isFirstLoaded)
         {
@@ -167,7 +176,20 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         FocusInfoViewControl.Initialize(this);
     }
 
-    private async void SaveToPng(object o, SaveFocusTreeToPngMessage saveFocusTreeToPngMessage)
+    private void SaveToPng(SaveFocusTreeToPngMessage message)
+    {
+        SaveToPngAsync()
+            .SafeFireAndForget(exception =>
+            {
+                Log.Error(exception, "导出国策树图片失败");
+                _messageBox.ShowErrorAsync(
+                    LangResources.Common_ExportImageFailed,
+                    LangResources.Common_Error
+                );
+            });
+    }
+
+    private async Task SaveToPngAsync()
     {
         var nodes = ViewModel.Nodes;
         if (nodes.Count == 0)
@@ -200,20 +222,9 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         }
 
         var notificationService = App.Current.Services.GetRequiredService<NotificationService>();
-        try
-        {
-            await _screenshotService.SaveFocusTreeScreenshotAsync(nodes, file);
-            Log.Info("已导出图片: {FileName}", file.Path.LocalPath);
-            notificationService.Show(LangResources.ExportImageSuccessfully);
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "导出国策树图片失败");
-            await _messageBox.ShowErrorAsync(
-                LangResources.Common_ExportImageFailed,
-                LangResources.Common_Error
-            );
-        }
+        await _screenshotService.SaveFocusTreeScreenshotAsync(nodes, file);
+        Log.Info("已导出图片: {FileName}", file.Path.LocalPath);
+        notificationService.Show(LangResources.ExportImageSuccessfully);
     }
 
     #region 鼠标事件处理
@@ -390,7 +401,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         if (result == FAContentDialogResult.Primary)
         {
             var position = _interactionManager?.GetRightClickGridPosition() ?? (0, 0);
-            var newFocusNode = await StrongReferenceMessenger.Default.Send(
+            var newFocusNode = await _createNewFocusHandler.InvokeAsync(
                 new CreateNewFocusMessage(
                     new FocusPoint(position.X, position.Y),
                     viewModel.FocusId,

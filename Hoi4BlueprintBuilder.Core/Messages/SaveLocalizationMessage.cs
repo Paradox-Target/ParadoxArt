@@ -1,6 +1,6 @@
-﻿namespace Hoi4BlueprintBuilder.Core.Messages;
+namespace Hoi4BlueprintBuilder.Core.Messages;
 
 /// <summary>
-/// StrongReferenceMessenger
+/// 触发本地化保存
 /// </summary>
 public sealed record SaveLocalizationMessage;

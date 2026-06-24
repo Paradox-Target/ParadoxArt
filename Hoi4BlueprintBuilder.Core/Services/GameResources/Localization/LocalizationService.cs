@@ -2,13 +2,13 @@ using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Localization;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
+using MessagePipe;
 using MethodTimer;
 using ParadoxPower.CSharp;
 using ParadoxPower.Localisation;
@@ -22,10 +22,12 @@ public sealed class LocalizationService
         LocalizationService,
         (GameLanguage Language, FrozenDictionary<string, string> Items),
         YAMLLocalisationParser.LocFile
-    >
+    >,
+        IDisposable
 {
     private readonly SettingsService _settingsService;
     private readonly GameResourcesPathService _gameResourcesPathService;
+    private readonly IDisposable _saveLocalizationSubscription;
 
     private ICollection<(GameLanguage Language, FrozenDictionary<string, string> Items)> Localisations =>
         Resources.Values;
@@ -46,7 +48,8 @@ public sealed class LocalizationService
         SettingsService settingsService,
         GameResourcesPathService gameResourcesPathService,
         ProjectConfigService configService,
-        IServiceProvider serviceProvider
+        IServiceProvider serviceProvider,
+        ISubscriber<SaveLocalizationMessage> saveLocalizationSubscriber
     )
         : base(
             configService
@@ -62,10 +65,15 @@ public sealed class LocalizationService
     {
         _settingsService = settingsService;
         _gameResourcesPathService = gameResourcesPathService;
-        StrongReferenceMessenger.Default.Register<SaveLocalizationMessage>(this, SaveLocalizationHandler);
+        _saveLocalizationSubscription = saveLocalizationSubscriber.Subscribe(SaveLocalizationHandler);
     }
 
-    private void SaveLocalizationHandler(object o, SaveLocalizationMessage saveLocalizationMessage)
+    public void Dispose()
+    {
+        _saveLocalizationSubscription.Dispose();
+    }
+
+    private void SaveLocalizationHandler(SaveLocalizationMessage _)
     {
         foreach (((string path, var gameLanguage), var userLocalisation) in _filesLocalisations)
         {

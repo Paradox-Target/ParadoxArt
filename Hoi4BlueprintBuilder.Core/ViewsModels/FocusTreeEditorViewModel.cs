@@ -5,7 +5,6 @@ using Avalonia.Collections;
 using Avalonia.Controls.Notifications;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Messages;
@@ -61,6 +60,12 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     private readonly NotificationService _notificationService;
     private readonly FocusTreeFileService _focusTreeFileService;
     private readonly IPublisher<RedrawFocusConnectionLinesMessage> _redrawFocusConnectionLinesMessagePublisher;
+    private readonly IPublisher<SaveLocalizationMessage> _saveLocalizationPublisher;
+    private readonly ISubscriber<DeleteImageResourceMessage> _deleteImageResourceSubscriber;
+    private readonly ISubscriber<FocusCompletedChangedMessage> _focusCompletedChangedSubscriber;
+
+    private IDisposable? _deleteImageResourceSubscription;
+    private IDisposable? _focusCompletedChangedSubscription;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -70,7 +75,10 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         NotificationService notificationService,
         StatusBarService statusBarService,
         FocusTreeFileService focusTreeFileService,
-        IPublisher<RedrawFocusConnectionLinesMessage> redrawFocusConnectionLinesMessagePublisher
+        IPublisher<RedrawFocusConnectionLinesMessage> redrawFocusConnectionLinesMessagePublisher,
+        IPublisher<SaveLocalizationMessage> saveLocalizationPublisher,
+        ISubscriber<DeleteImageResourceMessage> deleteImageResourceSubscriber,
+        ISubscriber<FocusCompletedChangedMessage> focusCompletedChangedSubscriber
     )
     {
         _pathService = pathService;
@@ -78,6 +86,9 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         _notificationService = notificationService;
         _focusTreeFileService = focusTreeFileService;
         _redrawFocusConnectionLinesMessagePublisher = redrawFocusConnectionLinesMessagePublisher;
+        _saveLocalizationPublisher = saveLocalizationPublisher;
+        _deleteImageResourceSubscriber = deleteImageResourceSubscriber;
+        _focusCompletedChangedSubscriber = focusCompletedChangedSubscriber;
 
         _nodes.CollectionChanged += (_, _) => statusBarService.SetCurrentFocusCount(_nodes.Count);
     }
@@ -99,20 +110,26 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 
     public void OnLoaded()
     {
-        StrongReferenceMessenger.Default.Register<CreateNewFocusMessage>(this, CreateNewFocus);
-        StrongReferenceMessenger.Default.Register<DeleteImageResourceMessage>(this, DeleteImageResource);
-        StrongReferenceMessenger.Default.Register<FocusCompletedChangedMessage>(
-            this,
-            (_, message) => ToggleFocusCompleted(message.FocusId)
+        _deleteImageResourceSubscription = _deleteImageResourceSubscriber.Subscribe(DeleteImageResource);
+        _focusCompletedChangedSubscription = _focusCompletedChangedSubscriber.Subscribe(message =>
+            ToggleFocusCompleted(message.FocusId)
         );
     }
 
     public void OnUnLoaded()
     {
-        StrongReferenceMessenger.Default.UnregisterAll(this);
+        DisposeMessagePipeSubscriptions();
     }
 
-    private void DeleteImageResource(object sender, DeleteImageResourceMessage message)
+    private void DisposeMessagePipeSubscriptions()
+    {
+        _deleteImageResourceSubscription?.Dispose();
+        _deleteImageResourceSubscription = null;
+        _focusCompletedChangedSubscription?.Dispose();
+        _focusCompletedChangedSubscription = null;
+    }
+
+    private void DeleteImageResource(DeleteImageResourceMessage message)
     {
         foreach (
             var focus in _nodes.AsValueEnumerable().Where(focus => focus.Node.Icon == message.SpriteName)
@@ -122,25 +139,20 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         }
     }
 
-    private void CreateNewFocus(object sender, CreateNewFocusMessage message)
+    public Task<FocusNode> CreateNewFocusAsync(CreateNewFocusMessage message)
     {
-        message.Reply(
-            Task.Run(() =>
+        return Task.Run(() =>
+        {
+            var focus = new FocusNode(message.FocusFilePath, message.FocusType)
             {
-                var focus = new FocusNode(message.FocusFilePath, message.FocusType)
-                {
-                    RawPosition = message.Position,
-                    Id = message.FocusId
-                };
-                SubscribeNodeEvents(focus);
-                Dispatcher.UIThread.Post(() =>
-                {
-                    _nodes.Add(new FocusNodeViewModel(focus));
-                });
-                _editorNodesMap[focus.Id] = focus;
-                return focus;
-            })
-        );
+                RawPosition = message.Position,
+                Id = message.FocusId
+            };
+            SubscribeNodeEvents(focus);
+            Dispatcher.UIThread.Post(() => _nodes.Add(new FocusNodeViewModel(focus)));
+            _editorNodesMap[focus.Id] = focus;
+            return focus;
+        });
     }
 
     public async Task LoadFocusTreeFileAsync(string filePath)
@@ -310,7 +322,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         }
 
         // 通知本地化服务保存本地化文本
-        StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
+        _saveLocalizationPublisher.Publish(new SaveLocalizationMessage());
 
         // 将编辑器中的 FocusNode 按照文件路径分组
         var maps = _editorNodesMap
@@ -503,7 +515,7 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
 
     public void Close()
     {
-        StrongReferenceMessenger.Default.UnregisterAll(this);
+        DisposeMessagePipeSubscriptions();
         ClearResources();
     }
 

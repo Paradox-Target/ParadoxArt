@@ -7,7 +7,7 @@
 - **.NET 10 / C# 13**: Use strictly modern C# features (e.g. file-scoped namespaces).
 - **MVVM Architecture**: Use CommunityToolkit.Mvvm, \[ObservableProperty], and \[RelayCommand] extensively to avoid boilerplate.
 - **Dependency Injection**: Use Injectio attributes (\[RegisterSingleton<T>], \[RegisterTransient<T>]) for auto-registration instead of manual service configuration. Fetch via App.Current.Services.GetRequiredService<T>() only when necessary (prefer constructor injection).
-- **Messaging**: Use StrongReferenceMessenger for guaranteed delivery (like SaveFocusTreeMessage) and WeakReferenceMessenger for decoupled broad events.
+- **Messaging**: Use MessagePipe (IPublisher<T>/ISubscriber<T> for pub/sub, IAsyncRequestHandler<TRequest,TResponse> for request/response) for in-process messaging. Always dispose subscriptions to avoid leaks.
 - **Localization**: Application text is in Hoi4BlueprintBuilder.Localization (LangResources.resx). Game keys/constants are in Keywords.cs.
 - **Performance Profiling**: Use \[Time("description")] (MethodTimer.Fody) for automatic execution time tracking of critical methods (e.g. GetAllNodesFromAst).
 

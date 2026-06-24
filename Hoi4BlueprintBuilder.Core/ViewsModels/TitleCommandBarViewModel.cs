@@ -1,7 +1,6 @@
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Messages;
@@ -12,6 +11,7 @@ using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using ParadoxPower.CSharpExtensions;
@@ -54,6 +54,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     private readonly UserStatusService _userStatusService;
     private readonly TelemetryService _telemetryService;
     private readonly FileResourceService _fileResourceService;
+    private readonly IPublisher<SaveFocusTreeToPngMessage> _saveFocusTreeToPngPublisher;
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -64,7 +65,8 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         UserStatusService userStatusService,
         NavigationService navigationService,
         TelemetryService telemetryService,
-        FileResourceService fileResourceService
+        FileResourceService fileResourceService,
+        IPublisher<SaveFocusTreeToPngMessage> saveFocusTreeToPngPublisher
     )
     {
         _settingsService = settingsService;
@@ -73,6 +75,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         _userStatusService = userStatusService;
         _telemetryService = telemetryService;
         _fileResourceService = fileResourceService;
+        _saveFocusTreeToPngPublisher = saveFocusTreeToPngPublisher;
 
         _tabViewService.CurrentItemChanged += currentItem =>
         {
@@ -105,7 +108,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     [RelayCommand]
     private void ExportFocusTreeScreenshot()
     {
-        StrongReferenceMessenger.Default.Send(new SaveFocusTreeToPngMessage());
+        _saveFocusTreeToPngPublisher.Publish(new SaveFocusTreeToPngMessage());
         _telemetryService.TrackEvent("ExportFocusTreeScreenshot");
     }
 

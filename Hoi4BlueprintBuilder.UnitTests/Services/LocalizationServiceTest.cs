@@ -1,9 +1,9 @@
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hoi4BlueprintBuilder.UnitTests.Services;
@@ -55,6 +55,7 @@ public class LocalizationServiceTests
         services.AddSingleton(descriptorService);
         services.AddSingleton<GameResourcesWatcherService>();
         services.AddSingleton<GameResourcesPathService>();
+        services.AddMessagePipe();
         services.AddSingleton<LocalizationService>();
         services.AddSingleton(new ProjectConfigService { SupportedLanguages = [GameLanguage.Chinese] });
         _serviceProvider = services.BuildServiceProvider();
@@ -65,10 +66,8 @@ public class LocalizationServiceTests
     public void TearDown()
     {
         // 清理资源
+        _localizationService.Dispose();
         _serviceProvider?.Dispose();
-
-        // 清理消息订阅
-        StrongReferenceMessenger.Default.UnregisterAll(_localizationService);
 
         // 清理临时文件
         if (Directory.Exists(_testRunDirectory))
@@ -130,7 +129,7 @@ public class LocalizationServiceTests
         _localizationService.AddOrUpdateLocalisation(focusFilePath, GameLanguage.Chinese, key, value);
 
         // 发送保存消息触发写入
-        StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
+        _serviceProvider.GetRequiredService<IPublisher<SaveLocalizationMessage>>().Publish(new SaveLocalizationMessage());
 
         // Assert
         // 预期路径: <ModRoot>/localisation/simp_chinese/new_focus_tree.yml
@@ -185,7 +184,7 @@ public class LocalizationServiceTests
             "new_value"
         );
 
-        StrongReferenceMessenger.Default.Send(new SaveLocalizationMessage());
+        _serviceProvider.GetRequiredService<IPublisher<SaveLocalizationMessage>>().Publish(new SaveLocalizationMessage());
 
         // Assert
         var content = File.ReadAllText(existingLocPath);

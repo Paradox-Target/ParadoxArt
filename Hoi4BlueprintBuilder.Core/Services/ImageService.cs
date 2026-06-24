@@ -2,12 +2,12 @@ using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using CommunityToolkit.Mvvm.Messaging;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Infrastructure;
 using Hoi4BlueprintBuilder.Core.Messages;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
+using MessagePipe;
 using Microsoft.Extensions.Caching.Memory;
 using NLog;
 using Pfim;
@@ -20,13 +20,19 @@ public sealed class ImageService : IDisposable
     private readonly MemoryCache _ddsCache = new(new MemoryCacheOptions());
     private readonly SpriteService _spriteService;
     private readonly FileSystemSafeWatcher _fileSystemWatcher;
+    private readonly IPublisher<DeleteImageResourceMessage> _deleteImageResourcePublisher;
 
     private const string Unknown = "GFX_goal_unknown";
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    public ImageService(SpriteService spriteService, SettingsService settingsService)
+    public ImageService(
+        SpriteService spriteService,
+        SettingsService settingsService,
+        IPublisher<DeleteImageResourceMessage> deleteImageResourcePublisher
+    )
     {
         _spriteService = spriteService;
+        _deleteImageResourcePublisher = deleteImageResourcePublisher;
         string path = Path.Combine(settingsService.ModRootFolderPath, "gfx");
         if (!Directory.Exists(path))
         {
@@ -46,7 +52,7 @@ public sealed class ImageService : IDisposable
             return;
         }
 
-        StrongReferenceMessenger.Default.Send(new DeleteImageResourceMessage(meta!.SpriteName));
+        _deleteImageResourcePublisher.Publish(new DeleteImageResourceMessage(meta!.SpriteName));
         _ddsCache.Remove(e.FullPath);
     }
 

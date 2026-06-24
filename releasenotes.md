@@ -4,17 +4,22 @@
 
 ---
 
-# 0.21.0
+### **If you find this tool helpful, please consider supporting us on Patreon. It truly means a lot to us!**
+
+[Patreon](https://www.patreon.com/MangoGong)
+
+---
+
+# 0.21.1
 
 ## Chinese
 
 **本软件现在在 [GitHub](https://github.com/Paradox-Target/ParadoxArt) 开放源代码.**
 
-- feat: 软件内添加官网地址
-
+- fix: 修复了资源泄漏问题
 
 ## English
 
 **This software is now open-sourced on [GitHub](https://github.com/Paradox-Target/ParadoxArt).**
 
-- feat: Add official website link in the app
+- fix: Fixed resource leak issues
