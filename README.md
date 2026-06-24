@@ -1,6 +1,6 @@
-﻿# 《钢铁雄心IV》：蓝图编辑器
+﻿# Paradox Art
 
-蓝图编辑器旨在为《钢铁雄心IV》玩家社区提供一款功能强大的桌面应用程序，其最终目标是一种高级的可视化脚本系统，参考行业内游戏引擎的成熟方案，将游戏内的复杂逻辑抽象为可拖拽、连接的节点，MOD开发者能够以更直观、模块化的方式构建和管理游戏内容。
+Paradox Art旨在为《钢铁雄心IV》玩家社区提供一款功能强大的桌面应用程序，其最终目标是一种高级的可视化脚本系统，参考行业内游戏引擎的成熟方案，将游戏内的复杂逻辑抽象为可拖拽、连接的节点，MOD开发者能够以更直观、模块化的方式构建和管理游戏内容。
 
 [English](README_EN.md) \ [中文](README.md)
 
@@ -8,7 +8,7 @@
 
 ### 目录
 
-- [《钢铁雄心IV》：蓝图编辑器](#钢铁雄心iv蓝图编辑器)
+- [Paradox Art](#Paradox-Art)
     - [目录](#目录)
     - [功能特性](#功能特性)
     - [项目愿景](#项目愿景)
@@ -47,7 +47,16 @@
 
 ### 快速上手
 
+下载最新的版本
 
+#### Windows
+
+- [安装版](https://packages.paradoxtarget.top/ParadoxArt-win-x64-stable-Setup.exe)
+- [便携版](https://packages.paradoxtarget.top/ParadoxArt-win-x64-stable-Portable.zip)
+
+#### Linux
+
+- [AppImage](https://packages.paradoxtarget.top/ParadoxArt-linux-x64-stable.AppImage)
 
 ---
 

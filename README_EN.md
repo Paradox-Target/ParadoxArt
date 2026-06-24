@@ -1,6 +1,6 @@
-﻿# Hearts of Iron IV: Blueprint Editor
+﻿# Paradox Art
 
-The Blueprint Editor is designed to provide a powerful desktop application for the Iron Hearts IV player community, with the ultimate goal of a high-level visual scripting system that references proven solutions for game engines in the industry, abstracting complex in-game logic into draggable, connectable nodes that MOD developers can use to build and manage in-game content in a more intuitive, modular way.
+Paradox Art is designed to provide a powerful desktop application for the Iron Hearts IV player community, with the ultimate goal of a high-level visual scripting system that references proven solutions for game engines in the industry, abstracting complex in-game logic into draggable, connectable nodes that MOD developers can use to build and manage in-game content in a more intuitive, modular way.
 
 [English](README_EN.md) \ [中文](README.md)
 
@@ -8,7 +8,7 @@ The Blueprint Editor is designed to provide a powerful desktop application for t
 
 ### Table of Contents
 
-- [Hearts of Iron IV: Blueprint Editor](#hearts-of-iron-iv-blueprint-editor)
+- [Paradox Art](#Paradox-Art)
     - [Table of Contents](#table-of-contents)
     - [Features](#features)
     - [Project Vision](#project-vision)
@@ -47,6 +47,16 @@ This project began with a simple goal: to eliminate the tedious and error-prone 
 
 ### Getting Started
 
+Download the latest version
+
+#### Windows
+
+- [Setup](https://packages.paradoxtarget.top/ParadoxArt-win-x64-stable-Setup.exe)
+- [Portable](https://packages.paradoxtarget.top/ParadoxArt-win-x64-stable-Portable.zip)
+
+#### Linux
+
+- [AppImage](https://packages.paradoxtarget.top/ParadoxArt-linux-x64-stable.AppImage)
 
 
 ---
