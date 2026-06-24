@@ -10,6 +10,8 @@
     <File Path="full-build.ps1" />
     <File Path="global.json" />
     <File Path="publish.ps1" />
+    <File Path="README.md" />
+    <File Path="README_EN.md" />
     <File Path="releasenotes.md" />
   </Folder>
   <Project Path="Hoi4BlueprintBuilder.Linux/Hoi4BlueprintBuilder.Linux.csproj" />

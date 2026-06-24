@@ -40,7 +40,8 @@ This project began with a simple goal: to eliminate the tedious and error-prone 
 
 ### Screenshots
 
-
+![ui1](./Pictures/ui1.png)
+![ui2](./Pictures/ui2.png)
 
 ---
 

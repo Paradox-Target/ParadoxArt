@@ -40,7 +40,8 @@
 
 ### 软件截图
 
-
+![ui1](./Pictures/ui1.png)
+![ui2](./Pictures/ui2.png)
 
 ---
 
