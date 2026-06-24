@@ -164,7 +164,7 @@
                         <HyperlinkButton Content="{x:Static lang:LangResources.AppSettings_OfficialWebsite}" NavigateUri="https://www.paradoxtarget.top/" />
                         <HyperlinkButton Content="{x:Static lang:LangResources.SourceRepository}" NavigateUri="https://github.com/Paradox-Target/ParadoxArt" />
                         <HyperlinkButton Command="{Binding OpenEulaCommand}" Content="{x:Static lang:LangResources.Settings_EULA}" />
-                        <HyperlinkButton Content="{x:Static lang:LangResources.Settings_ReportIssue}" NavigateUri="https://github.com/Paradox-Target/IssueReport/issues/new" />
+                        <HyperlinkButton Content="{x:Static lang:LangResources.Settings_ReportIssue}" NavigateUri="https://github.com/Paradox-Target/ParadoxArt/issues/new" />
                         <HyperlinkButton Content="{x:Static lang:LangResources.Settings_Afdian}" NavigateUri="https://ifdian.net/a/textGamex" />
                         <HyperlinkButton
                             Content="{x:Static lang:LangResources.Settings_ContactUs}"
