@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
-using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Messages;
@@ -13,7 +12,6 @@ using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
-using Hoi4BlueprintBuilder.Localization.Strings;
 using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using NLog;
@@ -367,15 +365,15 @@ public sealed partial class FocusInfoView : UserControl
         {
             _telemetryService.TrackEvent("OpenFocusIconPickerView");
             var viewModel = App.Current.Services.GetRequiredService<FocusIconPickerViewModel>();
-            var dia = new FAContentDialog
-            {
-                Content = new FocusIconPickerView { DataContext = viewModel },
-                PrimaryButtonText = LangResources.Common_Ok,
-                SecondaryButtonText = LangResources.Common_Cancel
-            };
-            var result = await dia.ShowAsync();
+            var window = new FocusIconPickerView { DataContext = viewModel };
 
-            if (result != FAContentDialogResult.Primary || string.IsNullOrEmpty(viewModel.SelectedFocusIcon))
+            if (WindowHelper.TryGetWindow(App.Current.ApplicationLifetime) is not { } owner)
+            {
+                return;
+            }
+
+            bool? result = await window.ShowDialog<bool?>(owner);
+            if (result != true || string.IsNullOrEmpty(viewModel.SelectedFocusIcon))
             {
                 return;
             }

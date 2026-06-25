@@ -726,6 +726,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FocusIconPickerView_Title.
+        /// </summary>
+        public static string FocusIconPickerView_Title {
+            get {
+                return ResourceManager.GetString("FocusIconPickerView_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FocusIconSum.
         /// </summary>
         public static string FocusIconSum {

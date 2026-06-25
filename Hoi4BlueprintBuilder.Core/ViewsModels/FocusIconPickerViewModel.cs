@@ -64,6 +64,14 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
         }
     }
 
+    public event Action<bool>? RequestClose;
+
+    [RelayCommand]
+    private void Ok() => RequestClose?.Invoke(true);
+
+    [RelayCommand]
+    private void Cancel() => RequestClose?.Invoke(false);
+
     public void Dispose()
     {
         _focusIconsSource.Dispose();

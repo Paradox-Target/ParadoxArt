@@ -633,4 +633,7 @@
   <data name="SourceRepository" xml:space="preserve">
     <value>SourceRepository</value>
   </data>
+  <data name="FocusIconPickerView_Title" xml:space="preserve">
+    <value>FocusIconPickerView_Title</value>
+  </data>
 </root>
