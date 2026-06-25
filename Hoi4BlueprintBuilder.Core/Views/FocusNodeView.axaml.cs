@@ -9,7 +9,8 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 
 public sealed partial class FocusNodeView : UserControl
 {
-    private static readonly IPublisher<FocusCompletedChangedMessage> FocusCompletedChangedPublisher =
+    // 不使用 static 字段是是因为与热重载冲突
+    private readonly IPublisher<FocusCompletedChangedMessage> _focusCompletedChangedPublisher =
         App.Current.Services.GetRequiredService<IPublisher<FocusCompletedChangedMessage>>();
 
     public FocusNodeView()
@@ -21,7 +22,7 @@ public sealed partial class FocusNodeView : UserControl
     {
         if (DataContext is FocusNodeViewModel vm)
         {
-            FocusCompletedChangedPublisher.Publish(new FocusCompletedChangedMessage(vm.Node.Id));
+            _focusCompletedChangedPublisher.Publish(new FocusCompletedChangedMessage(vm.Node.Id));
         }
     }
 }

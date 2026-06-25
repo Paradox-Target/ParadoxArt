@@ -11,8 +11,6 @@
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
         <SelfContained>true</SelfContained>
         <AssemblyName>ParadoxArt</AssemblyName>
-        <!-- 等适配 Avalonia 12, 如果需要移除, 连同 Avalonia.Markup.Xaml.Loader 一起  -->
-        <HotAvalonia>false</HotAvalonia>
     </PropertyGroup>
 
     <PropertyGroup>
