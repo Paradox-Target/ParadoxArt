@@ -45,7 +45,8 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
         return;
 
         Func<FocusIcon, bool> Filter(string text) =>
-            icon => string.IsNullOrEmpty(text) || icon.Name.Contains(text);
+            icon =>
+                string.IsNullOrEmpty(text) || icon.Name.Contains(text, StringComparison.OrdinalIgnoreCase);
     }
 
     [RelayCommand]
@@ -74,6 +75,7 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
 
     public void Dispose()
     {
+        RequestClose = null;
         _focusIconsSource.Dispose();
         _disposable.Dispose();
         SearchText.Dispose();
