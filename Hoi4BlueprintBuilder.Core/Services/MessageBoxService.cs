@@ -1,5 +1,5 @@
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using Hoi4BlueprintBuilder.Core.Helpers;
 using JetBrains.Annotations;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Enums;
@@ -48,9 +48,9 @@ public sealed class MessageBoxService
         var lifetime = App.Current.ApplicationLifetime;
         Task<ButtonResult> showTask;
 
-        if (lifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: not null } desktop)
+        if (WindowHelper.TryGetWindow(lifetime) is { } window)
         {
-            showTask = box.ShowWindowDialogAsync(desktop.MainWindow);
+            showTask = box.ShowWindowDialogAsync(window);
         }
         else
         {
