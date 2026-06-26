@@ -1,3 +1,4 @@
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using JetBrains.Annotations;
@@ -7,7 +8,7 @@ using MsBox.Avalonia.Enums;
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [RegisterSingleton<MessageBoxService>]
-public sealed class MessageBoxService
+public sealed class MessageBoxService(IApplicationLifetime lifetime)
 {
     [LocalizationRequired]
     public Task ShowErrorAsync(string message, string title = "")
@@ -45,12 +46,11 @@ public sealed class MessageBoxService
             icon: ToMsBoxIcon(icon)
         );
 
-        var lifetime = App.Current.ApplicationLifetime;
         Task<ButtonResult> showTask;
 
-        if (WindowHelper.TryGetWindow(lifetime) is { } window)
+        if (WindowHelper.TryGetWindow(lifetime) is { } owner)
         {
-            showTask = box.ShowWindowDialogAsync(window);
+            showTask = box.ShowWindowDialogAsync(owner);
         }
         else
         {

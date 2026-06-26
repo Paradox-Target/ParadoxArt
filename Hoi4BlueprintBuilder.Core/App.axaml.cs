@@ -89,6 +89,9 @@ public sealed class App : Application
         });
         _serviceCollection.AddParadoxArtCore();
         _serviceCollection.AddMessagePipe();
+        _serviceCollection.AddSingleton(
+            ApplicationLifetime ?? throw new InvalidOperationException("ApplicationLifetime未初始化")
+        );
     }
 
     public override void OnFrameworkInitializationCompleted()
