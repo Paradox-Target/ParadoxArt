@@ -23,15 +23,15 @@ public sealed partial class CreateNewFocusTreeFileViewModel : ObservableValidato
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [CustomValidation(typeof(CreateNewFocusTreeFileViewModel), nameof(CountryTagShouldExist))]
-    public partial string CountryTag { get; private set; } = string.Empty;
+    public partial string CountryTag { get; set; } = string.Empty;
 
     [ObservableProperty]
     [Required]
     [NotifyDataErrorInfo]
-    public partial string Id { get; private set; } = string.Empty;
+    public partial string Id { get; set; } = string.Empty;
 
     [ObservableProperty]
-    public partial bool IsDefaultFocusTree { get; private set; }
+    public partial bool IsDefaultFocusTree { get; set; }
 
     public event Action<bool>? PrimaryEnableChanged;
 

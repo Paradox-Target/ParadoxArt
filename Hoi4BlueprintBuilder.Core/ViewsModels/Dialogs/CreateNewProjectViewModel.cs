@@ -21,7 +21,7 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
     [ObservableProperty]
     [Required]
     [NotifyDataErrorInfo]
-    public partial string ModName { get; private set; } = string.Empty;
+    public partial string ModName { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(FinalFolder))]
@@ -37,7 +37,7 @@ public sealed partial class CreateNewProjectViewModel : ObservableValidator
     [Required]
     [NotifyDataErrorInfo]
     [CustomValidation(typeof(CreateNewProjectViewModel), nameof(IsValidVersion))]
-    public partial string SupportedVersion { get; private set; } = string.Empty;
+    public partial string SupportedVersion { get; set; } = string.Empty;
 
     // 虽然支持语言为 0 也可以, 但加个警告时不时更好？
     public bool ShowTagsErrorMessage => _tags.Count is < 1 or > 10;
