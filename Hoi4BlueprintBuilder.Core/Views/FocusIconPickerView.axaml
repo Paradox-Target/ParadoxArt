@@ -21,29 +21,28 @@
     mc:Ignorable="d">
 
     <Grid Margin="8" RowDefinitions="*,Auto">
-        <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled">
-            <Grid RowDefinitions="Auto,*">
-                <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
-                    <TextBlock
-                        Grid.Column="0"
-                        Margin="8,0"
-                        VerticalAlignment="Center"
-                        Classes="BodyStrongTextBlock"
-                        Text="{Binding Sum}" />
-                    <TextBox
-                        Grid.Column="1"
-                        PlaceholderText="Search..."
-                        Text="{Binding SearchText.Value}">
-                        <TextBox.InnerLeftContent>
-                            <controls:FontIcon
-                                Margin="12,0,8,0"
-                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                Glyph="&#xE721;" />
-                        </TextBox.InnerLeftContent>
-                    </TextBox>
-                </Grid>
-
-                <ItemsRepeater Grid.Row="1" ItemsSource="{Binding FocusIcons}">
+        <Grid Grid.Row="0" RowDefinitions="Auto,*">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="8,0"
+                    VerticalAlignment="Center"
+                    Classes="BodyStrongTextBlock"
+                    Text="{Binding Sum}" />
+                <TextBox
+                    Grid.Column="1"
+                    PlaceholderText="Search..."
+                    Text="{Binding SearchText.Value}">
+                    <TextBox.InnerLeftContent>
+                        <controls:FontIcon
+                            Margin="12,0,8,0"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Glyph="&#xE721;" />
+                    </TextBox.InnerLeftContent>
+                </TextBox>
+            </Grid>
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+                <ItemsRepeater ItemsSource="{Binding FocusIcons}">
                     <ItemsRepeater.Layout>
                         <UniformGridLayout
                             MinColumnSpacing="4"
@@ -65,12 +64,12 @@
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>
-            </Grid>
-        </ScrollViewer>
+            </ScrollViewer>
+        </Grid>
 
         <StackPanel
             Grid.Row="1"
-            Margin="12"
+            Margin="8"
             HorizontalAlignment="Right"
             Orientation="Horizontal"
             Spacing="8">
