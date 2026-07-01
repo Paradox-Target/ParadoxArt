@@ -25,6 +25,7 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
     private readonly ProjectConfigService _projectConfigService;
     private readonly MessageBoxService _messageBoxService;
     private readonly NotificationService _notificationService;
+    private readonly TelemetryService _telemetryService;
     public string SelectedFocusIcon { get; private set; } = string.Empty;
     public ReadOnlyObservableCollection<FocusIcon> FocusIcons => _focusIcons;
     private readonly ReadOnlyObservableCollection<FocusIcon> _focusIcons;
@@ -55,13 +56,15 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
         SpriteService spriteService,
         ProjectConfigService projectConfigService,
         MessageBoxService messageBoxService,
-        NotificationService notificationService
+        NotificationService notificationService,
+        TelemetryService telemetryService
     )
     {
         _spriteService = spriteService;
         _projectConfigService = projectConfigService;
         _messageBoxService = messageBoxService;
         _notificationService = notificationService;
+        _telemetryService = telemetryService;
         FavoritesNames = new ObservableCollection<string>(
             _projectConfigService.IconFavorites.Select(favorites => favorites.Name).Prepend(AllIconsKey)
         );
@@ -119,6 +122,7 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
         _projectConfigService.IconFavorites.Add(new IconFavorites(NewIconFavoritesName, []));
         FavoritesNames.Add(NewIconFavoritesName);
         NewIconFavoritesName = string.Empty;
+        _telemetryService.TrackEvent("Create_New_Icon_Favorites");
     }
 
     [RelayCommand]
@@ -165,6 +169,7 @@ public sealed partial class FocusIconPickerViewModel : ObservableObject, IDispos
 
         _projectConfigService.IconFavorites.Remove(favorites);
         FavoritesNames.Remove(favoritesName);
+        _telemetryService.TrackEvent("Delete_Icon_Favorites");
     }
 
     partial void OnCurrentFavoritesNameChanged(string value)
