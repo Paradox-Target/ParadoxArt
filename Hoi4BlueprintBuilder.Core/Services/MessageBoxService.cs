@@ -78,6 +78,7 @@ public sealed class MessageBoxService(IApplicationLifetime lifetime)
             MessageBoxIcon.Info => Icon.Info,
             MessageBoxIcon.Warning => Icon.Warning,
             MessageBoxIcon.Error => Icon.Error,
+            MessageBoxIcon.Question => Icon.Question,
             _ => Icon.Info
         };
     }
@@ -97,7 +98,8 @@ public enum MessageBoxIcon : byte
 {
     Info,
     Warning,
-    Error
+    Error,
+    Question
 }
 
 public enum MessageBoxResult : byte

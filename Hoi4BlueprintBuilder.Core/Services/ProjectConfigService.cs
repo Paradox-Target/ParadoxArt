@@ -31,6 +31,7 @@ public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigServ
 
     public double FocusCellHeight { get; set; } = FocusMapConstants.CellHeight;
     public double FocusCellWidth { get; set; } = FocusMapConstants.CellWidth;
+    public List<IconFavorites> IconFavorites { get; set; } = [];
 
     [JsonIgnore]
     public double FocusHeight => FocusCellHeight * FocusMapConstants.FocusFactor;

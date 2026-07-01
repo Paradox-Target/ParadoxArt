@@ -638,4 +638,34 @@ Sprite Name: {1}</value>
     <data name="FocusIconPickerView_Title" xml:space="preserve">
         <value>Icon Picker</value>
     </data>
+    <data name="FocusIconFavorites_All" xml:space="preserve">
+        <value>All</value>
+    </data>
+    <data name="FocusIconPicker_NewFavoritesName" xml:space="preserve">
+        <value>Favorites name</value>
+    </data>
+    <data name="FocusIconPicker_CreateNewFavorites" xml:space="preserve">
+        <value>Create new favorites</value>
+    </data>
+    <data name="FocusIconPicker_AddTo" xml:space="preserve">
+        <value>Add to</value>
+    </data>
+    <data name="FocusIconPicker_RemoveIconFromFavorites" xml:space="preserve">
+        <value>Remove from favorites</value>
+    </data>
+    <data name="FocusIconFavorites_DeleteConfirm" xml:space="preserve">
+        <value>Are you sure you want to delete the favorites folder '{0}'?</value>
+    </data>
+    <data name="FocusIconFavorites_NotFound" xml:space="preserve">
+        <value>Not found favorites</value>
+    </data>
+    <data name="FocusIconFavorites_IconAlreadyExists" xml:space="preserve">
+        <value>Icon already exists</value>
+    </data>
+    <data name="FocusIconPicker_AddIconToFavoritesSuccess" xml:space="preserve">
+        <value>Add icon success</value>
+    </data>
+    <data name="FocusIconFavorites_FavoritesAlreadyExists" xml:space="preserve">
+        <value>Favorites already exists</value>
+    </data>
 </root>

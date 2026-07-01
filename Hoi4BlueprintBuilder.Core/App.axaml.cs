@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
@@ -89,9 +90,13 @@ public sealed class App : Application
         });
         _serviceCollection.AddParadoxArtCore();
         _serviceCollection.AddMessagePipe();
-        _serviceCollection.AddSingleton(
-            ApplicationLifetime ?? throw new InvalidOperationException("ApplicationLifetime未初始化")
-        );
+        // 设计模式下 ApplicationLifetime 为 null
+        if (!Design.IsDesignMode)
+        {
+            _serviceCollection.AddSingleton(
+                ApplicationLifetime ?? throw new InvalidOperationException("ApplicationLifetime未初始化")
+            );
+        }
     }
 
     public override void OnFrameworkInitializationCompleted()

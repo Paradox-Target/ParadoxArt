@@ -636,4 +636,37 @@
   <data name="FocusIconPickerView_Title" xml:space="preserve">
     <value>FocusIconPickerView_Title</value>
   </data>
+  <data name="FocusIconFavorites_All" xml:space="preserve">
+    <value>FocusIconFavorites_All</value>
+  </data>
+  <data name="FocusIconPicker_CreateNewFavorites" xml:space="preserve">
+    <value>FocusIconPicker_CreateNewFavorites</value>
+  </data>
+  <data name="FocusIconPicker_NewFavoritesName" xml:space="preserve">
+    <value>FocusIconPicker_NewFavoritesName</value>
+  </data>
+  <data name="FocusIconPicker_RemoveIconFromFavorites" xml:space="preserve">
+    <value>FocusIconPicker_RemoveIconFromFavorites</value>
+  </data>
+  <data name="FocusIconPicker_AddTo" xml:space="preserve">
+    <value>FocusIconPicker_AddTo</value>
+  </data>
+  <data name="FocusIconFavorites_DeleteConfirm" xml:space="preserve">
+    <value>FocusIconFavorites_DeleteConfirm</value>
+  </data>
+  <data name="FocusIconFavorites_NotFound" xml:space="preserve">
+    <value>FocusIconFavorites_NotFound</value>
+  </data>
+  <data name="FocusIconFavorites_IconAlreadyExists" xml:space="preserve">
+    <value>FocusIconFavorites_IconAlreadyExists</value>
+  </data>
+  <data name="FocusIconPicker_AddIconToFavoritesSuccess" xml:space="preserve">
+    <value>FocusIconPicker_AddIconToFavoritesSuccess</value>
+  </data>
+  <data name="FocusIconFavorites_FavoritesAlreadyExists" xml:space="preserve">
+    <value>FocusIconFavorites_FavoritesAlreadyExists</value>
+  </data>
+  <data name="FocusIconFavorites_CanNotDeleteDefaultFavorites" xml:space="preserve">
+    <value>FocusIconFavorites_CanNotDeleteDefaultFavorites</value>
+  </data>
 </root>

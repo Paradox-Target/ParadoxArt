@@ -726,6 +726,105 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FocusIconFavorites_All.
+        /// </summary>
+        public static string FocusIconFavorites_All {
+            get {
+                return ResourceManager.GetString("FocusIconFavorites_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconFavorites_CanNotDeleteDefaultFavorites.
+        /// </summary>
+        public static string FocusIconFavorites_CanNotDeleteDefaultFavorites {
+            get {
+                return ResourceManager.GetString("FocusIconFavorites_CanNotDeleteDefaultFavorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconFavorites_DeleteConfirm.
+        /// </summary>
+        public static string FocusIconFavorites_DeleteConfirm {
+            get {
+                return ResourceManager.GetString("FocusIconFavorites_DeleteConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconFavorites_FavoritesAlreadyExists.
+        /// </summary>
+        public static string FocusIconFavorites_FavoritesAlreadyExists {
+            get {
+                return ResourceManager.GetString("FocusIconFavorites_FavoritesAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconFavorites_IconAlreadyExists.
+        /// </summary>
+        public static string FocusIconFavorites_IconAlreadyExists {
+            get {
+                return ResourceManager.GetString("FocusIconFavorites_IconAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconFavorites_NotFound.
+        /// </summary>
+        public static string FocusIconFavorites_NotFound {
+            get {
+                return ResourceManager.GetString("FocusIconFavorites_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconPicker_AddIconToFavoritesSuccess.
+        /// </summary>
+        public static string FocusIconPicker_AddIconToFavoritesSuccess {
+            get {
+                return ResourceManager.GetString("FocusIconPicker_AddIconToFavoritesSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconPicker_AddTo.
+        /// </summary>
+        public static string FocusIconPicker_AddTo {
+            get {
+                return ResourceManager.GetString("FocusIconPicker_AddTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconPicker_CreateNewFavorites.
+        /// </summary>
+        public static string FocusIconPicker_CreateNewFavorites {
+            get {
+                return ResourceManager.GetString("FocusIconPicker_CreateNewFavorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconPicker_NewFavoritesName.
+        /// </summary>
+        public static string FocusIconPicker_NewFavoritesName {
+            get {
+                return ResourceManager.GetString("FocusIconPicker_NewFavoritesName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FocusIconPicker_RemoveIconFromFavorites.
+        /// </summary>
+        public static string FocusIconPicker_RemoveIconFromFavorites {
+            get {
+                return ResourceManager.GetString("FocusIconPicker_RemoveIconFromFavorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FocusIconPickerView_Title.
         /// </summary>
         public static string FocusIconPickerView_Title {

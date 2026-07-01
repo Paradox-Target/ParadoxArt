@@ -1,10 +1,11 @@
-﻿<fa:FAAppWindow
+﻿<faWindow:FAAppWindow
     x:Class="Hoi4BlueprintBuilder.Core.Views.FocusIconPickerView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Hoi4BlueprintBuilder.Core.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:fa="using:FluentAvalonia.UI.Windowing"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:faWindow="using:FluentAvalonia.UI.Windowing"
     xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:Hoi4BlueprintBuilder.Core.Models.Focus"
@@ -20,64 +21,116 @@
     WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
 
-    <Grid Margin="8" RowDefinitions="*,Auto">
-        <Grid Grid.Row="0" RowDefinitions="Auto,*">
-            <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
-                <TextBlock
-                    Grid.Column="0"
-                    Margin="8,0"
-                    VerticalAlignment="Center"
-                    Classes="BodyStrongTextBlock"
-                    Text="{Binding Sum}" />
-                <TextBox
-                    Grid.Column="1"
-                    PlaceholderText="Search..."
-                    Text="{Binding SearchText.Value}">
-                    <TextBox.InnerLeftContent>
-                        <controls:FontIcon
-                            Margin="12,0,8,0"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Glyph="&#xE721;" />
-                    </TextBox.InnerLeftContent>
-                </TextBox>
-            </Grid>
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
-                <ItemsRepeater ItemsSource="{Binding FocusIcons}">
-                    <ItemsRepeater.Layout>
-                        <UniformGridLayout
-                            MinColumnSpacing="4"
-                            MinItemHeight="88"
-                            MinItemWidth="100"
-                            MinRowSpacing="4" />
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate x:DataType="model:FocusIcon">
-                            <ToggleButton
-                                x:Name="PickButton"
-                                Command="{Binding Path=((vms:FocusIconPickerViewModel)DataContext).PickFocusIconCommand, ElementName=MainControl}"
-                                CommandParameter="{Binding ElementName=PickButton}">
-                                <Image
-                                    Source="{Binding Icon}"
-                                    Stretch="Uniform"
-                                    ToolTip.Tip="{Binding Name}" />
-                            </ToggleButton>
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-            </ScrollViewer>
-        </Grid>
+    <faWindow:FAAppWindow.Resources>
+        <fa:FAMenuFlyout x:Key="ContextMenu">
+            <fa:FAMenuFlyoutSubItem x:Name="AddToFavoritesMenuItem" Text="{x:Static lang:LangResources.FocusIconPicker_AddTo}">
+                <fa:FAMenuFlyoutSubItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Add" />
+                </fa:FAMenuFlyoutSubItem.IconSource>
+            </fa:FAMenuFlyoutSubItem>
 
-        <StackPanel
-            Grid.Row="1"
-            Margin="8"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal"
-            Spacing="8">
-            <Button Command="{Binding CancelCommand}" Content="{x:Static lang:LangResources.Common_Cancel}" />
-            <Button
-                Command="{Binding OkCommand}"
-                Content="{x:Static lang:LangResources.Common_Ok}"
-                IsDefault="True" />
-        </StackPanel>
+            <fa:FAMenuFlyoutItem x:Name="RemoveIconFromFavoritesMenuItem" Text="{x:Static lang:LangResources.FocusIconPicker_RemoveIconFromFavorites}">
+                <fa:FAMenuFlyoutItem.IconSource>
+                    <fa:FASymbolIconSource Symbol="Delete" />
+                </fa:FAMenuFlyoutItem.IconSource>
+            </fa:FAMenuFlyoutItem>
+        </fa:FAMenuFlyout>
+    </faWindow:FAAppWindow.Resources>
+
+    <Grid Margin="8" ColumnDefinitions="0.2*,0.8*">
+        <Grid Grid.Column="0">
+            <Grid RowDefinitions="*, Auto">
+                <ListBox
+                    x:Name="FavoritesListBox"
+                    Grid.Row="0"
+                    ItemsSource="{Binding FavoritesNames}"
+                    SelectedItem="{Binding CurrentFavoritesName}"
+                    SelectionMode="Single" />
+                <StackPanel
+                    Grid.Row="1"
+                    Orientation="Horizontal"
+                    Spacing="4">
+                    <Button Command="{Binding DeleteIconFavoritesCommand}" Content="{x:Static lang:LangResources.Common_Delete}" />
+                    <Button Content="{x:Static lang:LangResources.FocusIconPicker_CreateNewFavorites}">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <TextBox
+                                        MinWidth="180"
+                                        Margin="0,4"
+                                        PlaceholderText="{x:Static lang:LangResources.FocusIconPicker_NewFavoritesName}"
+                                        Text="{Binding NewIconFavoritesName}" />
+                                    <Button
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding CreateNewIconFavoritesCommand}"
+                                        Content="{x:Static lang:LangResources.Common_Create}" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid Grid.Column="1" RowDefinitions="*,Auto">
+            <Grid Grid.Row="0" RowDefinitions="Auto,*">
+                <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="8,0"
+                        VerticalAlignment="Center"
+                        Classes="BodyStrongTextBlock"
+                        Text="{Binding Sum}" />
+                    <TextBox
+                        Grid.Column="1"
+                        PlaceholderText="Search..."
+                        Text="{Binding SearchText.Value}">
+                        <TextBox.InnerLeftContent>
+                            <controls:FontIcon
+                                Margin="12,0,8,0"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Glyph="&#xE721;" />
+                        </TextBox.InnerLeftContent>
+                    </TextBox>
+                </Grid>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsRepeater ItemsSource="{Binding FocusIcons}">
+                        <ItemsRepeater.Layout>
+                            <UniformGridLayout
+                                MinColumnSpacing="4"
+                                MinItemHeight="88"
+                                MinItemWidth="100"
+                                MinRowSpacing="4" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="model:FocusIcon">
+                                <ToggleButton
+                                    x:Name="PickButton"
+                                    Command="{Binding Path=((vms:FocusIconPickerViewModel)DataContext).PickFocusIconCommand, ElementName=MainControl}"
+                                    CommandParameter="{Binding ElementName=PickButton}"
+                                    PointerPressed="PickButton_OnPointerPressed">
+                                    <Image
+                                        Source="{Binding Icon}"
+                                        Stretch="Uniform"
+                                        ToolTip.Tip="{Binding Name}" />
+                                </ToggleButton>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </ScrollViewer>
+            </Grid>
+
+            <StackPanel
+                Grid.Row="1"
+                Margin="8"
+                HorizontalAlignment="Right"
+                Orientation="Horizontal"
+                Spacing="8">
+                <Button Command="{Binding CancelCommand}" Content="{x:Static lang:LangResources.Common_Cancel}" />
+                <Button
+                    Command="{Binding OkCommand}"
+                    Content="{x:Static lang:LangResources.Common_Ok}"
+                    IsDefault="True" />
+            </StackPanel>
+        </Grid>
     </Grid>
-</fa:FAAppWindow>
+</faWindow:FAAppWindow>
