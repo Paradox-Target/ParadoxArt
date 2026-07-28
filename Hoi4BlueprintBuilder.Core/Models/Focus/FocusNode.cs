@@ -118,14 +118,18 @@ public sealed partial class FocusNode(string path, FocusType type)
     }
 
     [ObservableProperty]
-    private string _icon = string.Empty;
+    public partial string Icon { get; set; } = string.Empty;
 
     public decimal Cost { get; set; }
 
     public string CompletionReward { get; set; } = string.Empty;
+    public string Available { get; set; } = string.Empty;
+    public string AiWillDo { get; set; } = string.Empty;
+    public string Bypass { get; set; } = string.Empty;
+    public string SelectEffect { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private bool _isVisible = true;
+    public partial bool IsVisible { get; private set; } = true;
 
     /// <summary>
     /// 如果 <c>available</c> 块不满足则取消进行中的 Focus, 默认值为 <c>true</c>
@@ -162,6 +166,7 @@ public sealed partial class FocusNode(string path, FocusType type)
         {
             offset.PropertyChanged -= OnFocusOffsetPropertyChanged;
         }
+        _offsets.Clear();
     }
 
     private void OnFocusOffsetPropertyChanged(object? sender, PropertyChangedEventArgs e)

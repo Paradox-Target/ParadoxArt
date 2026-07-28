@@ -111,11 +111,7 @@ public static class NodeHelper
 
         children.AddRange(GetFilteredChildren(focusNode));
 
-        AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
-
-        AddPrerequisiteToChildrenIfExist(children, editorModel);
-
-        AddCompletionRewardToChildrenIfExist(children, editorModel);
+        AddComplexNode(children, editorModel);
 
         if (editorModel.RelativePosition is not null)
         {
@@ -127,9 +123,54 @@ public static class NodeHelper
         focusNode.AllArray = children.ToArray();
     }
 
-    public static void AddCompletionRewardToChildrenIfExist(List<Child> children, FocusNode editorModel)
+    public static void AddComplexNode(List<Child> children, FocusNode editorModel)
     {
-        if (string.IsNullOrWhiteSpace(editorModel.CompletionReward))
+        AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
+        AddPrerequisiteToChildrenIfExist(children, editorModel);
+        AddCompletionRewardToChildrenIfExist(children, editorModel.CompletionReward);
+        AddAvailableToChildrenIfExist(children, editorModel.Available);
+        AddAiWillDoToChildrenIfExist(children, editorModel.AiWillDo);
+        AddBypassToChildrenIfExist(children, editorModel.Bypass);
+        AddSelectEffectToChildrenIfExist(children, editorModel.SelectEffect);
+    }
+
+    private static void AddSelectEffectToChildrenIfExist(List<Child> children, string selectEffect)
+    {
+        if (string.IsNullOrWhiteSpace(selectEffect))
+        {
+            return;
+        }
+
+        if (TextParser.TryParse(Keywords.SelectEffect, selectEffect, out var selectEffectNode, out var error))
+        {
+            children.Add(selectEffectNode);
+        }
+        else
+        {
+            Log.Warn("解析 Select Effect 失败, 无法插入到 AST 树中. {Message}", error.ErrorMessage);
+        }
+    }
+
+    private static void AddBypassToChildrenIfExist(List<Child> children, string bypass)
+    {
+        if (string.IsNullOrWhiteSpace(bypass))
+        {
+            return;
+        }
+
+        if (TextParser.TryParse(Keywords.Bypass, bypass, out var bypassNode, out var error))
+        {
+            children.Add(bypassNode);
+        }
+        else
+        {
+            Log.Warn("解析 Bypass 失败, 无法插入到 AST 树中. {Message}", error.ErrorMessage);
+        }
+    }
+
+    private static void AddCompletionRewardToChildrenIfExist(List<Child> children, string completionReward)
+    {
+        if (string.IsNullOrWhiteSpace(completionReward))
         {
             return;
         }
@@ -137,7 +178,7 @@ public static class NodeHelper
         if (
             TextParser.TryParse(
                 Keywords.CompletionReward,
-                editorModel.CompletionReward,
+                completionReward,
                 out var completionRewardNode,
                 out var error
             )
@@ -151,11 +192,46 @@ public static class NodeHelper
         }
     }
 
+    private static void AddAvailableToChildrenIfExist(List<Child> children, string available)
+    {
+        if (string.IsNullOrWhiteSpace(available))
+        {
+            return;
+        }
+
+        if (TextParser.TryParse(Keywords.Available, available, out var node, out var error))
+        {
+            children.Add(node);
+        }
+        else
+        {
+            Log.Warn("解析 Available 失败, 无法插入到AST树中. {Message}", error.ErrorMessage);
+        }
+    }
+
+    private static void AddAiWillDoToChildrenIfExist(List<Child> children, string aiWillDo)
+    {
+        if (string.IsNullOrWhiteSpace(aiWillDo))
+        {
+            return;
+        }
+
+        if (TextParser.TryParse(Keywords.AiWillDo, aiWillDo, out var node, out var error))
+        {
+            children.Add(node);
+        }
+        else
+        {
+            Log.Warn("解析 AiWillDo 失败, 无法插入到AST树中. {Message}", error.ErrorMessage);
+        }
+    }
+
     private static IEnumerable<Child> GetFilteredChildren(Node focusNode)
     {
         return focusNode.AllArray.Where(static child =>
         {
-            // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId, CompletionReward
+            // 排除掉不需要的 MutuallyExclusive, Prerequisite, RelativePositionId, CompletionReward, Available
+            // AiWillDo, Bypass
             // 这些内容完全按照编辑器模型保存
             if (
                 child.TryGetNode(out var node)
@@ -163,6 +239,10 @@ public static class NodeHelper
                     node.Key.EqualsIgnoreCase(Keywords.MutuallyExclusive)
                     || node.Key.EqualsIgnoreCase(Keywords.Prerequisite)
                     || node.Key.EqualsIgnoreCase(Keywords.CompletionReward)
+                    || node.Key.EqualsIgnoreCase(Keywords.Available)
+                    || node.Key.EqualsIgnoreCase(Keywords.AiWillDo)
+                    || node.Key.EqualsIgnoreCase(Keywords.Bypass)
+                    || node.Key.EqualsIgnoreCase(Keywords.SelectEffect)
                 )
             )
             {
@@ -190,7 +270,7 @@ public static class NodeHelper
         });
     }
 
-    public static void AddMutuallyExclusiveToChildrenIfExist(List<Child> children, FocusNode editorModel)
+    private static void AddMutuallyExclusiveToChildrenIfExist(List<Child> children, FocusNode editorModel)
     {
         if (editorModel.MutuallyExclusive.Count == 0)
         {
@@ -205,7 +285,7 @@ public static class NodeHelper
         children.Add(mutuallyExclusiveChild);
     }
 
-    public static void AddPrerequisiteToChildrenIfExist(List<Child> children, FocusNode editorModel)
+    private static void AddPrerequisiteToChildrenIfExist(List<Child> children, FocusNode editorModel)
     {
         if (editorModel.Prerequisite.Count == 0)
         {

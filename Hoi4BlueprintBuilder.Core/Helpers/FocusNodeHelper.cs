@@ -30,9 +30,7 @@ public static class FocusNodeHelper
             );
         }
 
-        NodeHelper.AddCompletionRewardToChildrenIfExist(children, editorModel);
-        NodeHelper.AddMutuallyExclusiveToChildrenIfExist(children, editorModel);
-        NodeHelper.AddPrerequisiteToChildrenIfExist(children, editorModel);
+        NodeHelper.AddComplexNode(children, editorModel);
 
         string key = editorModel.Type == FocusType.Shared ? Keywords.SharedFocus : Keywords.Focus;
         var focusNode = new Node(key) { AllArray = children.ToArray() };

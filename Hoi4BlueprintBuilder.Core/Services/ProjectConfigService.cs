@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using Hoi4BlueprintBuilder.Core.Constants;
 using Hoi4BlueprintBuilder.Core.Helpers;
@@ -7,7 +7,7 @@ using Hoi4BlueprintBuilder.Core.Models;
 namespace Hoi4BlueprintBuilder.Core.Services;
 
 [JsonSerializable(typeof(ProjectConfigService))]
-internal partial class ProjectConfigServiceContext : JsonSerializerContext;
+internal sealed partial class ProjectConfigServiceContext : JsonSerializerContext;
 
 public sealed class ProjectConfigService : BaseSettingsService<ProjectConfigService>, IDisposable
 {

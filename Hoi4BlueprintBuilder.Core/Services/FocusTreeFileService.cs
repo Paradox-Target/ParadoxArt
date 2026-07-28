@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Avalonia.Collections;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
@@ -339,6 +339,22 @@ public sealed class FocusTreeFileService(IServiceProvider serviceProvider)
         else if (node.Key.EqualsIgnoreCase(Keywords.CompletionReward))
         {
             model.CompletionReward = node.ToScript();
+        }
+        else if (node.Key.EqualsIgnoreCase(Keywords.Available))
+        {
+            model.Available = node.ToScript();
+        }
+        else if (node.Key.EqualsIgnoreCase(Keywords.AiWillDo))
+        {
+            model.AiWillDo = node.ToScript();
+        }
+        else if (node.Key.EqualsIgnoreCase(Keywords.Bypass))
+        {
+            model.Bypass = node.ToScript();
+        }
+        else if (node.Key.EqualsIgnoreCase(Keywords.SelectEffect))
+        {
+            model.SelectEffect = node.ToScript();
         }
         else if (node.Key.EqualsIgnoreCase("offset"))
         {

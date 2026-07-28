@@ -64,6 +64,10 @@ public sealed partial class FocusInfoView : UserControl
         Height = _settingsService.FocusInfoCardHeight;
 
         CompletionRewardEditor.SetGrammar(".txt");
+        AvailableEditor.SetGrammar(".txt");
+        AiWillDoEditor.SetGrammar(".txt");
+        BypassEditor.SetGrammar(".txt");
+
         // 设置 DataContext 防止运行时提示绑定错误
         _viewModel = new FocusInfoViewModel(new FocusNode(string.Empty, FocusType.Unknown));
         DataContext = _viewModel;
@@ -85,6 +89,10 @@ public sealed partial class FocusInfoView : UserControl
         AddHandler(DragDrop.DropEvent, FocusIcon_OnDrop);
 
         CompletionRewardEditor.TextChanged += OnCompletionRewardTextChanged;
+        AvailableEditor.TextChanged += OnAvailableTextChanged;
+        AiWillDoEditor.TextChanged += OnAiWillDoTextChanged;
+        BypassEditor.TextChanged += OnBypassTextChanged;
+        SelectEffectEditor.TextChanged += OnSelectEffectTextChanged;
 
         SizeChanged += (_, args) =>
         {
@@ -97,6 +105,38 @@ public sealed partial class FocusInfoView : UserControl
                 _settingsService.FocusInfoCardHeight = args.NewSize.Height;
             }
         };
+    }
+
+    private void OnSelectEffectTextChanged(object? sender, EventArgs e)
+    {
+        if (_viewModel is not null)
+        {
+            _viewModel.FocusNode.SelectEffect = SelectEffectEditor.Text;
+        }
+    }
+
+    private void OnAiWillDoTextChanged(object? sender, EventArgs e)
+    {
+        if (_viewModel is not null)
+        {
+            _viewModel.FocusNode.AiWillDo = AiWillDoEditor.Text;
+        }
+    }
+
+    private void OnAvailableTextChanged(object? sender, EventArgs e)
+    {
+        if (_viewModel is not null)
+        {
+            _viewModel.FocusNode.Available = AvailableEditor.Text;
+        }
+    }
+
+    private void OnBypassTextChanged(object? sender, EventArgs e)
+    {
+        if (_viewModel is not null)
+        {
+            _viewModel.FocusNode.Bypass = BypassEditor.Text;
+        }
     }
 
     private FocusTreeEditorView? _focusTreeEditorView;
@@ -260,6 +300,10 @@ public sealed partial class FocusInfoView : UserControl
         _viewModel = newViewModel;
         newViewModel.FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
         CompletionRewardEditor.Text = newViewModel.FocusNode.CompletionReward;
+        AvailableEditor.Text = newViewModel.FocusNode.Available;
+        AiWillDoEditor.Text = newViewModel.FocusNode.AiWillDo;
+        BypassEditor.Text = newViewModel.FocusNode.Bypass;
+        SelectEffectEditor.Text = newViewModel.FocusNode.SelectEffect;
 
         if (!string.IsNullOrEmpty(newViewModel.FocusNode.Icon))
         {
@@ -271,6 +315,8 @@ public sealed partial class FocusInfoView : UserControl
     {
         if (_viewModel is not null)
         {
+            // TODO: 仅在关闭或者保存时使用 CompletionRewardEditor.Text 属性
+            // 因为这是一个昂贵的操作.
             _viewModel.FocusNode.CompletionReward = CompletionRewardEditor.Text;
         }
     }

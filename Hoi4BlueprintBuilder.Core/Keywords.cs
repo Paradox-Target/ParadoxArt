@@ -13,4 +13,8 @@ public static class Keywords
     public const string CompletionReward = "completion_reward";
     public const string CancelIfInvalid = "cancel_if_invalid";
     public const string ContinueIfInvalid = "continue_if_invalid";
+    public const string Available = "available";
+    public const string AiWillDo = "ai_will_do";
+    public const string Bypass = "bypass";
+    public const string SelectEffect = "select_effect";
 }

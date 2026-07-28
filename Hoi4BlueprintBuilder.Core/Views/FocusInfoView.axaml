@@ -25,6 +25,11 @@
             <Setter Property="BorderThickness">1</Setter>
             <Setter Property="CornerRadius">4</Setter>
         </Style>
+        <Style Selector="control|TextEditorControl.Code">
+            <Setter Property="MinHeight">100</Setter>
+            <Setter Property="Padding">4,0,0,18</Setter>
+            <Setter Property="FontSize">12</Setter>
+        </Style>
     </UserControl.Styles>
 
     <Grid>
@@ -210,6 +215,45 @@
                             IsChecked="{Binding FocusNode.ContinueIfInvalid, Mode=TwoWay}" />
                     </StackPanel>
 
+                    <Expander Header="Available">
+                        <Border
+                            Margin="0,4,0,0"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1"
+                            CornerRadius="4">
+                            <control:TextEditorControl
+                                x:Name="AvailableEditor"
+                                Classes="Code"
+                                FontFamily="Cascadia Code" />
+                        </Border>
+                    </Expander>
+
+                    <Expander Header="Bypass">
+                        <Border
+                            Margin="0,4,0,0"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1"
+                            CornerRadius="4">
+                            <control:TextEditorControl
+                                x:Name="BypassEditor"
+                                Classes="Code"
+                                FontFamily="Cascadia Code" />
+                        </Border>
+                    </Expander>
+
+                    <Expander Header="Select Effect">
+                        <Border
+                            Margin="0,4,0,0"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1"
+                            CornerRadius="4">
+                            <control:TextEditorControl
+                                x:Name="SelectEffectEditor"
+                                Classes="Code"
+                                FontFamily="Cascadia Code" />
+                        </Border>
+                    </Expander>
+
                     <Expander Header="{x:Static lang:LangResources.CompletionEffect}">
                         <Border
                             Margin="0,4,0,0"
@@ -218,11 +262,21 @@
                             CornerRadius="4">
                             <control:TextEditorControl
                                 x:Name="CompletionRewardEditor"
-                                MinHeight="100"
-                                Padding="4,0,0,18"
-                                Background="Transparent"
-                                FontFamily="Cascadia Code"
-                                FontSize="12" />
+                                Classes="Code"
+                                FontFamily="Cascadia Code" />
+                        </Border>
+                    </Expander>
+
+                    <Expander Header="AiWillDo">
+                        <Border
+                            Margin="0,4,0,0"
+                            BorderBrush="Gray"
+                            BorderThickness="0,0,0,1"
+                            CornerRadius="4">
+                            <control:TextEditorControl
+                                x:Name="AiWillDoEditor"
+                                Classes="Code"
+                                FontFamily="Cascadia Code" />
                         </Border>
                     </Expander>
 
