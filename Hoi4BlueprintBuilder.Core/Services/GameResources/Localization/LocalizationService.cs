@@ -208,6 +208,11 @@ public sealed class LocalizationService
     /// <param name="value">本地化值</param>
     public void AddOrUpdateLocalisation(string filePath, GameLanguage gameLanguage, string key, string value)
     {
+        if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(filePath))
+        {
+            return;
+        }
+
         var mapKey = (filePath, gameLanguage);
         if (!_filesLocalisations.TryGetValue(mapKey, out var localisation))
         {
