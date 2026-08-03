@@ -1,0 +1,136 @@
+﻿using Hoi4BlueprintBuilder.Core.Extensions;
+using Hoi4BlueprintBuilder.Core.Models;
+using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
+using ParadoxPower.CSharpExtensions;
+using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
+using ZLinq;
+
+namespace Hoi4BlueprintBuilder.Core.Services.GameResources;
+
+[RegisterSingleton<UnitService>]
+public sealed class UnitService : CommonResourcesService<UnitService, Dictionary<string, UnitInfo>>
+{
+    public UnitService(IServiceProvider serviceProvider)
+        : base(
+            Path.Combine(Keywords.Common, "units"),
+            WatcherFilter.Text,
+            serviceProvider,
+            PathType.Folder,
+            SearchOption.AllDirectories,
+            true
+        ) { }
+
+    public IEnumerable<UnitInfo> AllUnits => Resources.Values.SelectMany(map => map.Values);
+
+    protected override Dictionary<string, UnitInfo> ParseFileToContent(Node rootNode)
+    {
+        var map = new Dictionary<string, UnitInfo>();
+
+        foreach (var subUnitsNode in rootNode.NodesValue.Where(n => n.Key.EqualsIgnoreCase("sub_units")))
+        {
+            foreach (var unitNode in subUnitsNode.NodesValue)
+            {
+                ParseUnitInfo(unitNode, map);
+            }
+        }
+
+        return map;
+    }
+
+    private void ParseUnitInfo(Node unitNode, Dictionary<string, UnitInfo> map)
+    {
+        string? groupName = null;
+        bool isRegimental = true;
+        bool isDivisional = true;
+        int width = 0;
+        bool canBeParachuted = false;
+        int manpower = 0;
+        bool allowInNonArmyHq = true;
+        var allowedGroups = new HashSet<string>();
+        var requirements = new List<(string Name, int Quantity)>();
+
+        foreach (var child in unitNode.AllArray)
+        {
+            if (child.TryGetLeaf(out var leaf))
+            {
+                if (leaf.Key.EqualsIgnoreCase("group"))
+                {
+                    groupName = leaf.ValueText;
+                }
+                else if (
+                    leaf.Key.EqualsIgnoreCase("regimental") && leaf.Value.TryGetBool(out bool regimental)
+                )
+                {
+                    isRegimental = regimental;
+                }
+                else if (
+                    leaf.Key.EqualsIgnoreCase("divisional") && leaf.Value.TryGetBool(out bool divisional)
+                )
+                {
+                    isDivisional = divisional;
+                }
+                else if (leaf.Key.EqualsIgnoreCase("combat_width"))
+                {
+                    leaf.Value.TryGetInt(out width);
+                }
+                else if (
+                    leaf.Key.EqualsIgnoreCase("can_be_parachuted")
+                    && leaf.Value.TryGetBool(out bool parachuted)
+                )
+                {
+                    canBeParachuted = parachuted;
+                }
+                else if (leaf.Key.EqualsIgnoreCase("manpower"))
+                {
+                    leaf.Value.TryGetInt(out manpower);
+                }
+                else if (
+                    leaf.Key.EqualsIgnoreCase("allow_in_non_army_hq")
+                    && leaf.Value.TryGetBool(out bool allowInNonArmyHqBool)
+                )
+                {
+                    allowInNonArmyHq = allowInNonArmyHqBool;
+                }
+            }
+            else if (child.TryGetNode(out var node))
+            {
+                if (node.Key.EqualsIgnoreCase("allowed_battalion_groups"))
+                {
+                    foreach (var group in node.LeafValuesValue)
+                    {
+                        allowedGroups.Add(group.Key);
+                    }
+                }
+                else if (node.Key.EqualsIgnoreCase("need"))
+                {
+                    foreach (var requirement in node.LeavesValue)
+                    {
+                        if (requirement.Value.TryGetInt(out int quantity))
+                        {
+                            requirements.Add((requirement.Key, quantity));
+                        }
+                    }
+                }
+            }
+        }
+        if (groupName is null)
+        {
+            Log.Warn("{Name} 不存在分组信息", unitNode.Key);
+            return;
+        }
+        allowedGroups.TrimExcess();
+        map[unitNode.Key] = new UnitInfo(
+            unitNode.Key,
+            groupName,
+            isRegimental,
+            isDivisional,
+            width,
+            canBeParachuted,
+            manpower,
+            allowInNonArmyHq,
+            allowedGroups,
+            [.. requirements]
+        );
+    }
+}

@@ -129,7 +129,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
 
     private string GetFocusDaysTip()
     {
-        long focusCost = DefinesService.GetLong(DefineName);
+        int focusCost = DefinesService.GetInt(DefineName);
         int totalDays = (int)(FocusNode.Cost * focusCost);
         return $" x {focusCost} = {totalDays} {LangResources.Day}";
     }

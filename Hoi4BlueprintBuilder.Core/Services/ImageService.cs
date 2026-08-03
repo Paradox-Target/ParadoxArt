@@ -19,6 +19,7 @@ public sealed class ImageService : IDisposable
 {
     private readonly MemoryCache _ddsCache = new(new MemoryCacheOptions());
     private readonly SpriteService _spriteService;
+    private readonly GameResourcesPathService _pathService;
     private readonly FileSystemSafeWatcher _fileSystemWatcher;
     private readonly IPublisher<DeleteImageResourceMessage> _deleteImageResourcePublisher;
 
@@ -28,10 +29,12 @@ public sealed class ImageService : IDisposable
     public ImageService(
         SpriteService spriteService,
         SettingsService settingsService,
+        GameResourcesPathService pathService,
         IPublisher<DeleteImageResourceMessage> deleteImageResourcePublisher
     )
     {
         _spriteService = spriteService;
+        _pathService = pathService;
         _deleteImageResourcePublisher = deleteImageResourcePublisher;
         string path = Path.Combine(settingsService.ModRootFolderPath, "gfx");
         if (!Directory.Exists(path))
@@ -72,13 +75,35 @@ public sealed class ImageService : IDisposable
     }
 
     /// <summary>
+    /// 获取 <see cref="Bitmap"/> 图像
+    /// </summary>
+    /// <param name="spriteName">精灵名称</param>
+    /// <param name="frame">图片帧数</param>
+    /// <returns></returns>
+    public Bitmap? GetIconByName(string spriteName, short frame = 1)
+    {
+        if (!_spriteService.TryGetSpriteInfo(spriteName, out var info))
+        {
+            return null;
+        }
+
+        string? filePath = _pathService.GetFilePathPriorModByRelativePath(info.RelativePath);
+        if (filePath is null || !File.Exists(filePath) || frame > info.TotalFrames)
+        {
+            return null;
+        }
+
+        return GetImageSource(spriteName, filePath, frame, info.TotalFrames);
+    }
+
+    /// <summary>
     /// 从指定路径加载图像并返回对应的 BitmapSource.
     /// </summary>
     /// <remarks>仅支持 Png 和 Dds 格式</remarks>
     /// <param name="spriteId">图像ID</param>
     /// <param name="filePath">图像文件路径</param>
     /// <returns>如果是不支持的图像格式, 返回 <c>null</c></returns>
-    public Bitmap? GetImageSource(string spriteId, string filePath)
+    public Bitmap? GetImageSource(string spriteId, string filePath, short frame = 1, short totalFrames = 1)
     {
         try
         {
@@ -91,7 +116,7 @@ public sealed class ImageService : IDisposable
             }
             else if (format == ImageFormatType.Dds)
             {
-                bitmap = GetImageSourceFromDds(spriteId, filePath);
+                bitmap = GetImageSourceFromDds(spriteId, filePath, frame, totalFrames);
             }
             else
             {
@@ -107,7 +132,12 @@ public sealed class ImageService : IDisposable
         }
     }
 
-    private Bitmap GetImageSourceFromDds(string spriteName, string filePath)
+    private Bitmap GetImageSourceFromDds(
+        string spriteName,
+        string filePath,
+        short frame = 1,
+        short totalFrames = 1
+    )
     {
         var meta = _ddsCache.GetOrCreate(
             filePath,
@@ -129,15 +159,21 @@ public sealed class ImageService : IDisposable
             }
         );
 
-        var handle = GCHandle.Alloc(meta!.Data, GCHandleType.Pinned);
+        int effectiveTotalFrames = totalFrames > 0 ? totalFrames : 1;
+        int effectiveFrame = Math.Clamp(frame, (short)1, (short)effectiveTotalFrames);
+        int frameWidth = meta!.Width / effectiveTotalFrames;
+        int bytesPerPixel = meta.Stride / meta.Width;
+        int byteOffset = (effectiveFrame - 1) * frameWidth * bytesPerPixel;
+
+        var handle = GCHandle.Alloc(meta.Data, GCHandleType.Pinned);
         try
         {
-            IntPtr addr = handle.AddrOfPinnedObject();
+            IntPtr addr = handle.AddrOfPinnedObject() + byteOffset;
             return new Bitmap(
                 meta.Format,
                 AlphaFormat.Unpremul,
                 addr,
-                new PixelSize(meta.Width, meta.Height),
+                new PixelSize(frameWidth, meta.Height),
                 new Vector(96, 96),
                 meta.Stride
             );

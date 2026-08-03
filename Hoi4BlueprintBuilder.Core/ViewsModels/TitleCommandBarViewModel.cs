@@ -217,6 +217,13 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void OpenOobEditor()
+    {
+        _tabViewService.AddSingleTabFromIoc<OobEditorView>();
+        _telemetryService.TrackEvent("OpenOobEditor");
+    }
+
+    [RelayCommand]
     private async Task OpenImageImport()
     {
         var fileService = App.Current.Services.GetRequiredService<FileService>();

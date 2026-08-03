@@ -48,9 +48,15 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
         return 2;
     }
 
-    public long GetLong(string defineName)
+    public int GetInt(string defineName)
     {
-        return _globalLua.GetLong(defineName);
+        return _globalLua.GetInteger(defineName);
+    }
+
+    public long[] GetLongs(string defineName)
+    {
+        using var table = _globalLua.GetTable(defineName);
+        return [.. table.Values.Cast<long>()];
     }
 
     protected override byte ParseFileToContent(byte result)

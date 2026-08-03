@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Infrastructure.Parser;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Models.Focus;
@@ -61,6 +62,19 @@ public sealed class LocalizationFormatService
         return TryGetFormatText(key, out string? value) ? value : key;
     }
 
+    public string GetFormatText(string key, string placeholder, int value)
+    {
+        if (!_localizationService.TryGetValue(key, out string? localizationText))
+        {
+            return key;
+        }
+
+        var result = new List<TextFormatInfo>();
+        ParseFormat(localizationText, result, placeholder, value);
+
+        return result.AsValueEnumerable().Select(static info => info.DisplayText).JoinToString(string.Empty);
+    }
+
     public string GetFormatText(string key, GameLanguage language)
     {
         return TryGetFormatText(key, language, out string? value) ? value : key;
@@ -99,21 +113,45 @@ public sealed class LocalizationFormatService
         return result;
     }
 
-    private void ParseFormatToList(IEnumerable<LocalizationFormatInfo> formats, List<TextFormatInfo> result)
+    private void ParseFormatToList(
+        IEnumerable<LocalizationFormatInfo> formats,
+        List<TextFormatInfo> result,
+        string? placeholder = null,
+        int value = 0
+    )
     {
         foreach (var format in formats)
         {
             if (format.Type == LocalizationFormatType.Placeholder)
             {
+                var span = format.Text.AsSpan();
+                int index = span.IndexOf('|');
+
+                // 如果占位符匹配, 则替换为传入的值
+                if (
+                    placeholder is not null
+                    && (
+                        format.Text.EqualsIgnoreCase(placeholder)
+                        || (
+                            index != -1
+                            && span[..index].Equals(placeholder, StringComparison.OrdinalIgnoreCase)
+                        )
+                    )
+                )
+                {
+                    result.Add(new TextFormatInfo(value.ToString(), Color.Black));
+                    continue;
+                }
+
                 // 一般来说, 包含管道符或文本为 VALUE | VAL 的为格式说明字符串, 不需要处理
-                if (format.Text.Contains('|') || format.Text == "VALUE" || format.Text == "VAL")
+                if (index != -1 || format.Text == "VALUE" || format.Text == "VAL")
                 {
                     continue;
                 }
 
                 // 递归处理所有本地化引用
                 string text = _localizationService.GetValue(format.Text);
-                ParseFormat(text, result);
+                ParseFormat(text, result, placeholder, value);
             }
             else if (format.Type == LocalizationFormatType.Icon)
             {
@@ -121,16 +159,21 @@ public sealed class LocalizationFormatService
             }
             else
             {
-                result.AddRange(GetColorText(format));
+                result.AddRange(GetColorText(format, placeholder, value));
             }
         }
     }
 
-    private void ParseFormat(string text, List<TextFormatInfo> result)
+    private void ParseFormat(
+        string text,
+        List<TextFormatInfo> result,
+        string? placeholder = null,
+        int value = 0
+    )
     {
         if (LocalizationFormatParser.TryParse(text, out var formats))
         {
-            ParseFormatToList(formats, result);
+            ParseFormatToList(formats, result, placeholder, value);
         }
         else
         {
@@ -142,8 +185,14 @@ public sealed class LocalizationFormatService
     /// 尝试将文本解析为 <see cref="TextFormatInfo"/>, 并使用 <see cref="LocalizationFormatInfo"/> 中指定的颜色, 如果颜色不存在, 则使用默认颜色
     /// </summary>
     /// <param name="format">文本格式信息</param>
+    /// <param name="placeholder">占位符</param>
+    /// <param name="value">值</param>
     /// <returns></returns>
-    private IEnumerable<TextFormatInfo> GetColorText(LocalizationFormatInfo format)
+    private IEnumerable<TextFormatInfo> GetColorText(
+        LocalizationFormatInfo format,
+        string? placeholder = null,
+        int value = 0
+    )
     {
         var color = Color.Black;
         string text = format.Text;
@@ -160,16 +209,11 @@ public sealed class LocalizationFormatService
                 text = format.Text[1..];
             }
 
-            // 处理嵌套在着色语法中的其他语法使用
-            if (
-                LocalizationFormatParser.TryParse(text, out var formatInfos)
-                && formatInfos
-                    .AsValueEnumerable()
-                    .Any(static info => info.Type == LocalizationFormatType.Placeholder)
-            )
+            // 处理嵌套在着色语法中的其他语法使用 ($$ 转义, \n 换行, 占位符, 图标, 键引用等)
+            if (LocalizationFormatParser.TryParse(text, out var formatInfos))
             {
                 var list = new List<TextFormatInfo>();
-                ParseFormatToList(formatInfos, list);
+                ParseFormatToList(formatInfos, list, placeholder, value);
                 for (int i = 0; i < list.Count; i++)
                 {
                     list[i] = new TextFormatInfo(list[i].DisplayText, color);

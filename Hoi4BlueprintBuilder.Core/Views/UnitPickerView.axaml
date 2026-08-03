@@ -1,0 +1,64 @@
+﻿<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.UnitPickerView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    x:Name="MainControl"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:UnitPickerViewModel"
+    mc:Ignorable="d">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <Button
+            Grid.Row="0"
+            Command="{Binding BackCommand}"
+            Content="返回"
+            IsVisible="{Binding IsVisibleBackButton}" />
+
+        <Panel Grid.Row="1">
+            <ItemsRepeater IsVisible="{Binding !IsSubUnitView}" ItemsSource="{Binding Units}">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout
+                        MinColumnSpacing="4"
+                        MinItemHeight="88"
+                        MinItemWidth="130"
+                        MinRowSpacing="2" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding ((vms:UnitPickerViewModel)DataContext).PickGroupCommand, ElementName=MainControl}" CommandParameter="{Binding}">
+                            <StackPanel>
+                                <Image Source="{Binding Image}" Stretch="None" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding GroupName}" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+
+            <ItemsRepeater IsVisible="{Binding IsSubUnitView}" ItemsSource="{Binding SubUnits}">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout
+                        MinColumnSpacing="4"
+                        MinItemHeight="88"
+                        MinItemWidth="130"
+                        MinRowSpacing="2" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding ((vms:UnitPickerViewModel)DataContext).PickSubUnitCommand, ElementName=MainControl}" CommandParameter="{Binding}">
+                            <StackPanel>
+                                <Image Source="{Binding Image}" Stretch="None" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" />
+                            </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </Panel>
+    </Grid>
+</UserControl>

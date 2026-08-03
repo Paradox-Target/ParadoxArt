@@ -15,6 +15,13 @@ public sealed partial class TextEditorControl : UserControl
         get => TextEditor.Text;
         set => TextEditor.Text = value;
     }
+
+    public bool IsReadOnly
+    {
+        get => TextEditor.IsReadOnly;
+        set => TextEditor.IsReadOnly = value;
+    }
+
     public event EventHandler? TextChanged;
 
     private TextMate.Installation _installation;
