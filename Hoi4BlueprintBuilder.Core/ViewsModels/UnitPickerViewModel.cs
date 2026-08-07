@@ -37,8 +37,13 @@ public sealed partial class UnitPickerViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void PickGroup(UnitGroupVo group)
+    private void PickGroup(UnitGroupVo? group)
     {
+        if (group is null)
+        {
+            return;
+        }
+
         SubUnits = group.Units;
         IsSubUnitView = true;
     }

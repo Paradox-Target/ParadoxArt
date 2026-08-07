@@ -89,6 +89,7 @@ public sealed partial class OobEditorView : UserControl, ITabViewItem
                     Tag = UnitSlotType.RegimentalSupport
                 };
                 button.CommandParameter = button;
+                // 不能共用同一个 TextBlock, 会崩溃.
                 Avalonia.Controls.ToolTip.SetTip(
                     button,
                     vm.DesignerBlockedByRegimentBattalions.ToTextBlock()

@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,7 @@ public sealed class GridRulerControl : Control
 {
     // 标尺大小
     private const double RulerSize = 30.0;
-    private static readonly SolidColorBrush RulerBrush = new(Color.FromRgb(74, 74, 74));
+    private static readonly ImmutableSolidColorBrush RulerBrush = new(Color.FromRgb(74, 74, 74));
     private static readonly Typeface RulerTypeface = new("Segoe UI");
     private static readonly ProjectConfigService ProjectConfigService =
         App.Current.Services.GetRequiredService<ProjectConfigService>();
