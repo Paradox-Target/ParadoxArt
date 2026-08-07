@@ -86,11 +86,12 @@
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"
                         Text="{Binding TotalWidthText}"
-                        ToolTip.Tip="{Binding DesignerCombatWidthDesc}" />
+                        ToolTip.Tip="{Binding TotalWidthDesc}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"
-                        Text="{Binding TotalManpowerText}" />
+                        Text="{Binding TotalManpowerText}"
+                        ToolTip.Tip="{Binding TotalManpowerDesc}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"
@@ -127,7 +128,8 @@
                     Grid.Row="0"
                     Grid.Column="1"
                     Padding="8"
-                    Header="{Binding DivisionalSupportHeader, Mode=OneTime}">
+                    Header="{Binding DivisionalSupportHeader, Mode=OneTime}"
+                    ToolTip.Tip="{Binding DivisionalSupportDesc, Mode=OneTime}">
                     <Grid x:Name="DivisionalSupportPanel" />
                 </GroupBox>
                 <GroupBox
@@ -135,7 +137,8 @@
                     Grid.Column="0"
                     Margin="0,8,0,0"
                     Padding="8"
-                    Header="{Binding RegimentalSupportHeader, Mode=OneTime}">
+                    Header="{Binding RegimentalSupportHeader, Mode=OneTime}"
+                    ToolTip.Tip="{Binding RegimentalSupportDesc, Mode=OneTime}">
                     <Grid x:Name="RegimentalSupportPanel" />
                 </GroupBox>
             </Grid>
@@ -150,9 +153,9 @@
                 <ListBox.DataTemplates>
                     <DataTemplate x:DataType="vms:EquipmentsVo">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text="{Binding Name, Mode=OneTime}" />
                             <TextBlock Text=":" />
-                            <TextBlock Text="{Binding Quantity}" />
+                            <TextBlock Text="{Binding Quantity, Mode=OneTime}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.DataTemplates>

@@ -39,7 +39,8 @@ public sealed partial class OobEditorViewModel : ObservableObject
     public int RegimentalSupportHeight { get; }
 
     public string CanParachutedCountText => CanNotParachutedCount == 0 ? "√允许伞降" : "×不允许伞降";
-    public string TotalManpowerText => $"人力: {TotalManpower}";
+    public string TotalManpowerText => $"{DesignerManpower}{TotalManpower}";
+    private string DesignerManpower { get; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalManpowerText))]
@@ -66,6 +67,8 @@ public sealed partial class OobEditorViewModel : ObservableObject
     [ObservableProperty]
     public partial string DivisionNamesGroup { get; set; } = string.Empty;
 
+    public TextBlock DivisionalSupportDesc { get; }
+
     /// <summary>
     /// 每列最少几个才能使用团级支援
     /// </summary>
@@ -74,7 +77,9 @@ public sealed partial class OobEditorViewModel : ObservableObject
     public string RegimentalSupportHeader { get; }
     public string DivisionalSupportHeader { get; }
     public string DesignerCombatWidth { get; }
-    public TextBlock DesignerCombatWidthDesc { get; }
+    public TextBlock TotalWidthDesc { get; }
+    public string TotalManpowerDesc { get; }
+    public TextBlock RegimentalSupportDesc { get; }
     public IEnumerable<Inline> DesignerBlockedByRegimentBattalions { get; }
 
     private readonly UnitService _unitService;
@@ -158,8 +163,16 @@ public sealed partial class OobEditorViewModel : ObservableObject
             MinUseRegimentalCount
         );
         DesignerCombatWidth = _localizationService.GetFormatText("DESIGNER_COMBATWIDTH");
-        DesignerCombatWidthDesc = _localizationService
+        TotalWidthDesc = _localizationService
             .GetFormatTextWithColor("DESIGNER_COMBATWIDTH_DESC")
+            .ToTextBlock();
+        TotalManpowerDesc = _localizationService.GetFormatText("DESIGNER_MANPOWER_DESC");
+        DesignerManpower = _localizationService.GetFormatText("DESIGNER_MANPOWER");
+        RegimentalSupportDesc = _localizationService
+            .GetFormatTextWithColor("DESIGNER_REGIMENTAL_SUPPORT_COLUMN_TITLE")
+            .ToTextBlock();
+        DivisionalSupportDesc = _localizationService
+            .GetFormatTextWithColor("DESIGNER_SUPPORT_COLUMN_TITLE")
             .ToTextBlock();
     }
 
@@ -263,7 +276,7 @@ public sealed partial class OobEditorViewModel : ObservableObject
             {
                 var unitInfo = unit.UnitInfo;
                 button.Content = new Image { Source = unit.Image, Stretch = Stretch.Uniform };
-                ToolTip.SetTip(button, unit.Name);
+                ToolTip.SetTip(button, $"{unit.Name}\n\n{_localizationService.GetFormatText($"{unitInfo.Name}_desc")}");
 
                 if (!unitInfo.CanBeParachuted)
                 {
