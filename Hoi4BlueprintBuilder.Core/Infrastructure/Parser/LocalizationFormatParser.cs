@@ -48,4 +48,15 @@ public static class LocalizationFormatParser
 
         return parseResult.Success;
     }
+
+    public static bool TryParse(
+        ReadOnlySpan<char> input,
+        [NotNullWhen(true)] out IEnumerable<LocalizationFormatInfo>? formats
+    )
+    {
+        var parseResult = LocalizationTextParser.Parse(input);
+        formats = parseResult.Success ? parseResult.Value : null;
+
+        return parseResult.Success;
+    }
 }

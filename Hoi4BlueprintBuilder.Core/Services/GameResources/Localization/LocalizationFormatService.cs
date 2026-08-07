@@ -228,7 +228,7 @@ public sealed class LocalizationFormatService
     )
     {
         Color? color = null;
-        string text = format.Text;
+        ReadOnlySpan<char> text = format.Text;
         if (format.Type == LocalizationFormatType.TextWithColor)
         {
             if (string.IsNullOrEmpty(format.Text))
@@ -236,11 +236,10 @@ public sealed class LocalizationFormatService
                 return [new TextFormatInfo(string.Empty, null)];
             }
 
-            if (_localizationTextColorsService.TryGetColor(format.Text[0], out var colorInfo))
+            if (_localizationTextColorsService.TryGetColor(text[0], out var colorInfo))
             {
                 color = colorInfo.Color;
-                //TODO: 使用 Span 优化
-                text = format.Text[1..];
+                text = text[1..];
             }
 
             // 处理嵌套在着色语法中的其他语法使用 ($$ 转义, \n 换行, 占位符, 图标, 键引用等)
@@ -258,6 +257,6 @@ public sealed class LocalizationFormatService
             }
         }
 
-        return [new TextFormatInfo(text, color)];
+        return [new TextFormatInfo(text.ToString(), color)];
     }
 }
