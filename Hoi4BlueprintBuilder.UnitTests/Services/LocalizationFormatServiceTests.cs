@@ -1,3 +1,4 @@
+using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
@@ -282,12 +283,215 @@ public class LocalizationFormatServiceTests
     {
         // 值: "$$100$VAL|0$"
         // $$100 → 字面 "$100", $VAL|0$ → 占位符
-        string result = _formatService.GetFormatText(
-            "ESCAPED_DOLLAR_ADJACENT_PLACEHOLDER",
-            "VAL",
-            50
-        );
+        string result = _formatService.GetFormatText("ESCAPED_DOLLAR_ADJACENT_PLACEHOLDER", "VAL", 50);
 
         Assert.That(result, Is.EqualTo("$10050"));
+    }
+
+    // ===== 颜色相关测试 =====
+    // 颜色值来自 TestData/interface/core.gfx 中的 textcolors 定义
+
+    private static readonly Color ColorRed = Color.FromRgb(255, 50, 50); // R
+    private static readonly Color ColorGreen = Color.FromRgb(0, 159, 3); // G
+    private static readonly Color ColorBlue = Color.FromRgb(0, 0, 255); // B
+    private static readonly Color ColorGold = Color.FromRgb(255, 189, 0); // H / Y
+
+    [Test]
+    public void GetFormatTextInfo_SimpleColorBlock_ShouldAssignColor()
+    {
+        // §R红色文本§! → 整段为红色
+        var result = _formatService.GetFormatTextInfo("§R红色文本§!");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().DisplayText, Is.EqualTo("红色文本"));
+            Assert.That(result.First().Color, Is.EqualTo(ColorRed));
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfo_MultipleColorBlocks_ShouldAssignEachColor()
+    {
+        // §R红§!§G绿§!§B蓝§! → 三段不同颜色
+        var result = _formatService.GetFormatTextInfo("§R红§!§G绿§!§B蓝§!");
+
+        var list = result.ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(list, Has.Count.EqualTo(3));
+            Assert.That(list[0].DisplayText, Is.EqualTo("红"));
+            Assert.That(list[0].Color, Is.EqualTo(ColorRed));
+            Assert.That(list[1].DisplayText, Is.EqualTo("绿"));
+            Assert.That(list[1].Color, Is.EqualTo(ColorGreen));
+            Assert.That(list[2].DisplayText, Is.EqualTo("蓝"));
+            Assert.That(list[2].Color, Is.EqualTo(ColorBlue));
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfo_TextAroundColor_ShouldHaveNullColorForPlainText()
+    {
+        // 前§R红色§!后 → 黑(null) + 红 + 黑(null)
+        var result = _formatService.GetFormatTextInfo("前§R红色§!后");
+
+        var list = result.ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(list, Has.Count.EqualTo(3));
+            Assert.That(list[0].DisplayText, Is.EqualTo("前"));
+            Assert.That(list[0].Color, Is.Null);
+            Assert.That(list[1].DisplayText, Is.EqualTo("红色"));
+            Assert.That(list[1].Color, Is.EqualTo(ColorRed));
+            Assert.That(list[2].DisplayText, Is.EqualTo("后"));
+            Assert.That(list[2].Color, Is.Null);
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfo_NoColorBlocks_ShouldAllHaveNullColor()
+    {
+        // 普通文本无颜色 → 单段 null 颜色
+        var result = _formatService.GetFormatTextInfo("普通文本无颜色");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().DisplayText, Is.EqualTo("普通文本无颜色"));
+            Assert.That(result.First().Color, Is.Null);
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfo_UnknownColorCode_ShouldFallBackToNullColor()
+    {
+        // §Z未知§! → Z 不在 core.gfx 中, 颜色为 null, 文本保留 "Z未知"
+        var result = _formatService.GetFormatTextInfo("§Z未知§!");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().DisplayText, Is.EqualTo("Z未知"));
+            Assert.That(result.First().Color, Is.Null);
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfo_EmptyColorBlock_ShouldProduceNoItems()
+    {
+        // §R§! → 颜色块内容为空, 解析后不产生任何 TextFormatInfo
+        var result = _formatService.GetFormatTextInfo("§R§!");
+
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public void GetFormatTextInfoByKey_PlaceholderWithColorFormatSpecifier_ShouldUseSpecifierColor()
+    {
+        // §R$NUM|H$个§! with NUM=5
+        // $NUM|H$ 的格式说明符 H 是颜色码 → 占位符值 "5" 使用金色 (H), 而非外层红色
+        // "个" 无自身颜色 → 使用外层红色
+        var result = _formatService.GetFormatTextInfoByKey("COLOR_PLACEHOLDER_FORMAT_H", "NUM", 5);
+
+        var list = result.ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(list, Has.Count.EqualTo(2));
+            Assert.That(list[0].DisplayText, Is.EqualTo("5"));
+            Assert.That(list[0].Color, Is.EqualTo(ColorGold));
+            Assert.That(list[1].DisplayText, Is.EqualTo("个"));
+            Assert.That(list[1].Color, Is.EqualTo(ColorRed));
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfoByKey_PlaceholderWithNonColorFormatSpecifier_ShouldUseOuterColor()
+    {
+        // §R$NUM|0$§! with NUM=5
+        // 格式说明符 "0" 不是颜色码 → 占位符值 "5" 颜色为 null → 回退到外层红色
+        var result = _formatService.GetFormatTextInfoByKey("COLOR_PLACEHOLDER_FORMAT_0", "NUM", 5);
+
+        var list = result.ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(list, Has.Count.EqualTo(1));
+            Assert.That(list[0].DisplayText, Is.EqualTo("5"));
+            Assert.That(list[0].Color, Is.EqualTo(ColorRed));
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfo_NestedKeyReference_ShouldPreserveInnerColor()
+    {
+        // §R前缀$COLOR_INNER_GREEN$后缀§! where COLOR_INNER_GREEN = §G绿色§!
+        // 外层 §R 红色, 内层 §G 绿色
+        // 内层颜色优先: "前缀"→红, "绿色"→绿 (内层颜色保留), "后缀"→红
+        var result = _formatService.GetFormatTextInfo("§R前缀$COLOR_INNER_GREEN$后缀§!");
+
+        var list = result.ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(list, Has.Count.EqualTo(3));
+            Assert.That(list[0].DisplayText, Is.EqualTo("前缀"));
+            Assert.That(list[0].Color, Is.EqualTo(ColorRed));
+            Assert.That(list[1].DisplayText, Is.EqualTo("绿色"));
+            Assert.That(list[1].Color, Is.EqualTo(ColorGreen));
+            Assert.That(list[2].DisplayText, Is.EqualTo("后缀"));
+            Assert.That(list[2].Color, Is.EqualTo(ColorRed));
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfoByKey_DesignerBlocked_ShouldVerifyFullColorLayout()
+    {
+        // §R-需要该团中至少有§!§H$NUM_BATTALIONS|H$个作战营§!§R。§! with NUM_BATTALIONS=5
+        // 段1: "-需要该团中至少有" → 红 (§R)
+        // 段2: "5" → 金 (占位符 |H 格式说明符颜色, 优先于外层 §H)
+        // 段3: "个作战营" → 金 (外层 §H)
+        // 段4: "。" → 红 (§R)
+        var result = _formatService.GetFormatTextInfoByKey(
+            "DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS",
+            "NUM_BATTALIONS",
+            5
+        );
+
+        var list = result.ToList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(list, Has.Count.EqualTo(4));
+            Assert.That(list[0].DisplayText, Is.EqualTo("-需要该团中至少有"));
+            Assert.That(list[0].Color, Is.EqualTo(ColorRed));
+            Assert.That(list[1].DisplayText, Is.EqualTo("5"));
+            Assert.That(list[1].Color, Is.EqualTo(ColorGold));
+            Assert.That(list[2].DisplayText, Is.EqualTo("个作战营"));
+            Assert.That(list[2].Color, Is.EqualTo(ColorGold));
+            Assert.That(list[3].DisplayText, Is.EqualTo("。"));
+            Assert.That(list[3].Color, Is.EqualTo(ColorRed));
+        });
+    }
+
+    [Test]
+    public void GetFormatTextInfoByKey_KeyNotFound_ShouldReturnKeyWithNullColor()
+    {
+        var result = _formatService.GetFormatTextInfoByKey("NON_EXISTENT_KEY", "NUM", 1);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().DisplayText, Is.EqualTo("NON_EXISTENT_KEY"));
+            Assert.That(result.First().Color, Is.Null);
+        });
+    }
+
+    [Test]
+    public void NotExistFormatSpecifierTest()
+    {
+        var result = _formatService.GetFormatTextInfoByKey("COLOR_PLACEHOLDER_FORMAT", "NUM", 6);
+        Assert.That(result, Has.Count.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.First().DisplayText, Is.EqualTo("6"));
+            Assert.That(result.First().Color, Is.EqualTo(ColorRed));
+        });
     }
 }

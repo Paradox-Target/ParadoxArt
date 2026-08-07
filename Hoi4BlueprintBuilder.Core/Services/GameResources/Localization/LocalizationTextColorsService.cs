@@ -1,6 +1,6 @@
 ﻿using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
+using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using MethodTimer;
@@ -57,13 +57,13 @@ public sealed class LocalizationTextColorsService
         foreach (var textColorNode in textColorsNode.NodesValue)
         {
             char key = textColorNode.Key[0];
-            var colorBytes = new List<int>(3);
+            var colorBytes = new List<byte>(3);
 
             foreach (var leafValue in textColorNode.LeafValuesValue)
             {
                 if (leafValue.Value.TryGetInt(out int colorByte))
                 {
-                    colorBytes.Add(colorByte);
+                    colorBytes.Add((byte)colorByte);
                 }
                 else
                 {
@@ -78,7 +78,7 @@ public sealed class LocalizationTextColorsService
 
             colors[key] = new LocalizationTextColor(
                 key,
-                Color.FromArgb(colorBytes[0], colorBytes[1], colorBytes[2])
+                Color.FromRgb(colorBytes[0], colorBytes[1], colorBytes[2])
             );
         }
 

@@ -85,7 +85,8 @@
                     <TextBlock
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"
-                        Text="{Binding TotalWidthText}" />
+                        Text="{Binding TotalWidthText}"
+                        ToolTip.Tip="{Binding DesignerCombatWidthDesc}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"

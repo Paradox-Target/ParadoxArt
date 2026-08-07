@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 
@@ -88,7 +89,10 @@ public sealed partial class OobEditorView : UserControl, ITabViewItem
                     Tag = UnitSlotType.RegimentalSupport
                 };
                 button.CommandParameter = button;
-                Avalonia.Controls.ToolTip.SetTip(button, vm.DesignerBlockedByRegimentBattalions);
+                Avalonia.Controls.ToolTip.SetTip(
+                    button,
+                    vm.DesignerBlockedByRegimentBattalions.ToTextBlock()
+                );
                 Grid.SetRow(button, row);
                 Grid.SetColumn(button, column);
                 RegimentalSupportPanel.Children.Add(button);

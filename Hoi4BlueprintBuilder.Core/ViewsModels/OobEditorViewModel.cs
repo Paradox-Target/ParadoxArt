@@ -1,12 +1,14 @@
 using System.Diagnostics;
 using System.Drawing;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Notifications;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
@@ -59,7 +61,7 @@ public sealed partial class OobEditorViewModel : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TotalWidthText))]
     private partial int TotalWidth { get; set; }
-    public string TotalWidthText => $"宽度: {TotalWidth}";
+    public string TotalWidthText => $"{DesignerCombatWidth}{TotalWidth}";
 
     [ObservableProperty]
     public partial string DivisionNamesGroup { get; set; } = string.Empty;
@@ -71,7 +73,9 @@ public sealed partial class OobEditorViewModel : ObservableObject
 
     public string RegimentalSupportHeader { get; }
     public string DivisionalSupportHeader { get; }
-    public string DesignerBlockedByRegimentBattalions { get; }
+    public string DesignerCombatWidth { get; }
+    public TextBlock DesignerCombatWidthDesc { get; }
+    public IEnumerable<Inline> DesignerBlockedByRegimentBattalions { get; }
 
     private readonly UnitService _unitService;
     private readonly ImageService _imageService;
@@ -131,7 +135,7 @@ public sealed partial class OobEditorViewModel : ObservableObject
         RegimentalSupportHeight = definesService.GetInt("NDefines.NMilitary.MAX_REGIMENTAL_SUPPORT_HEIGHT");
         long[] array = definesService.GetLongs("NDefines.NMilitary.REGIMENTAL_SUPPORT_REQUIRED_BATTALIONS");
         MinUseRegimentalCount = (int)(array.Length > 0 ? array[0] : 0);
-        PropertyChanged += (sender, e) =>
+        PropertyChanged += (_, e) =>
         {
             if (
                 e.PropertyName
@@ -148,11 +152,15 @@ public sealed partial class OobEditorViewModel : ObservableObject
 
         DivisionalSupportHeader = _localizationService.GetFormatText("SUPPORT_HEADER");
         RegimentalSupportHeader = _localizationService.GetFormatText("REGIMENTAL_SUPPORT_HEADER");
-        DesignerBlockedByRegimentBattalions = _localizationService.GetFormatText(
+        DesignerBlockedByRegimentBattalions = _localizationService.GetFormatTextWithColor(
             "DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS",
             "NUM_BATTALIONS",
             MinUseRegimentalCount
         );
+        DesignerCombatWidth = _localizationService.GetFormatText("DESIGNER_COMBATWIDTH");
+        DesignerCombatWidthDesc = _localizationService
+            .GetFormatTextWithColor("DESIGNER_COMBATWIDTH_DESC")
+            .ToTextBlock();
     }
 
     public void SetTextAction(Action<string> setText)

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
+using Avalonia.Media;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Infrastructure.Parser;
 using Hoi4BlueprintBuilder.Core.Models;
@@ -75,6 +75,30 @@ public sealed class LocalizationFormatService
         return result.AsValueEnumerable().Select(static info => info.DisplayText).JoinToString(string.Empty);
     }
 
+    /// <summary>
+    /// 根据 <c>key</c> 获取格式化后的文本信息, 并替换指定占位符
+    /// </summary>
+    /// <param name="key">本地化键</param>
+    /// <param name="placeholder">要替换的占位符名称</param>
+    /// <param name="value">替换值</param>
+    /// <returns>格式化后的文本信息集合</returns>
+    public IReadOnlyCollection<TextFormatInfo> GetFormatTextInfoByKey(
+        string key,
+        string? placeholder = null,
+        int value = 0
+    )
+    {
+        if (!_localizationService.TryGetValue(key, out string? localizationText))
+        {
+            return [new TextFormatInfo(key, null)];
+        }
+
+        var result = new List<TextFormatInfo>();
+        ParseFormat(localizationText, result, placeholder, value);
+
+        return result;
+    }
+
     public string GetFormatText(string key, GameLanguage language)
     {
         return TryGetFormatText(key, language, out string? value) ? value : key;
@@ -139,11 +163,20 @@ public sealed class LocalizationFormatService
                     )
                 )
                 {
-                    result.Add(new TextFormatInfo(value.ToString(), Color.Black));
+                    var formatSpecifier = span[(index + 1)..];
+                    Color? color = null;
+                    if (
+                        formatSpecifier.Length == 1
+                        && _localizationTextColorsService.TryGetColor(formatSpecifier[0], out var colorInfo)
+                    )
+                    {
+                        color = colorInfo.Color;
+                    }
+                    result.Add(new TextFormatInfo(value.ToString(), color));
                     continue;
                 }
 
-                // 一般来说, 包含管道符或文本为 VALUE | VAL 的为格式说明字符串, 不需要处理
+                // 忽略其他
                 if (index != -1 || format.Text == "VALUE" || format.Text == "VAL")
                 {
                     continue;
@@ -177,7 +210,7 @@ public sealed class LocalizationFormatService
         }
         else
         {
-            result.Add(new TextFormatInfo(text, Color.Black));
+            result.Add(new TextFormatInfo(text, null));
         }
     }
 
@@ -194,18 +227,19 @@ public sealed class LocalizationFormatService
         int value = 0
     )
     {
-        var color = Color.Black;
+        Color? color = null;
         string text = format.Text;
         if (format.Type == LocalizationFormatType.TextWithColor)
         {
             if (string.IsNullOrEmpty(format.Text))
             {
-                return [new TextFormatInfo(string.Empty, Color.Black)];
+                return [new TextFormatInfo(string.Empty, null)];
             }
 
             if (_localizationTextColorsService.TryGetColor(format.Text[0], out var colorInfo))
             {
                 color = colorInfo.Color;
+                //TODO: 使用 Span 优化
                 text = format.Text[1..];
             }
 
@@ -216,7 +250,8 @@ public sealed class LocalizationFormatService
                 ParseFormatToList(formatInfos, list, placeholder, value);
                 for (int i = 0; i < list.Count; i++)
                 {
-                    list[i] = new TextFormatInfo(list[i].DisplayText, color);
+                    var info = list[i];
+                    list[i] = new TextFormatInfo(info.DisplayText, info.Color ?? color);
                 }
 
                 return list;

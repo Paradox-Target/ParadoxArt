@@ -10,13 +10,13 @@
 
 ---
 
-# 0.23.0
+# 0.24.0
 
 ## Chinese
 
 **本软件现在在 [GitHub](https://github.com/Paradox-Target/ParadoxArt) 开放源代码.**
 
-- feat: 国策信息卡新增 `ai_will_do`, `available`, `bypass`, `select_effect` 属性编辑功能.
+- feat: 本地化文本支持占位符着色.
 
 ## English
 
