@@ -362,7 +362,9 @@ public sealed partial class OobEditorViewModel : ObservableObject
         }
         else if (slotType == UnitSlotType.RegimentalSupport)
         {
-            int count = _existingUnits.Keys.Count(info => info.Point.X == position.Point.X);
+            int count = _existingUnits.Keys.Count(info =>
+                info.Point.X == position.Point.X && info.SlotType == UnitSlotType.Common
+            );
             if (count < MinUseRegimentalCount)
             {
                 units = [];
