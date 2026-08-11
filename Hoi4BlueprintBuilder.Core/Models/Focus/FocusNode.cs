@@ -53,7 +53,9 @@ public sealed partial class FocusNode(string path, FocusType type)
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]
     [NotifyPropertyChangedFor(nameof(Y))]
+#pragma warning disable MVVMTK0042
     private FocusNode? _relativePosition;
+#pragma warning restore MVVMTK0042
 
     /// <summary>
     /// 使用此节点作为相对位置源的节点的集合
@@ -85,36 +87,52 @@ public sealed partial class FocusNode(string path, FocusType type)
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(X))]
     [NotifyPropertyChangedFor(nameof(Y))]
+#pragma warning disable MVVMTK0042 // Prefer using [ObservableProperty] on partial properties
     private FocusPoint _rawPosition = new(0, 0);
+#pragma warning restore MVVMTK0042 // Prefer using [ObservableProperty] on partial properties
 
-    public int X => GetActualX();
-    public int Y => GetActualY();
+    public int X => ActualPosition.X;
+    public int Y => ActualPosition.Y;
 
-    // TODO: 计算两次, 待优化
-    private int GetActualX()
+    private FocusPoint ActualPosition
     {
-        int x = RelativePosition is null ? RawPosition.X : RawPosition.X + RelativePosition.X;
-        foreach (var offset in _offsets)
+        get
         {
-            if (offset.IsEnabled)
+            if (_isActualPositionValid)
             {
-                x += offset.Offset.X;
+                return _actualPosition;
             }
+
+            int x = RawPosition.X;
+            int y = RawPosition.Y;
+            if (RelativePosition is not null)
+            {
+                var relativePosition = RelativePosition.ActualPosition;
+                x += relativePosition.X;
+                y += relativePosition.Y;
+            }
+
+            foreach (var offset in _offsets)
+            {
+                if (offset.IsEnabled)
+                {
+                    x += offset.Offset.X;
+                    y += offset.Offset.Y;
+                }
+            }
+
+            _actualPosition = new FocusPoint(x, y);
+            _isActualPositionValid = true;
+            return _actualPosition;
         }
-        return x;
     }
 
-    private int GetActualY()
+    private FocusPoint _actualPosition;
+    private bool _isActualPositionValid;
+
+    private void InvalidateActualPosition()
     {
-        int y = RelativePosition is null ? RawPosition.Y : RawPosition.Y + RelativePosition.Y;
-        foreach (var offset in _offsets)
-        {
-            if (offset.IsEnabled)
-            {
-                y += offset.Offset.Y;
-            }
-        }
-        return y;
+        _isActualPositionValid = false;
     }
 
     [ObservableProperty]
@@ -138,7 +156,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// 如果 <see cref="CancelIfInvalid"/> 和 <see cref="ContinueIfInvalid"/> 都设置为 <c>false</c>，则当 <c>available</c> 代码块变为 <c>false</c> 时，焦点操作会暂停.
     /// </remarks>
     [ObservableProperty]
-    private bool _cancelIfInvalid = true;
+    public partial bool CancelIfInvalid { get; set; } = true;
 
     /// <summary>
     /// 无视 <c>available</c> 块, 无论如何都进行 Focus, 默认值为 <c>false</c>
@@ -147,7 +165,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// 如果 <see cref="CancelIfInvalid"/> 和 <see cref="ContinueIfInvalid"/> 都设置为 <c>false</c>，则当 <c>available</c> 代码块变为 <c>false</c> 时，焦点操作会暂停.
     /// </remarks>
     [ObservableProperty]
-    private bool _continueIfInvalid;
+    public partial bool ContinueIfInvalid { get; set; }
 
     public IReadOnlyCollection<FocusOffset> Offsets => _offsets;
     private readonly List<FocusOffset> _offsets = [];
@@ -158,6 +176,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     {
         offset.PropertyChanged += OnFocusOffsetPropertyChanged;
         _offsets.Add(offset);
+        InvalidateActualPosition();
     }
 
     private void ClearOffset()
@@ -167,12 +186,14 @@ public sealed partial class FocusNode(string path, FocusType type)
             offset.PropertyChanged -= OnFocusOffsetPropertyChanged;
         }
         _offsets.Clear();
+        InvalidateActualPosition();
     }
 
     private void OnFocusOffsetPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(FocusOffset.IsEnabled))
         {
+            InvalidateActualPosition();
             OnPropertyChanged(nameof(X));
             OnPropertyChanged(nameof(Y));
             RedrawFocusConnectionLinesIfNeed();
@@ -454,6 +475,7 @@ public sealed partial class FocusNode(string path, FocusType type)
 #pragma warning disable MVVMTK0034 // Direct field reference to [ObservableProperty] backing
         _rawPosition = new FocusPoint(offsetX, offsetY);
 #pragma warning restore MVVMTK0034 // Direct field reference to [ObservableProperty] backing
+        InvalidateActualPosition();
         RelativePosition = relativeTo;
         return true;
     }
@@ -495,8 +517,15 @@ public sealed partial class FocusNode(string path, FocusType type)
         OnPropertyChanged(nameof(LocalizedName));
     }
 
+    partial void OnRawPositionChanged(FocusPoint value)
+    {
+        InvalidateActualPosition();
+    }
+
     partial void OnRelativePositionChanged(FocusNode? oldValue, FocusNode? newValue)
     {
+        InvalidateActualPosition();
+
         if (oldValue is not null)
         {
             oldValue.PropertyChanged -= OnXOrYPropertyChanged;
@@ -514,10 +543,12 @@ public sealed partial class FocusNode(string path, FocusType type)
     {
         if (e.PropertyName == nameof(X))
         {
+            InvalidateActualPosition();
             OnPropertyChanged(nameof(X));
         }
         else if (e.PropertyName == nameof(Y))
         {
+            InvalidateActualPosition();
             OnPropertyChanged(nameof(Y));
         }
     }

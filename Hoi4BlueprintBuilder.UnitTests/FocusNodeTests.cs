@@ -36,6 +36,55 @@ public sealed class FocusNodeTests
     }
 
     [Test]
+    public void CalculatedPosition_WhenRawPositionChanges_UsesLatestPosition()
+    {
+        var node = new FocusNode("path", default) { RawPosition = new FocusPoint(1, 2) };
+
+        Assert.That(node.X, Is.EqualTo(1));
+        Assert.That(node.Y, Is.EqualTo(2));
+
+        node.RawPosition = new FocusPoint(10, 20);
+
+        Assert.That(node.X, Is.EqualTo(10));
+        Assert.That(node.Y, Is.EqualTo(20));
+    }
+
+    [Test]
+    public void CalculatedPosition_WhenRelativePositionChanges_UsesLatestPosition()
+    {
+        var relative = new FocusNode("rel", default) { RawPosition = new FocusPoint(1, 2) };
+        var node = new FocusNode("path", default)
+        {
+            RawPosition = new FocusPoint(3, 4),
+            RelativePosition = relative,
+        };
+
+        Assert.That(node.X, Is.EqualTo(4));
+        Assert.That(node.Y, Is.EqualTo(6));
+
+        relative.RawPosition = new FocusPoint(10, 20);
+
+        Assert.That(node.X, Is.EqualTo(13));
+        Assert.That(node.Y, Is.EqualTo(24));
+    }
+
+    [Test]
+    public void CalculatedPosition_WhenEnabledOffsetIsAdded_UsesLatestPosition()
+    {
+        var node = new FocusNode("path", default) { RawPosition = new FocusPoint(10, 20) };
+
+        Assert.That(node.X, Is.EqualTo(10));
+        Assert.That(node.Y, Is.EqualTo(20));
+
+        node.AddOffset(
+            new FocusOffset(new FocusPoint(5, 10), null) { IsEnabled = true }
+        );
+
+        Assert.That(node.X, Is.EqualTo(15));
+        Assert.That(node.Y, Is.EqualTo(30));
+    }
+
+    [Test]
     public void SetRawMethods_SubtractRelativeOffset_FromRawPosition()
     {
         var node = new FocusNode("path", default);
