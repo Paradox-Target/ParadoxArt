@@ -407,7 +407,9 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             }
             else
             {
-                var info = _existingUnits.Keys.FirstOrDefault(x => x.Point.X == position.Point.X);
+                var info = _existingUnits.Keys.FirstOrDefault(x =>
+                    x.Point.X == position.Point.X && x.SlotType == UnitSlotType.Common
+                );
                 string currentGroup = info is null ? string.Empty : _existingUnits[info].Group;
                 units = units.Where(item =>
                     item is { IsRegimental: true, IsDivisional: false }
@@ -509,7 +511,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             list.Add(regimentalSupport);
         }
         template.AllArray = [.. list];
-        var rootNode = new Node("");
+        var rootNode = new Node(string.Empty);
         rootNode.AddChild(template);
         _generatedText = rootNode.ToScript();
         _setText?.Invoke(_generatedText);
