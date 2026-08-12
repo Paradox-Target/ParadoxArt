@@ -51,8 +51,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     private readonly AvaloniaList<FocusNode> _mutuallyExclusive = [];
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(X))]
-    [NotifyPropertyChangedFor(nameof(Y))]
+    [NotifyPropertyChangedFor(nameof(X), nameof(Y))]
 #pragma warning disable MVVMTK0042
     private FocusNode? _relativePosition;
 #pragma warning restore MVVMTK0042
@@ -85,8 +84,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// 原始的位置, 对应脚本中的 X 与 Y 值 ,不包含相对位置的偏移, 不能代表显示位置。
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(X))]
-    [NotifyPropertyChangedFor(nameof(Y))]
+    [NotifyPropertyChangedFor(nameof(X), nameof(Y))]
 #pragma warning disable MVVMTK0042 // Prefer using [ObservableProperty] on partial properties
     private FocusPoint _rawPosition = new(0, 0);
 #pragma warning restore MVVMTK0042 // Prefer using [ObservableProperty] on partial properties
