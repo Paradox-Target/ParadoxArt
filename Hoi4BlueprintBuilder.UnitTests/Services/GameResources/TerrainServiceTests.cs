@@ -48,10 +48,7 @@ public sealed class TerrainServiceTests
         );
         var service = new TerrainService(BuildServiceProvider());
 
-        Assert.That(
-            service.LandTerrains,
-            Is.EquivalentTo(["forest", "river", "snow", "fort", "river", "amphibious"])
-        );
+        Assert.That(service.LandTerrains, Is.EquivalentTo(["forest", "snow", "fort", "river", "amphibious"]));
     }
 
     [Test]
