@@ -115,7 +115,6 @@ public sealed class GameResourcesPathService(
         var set = new Dictionary<string, string>(gameFilePaths.Length, PlatformHelper.Comparer);
 
         // 优先读取Mod文件
-        // TODO: 做一下性能测试, 看和原来的算法有什么区别
         foreach (
             string filePath in modFilePaths
                 .AsValueEnumerable()

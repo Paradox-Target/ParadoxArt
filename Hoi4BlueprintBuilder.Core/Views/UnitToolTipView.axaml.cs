@@ -5,7 +5,7 @@ namespace Hoi4BlueprintBuilder.Core.Views;
 public sealed partial class UnitToolTipView : UserControl
 {
     public UnitToolTipView()
-        : this("Test", "Test", new TextBlock()) { }
+        : this("单位名称", "这是一段描述", new TextBlock()) { }
 
     public UnitToolTipView(string unitName, string unitDescription, TextBlock unitModifiers)
     {
