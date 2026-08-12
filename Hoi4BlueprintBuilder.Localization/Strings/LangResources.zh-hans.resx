@@ -673,4 +673,49 @@ SpriteName: {1}</value>
   <data name="FocusIconFavorites_CanNotDeleteDefaultFavorites" xml:space="preserve">
     <value>无法删除默认收藏夹</value>
   </data>
+  <data name="OobEditorView_Title" xml:space="preserve">
+    <value>部队模板编辑器</value>
+  </data>
+  <data name="OobEditorView_TemplateName" xml:space="preserve">
+    <value>模板名</value>
+  </data>
+  <data name="OobEditorView_TemplateNamePlaceholder" xml:space="preserve">
+    <value>请输入模板名</value>
+  </data>
+  <data name="OobEditorView_IsLocked" xml:space="preserve">
+    <value>锁定部队</value>
+  </data>
+  <data name="OobEditorView_SupplyPriority" xml:space="preserve">
+    <value>补给优先级</value>
+  </data>
+  <data name="OobEditorView_CopyToClipboard" xml:space="preserve">
+    <value>复制到剪贴板</value>
+  </data>
+  <data name="OobEditorView_DivisionNamesGroup" xml:space="preserve">
+    <value>名称组</value>
+  </data>
+  <data name="OobEditorView_DivisionNamesGroupPlaceholder" xml:space="preserve">
+    <value>请输入名称组</value>
+  </data>
+  <data name="OobEditorView_TerrainModifiers" xml:space="preserve">
+    <value>地形修正</value>
+  </data>
+  <data name="OobEditorView_Terrain" xml:space="preserve">
+    <value>地形</value>
+  </data>
+  <data name="OobEditorView_NoTerrainModifiers" xml:space="preserve">
+    <value>当前编制没有地形修正</value>
+  </data>
+  <data name="OobEditorView_EquipmentRequirements" xml:space="preserve">
+    <value>装备需求</value>
+  </data>
+  <data name="OobEditorView_ParachutingAllowed" xml:space="preserve">
+    <value>√允许伞降</value>
+  </data>
+  <data name="OobEditorView_ParachutingNotAllowed" xml:space="preserve">
+    <value>×不允许伞降</value>
+  </data>
+  <data name="OobEditorView_UnitPickerTitle" xml:space="preserve">
+    <value>单位选择器</value>
+  </data>
 </root>

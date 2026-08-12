@@ -669,4 +669,49 @@
   <data name="FocusIconFavorites_CanNotDeleteDefaultFavorites" xml:space="preserve">
     <value>FocusIconFavorites_CanNotDeleteDefaultFavorites</value>
   </data>
+  <data name="OobEditorView_Title" xml:space="preserve">
+    <value>OobEditorView_Title</value>
+  </data>
+  <data name="OobEditorView_TemplateName" xml:space="preserve">
+    <value>OobEditorView_TemplateName</value>
+  </data>
+  <data name="OobEditorView_TemplateNamePlaceholder" xml:space="preserve">
+    <value>OobEditorView_TemplateNamePlaceholder</value>
+  </data>
+  <data name="OobEditorView_IsLocked" xml:space="preserve">
+    <value>OobEditorView_IsLocked</value>
+  </data>
+  <data name="OobEditorView_SupplyPriority" xml:space="preserve">
+    <value>OobEditorView_SupplyPriority</value>
+  </data>
+  <data name="OobEditorView_CopyToClipboard" xml:space="preserve">
+    <value>OobEditorView_CopyToClipboard</value>
+  </data>
+  <data name="OobEditorView_DivisionNamesGroup" xml:space="preserve">
+    <value>OobEditorView_DivisionNamesGroup</value>
+  </data>
+  <data name="OobEditorView_DivisionNamesGroupPlaceholder" xml:space="preserve">
+    <value>OobEditorView_DivisionNamesGroupPlaceholder</value>
+  </data>
+  <data name="OobEditorView_TerrainModifiers" xml:space="preserve">
+    <value>OobEditorView_TerrainModifiers</value>
+  </data>
+  <data name="OobEditorView_Terrain" xml:space="preserve">
+    <value>OobEditorView_Terrain</value>
+  </data>
+  <data name="OobEditorView_NoTerrainModifiers" xml:space="preserve">
+    <value>OobEditorView_NoTerrainModifiers</value>
+  </data>
+  <data name="OobEditorView_EquipmentRequirements" xml:space="preserve">
+    <value>OobEditorView_EquipmentRequirements</value>
+  </data>
+  <data name="OobEditorView_ParachutingAllowed" xml:space="preserve">
+    <value>OobEditorView_ParachutingAllowed</value>
+  </data>
+  <data name="OobEditorView_ParachutingNotAllowed" xml:space="preserve">
+    <value>OobEditorView_ParachutingNotAllowed</value>
+  </data>
+  <data name="OobEditorView_UnitPickerTitle" xml:space="preserve">
+    <value>OobEditorView_UnitPickerTitle</value>
+  </data>
 </root>

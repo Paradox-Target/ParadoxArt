@@ -1,7 +1,10 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Media;
+using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
+using Hoi4BlueprintBuilder.Localization.Strings;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
@@ -103,7 +106,9 @@ public sealed partial class OobEditorView : UserControl, ITabViewItem
         telemetryService.TrackEvent("Open_Template_Editor_View");
     }
 
-    public string Header => "部队模板编辑器";
+    public string Header => LangResources.OobEditorView_Title;
     public string FilePath => "internal://template_editor";
     public string ToolTip => Header;
+    public FAIconSource TabIcon { get; } =
+        new FAPathIconSource { Data = (Geometry)App.Current.Resources["DivisionDesignerIconGeometry"]! };
 }

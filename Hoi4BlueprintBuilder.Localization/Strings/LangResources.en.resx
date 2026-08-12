@@ -668,4 +668,49 @@ Sprite Name: {1}</value>
     <data name="FocusIconFavorites_FavoritesAlreadyExists" xml:space="preserve">
         <value>Favorites already exists</value>
     </data>
+    <data name="OobEditorView_Title" xml:space="preserve">
+        <value>Division Template Editor</value>
+    </data>
+    <data name="OobEditorView_TemplateName" xml:space="preserve">
+        <value>Template Name</value>
+    </data>
+    <data name="OobEditorView_TemplateNamePlaceholder" xml:space="preserve">
+        <value>Enter a template name</value>
+    </data>
+    <data name="OobEditorView_IsLocked" xml:space="preserve">
+        <value>Lock Template</value>
+    </data>
+    <data name="OobEditorView_SupplyPriority" xml:space="preserve">
+        <value>Supply Priority</value>
+    </data>
+    <data name="OobEditorView_CopyToClipboard" xml:space="preserve">
+        <value>Copy to Clipboard</value>
+    </data>
+    <data name="OobEditorView_DivisionNamesGroup" xml:space="preserve">
+        <value>Division Name Group</value>
+    </data>
+    <data name="OobEditorView_DivisionNamesGroupPlaceholder" xml:space="preserve">
+        <value>Enter a division name group</value>
+    </data>
+    <data name="OobEditorView_TerrainModifiers" xml:space="preserve">
+        <value>Terrain Modifiers</value>
+    </data>
+    <data name="OobEditorView_Terrain" xml:space="preserve">
+        <value>Terrain</value>
+    </data>
+    <data name="OobEditorView_NoTerrainModifiers" xml:space="preserve">
+        <value>This template has no terrain modifiers</value>
+    </data>
+    <data name="OobEditorView_EquipmentRequirements" xml:space="preserve">
+        <value>Equipment Requirements</value>
+    </data>
+    <data name="OobEditorView_ParachutingAllowed" xml:space="preserve">
+        <value>√ Parachuting Allowed</value>
+    </data>
+    <data name="OobEditorView_ParachutingNotAllowed" xml:space="preserve">
+        <value>× Parachuting Not Allowed</value>
+    </data>
+    <data name="OobEditorView_UnitPickerTitle" xml:space="preserve">
+        <value>Unit Picker</value>
+    </data>
 </root>

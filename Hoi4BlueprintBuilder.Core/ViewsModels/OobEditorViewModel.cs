@@ -39,7 +39,10 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     public int RegimentalSupportWidth { get; }
     public int RegimentalSupportHeight { get; }
 
-    public string CanParachutedCountText => CanNotParachutedCount == 0 ? "√允许伞降" : "×不允许伞降";
+    public string CanParachutedCountText =>
+        CanNotParachutedCount == 0
+            ? LangResources.OobEditorView_ParachutingAllowed
+            : LangResources.OobEditorView_ParachutingNotAllowed;
     public string TotalManpowerText => $"{DesignerManpower}{TotalManpower}";
     private string DesignerManpower { get; }
 
@@ -278,7 +281,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         var viewModel = new UnitPickerViewModel(list);
         var dialog = new FAContentDialog
         {
-            Title = "单位选择器",
+            Title = LangResources.OobEditorView_UnitPickerTitle,
             Content = new UnitPickerView(viewModel),
             CloseButtonText = LangResources.Common_Cancel
         };

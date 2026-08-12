@@ -59,7 +59,7 @@
 
             <fa:FACommandBarButton Command="{Binding OpenOobEditorCommand}" Label="部队编辑器">
                 <fa:FACommandBarButton.IconSource>
-                    <control:FontIconSource Glyph="&#xE775;" />
+                    <fa:FAPathIconSource Data="{StaticResource DivisionDesignerIconGeometry}" />
                 </fa:FACommandBarButton.IconSource>
             </fa:FACommandBarButton>
 

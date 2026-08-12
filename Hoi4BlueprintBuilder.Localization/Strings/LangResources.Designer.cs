@@ -1129,6 +1129,141 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
                 return ResourceManager.GetString("NotSupportInfoControl_Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_CopyToClipboard.
+        /// </summary>
+        public static string OobEditorView_CopyToClipboard {
+            get {
+                return ResourceManager.GetString("OobEditorView_CopyToClipboard", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_DivisionNamesGroup.
+        /// </summary>
+        public static string OobEditorView_DivisionNamesGroup {
+            get {
+                return ResourceManager.GetString("OobEditorView_DivisionNamesGroup", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_DivisionNamesGroupPlaceholder.
+        /// </summary>
+        public static string OobEditorView_DivisionNamesGroupPlaceholder {
+            get {
+                return ResourceManager.GetString("OobEditorView_DivisionNamesGroupPlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_EquipmentRequirements.
+        /// </summary>
+        public static string OobEditorView_EquipmentRequirements {
+            get {
+                return ResourceManager.GetString("OobEditorView_EquipmentRequirements", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_IsLocked.
+        /// </summary>
+        public static string OobEditorView_IsLocked {
+            get {
+                return ResourceManager.GetString("OobEditorView_IsLocked", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_NoTerrainModifiers.
+        /// </summary>
+        public static string OobEditorView_NoTerrainModifiers {
+            get {
+                return ResourceManager.GetString("OobEditorView_NoTerrainModifiers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_ParachutingAllowed.
+        /// </summary>
+        public static string OobEditorView_ParachutingAllowed {
+            get {
+                return ResourceManager.GetString("OobEditorView_ParachutingAllowed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_ParachutingNotAllowed.
+        /// </summary>
+        public static string OobEditorView_ParachutingNotAllowed {
+            get {
+                return ResourceManager.GetString("OobEditorView_ParachutingNotAllowed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_SupplyPriority.
+        /// </summary>
+        public static string OobEditorView_SupplyPriority {
+            get {
+                return ResourceManager.GetString("OobEditorView_SupplyPriority", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_TemplateName.
+        /// </summary>
+        public static string OobEditorView_TemplateName {
+            get {
+                return ResourceManager.GetString("OobEditorView_TemplateName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_TemplateNamePlaceholder.
+        /// </summary>
+        public static string OobEditorView_TemplateNamePlaceholder {
+            get {
+                return ResourceManager.GetString("OobEditorView_TemplateNamePlaceholder", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_Terrain.
+        /// </summary>
+        public static string OobEditorView_Terrain {
+            get {
+                return ResourceManager.GetString("OobEditorView_Terrain", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_TerrainModifiers.
+        /// </summary>
+        public static string OobEditorView_TerrainModifiers {
+            get {
+                return ResourceManager.GetString("OobEditorView_TerrainModifiers", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_Title.
+        /// </summary>
+        public static string OobEditorView_Title {
+            get {
+                return ResourceManager.GetString("OobEditorView_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to OobEditorView_UnitPickerTitle.
+        /// </summary>
+        public static string OobEditorView_UnitPickerTitle {
+            get {
+                return ResourceManager.GetString("OobEditorView_UnitPickerTitle", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to ParsingFocusTreeFile.

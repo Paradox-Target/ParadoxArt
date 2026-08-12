@@ -1,4 +1,18 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--  20 × 20 Fluent 风格：编制网格叠加编辑笔。  -->
+    <StreamGeometry x:Key="DivisionDesignerIconGeometry">
+        M1.5,1.5 H14.5 V2.75 H1.5 Z
+        M1.5,5.5 H14.5 V6.75 H1.5 Z
+        M1.5,9.5 H11.25 V10.75 H1.5 Z
+        M1.5,13.25 H7.75 V14.5 H1.5 Z
+        M1.5,1.5 H2.75 V14.5 H1.5 Z
+        M5.5,1.5 H6.75 V14.5 H5.5 Z
+        M9.5,1.5 H10.75 V11.25 H9.5 Z
+        M13.25,1.5 H14.5 V7.75 H13.25 Z
+        M9.15,15.55 L15.55,9.15 L17.85,11.45 L11.45,17.85 L8.2,18.8 Z
+        M16.4,8.3 L17.05,7.65 C17.64,7.06 18.59,7.06 19.18,7.65
+        C19.77,8.24 19.77,9.19 19.18,9.78 L18.7,10.26 Z
+    </StreamGeometry>
     <Bitmap x:Key="GameSettingsMainIcon">avares://ParadoxArt.Core/Assets/Icons/emoji_u1f4c2.png</Bitmap>
     <Bitmap x:Key="AppSettingsMainIcon">avares://ParadoxArt.Core/Assets/Icons/emoji_u1f310.png</Bitmap>
 </ResourceDictionary>
