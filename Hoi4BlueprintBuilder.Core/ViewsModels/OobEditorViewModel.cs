@@ -13,6 +13,7 @@ using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Localization;
+using Hoi4BlueprintBuilder.Core.Services.GameResources.Modifiers;
 using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Localization.Strings;
 using NLog;
@@ -23,7 +24,7 @@ using ZLinq;
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 
 [RegisterTransient<OobEditorViewModel>]
-public sealed partial class OobEditorViewModel : ObservableObject
+public sealed partial class OobEditorViewModel : ObservableObject, IClosed
 {
     public IEnumerable<EquipmentsVo> Equipments =>
         _equipments.Select(x => new EquipmentsVo(_localizationService.GetFormatText(x.Key), x.Value));
@@ -69,6 +70,15 @@ public sealed partial class OobEditorViewModel : ObservableObject
 
     public TextBlock DivisionalSupportDesc { get; }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasTerrainModifiers))]
+    public partial IReadOnlyList<TerrainModifierVo> TerrainModifiers { get; private set; } = [];
+
+    public bool HasTerrainModifiers => TerrainModifiers.Count > 0;
+    public string TerrainAttackHeader { get; }
+    public string TerrainMovementHeader { get; }
+    public string TerrainDefenceHeader { get; }
+
     /// <summary>
     /// 每列最少几个才能使用团级支援
     /// </summary>
@@ -87,13 +97,18 @@ public sealed partial class OobEditorViewModel : ObservableObject
     private readonly LocalizationFormatService _localizationService;
     private readonly ClipboardService _clipboardService;
     private readonly NotificationService _notificationService;
+    private readonly ModifierDisplayService _modifierService;
+    private readonly ModifierService _modifierValueService;
+    private readonly TerrainModifierCalculator _terrainModifierCalculator;
+    private readonly TerrainService _terrainService;
     private Action<string>? _setText;
     private string? _generatedText;
 
     private readonly Dictionary<PositionInfo, UnitInfo> _existingUnits = [];
     private readonly Dictionary<string, int> _equipments = [];
+    private readonly Dictionary<string, Bitmap?> _terrainImages = new(StringComparer.OrdinalIgnoreCase);
     private readonly UnitInfo EmptyUnit =
-        new(string.Empty, string.Empty, false, false, 0, false, 0, false, new HashSet<string>(), []);
+        new(string.Empty, string.Empty, false, false, 0, false, 0, false, new HashSet<string>(), [], []);
 
     private const string Support = "support";
     private const string UnitPropertyChange = "UnitPropertyChange";
@@ -105,7 +120,11 @@ public sealed partial class OobEditorViewModel : ObservableObject
         ImageService imageService,
         LocalizationFormatService localizationService,
         ClipboardService clipboardService,
-        NotificationService notificationService
+        NotificationService notificationService,
+        ModifierDisplayService modifierService,
+        ModifierService modifierValueService,
+        TerrainModifierCalculator terrainModifierCalculator,
+        TerrainService terrainService
     )
     {
         _unitService = unitService;
@@ -113,6 +132,10 @@ public sealed partial class OobEditorViewModel : ObservableObject
         _localizationService = localizationService;
         _clipboardService = clipboardService;
         _notificationService = notificationService;
+        _modifierService = modifierService;
+        _modifierValueService = modifierValueService;
+        _terrainModifierCalculator = terrainModifierCalculator;
+        _terrainService = terrainService;
         SupplyPriorities ??=
         [
             new SupplyPriorities(
@@ -174,6 +197,9 @@ public sealed partial class OobEditorViewModel : ObservableObject
         DivisionalSupportDesc = _localizationService
             .GetFormatTextWithColor("DESIGNER_SUPPORT_COLUMN_TITLE")
             .ToTextBlock();
+        TerrainAttackHeader = _localizationService.GetFormatText("STAT_ADJUSTER_ATTACK");
+        TerrainMovementHeader = _localizationService.GetFormatText("STAT_ADJUSTER_MOVEMENT");
+        TerrainDefenceHeader = _localizationService.GetFormatText("STAT_ADJUSTER_DEFENCE");
     }
 
     public void SetTextAction(Action<string> setText)
@@ -276,7 +302,16 @@ public sealed partial class OobEditorViewModel : ObservableObject
             {
                 var unitInfo = unit.UnitInfo;
                 button.Content = new Image { Source = unit.Image, Stretch = Stretch.Uniform };
-                ToolTip.SetTip(button, $"{unit.Name}\n\n{_localizationService.GetFormatText($"{unitInfo.Name}_desc")}");
+                ToolTip.SetTip(
+                    button,
+                    new UnitToolTipView(
+                        unit.Name,
+                        _localizationService.TryGetFormatText($"{unitInfo.Name}_desc", out string? desc)
+                            ? desc
+                            : string.Empty,
+                        _modifierService.GetDescription(unitInfo.Modifiers).ToTextBlock()
+                    )
+                );
 
                 if (!unitInfo.CanBeParachuted)
                 {
@@ -293,6 +328,7 @@ public sealed partial class OobEditorViewModel : ObservableObject
             // ReSharper disable once ExplicitCallerInfoArgument
             OnPropertyChanged(UnitPropertyChange);
             OnPropertyChanged(nameof(Equipments));
+            RefreshTerrainModifiers();
         }
 
         Cleanup(list, unit);
@@ -481,6 +517,95 @@ public sealed partial class OobEditorViewModel : ObservableObject
         Debug.Assert(SupplyPriorities is not null, "SupplyPriorities is null");
     }
 
+    private void RefreshTerrainModifiers()
+    {
+        var lineBattalions = new List<UnitInfo>();
+        var divisionalSupport = new List<UnitInfo>();
+        var regimentalSupportByColumn = new List<(int Column, UnitInfo Unit)>();
+        var lineBattalionsByColumn = new Dictionary<int, List<UnitInfo>>();
+
+        foreach (var (position, unit) in _existingUnits)
+        {
+            if (position.SlotType == UnitSlotType.Common)
+            {
+                lineBattalions.Add(unit);
+                int column = position.Point.X;
+                if (!lineBattalionsByColumn.TryGetValue(column, out var columnBattalions))
+                {
+                    columnBattalions = [];
+                    lineBattalionsByColumn.Add(column, columnBattalions);
+                }
+                columnBattalions.Add(unit);
+            }
+            else if (position.SlotType == UnitSlotType.DivisionalSupport)
+            {
+                divisionalSupport.Add(unit);
+            }
+            else if (position.SlotType == UnitSlotType.RegimentalSupport)
+            {
+                regimentalSupportByColumn.Add((position.Point.X, unit));
+            }
+        }
+
+        var regimentalSupport = regimentalSupportByColumn
+            .AsValueEnumerable()
+            .Where(item =>
+                lineBattalionsByColumn.TryGetValue(item.Column, out var columnBattalions)
+                && _terrainModifierCalculator.CanApplyRegimentalSupport(
+                    item.Unit,
+                    columnBattalions,
+                    MinUseRegimentalCount
+                )
+            )
+            .Select(static item => item.Unit)
+            .ToArray();
+        var modifiers = _terrainModifierCalculator.Calculate(
+            lineBattalions,
+            divisionalSupport,
+            regimentalSupport,
+            _terrainService.LandTerrains
+        );
+
+        TerrainModifiers = modifiers
+            .AsValueEnumerable()
+            .Select(result =>
+            {
+                var modifier = result.Modifier;
+                return new TerrainModifierVo(
+                    _localizationService.GetFormatText(result.Terrain),
+                    GetTerrainImage(result.Terrain),
+                    _modifierValueService.GetTerrainModifierDisplayValue("ATTACK", modifier.Attack),
+                    _modifierValueService.GetTerrainModifierBrush("ATTACK", modifier.Attack),
+                    _modifierValueService.GetTerrainModifierDisplayValue("MOVEMENT", modifier.Movement),
+                    _modifierValueService.GetTerrainModifierBrush("MOVEMENT", modifier.Movement),
+                    _modifierValueService.GetTerrainModifierDisplayValue("DEFENCE", modifier.Defence),
+                    _modifierValueService.GetTerrainModifierBrush("DEFENCE", modifier.Defence)
+                );
+            })
+            .ToArray();
+    }
+
+    private Bitmap? GetTerrainImage(string terrain)
+    {
+        if (_terrainImages.TryGetValue(terrain, out var image))
+        {
+            return image;
+        }
+
+        image = _imageService.GetIconByName($"GFX_adjuster_{terrain}_bg");
+        _terrainImages.Add(terrain, image);
+        return image;
+    }
+
+    public void Close()
+    {
+        foreach (var image in _terrainImages.Values)
+        {
+            image?.Dispose();
+        }
+        _terrainImages.Clear();
+    }
+
     private sealed record PositionInfo(Point Point, UnitSlotType SlotType);
 }
 
@@ -494,6 +619,17 @@ public sealed record UnitInfoVo(
 );
 
 public sealed record EquipmentsVo(string Name, int Quantity);
+
+public sealed record TerrainModifierVo(
+    string Name,
+    Bitmap? Image,
+    string Attack,
+    IBrush? AttackBrush,
+    string Movement,
+    IBrush? MovementBrush,
+    string Defence,
+    IBrush? DefenceBrush
+);
 
 public enum UnitSlotType : byte
 {

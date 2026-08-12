@@ -59,6 +59,7 @@ public class LocalizationFormatServiceTests
         services.AddSingleton<GameResourcesWatcherService>();
         services.AddSingleton<GameResourcesPathService>();
         services.AddMessagePipe();
+        services.AddSingleton(new LocalizationKeyMappingService(new StringReader("Raw Key,Mapping Key\r\n")));
         services.AddSingleton<LocalizationService>();
         services.AddSingleton(new ProjectConfigService { SupportedLanguages = [GameLanguage.Chinese] });
         services.AddSingleton<LocalizationTextColorsService>();

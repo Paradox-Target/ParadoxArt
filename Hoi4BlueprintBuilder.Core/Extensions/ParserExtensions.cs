@@ -5,20 +5,41 @@ namespace Hoi4BlueprintBuilder.Core.Extensions;
 
 public static class ParserExtensions
 {
-    public static bool TryGetIntCast(this Types.Value value, out int result)
+    extension(Types.Value value)
     {
-        if (value.TryGetInt(out result))
+        public bool TryGetIntCast(out int result)
         {
-            return true;
+            if (value.TryGetInt(out result))
+            {
+                return true;
+            }
+
+            if (value.TryGetDecimal(out decimal decimalValue))
+            {
+                result = (int)decimalValue;
+                return true;
+            }
+
+            result = 0;
+            return false;
         }
 
-        if (value.TryGetDecimal(out decimal decimalValue))
+        public bool TryGetDouble(out double result)
         {
-            result = (int)decimalValue;
-            return true;
-        }
+            if (value.TryGetDecimal(out decimal decimalValue))
+            {
+                result = (double)decimalValue;
+                return true;
+            }
 
-        result = 0;
-        return false;
+            if (value.TryGetInt(out int intValue))
+            {
+                result = intValue;
+                return true;
+            }
+
+            result = 0.0;
+            return false;
+        }
     }
 }

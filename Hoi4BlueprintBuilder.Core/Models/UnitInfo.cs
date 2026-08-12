@@ -1,4 +1,6 @@
-﻿namespace Hoi4BlueprintBuilder.Core.Models;
+﻿using ParadoxPower.Process;
+
+namespace Hoi4BlueprintBuilder.Core.Models;
 
 public sealed class UnitInfo(
     string name,
@@ -10,7 +12,8 @@ public sealed class UnitInfo(
     int manpower,
     bool allowInNonArmyHq,
     IReadOnlySet<string> allowedBattalionGroups,
-    IReadOnlyCollection<(string Name, int Quantity)> equipments
+    IReadOnlyCollection<(string Name, int Quantity)> equipments,
+    IReadOnlyCollection<Child> modifiers
 )
 {
     public string Name { get; } = name;
@@ -47,6 +50,8 @@ public sealed class UnitInfo(
     /// 需要的武器装备
     /// </summary>
     public IReadOnlyCollection<(string Name, int Quantity)> Equipments { get; } = equipments;
+
+    public IReadOnlyCollection<Child> Modifiers { get; } = modifiers;
 
     private IReadOnlySet<string> AllowedBattalionGroups { get; } = allowedBattalionGroups;
 

@@ -29,6 +29,7 @@
         <PackageReference Include="BCnEncoder.Net.ImageSharp" />
         <PackageReference Include="ByteSize" />
         <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="CsvHelper" />
         <PackageReference Include="DeviceId.Linux" />
         <PackageReference Include="DeviceId.Windows" />
         <PackageReference Include="DotNet.Glob" />

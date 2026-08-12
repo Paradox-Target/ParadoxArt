@@ -144,22 +144,107 @@
             </Grid>
         </Border>
 
-        <Expander
+        <Grid
             Grid.Row="2"
             Grid.Column="0"
-            Margin="8,0,0,0"
-            Header="装备需求">
-            <ListBox MaxHeight="150" ItemsSource="{Binding Equipments}">
-                <ListBox.DataTemplates>
-                    <DataTemplate x:DataType="vms:EquipmentsVo">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{Binding Name, Mode=OneTime}" />
-                            <TextBlock Text=":" />
-                            <TextBlock Text="{Binding Quantity, Mode=OneTime}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.DataTemplates>
-            </ListBox>
-        </Expander>
+            Margin="8,0,4,0"
+            ColumnDefinitions="*,*">
+            <Expander Margin="0,0,4,0" Header="地形修正">
+                <Grid RowDefinitions="Auto,*">
+                    <Grid
+                        Grid.Row="0"
+                        Margin="4,0,4,4"
+                        ColumnDefinitions="36,*,72,72,72">
+                        <TextBlock Grid.Column="1" FontWeight="SemiBold" Text="地形" />
+                        <TextBlock
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            FontWeight="SemiBold"
+                            Text="{Binding TerrainAttackHeader, Mode=OneTime}" />
+                        <TextBlock
+                            Grid.Column="3"
+                            HorizontalAlignment="Right"
+                            FontWeight="SemiBold"
+                            Text="{Binding TerrainMovementHeader, Mode=OneTime}" />
+                        <TextBlock
+                            Grid.Column="4"
+                            HorizontalAlignment="Right"
+                            FontWeight="SemiBold"
+                            Text="{Binding TerrainDefenceHeader, Mode=OneTime}" />
+                    </Grid>
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="8"
+                        HorizontalAlignment="Center"
+                        IsVisible="{Binding !HasTerrainModifiers}"
+                        Text="当前编制没有地形修正"
+                        TextWrapping="Wrap" />
+                    <ScrollViewer
+                        Grid.Row="1"
+                        MaxHeight="180"
+                        HorizontalScrollBarVisibility="Disabled"
+                        IsVisible="{Binding HasTerrainModifiers}"
+                        VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding TerrainModifiers}">
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate x:DataType="vms:TerrainModifierVo">
+                                    <Grid
+                                        Margin="4,2"
+                                        ColumnDefinitions="36,*,72,72,72">
+                                        <Image
+                                            Grid.Column="0"
+                                            Width="28"
+                                            Height="28"
+                                            HorizontalAlignment="Left"
+                                            Source="{Binding Image, Mode=OneTime}"
+                                            Stretch="Uniform" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Name, Mode=OneTime}"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Foreground="{Binding AttackBrush, Mode=OneTime}"
+                                            Text="{Binding Attack, Mode=OneTime}" />
+                                        <TextBlock
+                                            Grid.Column="3"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Foreground="{Binding MovementBrush, Mode=OneTime}"
+                                            Text="{Binding Movement, Mode=OneTime}" />
+                                        <TextBlock
+                                            Grid.Column="4"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Foreground="{Binding DefenceBrush, Mode=OneTime}"
+                                            Text="{Binding Defence, Mode=OneTime}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Expander>
+
+            <Expander
+                Grid.Column="1"
+                Margin="4,0,0,0"
+                Header="装备需求">
+                <ListBox MaxHeight="180" ItemsSource="{Binding Equipments}">
+                    <ListBox.DataTemplates>
+                        <DataTemplate x:DataType="vms:EquipmentsVo">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBlock Text="{Binding Name, Mode=OneTime}" />
+                                <TextBlock Text=":" />
+                                <TextBlock Text="{Binding Quantity, Mode=OneTime}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.DataTemplates>
+                </ListBox>
+            </Expander>
+        </Grid>
     </Grid>
 </UserControl>

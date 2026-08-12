@@ -27,6 +27,7 @@ public sealed class LocalizationService
 {
     private readonly SettingsService _settingsService;
     private readonly GameResourcesPathService _gameResourcesPathService;
+    private readonly LocalizationKeyMappingService _localisationKeyMappingService;
     private readonly IDisposable _saveLocalizationSubscription;
 
     private ICollection<(GameLanguage Language, FrozenDictionary<string, string> Items)> Localisations =>
@@ -49,7 +50,8 @@ public sealed class LocalizationService
         GameResourcesPathService gameResourcesPathService,
         ProjectConfigService configService,
         IServiceProvider serviceProvider,
-        ISubscriber<SaveLocalizationMessage> saveLocalizationSubscriber
+        ISubscriber<SaveLocalizationMessage> saveLocalizationSubscriber,
+        LocalizationKeyMappingService localisationKeyMappingService
     )
         : base(
             configService
@@ -65,6 +67,7 @@ public sealed class LocalizationService
     {
         _settingsService = settingsService;
         _gameResourcesPathService = gameResourcesPathService;
+        _localisationKeyMappingService = localisationKeyMappingService;
         _saveLocalizationSubscription = saveLocalizationSubscriber.Subscribe(SaveLocalizationHandler);
     }
 
@@ -183,6 +186,11 @@ public sealed class LocalizationService
             {
                 return true;
             }
+        }
+
+        if (_localisationKeyMappingService.TryGetValue(key, out string? mappingKey))
+        {
+            key = mappingKey;
         }
 
         foreach (

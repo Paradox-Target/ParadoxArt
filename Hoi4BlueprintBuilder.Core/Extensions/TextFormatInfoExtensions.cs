@@ -30,6 +30,14 @@ public static class TextFormatInfoExtensions
         return service.GetFormatTextInfoByKey(key, placeholder, value).ToInlines();
     }
 
+    public static IReadOnlyCollection<Inline> GetFormatTextWithColorByText(
+        this LocalizationFormatService service,
+        string text
+    )
+    {
+        return service.GetFormatTextInfo(text).ToInlines();
+    }
+
     /// <summary>
     /// 将 <see cref="TextFormatInfo"/> 集合转换为 Avalonia <see cref="Inline"/> 集合.
     /// </summary>

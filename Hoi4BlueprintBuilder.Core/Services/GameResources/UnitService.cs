@@ -1,4 +1,5 @@
-﻿using Hoi4BlueprintBuilder.Core.Extensions;
+﻿using System.Collections.Frozen;
+using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
 using ParadoxPower.CSharpExtensions;
@@ -11,6 +12,32 @@ namespace Hoi4BlueprintBuilder.Core.Services.GameResources;
 [RegisterSingleton<UnitService>]
 public sealed class UnitService : CommonResourcesService<UnitService, Dictionary<string, UnitInfo>>
 {
+    private static readonly FrozenSet<string> NonModifiersKeys = new HashSet<string>
+    {
+        "affects_speed",
+        "active",
+        "ai_priority",
+        "priority",
+        "map_icon_category",
+        "abbreviation",
+        "sprite",
+        "type",
+        "group",
+        "categories",
+        "regimental",
+        "divisional",
+        "training_time",
+        "same_support_type",
+        "allowed_battalion_groups",
+        "combat_width",
+        "weight",
+        // 不知道有什么用, 先过滤掉
+        "essential",
+        "max_strength",
+        "max_organisation",
+        "default_morale"
+    }.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+
     public UnitService(IServiceProvider serviceProvider)
         : base(
             Path.Combine(Keywords.Common, "units"),
@@ -130,7 +157,33 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
             manpower,
             allowInNonArmyHq,
             allowedGroups,
-            [.. requirements]
+            [.. requirements],
+            unitNode
+                .AllArray.AsValueEnumerable()
+                .Where(child =>
+                {
+                    string key;
+                    if (child.TryGetLeaf(out var leaf))
+                    {
+                        key = leaf.Key;
+                    }
+                    else if (child.TryGetNode(out var node))
+                    {
+                        key = node.Key;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                    if (NonModifiersKeys.Contains(key))
+                    {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .ToArray()
         );
     }
 }

@@ -15,4 +15,10 @@ public static class AssetLoadHelper
         string text = reader.ReadToEnd();
         return text;
     }
+    
+    public static TextReader OpenReadText(string path)
+    {
+        var stream = AssetLoader.Open(new Uri($"{AssetsFolder}/{path}"));
+        return new StreamReader(stream, Encoding.UTF8, leaveOpen: false);
+    }
 }

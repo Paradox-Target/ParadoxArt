@@ -22,7 +22,7 @@ public sealed partial class FocusNode(string path, FocusType type)
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LocalizedName))]
-    public partial string Id { get; set; } = string.Empty;
+    private string _id = string.Empty;
     public FocusType Type { get; } = type;
 
     /// <summary>
@@ -136,7 +136,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     }
 
     [ObservableProperty]
-    public partial string Icon { get; set; } = string.Empty;
+    private string _icon = string.Empty;
 
     public decimal Cost { get; set; }
 

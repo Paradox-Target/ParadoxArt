@@ -1,0 +1,13 @@
+﻿using CsvHelper.Configuration.Attributes;
+
+namespace Hoi4BlueprintBuilder.Core.Models;
+
+public sealed class ModifierLocalizationFormatInfo(
+    [Name("Key")] string key,
+    [Name("Format Info")] string formatInfo
+)
+{
+    public string Key { get; } = key;
+
+    public string FormatInfo { get; } = formatInfo;
+}
