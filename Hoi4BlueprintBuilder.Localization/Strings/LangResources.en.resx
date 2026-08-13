@@ -713,6 +713,12 @@ Sprite Name: {1}</value>
     <data name="OobEditorView_UnitPickerTitle" xml:space="preserve">
         <value>Unit Picker</value>
     </data>
+    <data name="OobEditorView_TemplateAttributesTab" xml:space="preserve">
+        <value>Template Attributes</value>
+    </data>
+    <data name="OobEditorView_TextViewerTab" xml:space="preserve">
+        <value>Generated Text Preview</value>
+    </data>
     <data name="Common_Back" xml:space="preserve">
         <value>Back</value>
     </data>

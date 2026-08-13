@@ -101,7 +101,7 @@
             </Grid>
         </Border>
 
-        <!--  右侧文本预览  -->
+        <!--  右侧属性与文本预览  -->
         <Border
             Grid.Row="0"
             Grid.RowSpan="3"
@@ -109,7 +109,37 @@
             Margin="4,8,8,4"
             ClipToBounds="True"
             CornerRadius="8">
-            <controls:TextEditorControl x:Name="TextEditor" IsReadOnly="True" />
+            <TabControl>
+                <TabItem Header="{x:Static lang:LangResources.OobEditorView_TemplateAttributesTab}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding TemplateAttributes}">
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate x:DataType="vms:TemplateAttributeVo">
+                                    <Grid
+                                        Margin="12,4"
+                                        ColumnDefinitions="*,Auto"
+                                        ToolTip.Tip="{Binding Description, Mode=OneTime}">
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Name, Mode=OneTime}"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Margin="12,0,0,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Value, Mode=OneTime}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="{x:Static lang:LangResources.OobEditorView_TextViewerTab}">
+                    <controls:TextEditorControl x:Name="TextEditor" IsReadOnly="True" />
+                </TabItem>
+            </TabControl>
         </Border>
 
         <Border

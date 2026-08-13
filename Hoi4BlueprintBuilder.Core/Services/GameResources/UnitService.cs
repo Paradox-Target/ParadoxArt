@@ -35,7 +35,13 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
         "essential",
         "max_strength",
         "max_organisation",
-        "default_morale"
+        "default_morale",
+        "recon",
+        "suppression_factor",
+        "casualty_trickleback",
+        "experience_loss_factor",
+        "equipment_capture_factor",
+        "entrenchment"
     }.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
     public UnitService(IServiceProvider serviceProvider)
@@ -158,6 +164,7 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
             allowInNonArmyHq,
             allowedGroups,
             [.. requirements],
+            ParseIntrinsicStats(unitNode),
             unitNode
                 .AllArray.AsValueEnumerable()
                 .Where(child =>
@@ -184,6 +191,106 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
                     return true;
                 })
                 .ToArray()
+        );
+    }
+
+    private static UnitIntrinsicStats ParseIntrinsicStats(Node unitNode)
+    {
+        double maxStrength = 0;
+        double maxOrganisation = 0;
+        double defaultMorale = 0;
+        double recon = 0;
+        double suppression = 0;
+        double suppressionFactor = 0;
+        double supplyConsumption = 0;
+        double casualtyTrickleback = 0;
+        double experienceLossFactor = 0;
+        double equipmentCaptureFactor = 0;
+        double trainingTime = 0;
+        double initiative = 0;
+        double entrenchment = 0;
+        double weight = 0;
+
+        foreach (var leaf in unitNode.LeavesValue)
+        {
+            if (!leaf.Value.TryGetDouble(out double value))
+            {
+                continue;
+            }
+
+            if (leaf.Key.EqualsIgnoreCase("max_strength"))
+            {
+                maxStrength = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("max_organisation"))
+            {
+                maxOrganisation = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("default_morale"))
+            {
+                defaultMorale = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("recon"))
+            {
+                recon = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("suppression"))
+            {
+                suppression = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("suppression_factor"))
+            {
+                suppressionFactor = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("supply_consumption"))
+            {
+                supplyConsumption = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("casualty_trickleback"))
+            {
+                casualtyTrickleback = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("experience_loss_factor"))
+            {
+                experienceLossFactor = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("weight"))
+            {
+                weight = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("equipment_capture_factor"))
+            {
+                equipmentCaptureFactor = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("training_time"))
+            {
+                trainingTime = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("initiative"))
+            {
+                initiative = value;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("entrenchment"))
+            {
+                entrenchment = value;
+            }
+        }
+
+        return new UnitIntrinsicStats(
+            maxStrength,
+            maxOrganisation,
+            defaultMorale,
+            recon,
+            suppression,
+            weight,
+            suppressionFactor,
+            supplyConsumption,
+            casualtyTrickleback,
+            experienceLossFactor,
+            equipmentCaptureFactor,
+            trainingTime,
+            initiative,
+            entrenchment
         );
     }
 }

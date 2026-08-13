@@ -126,6 +126,7 @@ public sealed class TerrainModifierCalculatorTests
             true,
             new HashSet<string>(),
             [],
+            new UnitIntrinsicStats(),
             root!.AllArray
         );
     }
@@ -142,6 +143,7 @@ public sealed class TerrainModifierCalculatorTests
             true,
             allowedGroups.ToHashSet(StringComparer.OrdinalIgnoreCase),
             [],
+            new UnitIntrinsicStats(),
             []
         );
 }

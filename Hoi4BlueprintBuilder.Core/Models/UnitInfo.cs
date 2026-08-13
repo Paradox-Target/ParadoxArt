@@ -13,6 +13,7 @@ public sealed class UnitInfo(
     bool allowInNonArmyHq,
     IReadOnlySet<string> allowedBattalionGroups,
     IReadOnlyCollection<(string Name, int Quantity)> equipments,
+    UnitIntrinsicStats stats,
     IReadOnlyCollection<Child> modifiers
 )
 {
@@ -51,6 +52,8 @@ public sealed class UnitInfo(
     /// </summary>
     public IReadOnlyCollection<(string Name, int Quantity)> Equipments { get; } = equipments;
 
+    public UnitIntrinsicStats Stats { get; } = stats;
+
     public IReadOnlyCollection<Child> Modifiers { get; } = modifiers;
 
     private IReadOnlySet<string> AllowedBattalionGroups { get; } = allowedBattalionGroups;
@@ -72,3 +75,21 @@ public sealed class UnitInfo(
 
     public string IconKey => $"GFX_unit_{Name}_icon_medium";
 }
+
+public sealed record UnitIntrinsicStats(
+    double MaxStrength = 0,
+    double MaxOrganisation = 0,
+    double DefaultMorale = 0,
+    double Recon = 0,
+    double Suppression = 0,
+    double Weight = 0,
+    double SuppressionFactor = 0,
+    double SupplyConsumption = 0,
+    double CasualtyTrickleback = 0,
+    double ExperienceLossFactor = 0,
+    double EquipmentCaptureFactor = 0,
+    double TrainingTime = 0,
+    double Initiative = 0,
+    // 堑壕值
+    double Entrenchment = 0
+);

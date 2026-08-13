@@ -1221,6 +1221,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Template Attributes.
+        /// </summary>
+        public static string OobEditorView_TemplateAttributesTab {
+            get {
+                return ResourceManager.GetString("OobEditorView_TemplateAttributesTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OobEditorView_TemplateName.
         /// </summary>
         public static string OobEditorView_TemplateName {
@@ -1253,6 +1262,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         public static string OobEditorView_TerrainModifiers {
             get {
                 return ResourceManager.GetString("OobEditorView_TerrainModifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generated Text Preview.
+        /// </summary>
+        public static string OobEditorView_TextViewerTab {
+            get {
+                return ResourceManager.GetString("OobEditorView_TextViewerTab", resourceCulture);
             }
         }
         

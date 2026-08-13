@@ -39,3 +39,4 @@ foreign_subversive_activites,MODIFIER_FOREIGN_SUBVERSIVE_ACTIVITIES,外来颠覆
 air_close_air_support_org_damage_factor,MODIFIER_AIR_CAS_ORG_DAMAGE_FACTOR,近距支援机组织度伤害
 supply_consumption,MODIFIER_SUPPLY_CONSUMPTION,补给消耗
 suppression,STAT_ARMY_SUPRESSION,镇压能力
+initiative,STAT_ARMY_INITIATIVE,主动性

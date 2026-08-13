@@ -186,9 +186,9 @@ public sealed class ModifierService
             : string.Empty;
     }
 
-    private string GetDisplayValue(double value, string modifierDisplayFormat)
+    public string GetDisplayValue(double value, string modifierDisplayFormat, bool withPlusSign = true)
     {
-        string sign = value > 0.0 ? "+" : string.Empty;
+        string sign = withPlusSign && value > 0.0 ? "+" : string.Empty;
         char displayDigits = GetDisplayDigits(modifierDisplayFormat);
         bool isPercentage =
             string.IsNullOrEmpty(modifierDisplayFormat) || modifierDisplayFormat.Contains('%');

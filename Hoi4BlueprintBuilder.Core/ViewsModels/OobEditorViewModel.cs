@@ -27,7 +27,11 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class OobEditorViewModel : ObservableObject, IClosed
 {
     public IEnumerable<EquipmentsVo> Equipments =>
-        _equipments.Select(x => new EquipmentsVo(_localizationService.GetFormatText(x.Key), x.Value));
+        _equipments.Select(x => new EquipmentsVo(_localizationFormatService.GetFormatText(x.Key), x.Value));
+
+    [ObservableProperty]
+    public partial IReadOnlyList<TemplateAttributeVo> TemplateAttributes { get; private set; } = [];
+
     public static SupplyPriorities[]? SupplyPriorities { get; private set; }
     public int DivisionBrigadeWidth { get; }
 
@@ -97,7 +101,8 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
 
     private readonly UnitService _unitService;
     private readonly ImageService _imageService;
-    private readonly LocalizationFormatService _localizationService;
+    private readonly LocalizationFormatService _localizationFormatService;
+    private readonly LocalizationService _localizationService;
     private readonly ClipboardService _clipboardService;
     private readonly NotificationService _notificationService;
     private readonly ModifierDisplayService _modifierService;
@@ -111,7 +116,22 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     private readonly Dictionary<string, int> _equipments = [];
     private readonly Dictionary<string, Bitmap?> _terrainImages = new(StringComparer.OrdinalIgnoreCase);
     private readonly UnitInfo EmptyUnit =
-        new(string.Empty, string.Empty, false, false, 0, false, 0, false, new HashSet<string>(), [], []);
+        new(
+            string.Empty,
+            string.Empty,
+            false,
+            false,
+            0,
+            false,
+            0,
+            false,
+            new HashSet<string>(),
+            [],
+            new UnitIntrinsicStats(),
+            []
+        );
+
+    private readonly TemplateAttributesLocalizations _templateAttributesLocalization;
 
     private const string Support = "support";
     private const string UnitPropertyChange = "UnitPropertyChange";
@@ -121,7 +141,8 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         DefinesService definesService,
         UnitService unitService,
         ImageService imageService,
-        LocalizationFormatService localizationService,
+        LocalizationFormatService localizationFormatService,
+        LocalizationService localizationService,
         ClipboardService clipboardService,
         NotificationService notificationService,
         ModifierDisplayService modifierService,
@@ -132,6 +153,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     {
         _unitService = unitService;
         _imageService = imageService;
+        _localizationFormatService = localizationFormatService;
         _localizationService = localizationService;
         _clipboardService = clipboardService;
         _notificationService = notificationService;
@@ -139,21 +161,22 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         _modifierValueService = modifierValueService;
         _terrainModifierCalculator = terrainModifierCalculator;
         _terrainService = terrainService;
+        _templateAttributesLocalization = new TemplateAttributesLocalizations(_localizationFormatService);
         SupplyPriorities ??=
         [
             new SupplyPriorities(
-                _localizationService.GetFormatText("TEMPLATE_PRIO_0"),
-                _localizationService.GetFormatText("TEMPLATE_PRIO_0_DESC"),
+                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_0"),
+                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_0_DESC"),
                 0
             ),
             new SupplyPriorities(
-                _localizationService.GetFormatText("TEMPLATE_PRIO_1"),
-                _localizationService.GetFormatText("TEMPLATE_PRIO_1_DESC"),
+                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_1"),
+                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_1_DESC"),
                 1
             ),
             new SupplyPriorities(
-                _localizationService.GetFormatText("TEMPLATE_PRIO_2"),
-                _localizationService.GetFormatText("TEMPLATE_PRIO_2_DESC"),
+                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_2"),
+                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_2_DESC"),
                 2
             )
         ];
@@ -181,28 +204,29 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             }
         };
 
-        DivisionalSupportHeader = _localizationService.GetFormatText("SUPPORT_HEADER");
-        RegimentalSupportHeader = _localizationService.GetFormatText("REGIMENTAL_SUPPORT_HEADER");
-        DesignerBlockedByRegimentBattalions = _localizationService.GetFormatTextWithColor(
+        DivisionalSupportHeader = _localizationFormatService.GetFormatText("SUPPORT_HEADER");
+        RegimentalSupportHeader = _localizationFormatService.GetFormatText("REGIMENTAL_SUPPORT_HEADER");
+        DesignerBlockedByRegimentBattalions = _localizationFormatService.GetFormatTextWithColor(
             "DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS",
             "NUM_BATTALIONS",
             MinUseRegimentalCount
         );
-        DesignerCombatWidth = _localizationService.GetFormatText("DESIGNER_COMBATWIDTH");
-        TotalWidthDesc = _localizationService
+        DesignerCombatWidth = _localizationFormatService.GetFormatText("DESIGNER_COMBATWIDTH");
+        TotalWidthDesc = _localizationFormatService
             .GetFormatTextWithColor("DESIGNER_COMBATWIDTH_DESC")
             .ToTextBlock();
-        TotalManpowerDesc = _localizationService.GetFormatText("DESIGNER_MANPOWER_DESC");
-        DesignerManpower = _localizationService.GetFormatText("DESIGNER_MANPOWER");
-        RegimentalSupportDesc = _localizationService
+        TotalManpowerDesc = _localizationFormatService.GetFormatText("DESIGNER_MANPOWER_DESC");
+        DesignerManpower = _localizationFormatService.GetFormatText("DESIGNER_MANPOWER");
+        RegimentalSupportDesc = _localizationFormatService
             .GetFormatTextWithColor("DESIGNER_REGIMENTAL_SUPPORT_COLUMN_TITLE")
             .ToTextBlock();
-        DivisionalSupportDesc = _localizationService
+        DivisionalSupportDesc = _localizationFormatService
             .GetFormatTextWithColor("DESIGNER_SUPPORT_COLUMN_TITLE")
             .ToTextBlock();
-        TerrainAttackHeader = _localizationService.GetFormatText("STAT_ADJUSTER_ATTACK");
-        TerrainMovementHeader = _localizationService.GetFormatText("STAT_ADJUSTER_MOVEMENT");
-        TerrainDefenceHeader = _localizationService.GetFormatText("STAT_ADJUSTER_DEFENCE");
+        TerrainAttackHeader = _localizationFormatService.GetFormatText("STAT_ADJUSTER_ATTACK");
+        TerrainMovementHeader = _localizationFormatService.GetFormatText("STAT_ADJUSTER_MOVEMENT");
+        TerrainDefenceHeader = _localizationFormatService.GetFormatText("STAT_ADJUSTER_DEFENCE");
+        RefreshTemplateAttributes();
     }
 
     public void SetTextAction(Action<string> setText)
@@ -255,7 +279,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         {
             string imageKey = $"GFX_group_{group.Key}_icon";
             var image = _imageService.GetIconByName(imageKey);
-            string name = _localizationService.GetFormatText($"group_{group.Key}_title");
+            string name = _localizationFormatService.GetFormatText($"group_{group.Key}_title");
             var subUnits = GetSubUnits(group, position);
 
             if (existingUnit is not null)
@@ -263,7 +287,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                 subUnits.Insert(
                     0,
                     new UnitInfoVo(
-                        _localizationService.GetFormatText("DESIGNER_REMOVE"),
+                        _localizationFormatService.GetFormatText("DESIGNER_REMOVE"),
                         _imageService.GetIconByName("GFX_remove_icon"),
                         EmptyUnit,
                         true
@@ -309,7 +333,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                     button,
                     new UnitToolTipView(
                         unit.Name,
-                        _localizationService.TryGetFormatText($"{unitInfo.Name}_desc", out string? desc)
+                        _localizationFormatService.TryGetFormatText($"{unitInfo.Name}_desc", out string? desc)
                             ? desc
                             : string.Empty,
                         _modifierService.GetDescription(unitInfo.Modifiers).ToTextBlock()
@@ -328,6 +352,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                     _equipments[name] = _equipments.GetValueOrDefault(name) + quantity;
                 }
             }
+            RefreshTemplateAttributes();
             // ReSharper disable once ExplicitCallerInfoArgument
             OnPropertyChanged(UnitPropertyChange);
             OnPropertyChanged(nameof(Equipments));
@@ -358,6 +383,198 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                 _equipments[name] = current;
             }
         }
+    }
+
+    private void RefreshTemplateAttributes()
+    {
+        int unitCount = _existingUnits.Count;
+        if (unitCount == 0)
+        {
+            TemplateAttributes =
+            [
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.Hp,
+                    _templateAttributesLocalization.HpDesc,
+                    FormatValue(_templateAttributesLocalization.HpKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.Organization,
+                    _templateAttributesLocalization.OrganizationDesc,
+                    FormatValue(_templateAttributesLocalization.OrganizationKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.RecoveryRate,
+                    _templateAttributesLocalization.RecoveryRateDesc,
+                    FormatValue(_templateAttributesLocalization.RecoveryRateKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.Recon,
+                    _templateAttributesLocalization.ReconDesc,
+                    FormatValue(_templateAttributesLocalization.ReconKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.Suppression,
+                    _templateAttributesLocalization.SuppressionDesc,
+                    FormatValue(_templateAttributesLocalization.SuppressionKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.Weight,
+                    _templateAttributesLocalization.WeightDesc,
+                    FormatValue(_templateAttributesLocalization.WeightKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.SupplyConsumption,
+                    _templateAttributesLocalization.SupplyConsumptionDesc,
+                    FormatValue(_templateAttributesLocalization.SupplyConsumptionKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.CasualtyTrickleback,
+                    _templateAttributesLocalization.CasualtyTricklebackDesc,
+                    FormatValue(_templateAttributesLocalization.CasualtyTricklebackKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.ExperienceLoss,
+                    _templateAttributesLocalization.ExperienceLossDesc,
+                    FormatValue(_templateAttributesLocalization.ExperienceLossKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.EquipmentCaptureRatio,
+                    _templateAttributesLocalization.EquipmentCaptureRatioDesc,
+                    FormatValue(_templateAttributesLocalization.EquipmentCaptureRatioKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.TrainingTime,
+                    _templateAttributesLocalization.TrainingTimeDesc,
+                    FormatValue(_templateAttributesLocalization.TrainingTimeKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.Initiative,
+                    _templateAttributesLocalization.InitiativeDesc,
+                    FormatValue(_templateAttributesLocalization.InitiativeKey, 0)
+                ),
+                new TemplateAttributeVo(
+                    _templateAttributesLocalization.Entrenchment,
+                    _templateAttributesLocalization.EntrenchmentDesc,
+                    FormatValue(_templateAttributesLocalization.EntrenchmentKey, 0)
+                )
+            ];
+            return;
+        }
+
+        double maxStrength = 0;
+        double maxOrganisation = 0;
+        double defaultMorale = 0;
+        double recon = 0;
+        double suppression = 0;
+        double suppressionFactor = 0;
+        double supplyConsumption = 0;
+        double casualtyTrickleback = 0;
+        double experienceLossFactor = 0;
+        double equipmentCaptureFactor = 0;
+        double trainingTime = 0;
+        double initiative = 0;
+        double entrenchment = 0;
+        double weight = 0;
+
+        foreach (UnitIntrinsicStats stats in _existingUnits.Values.Select(static unit => unit.Stats))
+        {
+            maxStrength += stats.MaxStrength;
+            maxOrganisation += stats.MaxOrganisation;
+            defaultMorale += stats.DefaultMorale;
+            recon += stats.Recon;
+            suppression += stats.Suppression;
+            suppressionFactor += stats.SuppressionFactor;
+            supplyConsumption += stats.SupplyConsumption;
+            casualtyTrickleback += stats.CasualtyTrickleback;
+            experienceLossFactor += stats.ExperienceLossFactor;
+            equipmentCaptureFactor += stats.EquipmentCaptureFactor;
+            trainingTime = Math.Max(trainingTime, stats.TrainingTime);
+            initiative += stats.Initiative;
+            entrenchment += stats.Entrenchment;
+            weight += stats.Weight;
+        }
+
+        double organization = maxOrganisation / unitCount;
+        double recoveryRate = defaultMorale / unitCount;
+        double suppressionValue = suppression * (1 + suppressionFactor);
+
+        TemplateAttributes =
+        [
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.Hp,
+                _templateAttributesLocalization.HpDesc,
+                FormatValue(_templateAttributesLocalization.HpKey, maxStrength)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.Organization,
+                _templateAttributesLocalization.OrganizationDesc,
+                FormatValue(_templateAttributesLocalization.OrganizationKey, organization)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.RecoveryRate,
+                _templateAttributesLocalization.RecoveryRateDesc,
+                FormatValue(_templateAttributesLocalization.RecoveryRateKey, recoveryRate)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.Recon,
+                _templateAttributesLocalization.ReconDesc,
+                FormatValue(_templateAttributesLocalization.ReconKey, recon)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.Suppression,
+                _templateAttributesLocalization.SuppressionDesc,
+                FormatValue(_templateAttributesLocalization.SuppressionKey, suppressionValue)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.Weight,
+                _templateAttributesLocalization.WeightDesc,
+                FormatValue(_templateAttributesLocalization.WeightKey, weight)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.SupplyConsumption,
+                _templateAttributesLocalization.SupplyConsumptionDesc,
+                FormatValue(_templateAttributesLocalization.SupplyConsumptionKey, supplyConsumption)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.CasualtyTrickleback,
+                _templateAttributesLocalization.CasualtyTricklebackDesc,
+                FormatValue(_templateAttributesLocalization.CasualtyTricklebackKey, casualtyTrickleback)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.ExperienceLoss,
+                _templateAttributesLocalization.ExperienceLossDesc,
+                FormatValue(_templateAttributesLocalization.ExperienceLossKey, experienceLossFactor)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.EquipmentCaptureRatio,
+                _templateAttributesLocalization.EquipmentCaptureRatioDesc,
+                FormatValue(_templateAttributesLocalization.EquipmentCaptureRatioKey, equipmentCaptureFactor)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.TrainingTime,
+                _templateAttributesLocalization.TrainingTimeDesc,
+                FormatValue(_templateAttributesLocalization.TrainingTimeKey, trainingTime)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.Initiative,
+                _templateAttributesLocalization.InitiativeDesc,
+                FormatValue(_templateAttributesLocalization.InitiativeKey, initiative)
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.Entrenchment,
+                _templateAttributesLocalization.EntrenchmentDesc,
+                FormatValue(_templateAttributesLocalization.EntrenchmentKey, entrenchment)
+            )
+        ];
+    }
+
+    private string FormatValue(string key, double value)
+    {
+        if (!_localizationService.TryGetValue($"{key}_DIFF", out string? format))
+        {
+            format = _localizationService.GetValue($"{key}_VALUE");
+        }
+        return _modifierValueService.GetDisplayValue(value, format, withPlusSign: false);
     }
 
     private bool TryGetUnitByX(int x, UnitSlotType slotType, out string group)
@@ -423,7 +640,9 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         foreach (var unitInfo in units.Where(static unit => unit.AllowInNonArmyHq))
         {
             var image = _imageService.GetIconByName(unitInfo.IconKey);
-            list.Add(new UnitInfoVo(_localizationService.GetFormatText(unitInfo.Name), image, unitInfo));
+            list.Add(
+                new UnitInfoVo(_localizationFormatService.GetFormatText(unitInfo.Name), image, unitInfo)
+            );
             if (image is null)
             {
                 Log.Warn("'{Name}' 找不到图片", unitInfo.IconKey);
@@ -577,7 +796,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             {
                 var modifier = result.Modifier;
                 return new TerrainModifierVo(
-                    _localizationService.GetFormatText(result.Terrain),
+                    _localizationFormatService.GetFormatText(result.Terrain),
                     GetTerrainImage(result.Terrain),
                     _modifierValueService.GetTerrainModifierDisplayValue("ATTACK", modifier.Attack),
                     _modifierValueService.GetTerrainModifierBrush("ATTACK", modifier.Attack),
@@ -612,6 +831,79 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     }
 
     private sealed record PositionInfo(Point Point, UnitSlotType SlotType);
+
+    private sealed class TemplateAttributesLocalizations
+    {
+        public TemplateAttributesLocalizations(LocalizationFormatService localizationService)
+        {
+            Hp = localizationService.GetFormatText(HpKey);
+            HpDesc = localizationService.GetFormatText($"{HpKey}_DESC");
+            Organization = localizationService.GetFormatText(OrganizationKey);
+            OrganizationDesc = localizationService.GetFormatText($"{OrganizationKey}_DESC");
+            RecoveryRate = localizationService.GetFormatText(RecoveryRateKey);
+            RecoveryRateDesc = localizationService.GetFormatText($"{RecoveryRateKey}_DESC");
+            Recon = localizationService.GetFormatText(ReconKey);
+            ReconDesc = localizationService.GetFormatText($"{ReconKey}_DESC");
+            Suppression = localizationService.GetFormatText(SuppressionKey);
+            SuppressionDesc = localizationService.GetFormatText($"{SuppressionKey}_DESC");
+            SupplyConsumption = localizationService.GetFormatText(SupplyConsumptionKey);
+            SupplyConsumptionDesc = localizationService.GetFormatText($"{SupplyConsumptionKey}_DESC");
+            CasualtyTrickleback = localizationService.GetFormatText(CasualtyTricklebackKey);
+            CasualtyTricklebackDesc = localizationService.GetFormatText($"{CasualtyTricklebackKey}_DESC");
+            EquipmentCaptureRatio = localizationService.GetFormatText(EquipmentCaptureRatioKey);
+            EquipmentCaptureRatioDesc = localizationService.GetFormatText($"{EquipmentCaptureRatioKey}_DESC");
+            ExperienceLoss = localizationService.GetFormatText(ExperienceLossKey);
+            ExperienceLossDesc = localizationService.GetFormatText($"{ExperienceLossKey}_DESC");
+            TrainingTime = localizationService.GetFormatText(TrainingTimeKey);
+            TrainingTimeDesc = localizationService.GetFormatText($"{TrainingTimeKey}_DESC");
+            Initiative = localizationService.GetFormatText(InitiativeKey);
+            InitiativeDesc = localizationService.GetFormatText($"{InitiativeKey}_DESC");
+            Entrenchment = localizationService.GetFormatText(EntrenchmentKey);
+            EntrenchmentDesc = localizationService.GetFormatText($"{EntrenchmentKey}_DESC");
+            Weight = localizationService.GetFormatText(WeightKey);
+            WeightDesc = localizationService.GetFormatText($"{WeightKey}_DESC");
+        }
+
+        public string HpKey { get; } = "STAT_COMMON_MAX_STRENGTH";
+        public string Hp { get; }
+        public string HpDesc { get; }
+        public string OrganizationKey { get; } = "STAT_COMMON_MAX_ORG";
+        public string Organization { get; }
+        public string OrganizationDesc { get; }
+        public string RecoveryRateKey { get; } = "STAT_ARMY_DEFAULT_MORALE";
+        public string RecoveryRate { get; }
+        public string RecoveryRateDesc { get; }
+        public string ReconKey { get; } = "STAT_ARMY_RECON";
+        public string Recon { get; }
+        public string ReconDesc { get; }
+        public string SuppressionKey { get; } = "STAT_ARMY_SUPRESSION";
+        public string Suppression { get; }
+        public string SuppressionDesc { get; }
+        public string SupplyConsumptionKey { get; } = "STAT_ARMY_SUPPLY_CONSUMPTION";
+        public string SupplyConsumption { get; }
+        public string SupplyConsumptionDesc { get; }
+        public string CasualtyTricklebackKey { get; } = "STAT_CASUALTY_TRICKLEBACK";
+        public string CasualtyTrickleback { get; }
+        public string CasualtyTricklebackDesc { get; }
+        public string EquipmentCaptureRatioKey { get; } = "STAT_ARMY_EQUIPMENT_CAPTURE_FACTOR";
+        public string EquipmentCaptureRatio { get; }
+        public string EquipmentCaptureRatioDesc { get; }
+        public string ExperienceLossKey { get; } = "STAT_ARMY_EXPERIENCE_LOSS_FACTOR";
+        public string ExperienceLoss { get; }
+        public string ExperienceLossDesc { get; }
+        public string TrainingTimeKey { get; } = "DESIGNER_TRAINING_TIME";
+        public string TrainingTime { get; }
+        public string TrainingTimeDesc { get; }
+        public string InitiativeKey { get; } = "STAT_ARMY_INITIATIVE";
+        public string Initiative { get; }
+        public string InitiativeDesc { get; }
+        public string EntrenchmentKey { get; } = "STAT_ARMY_ENTRENCHMENT";
+        public string Entrenchment { get; }
+        public string EntrenchmentDesc { get; }
+        public string WeightKey { get; } = "STAT_COMMON_WEIGHT";
+        public string Weight { get; }
+        public string WeightDesc { get; }
+    }
 }
 
 public sealed record UnitGroupVo(string GroupName, Bitmap? Image, IReadOnlyCollection<UnitInfoVo> Units);
@@ -624,6 +916,8 @@ public sealed record UnitInfoVo(
 );
 
 public sealed record EquipmentsVo(string Name, int Quantity);
+
+public sealed record TemplateAttributeVo(string Name, string Description, string Value);
 
 public sealed record TerrainModifierVo(
     string Name,
