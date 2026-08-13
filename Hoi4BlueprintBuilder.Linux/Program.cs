@@ -35,6 +35,13 @@ public sealed class Program
         return AppBuilder
             .Configure<App>()
             .UsePlatformDetect()
+            .With(
+                new SkiaOptions
+                {
+                    // 256 MB
+                    MaxGpuResourceSizeBytes = 256 * 1024 * 1024
+                }
+            )
             .WithInterFont()
             .LogToTrace()
             .UseR3();
