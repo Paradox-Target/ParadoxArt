@@ -10,7 +10,11 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        include:
+          - os: windows-latest
+            project: Hoi4BlueprintBuilder.Windows/Hoi4BlueprintBuilder.Windows.csproj
+          - os: ubuntu-latest
+            project: Hoi4BlueprintBuilder.Linux/Hoi4BlueprintBuilder.Linux.csproj
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -19,5 +23,7 @@ jobs:
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
+    - name: Build ${{ matrix.project }}
+      run: dotnet build ${{ matrix.project }} --configuration Release
     - name: Test
-      run: dotnet test
+      run: dotnet test --project Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj
