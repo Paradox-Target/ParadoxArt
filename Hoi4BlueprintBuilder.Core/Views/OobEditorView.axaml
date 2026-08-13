@@ -56,7 +56,7 @@
                         SelectedIndex="{Binding SelectedSupplyPriorityIndex}">
                         <ComboBox.DataTemplates>
                             <DataTemplate x:DataType="models:SupplyPriorities">
-                                <TextBlock Text="{Binding DisplayName}" ToolTip.Tip="{Binding ToolTip}" />
+                                <TextBlock Text="{Binding DisplayName, Mode=OneTime}" ToolTip.Tip="{Binding ToolTip, Mode=OneTime}" />
                             </DataTemplate>
                         </ComboBox.DataTemplates>
                     </ComboBox>
@@ -73,7 +73,7 @@
                     Grid.Row="1"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
-                    Margin="0,10,0,0"
+                    Margin="0,8,0,0"
                     Orientation="Horizontal"
                     Spacing="12">
                     <TextBlock VerticalAlignment="Center" Text="{x:Static lang:LangResources.OobEditorView_DivisionNamesGroup}" />
@@ -87,12 +87,12 @@
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"
                         Text="{Binding TotalWidthText}"
-                        ToolTip.Tip="{Binding TotalWidthDesc}" />
+                        ToolTip.Tip="{Binding TotalWidthDesc, Mode=OneTime}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"
                         Text="{Binding TotalManpowerText}"
-                        ToolTip.Tip="{Binding TotalManpowerDesc}" />
+                        ToolTip.Tip="{Binding TotalManpowerDesc, Mode=OneTime}" />
                     <TextBlock
                         VerticalAlignment="Center"
                         Classes="BodyTextBlock"
@@ -156,7 +156,10 @@
                         Grid.Row="0"
                         Margin="4,0,4,4"
                         ColumnDefinitions="36,*,72,72,72">
-                        <TextBlock Grid.Column="1" FontWeight="SemiBold" Text="{x:Static lang:LangResources.OobEditorView_Terrain}" />
+                        <TextBlock
+                            Grid.Column="1"
+                            FontWeight="SemiBold"
+                            Text="{x:Static lang:LangResources.OobEditorView_Terrain}" />
                         <TextBlock
                             Grid.Column="2"
                             HorizontalAlignment="Right"
@@ -189,9 +192,7 @@
                         <ItemsControl ItemsSource="{Binding TerrainModifiers}">
                             <ItemsControl.DataTemplates>
                                 <DataTemplate x:DataType="vms:TerrainModifierVo">
-                                    <Grid
-                                        Margin="4,2"
-                                        ColumnDefinitions="36,*,72,72,72">
+                                    <Grid Margin="4,2" ColumnDefinitions="36,*,72,72,72">
                                         <Image
                                             Grid.Column="0"
                                             Width="28"

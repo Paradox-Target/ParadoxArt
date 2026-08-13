@@ -713,4 +713,7 @@ Sprite Name: {1}</value>
     <data name="OobEditorView_UnitPickerTitle" xml:space="preserve">
         <value>Unit Picker</value>
     </data>
+    <data name="Common_Back" xml:space="preserve">
+        <value>Back</value>
+    </data>
 </root>

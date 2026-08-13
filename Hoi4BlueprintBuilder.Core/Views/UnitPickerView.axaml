@@ -3,6 +3,7 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
     x:Name="MainControl"
@@ -16,7 +17,7 @@
         <Button
             Grid.Row="0"
             Command="{Binding BackCommand}"
-            Content="返回"
+            Content="{x:Static lang:LangResources.Common_Back}"
             IsVisible="{Binding IsVisibleBackButton}" />
 
         <Panel Grid.Row="1">
@@ -32,8 +33,8 @@
                     <DataTemplate>
                         <Button Command="{Binding ((vms:UnitPickerViewModel)DataContext).PickGroupCommand, ElementName=MainControl}" CommandParameter="{Binding}">
                             <StackPanel>
-                                <Image Source="{Binding Image}" Stretch="None" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding GroupName}" />
+                                <Image Source="{Binding Image, Mode=OneTime}" Stretch="None" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding GroupName, Mode=OneTime}" />
                             </StackPanel>
                         </Button>
                     </DataTemplate>
@@ -52,8 +53,8 @@
                     <DataTemplate>
                         <Button Command="{Binding ((vms:UnitPickerViewModel)DataContext).PickSubUnitCommand, ElementName=MainControl}" CommandParameter="{Binding}">
                             <StackPanel>
-                                <Image Source="{Binding Image}" Stretch="None" />
-                                <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" />
+                                <Image Source="{Binding Image, Mode=OneTime}" Stretch="None" />
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Name, Mode=OneTime}" />
                             </StackPanel>
                         </Button>
                     </DataTemplate>

@@ -718,4 +718,7 @@ SpriteName: {1}</value>
   <data name="OobEditorView_UnitPickerTitle" xml:space="preserve">
     <value>单位选择器</value>
   </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
 </root>

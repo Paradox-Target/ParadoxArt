@@ -714,4 +714,7 @@
   <data name="OobEditorView_UnitPickerTitle" xml:space="preserve">
     <value>OobEditorView_UnitPickerTitle</value>
   </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Common_Back</value>
+  </data>
 </root>
