@@ -24,7 +24,7 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     private string GetRelativePositionFocusLocalizedName() =>
         FocusNode.RelativePosition is null
             ? string.Empty
-            : LocalizationFormatService.GetFormatText(FocusNode.RelativePosition.Id);
+            : LocalizationFormatService.GetFormatTextInAll(FocusNode.RelativePosition.Id);
 
     public decimal Cost
     {
@@ -92,8 +92,8 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
         FocusNode = focusNode;
         Languages = App.Current.Services.GetRequiredService<ProjectConfigService>().SupportedLanguages;
 
-        IdText = LocalizationFormatService.GetFormatText(FocusNode.Id);
-        DescriptionText = LocalizationFormatService.GetFormatText(FocusDescriptionKey);
+        IdText = LocalizationFormatService.GetFormatTextInAll(FocusNode.Id);
+        DescriptionText = LocalizationFormatService.GetFormatTextInAll(FocusDescriptionKey);
         SelectedLanguageIndex = _lastSelectedLanguageIndex;
 
         FocusNode.PropertyChanged += FocusNodeOnPropertyChanged;
@@ -170,8 +170,8 @@ public sealed partial class FocusInfoViewModel : ObservableObject, IDisposable
     {
         _lastSelectedLanguageIndex = value;
         _isUpdatingLanguage = true;
-        DescriptionText = LocalizationFormatService.GetFormatText(FocusDescriptionKey, Languages[value]);
-        IdText = LocalizationFormatService.GetFormatText(FocusNode.Id, Languages[value]);
+        DescriptionText = LocalizationFormatService.GetFormatTextInAll(FocusDescriptionKey, Languages[value]);
+        IdText = LocalizationFormatService.GetFormatTextInAll(FocusNode.Id, Languages[value]);
         _isUpdatingLanguage = false;
     }
 

@@ -329,7 +329,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         {
             string impactedFocusIds = focus
                 .RelativePositionChildren.AsValueEnumerable()
-                .Select(f => _localizationFormatService.GetFormatText(f.Id))
+                .Select(f => _localizationFormatService.GetFormatTextInAll(f.Id))
                 .JoinToString('\n');
             var result = await _messageBox.ShowAsync(
                 string.Format(

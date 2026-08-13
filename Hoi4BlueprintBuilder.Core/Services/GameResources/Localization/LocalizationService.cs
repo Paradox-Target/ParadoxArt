@@ -155,6 +155,15 @@ public sealed class LocalizationService
     }
 
     /// <summary>
+    /// 如果本地化文本不存在, 则返回<c>key</c> (使用映射)
+    /// </summary>
+    /// <returns></returns>
+    public string GetValueInAll(string key)
+    {
+        return TryGetValueInAll(key, out string? value) ? value : key;
+    }
+
+    /// <summary>
     /// 如果本地化文本不存在, 则返回<c>key</c>
     /// </summary>
     /// <returns></returns>
@@ -166,12 +175,36 @@ public sealed class LocalizationService
     /// <summary>
     /// 使用当前游戏语言尝试获取本地化文本, 如果找到返回<c>true</c>和对应的值, 反之返回<c>false</c>和<c>null</c>
     /// </summary>
+    /// <remarks>
+    /// 使用映射
+    /// </remarks>
     /// <param name="key"></param>
     /// <param name="value"></param>
     /// <returns></returns>
+    public bool TryGetValueInAll(string key, [NotNullWhen(true)] out string? value)
+    {
+        return TryGetValueInAll(key, _settingsService.GameLanguage, out value);
+    }
+
     public bool TryGetValue(string key, [NotNullWhen(true)] out string? value)
     {
         return TryGetValue(key, _settingsService.GameLanguage, out value);
+    }
+
+    public bool TryGetValueInAll(string key, GameLanguage language, [NotNullWhen(true)] out string? value)
+    {
+        if (_localisationKeyMappingService.TryGetValue(key, out string? mappingKey))
+        {
+            key = mappingKey;
+        }
+
+        if (TryGetValue(key, language, out value))
+        {
+            return true;
+        }
+
+        value = null;
+        return false;
     }
 
     public bool TryGetValue(string key, GameLanguage language, [NotNullWhen(true)] out string? value)
@@ -186,11 +219,6 @@ public sealed class LocalizationService
             {
                 return true;
             }
-        }
-
-        if (_localisationKeyMappingService.TryGetValue(key, out string? mappingKey))
-        {
-            key = mappingKey;
         }
 
         foreach (

@@ -40,3 +40,7 @@ air_close_air_support_org_damage_factor,MODIFIER_AIR_CAS_ORG_DAMAGE_FACTOR,近�
 supply_consumption,MODIFIER_SUPPLY_CONSUMPTION,补给消耗
 suppression,STAT_ARMY_SUPRESSION,镇压能力
 initiative,STAT_ARMY_INITIATIVE,主动性
+entrenchment,STAT_ARMY_ENTRENCHMENT,堑壕值
+recon,STAT_ARMY_RECON,侦察
+equipment_capture_factor,STAT_ARMY_EQUIPMENT_CAPTURE_FACTOR,装备缴获
+experience_loss_factor,STAT_ARMY_EXPERIENCE_LOSS_FACTOR,经验损失

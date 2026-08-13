@@ -28,6 +28,16 @@ public sealed class LocalizationFormatService
     /// 根据 <c>key</c> 获取格式化后的文本
     /// </summary>
     /// <param name="key"></param>
+    /// <returns>格式化后的文本, 如果未找到值, 则返回<c>key</c></returns>
+    public string GetFormatText(string key)
+    {
+        return TryGetFormatText(key, out string? value) ? value : key;
+    }
+
+    /// <summary>
+    /// 根据 <c>key</c> 获取格式化后的文本
+    /// </summary>
+    /// <param name="key"></param>
     /// <param name="value"></param>
     /// <returns>格式化后的文本, 如果找到值, 返回<c>true</c>, 反之返回<c>false</c></returns>
     public bool TryGetFormatText(string key, [NotNullWhen(true)] out string? value)
@@ -41,9 +51,30 @@ public sealed class LocalizationFormatService
         return false;
     }
 
-    public bool TryGetFormatText(string key, GameLanguage language, [NotNullWhen(true)] out string? value)
+    /// <summary>
+    /// 根据 <c>key</c> 获取格式化后的文本
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="value"></param>
+    /// <returns>格式化后的文本, 如果找到值, 返回<c>true</c>, 反之返回<c>false</c></returns>
+    public bool TryGetFormatTextInAll(string key, [NotNullWhen(true)] out string? value)
     {
-        if (_localizationService.TryGetValue(key, language, out value))
+        if (_localizationService.TryGetValueInAll(key, out value))
+        {
+            value = GetFormatTextByText(value);
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool TryGetFormatTextInAll(
+        string key,
+        GameLanguage language,
+        [NotNullWhen(true)] out string? value
+    )
+    {
+        if (_localizationService.TryGetValueInAll(key, language, out value))
         {
             value = GetFormatTextByText(value);
             return true;
@@ -56,15 +87,16 @@ public sealed class LocalizationFormatService
     /// 根据 <c>key</c> 获取格式化后的文本
     /// </summary>
     /// <param name="key"></param>
+    /// <remarks>使用映射</remarks>
     /// <returns>格式化后的文本, 如果未找到值, 则返回<c>key</c></returns>
-    public string GetFormatText(string key)
+    public string GetFormatTextInAll(string key)
     {
-        return TryGetFormatText(key, out string? value) ? value : key;
+        return TryGetFormatTextInAll(key, out string? value) ? value : key;
     }
 
-    public string GetFormatText(string key, string placeholder, int value)
+    public string GetFormatTextInAll(string key, string placeholder, int value)
     {
-        if (!_localizationService.TryGetValue(key, out string? localizationText))
+        if (!_localizationService.TryGetValueInAll(key, out string? localizationText))
         {
             return key;
         }
@@ -88,7 +120,7 @@ public sealed class LocalizationFormatService
         int value = 0
     )
     {
-        if (!_localizationService.TryGetValue(key, out string? localizationText))
+        if (!_localizationService.TryGetValueInAll(key, out string? localizationText))
         {
             return [new TextFormatInfo(key, null)];
         }
@@ -99,9 +131,9 @@ public sealed class LocalizationFormatService
         return result;
     }
 
-    public string GetFormatText(string key, GameLanguage language)
+    public string GetFormatTextInAll(string key, GameLanguage language)
     {
-        return TryGetFormatText(key, language, out string? value) ? value : key;
+        return TryGetFormatTextInAll(key, language, out string? value) ? value : key;
     }
 
     /// <summary>
@@ -183,7 +215,7 @@ public sealed class LocalizationFormatService
                 }
 
                 // 递归处理所有本地化引用
-                string text = _localizationService.GetValue(format.Text);
+                string text = _localizationService.GetValueInAll(format.Text);
                 ParseFormat(text, result, placeholder, value);
             }
             else if (format.Type == LocalizationFormatType.Icon)

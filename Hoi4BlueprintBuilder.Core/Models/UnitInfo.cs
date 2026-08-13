@@ -85,6 +85,7 @@ public sealed record UnitIntrinsicStats(
     double Weight = 0,
     double SuppressionFactor = 0,
     double SupplyConsumption = 0,
+    double SupplyConsumptionFactor = 0,
     double CasualtyTrickleback = 0,
     double ExperienceLossFactor = 0,
     double EquipmentCaptureFactor = 0,

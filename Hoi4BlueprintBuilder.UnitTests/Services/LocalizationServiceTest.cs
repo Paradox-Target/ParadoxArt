@@ -81,8 +81,8 @@ public class LocalizationServiceTests
     public void GetValue_ShouldLoadValuesFromTestData()
     {
         // 验证是否成功加载了 test.yml 中的数据
-        var value1 = _localizationService.GetValue("loc_test1");
-        var value2 = _localizationService.GetValue("loc_test2");
+        var value1 = _localizationService.GetValueInAll("loc_test1");
+        var value2 = _localizationService.GetValueInAll("loc_test2");
 
         using (Assert.EnterMultipleScope())
         {
@@ -95,7 +95,7 @@ public class LocalizationServiceTests
     public void GetValue_ShouldReturnKey_WhenKeyDoesNotExist()
     {
         var key = "NON_EXISTENT_KEY";
-        var value = _localizationService.GetValue(key);
+        var value = _localizationService.GetValueInAll(key);
         Assert.That(value, Is.EqualTo(key));
     }
 
@@ -108,7 +108,7 @@ public class LocalizationServiceTests
 
         _localizationService.AddOrUpdateLocalisation(focusFilePath, GameLanguage.Chinese, key, value);
 
-        var retrievedValue = _localizationService.GetValue(key);
+        var retrievedValue = _localizationService.GetValueInAll(key);
         Assert.That(retrievedValue, Is.EqualTo(value));
     }
 

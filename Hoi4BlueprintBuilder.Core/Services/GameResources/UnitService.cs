@@ -36,12 +36,12 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
         "max_strength",
         "max_organisation",
         "default_morale",
-        "recon",
         "suppression_factor",
         "casualty_trickleback",
-        "experience_loss_factor",
-        "equipment_capture_factor",
-        "entrenchment"
+        "breakthrough",
+        "soft_attack",
+        "hard_attack",
+        "defense"
     }.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
     public UnitService(IServiceProvider serviceProvider)
@@ -210,6 +210,7 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
         double initiative = 0;
         double entrenchment = 0;
         double weight = 0;
+        double supplyConsumptionFactor = 0;
 
         foreach (var leaf in unitNode.LeavesValue)
         {
@@ -274,6 +275,10 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
             {
                 entrenchment = value;
             }
+            else if (leaf.Key.EqualsIgnoreCase("supply_consumption_factor"))
+            {
+                supplyConsumptionFactor = value;
+            }
         }
 
         return new UnitIntrinsicStats(
@@ -285,6 +290,7 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
             weight,
             suppressionFactor,
             supplyConsumption,
+            supplyConsumptionFactor,
             casualtyTrickleback,
             experienceLossFactor,
             equipmentCaptureFactor,

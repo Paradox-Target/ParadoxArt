@@ -27,7 +27,10 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class OobEditorViewModel : ObservableObject, IClosed
 {
     public IEnumerable<EquipmentsVo> Equipments =>
-        _equipments.Select(x => new EquipmentsVo(_localizationFormatService.GetFormatText(x.Key), x.Value));
+        _equipments.Select(x => new EquipmentsVo(
+            _localizationFormatService.GetFormatTextInAll(x.Key),
+            x.Value
+        ));
 
     [ObservableProperty]
     public partial IReadOnlyList<TemplateAttributeVo> TemplateAttributes { get; private set; } = [];
@@ -165,18 +168,18 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         SupplyPriorities ??=
         [
             new SupplyPriorities(
-                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_0"),
-                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_0_DESC"),
+                _localizationFormatService.GetFormatTextInAll("TEMPLATE_PRIO_0"),
+                _localizationFormatService.GetFormatTextInAll("TEMPLATE_PRIO_0_DESC"),
                 0
             ),
             new SupplyPriorities(
-                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_1"),
-                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_1_DESC"),
+                _localizationFormatService.GetFormatTextInAll("TEMPLATE_PRIO_1"),
+                _localizationFormatService.GetFormatTextInAll("TEMPLATE_PRIO_1_DESC"),
                 1
             ),
             new SupplyPriorities(
-                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_2"),
-                _localizationFormatService.GetFormatText("TEMPLATE_PRIO_2_DESC"),
+                _localizationFormatService.GetFormatTextInAll("TEMPLATE_PRIO_2"),
+                _localizationFormatService.GetFormatTextInAll("TEMPLATE_PRIO_2_DESC"),
                 2
             )
         ];
@@ -204,28 +207,28 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             }
         };
 
-        DivisionalSupportHeader = _localizationFormatService.GetFormatText("SUPPORT_HEADER");
-        RegimentalSupportHeader = _localizationFormatService.GetFormatText("REGIMENTAL_SUPPORT_HEADER");
+        DivisionalSupportHeader = _localizationFormatService.GetFormatTextInAll("SUPPORT_HEADER");
+        RegimentalSupportHeader = _localizationFormatService.GetFormatTextInAll("REGIMENTAL_SUPPORT_HEADER");
         DesignerBlockedByRegimentBattalions = _localizationFormatService.GetFormatTextWithColor(
             "DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS",
             "NUM_BATTALIONS",
             MinUseRegimentalCount
         );
-        DesignerCombatWidth = _localizationFormatService.GetFormatText("DESIGNER_COMBATWIDTH");
+        DesignerCombatWidth = _localizationFormatService.GetFormatTextInAll("DESIGNER_COMBATWIDTH");
         TotalWidthDesc = _localizationFormatService
             .GetFormatTextWithColor("DESIGNER_COMBATWIDTH_DESC")
             .ToTextBlock();
-        TotalManpowerDesc = _localizationFormatService.GetFormatText("DESIGNER_MANPOWER_DESC");
-        DesignerManpower = _localizationFormatService.GetFormatText("DESIGNER_MANPOWER");
+        TotalManpowerDesc = _localizationFormatService.GetFormatTextInAll("DESIGNER_MANPOWER_DESC");
+        DesignerManpower = _localizationFormatService.GetFormatTextInAll("DESIGNER_MANPOWER");
         RegimentalSupportDesc = _localizationFormatService
             .GetFormatTextWithColor("DESIGNER_REGIMENTAL_SUPPORT_COLUMN_TITLE")
             .ToTextBlock();
         DivisionalSupportDesc = _localizationFormatService
             .GetFormatTextWithColor("DESIGNER_SUPPORT_COLUMN_TITLE")
             .ToTextBlock();
-        TerrainAttackHeader = _localizationFormatService.GetFormatText("STAT_ADJUSTER_ATTACK");
-        TerrainMovementHeader = _localizationFormatService.GetFormatText("STAT_ADJUSTER_MOVEMENT");
-        TerrainDefenceHeader = _localizationFormatService.GetFormatText("STAT_ADJUSTER_DEFENCE");
+        TerrainAttackHeader = _localizationFormatService.GetFormatTextInAll("STAT_ADJUSTER_ATTACK");
+        TerrainMovementHeader = _localizationFormatService.GetFormatTextInAll("STAT_ADJUSTER_MOVEMENT");
+        TerrainDefenceHeader = _localizationFormatService.GetFormatTextInAll("STAT_ADJUSTER_DEFENCE");
         RefreshTemplateAttributes();
     }
 
@@ -279,7 +282,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         {
             string imageKey = $"GFX_group_{group.Key}_icon";
             var image = _imageService.GetIconByName(imageKey);
-            string name = _localizationFormatService.GetFormatText($"group_{group.Key}_title");
+            string name = _localizationFormatService.GetFormatTextInAll($"group_{group.Key}_title");
             var subUnits = GetSubUnits(group, position);
 
             if (existingUnit is not null)
@@ -287,7 +290,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                 subUnits.Insert(
                     0,
                     new UnitInfoVo(
-                        _localizationFormatService.GetFormatText("DESIGNER_REMOVE"),
+                        _localizationFormatService.GetFormatTextInAll("DESIGNER_REMOVE"),
                         _imageService.GetIconByName("GFX_remove_icon"),
                         EmptyUnit,
                         true
@@ -333,7 +336,10 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                     button,
                     new UnitToolTipView(
                         unit.Name,
-                        _localizationFormatService.TryGetFormatText($"{unitInfo.Name}_desc", out string? desc)
+                        _localizationFormatService.TryGetFormatTextInAll(
+                            $"{unitInfo.Name}_desc",
+                            out string? desc
+                        )
                             ? desc
                             : string.Empty,
                         _modifierService.GetDescription(unitInfo.Modifiers).ToTextBlock()
@@ -475,8 +481,9 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         double initiative = 0;
         double entrenchment = 0;
         double weight = 0;
+        double supplyConsumptionFactor = 0;
 
-        foreach (UnitIntrinsicStats stats in _existingUnits.Values.Select(static unit => unit.Stats))
+        foreach (var stats in _existingUnits.Values.AsValueEnumerable().Select(static unit => unit.Stats))
         {
             maxStrength += stats.MaxStrength;
             maxOrganisation += stats.MaxOrganisation;
@@ -485,6 +492,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             suppression += stats.Suppression;
             suppressionFactor += stats.SuppressionFactor;
             supplyConsumption += stats.SupplyConsumption;
+            supplyConsumptionFactor += stats.SupplyConsumptionFactor;
             casualtyTrickleback += stats.CasualtyTrickleback;
             experienceLossFactor += stats.ExperienceLossFactor;
             equipmentCaptureFactor += stats.EquipmentCaptureFactor;
@@ -494,6 +502,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             weight += stats.Weight;
         }
 
+        supplyConsumption = (1.0 + supplyConsumptionFactor) * supplyConsumption;
         double organization = maxOrganisation / unitCount;
         double recoveryRate = defaultMorale / unitCount;
         double suppressionValue = suppression * (1 + suppressionFactor);
@@ -570,9 +579,9 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
 
     private string FormatValue(string key, double value)
     {
-        if (!_localizationService.TryGetValue($"{key}_DIFF", out string? format))
+        if (!_localizationService.TryGetValueInAll($"{key}_DIFF", out string? format))
         {
-            format = _localizationService.GetValue($"{key}_VALUE");
+            format = _localizationService.GetValueInAll($"{key}_VALUE");
         }
         return _modifierValueService.GetDisplayValue(value, format, withPlusSign: false);
     }
@@ -796,7 +805,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             {
                 var modifier = result.Modifier;
                 return new TerrainModifierVo(
-                    _localizationFormatService.GetFormatText(result.Terrain),
+                    _localizationFormatService.GetFormatTextInAll(result.Terrain),
                     GetTerrainImage(result.Terrain),
                     _modifierValueService.GetTerrainModifierDisplayValue("ATTACK", modifier.Attack),
                     _modifierValueService.GetTerrainModifierBrush("ATTACK", modifier.Attack),
@@ -836,32 +845,36 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     {
         public TemplateAttributesLocalizations(LocalizationFormatService localizationService)
         {
-            Hp = localizationService.GetFormatText(HpKey);
-            HpDesc = localizationService.GetFormatText($"{HpKey}_DESC");
-            Organization = localizationService.GetFormatText(OrganizationKey);
-            OrganizationDesc = localizationService.GetFormatText($"{OrganizationKey}_DESC");
-            RecoveryRate = localizationService.GetFormatText(RecoveryRateKey);
-            RecoveryRateDesc = localizationService.GetFormatText($"{RecoveryRateKey}_DESC");
-            Recon = localizationService.GetFormatText(ReconKey);
-            ReconDesc = localizationService.GetFormatText($"{ReconKey}_DESC");
-            Suppression = localizationService.GetFormatText(SuppressionKey);
-            SuppressionDesc = localizationService.GetFormatText($"{SuppressionKey}_DESC");
-            SupplyConsumption = localizationService.GetFormatText(SupplyConsumptionKey);
-            SupplyConsumptionDesc = localizationService.GetFormatText($"{SupplyConsumptionKey}_DESC");
-            CasualtyTrickleback = localizationService.GetFormatText(CasualtyTricklebackKey);
-            CasualtyTricklebackDesc = localizationService.GetFormatText($"{CasualtyTricklebackKey}_DESC");
-            EquipmentCaptureRatio = localizationService.GetFormatText(EquipmentCaptureRatioKey);
-            EquipmentCaptureRatioDesc = localizationService.GetFormatText($"{EquipmentCaptureRatioKey}_DESC");
-            ExperienceLoss = localizationService.GetFormatText(ExperienceLossKey);
-            ExperienceLossDesc = localizationService.GetFormatText($"{ExperienceLossKey}_DESC");
-            TrainingTime = localizationService.GetFormatText(TrainingTimeKey);
-            TrainingTimeDesc = localizationService.GetFormatText($"{TrainingTimeKey}_DESC");
-            Initiative = localizationService.GetFormatText(InitiativeKey);
-            InitiativeDesc = localizationService.GetFormatText($"{InitiativeKey}_DESC");
-            Entrenchment = localizationService.GetFormatText(EntrenchmentKey);
-            EntrenchmentDesc = localizationService.GetFormatText($"{EntrenchmentKey}_DESC");
-            Weight = localizationService.GetFormatText(WeightKey);
-            WeightDesc = localizationService.GetFormatText($"{WeightKey}_DESC");
+            Hp = localizationService.GetFormatTextInAll(HpKey);
+            HpDesc = localizationService.GetFormatTextInAll($"{HpKey}_DESC");
+            Organization = localizationService.GetFormatTextInAll(OrganizationKey);
+            OrganizationDesc = localizationService.GetFormatTextInAll($"{OrganizationKey}_DESC");
+            RecoveryRate = localizationService.GetFormatTextInAll(RecoveryRateKey);
+            RecoveryRateDesc = localizationService.GetFormatTextInAll($"{RecoveryRateKey}_DESC");
+            Recon = localizationService.GetFormatTextInAll(ReconKey);
+            ReconDesc = localizationService.GetFormatTextInAll($"{ReconKey}_DESC");
+            Suppression = localizationService.GetFormatTextInAll(SuppressionKey);
+            SuppressionDesc = localizationService.GetFormatTextInAll($"{SuppressionKey}_DESC");
+            SupplyConsumption = localizationService.GetFormatTextInAll(SupplyConsumptionKey);
+            SupplyConsumptionDesc = localizationService.GetFormatTextInAll($"{SupplyConsumptionKey}_DESC");
+            CasualtyTrickleback = localizationService.GetFormatTextInAll(CasualtyTricklebackKey);
+            CasualtyTricklebackDesc = localizationService.GetFormatTextInAll(
+                $"{CasualtyTricklebackKey}_DESC"
+            );
+            EquipmentCaptureRatio = localizationService.GetFormatTextInAll(EquipmentCaptureRatioKey);
+            EquipmentCaptureRatioDesc = localizationService.GetFormatTextInAll(
+                $"{EquipmentCaptureRatioKey}_DESC"
+            );
+            ExperienceLoss = localizationService.GetFormatTextInAll(ExperienceLossKey);
+            ExperienceLossDesc = localizationService.GetFormatTextInAll($"{ExperienceLossKey}_DESC");
+            TrainingTime = localizationService.GetFormatTextInAll(TrainingTimeKey);
+            TrainingTimeDesc = localizationService.GetFormatTextInAll($"{TrainingTimeKey}_DESC");
+            Initiative = localizationService.GetFormatTextInAll(InitiativeKey);
+            InitiativeDesc = localizationService.GetFormatTextInAll($"{InitiativeKey}_DESC");
+            Entrenchment = localizationService.GetFormatTextInAll(EntrenchmentKey);
+            EntrenchmentDesc = localizationService.GetFormatTextInAll($"{EntrenchmentKey}_DESC");
+            Weight = localizationService.GetFormatTextInAll(WeightKey);
+            WeightDesc = localizationService.GetFormatTextInAll($"{WeightKey}_DESC");
         }
 
         public string HpKey { get; } = "STAT_COMMON_MAX_STRENGTH";

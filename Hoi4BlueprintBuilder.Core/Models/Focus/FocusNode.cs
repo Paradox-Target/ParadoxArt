@@ -30,7 +30,7 @@ public sealed partial class FocusNode(string path, FocusType type)
     /// </summary>
     public string Path { get; } = path;
     public string LocalizedName =>
-        _localizationFormatService is null ? Id : _localizationFormatService.GetFormatText(Id);
+        _localizationFormatService is null ? Id : _localizationFormatService.GetFormatTextInAll(Id);
 
     private static LocalizationFormatService? _localizationFormatService;
 

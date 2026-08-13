@@ -85,27 +85,27 @@ public sealed class ModifierService
 
     public bool TryGetLocalizationName(string modifierKey, [NotNullWhen(true)] out string? value)
     {
-        if (_localizationService.TryGetValue(modifierKey, out value))
+        if (_localizationService.TryGetValueInAll(modifierKey, out value))
         {
             return true;
         }
 
-        if (_localizationService.TryGetValue($"MODIFIER_{modifierKey}", out value))
+        if (_localizationService.TryGetValueInAll($"MODIFIER_{modifierKey}", out value))
         {
             return true;
         }
 
-        if (_localizationService.TryGetValue($"MODIFIER_NAVAL_{modifierKey}", out value))
+        if (_localizationService.TryGetValueInAll($"MODIFIER_NAVAL_{modifierKey}", out value))
         {
             return true;
         }
 
-        if (_localizationService.TryGetValue($"MODIFIER_UNIT_LEADER_{modifierKey}", out value))
+        if (_localizationService.TryGetValueInAll($"MODIFIER_UNIT_LEADER_{modifierKey}", out value))
         {
             return true;
         }
 
-        if (_localizationService.TryGetValue($"MODIFIER_ARMY_LEADER_{modifierKey}", out value))
+        if (_localizationService.TryGetValueInAll($"MODIFIER_ARMY_LEADER_{modifierKey}", out value))
         {
             return true;
         }
@@ -131,14 +131,14 @@ public sealed class ModifierService
         }
 
         if (
-            _localizationService.TryGetValue($"{modifier}_tt", out result)
-            || _localizationService.TryGetValue($"{modifier}_DIFF", out result)
+            _localizationService.TryGetValueInAll($"{modifier}_tt", out result)
+            || _localizationService.TryGetValueInAll($"{modifier}_DIFF", out result)
         )
         {
             return true;
         }
 
-        return _localizationService.TryGetValue(modifier, out result);
+        return _localizationService.TryGetValueInAll(modifier, out result);
     }
 
     private static ModifierEffectType GetModifierType(string modifierFormat)
@@ -181,7 +181,7 @@ public sealed class ModifierService
 
     private string GetTerrainModifierFormat(string stat)
     {
-        return _localizationService.TryGetValue($"STAT_ADJUSTER_{stat}_DIFF", out string? format)
+        return _localizationService.TryGetValueInAll($"STAT_ADJUSTER_{stat}_DIFF", out string? format)
             ? format
             : string.Empty;
     }

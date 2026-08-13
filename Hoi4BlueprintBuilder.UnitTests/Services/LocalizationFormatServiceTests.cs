@@ -84,7 +84,7 @@ public class LocalizationFormatServiceTests
         // 测试字符串: §R-需要该团中至少有§!§H$NUM_BATTALIONS|H$个作战营§!§R。§!
         // 占位符 NUM_BATTALIONS 嵌套在 §H...§! 颜色块中, 且带有 |H 格式说明符
         // 期望结果: -需要该团中至少有5个作战营。
-        string result = _formatService.GetFormatText(
+        string result = _formatService.GetFormatTextInAll(
             "DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS",
             "NUM_BATTALIONS",
             5
@@ -97,7 +97,7 @@ public class LocalizationFormatServiceTests
     public void GetFormatText_WithoutPlaceholder_ShouldSkipFormatSpecifier()
     {
         // 不提供占位符时, $NUM_BATTALIONS|H$ 作为格式说明符被跳过
-        string result = _formatService.GetFormatText("DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS");
+        string result = _formatService.GetFormatTextInAll("DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS");
 
         Assert.That(result, Is.EqualTo("-需要该团中至少有个作战营。"));
     }
@@ -111,7 +111,7 @@ public class LocalizationFormatServiceTests
         // 模式来源: THEATER_GROUP_OFFENSIVE_TROUBLES
         // 值: §R$COUNT|H$场攻击战中有$BAD_COUNT|H$场处于劣势§!
         // 一个颜色块内含两个占位符, 仅替换 COUNT
-        string result = _formatService.GetFormatText("COMPLEX_MULTI_PLACEHOLDER_IN_COLOR", "COUNT", 10);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_MULTI_PLACEHOLDER_IN_COLOR", "COUNT", 10);
 
         Assert.That(result, Is.EqualTo("10场攻击战中有场处于劣势"));
     }
@@ -120,7 +120,7 @@ public class LocalizationFormatServiceTests
     public void GetFormatText_MultiplePlaceholdersInsideOneColorBlock_ShouldSubstituteSecond()
     {
         // 同一字符串, 仅替换 BAD_COUNT
-        string result = _formatService.GetFormatText("COMPLEX_MULTI_PLACEHOLDER_IN_COLOR", "BAD_COUNT", 3);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_MULTI_PLACEHOLDER_IN_COLOR", "BAD_COUNT", 3);
 
         Assert.That(result, Is.EqualTo("场攻击战中有3场处于劣势"));
     }
@@ -131,7 +131,7 @@ public class LocalizationFormatServiceTests
         // 模式来源: AIR_VIEW_AVERAGE_MISSION_EFFICIENCY_FRIEND
         // 值: 效率：$VAL_HIGH|G%$$VAL_MID|H%$$VAL_LOW|R%$
         // 三个相邻占位符 (无颜色块包裹), 各带不同的颜色格式说明符
-        string result = _formatService.GetFormatText("COMPLEX_ADJACENT_PLACEHOLDERS", "VAL_MID", 75);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_ADJACENT_PLACEHOLDERS", "VAL_MID", 75);
 
         Assert.That(result, Is.EqualTo("效率：75"));
     }
@@ -140,7 +140,7 @@ public class LocalizationFormatServiceTests
     public void GetFormatText_AdjacentPlaceholders_WithoutPlaceholder_ShouldSkipAll()
     {
         // 不提供占位符时, 所有带 | 的占位符均被跳过
-        string result = _formatService.GetFormatText("COMPLEX_ADJACENT_PLACEHOLDERS");
+        string result = _formatService.GetFormatTextInAll("COMPLEX_ADJACENT_PLACEHOLDERS");
 
         Assert.That(result, Is.EqualTo("效率："));
     }
@@ -151,7 +151,7 @@ public class LocalizationFormatServiceTests
         // 模式来源: DIVISION_MODIFICATION_NEED_NOT_FILLED
         // 值: 需要额外$AMOUNT|H0$ $EQUIPMENT|H$（§R现有$STOCK_AMOUNT|H0^$可用§!）
         // 占位符分布在颜色块内外, 目标占位符在颜色块内, 带 |H0^ 复合格式说明符
-        string result = _formatService.GetFormatText(
+        string result = _formatService.GetFormatTextInAll(
             "COMPLEX_PLACEHOLDER_IN_AND_OUT_COLOR",
             "STOCK_AMOUNT",
             100
@@ -166,7 +166,7 @@ public class LocalizationFormatServiceTests
         // 模式来源: DESIGNER_BLOCKED_BY_REGIMENT_BATTALIONS 变体
         // 值: §R$COUNT|H$场§!中间文本§G$MAX|H$个§!
         // 两个不同颜色的颜色块, 各含一个占位符, 中间有普通文本
-        string result = _formatService.GetFormatText("COMPLEX_SEQUENTIAL_COLOR_BLOCKS", "MAX", 20);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_SEQUENTIAL_COLOR_BLOCKS", "MAX", 20);
 
         Assert.That(result, Is.EqualTo("场中间文本20个"));
     }
@@ -175,7 +175,7 @@ public class LocalizationFormatServiceTests
     public void GetFormatText_SequentialColorBlocks_ShouldSubstituteInFirstBlock()
     {
         // 同一字符串, 替换第一个颜色块中的 COUNT
-        string result = _formatService.GetFormatText("COMPLEX_SEQUENTIAL_COLOR_BLOCKS", "COUNT", 8);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_SEQUENTIAL_COLOR_BLOCKS", "COUNT", 8);
 
         Assert.That(result, Is.EqualTo("8场中间文本个"));
     }
@@ -185,7 +185,7 @@ public class LocalizationFormatServiceTests
     {
         // 值: 外层$VAL|0$文本§R内层$VAL|H$§!
         // 同名占位符分别出现在颜色块外和块内, 应同时替换
-        string result = _formatService.GetFormatText("COMPLEX_SAME_PLACEHOLDER_IN_OUT", "VAL", 99);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_SAME_PLACEHOLDER_IN_OUT", "VAL", 99);
 
         Assert.That(result, Is.EqualTo("外层99文本内层99"));
     }
@@ -197,7 +197,7 @@ public class LocalizationFormatServiceTests
         // COMPLEX_DEEP_NESTED_OUTER: §R前缀$COMPLEX_DEEP_NESTED_INNER$后缀§!
         // COMPLEX_DEEP_NESTED_INNER: §H$DEEP_VALUE|H$中§!
         // 解析路径: 外层§R → 解析$INNER$引用 → 内层§H → 替换$DEEP_VALUE|H$
-        string result = _formatService.GetFormatText("COMPLEX_DEEP_NESTED_OUTER", "DEEP_VALUE", 42);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_DEEP_NESTED_OUTER", "DEEP_VALUE", 42);
 
         Assert.That(result, Is.EqualTo("前缀42中后缀"));
     }
@@ -206,7 +206,7 @@ public class LocalizationFormatServiceTests
     public void GetFormatText_DeepNestedThroughKeyReference_WithoutPlaceholder_ShouldSkipInner()
     {
         // 不提供占位符时, 深层嵌套中的 $DEEP_VALUE|H$ 被跳过
-        string result = _formatService.GetFormatText("COMPLEX_DEEP_NESTED_OUTER");
+        string result = _formatService.GetFormatTextInAll("COMPLEX_DEEP_NESTED_OUTER");
 
         Assert.That(result, Is.EqualTo("前缀中后缀"));
     }
@@ -217,7 +217,7 @@ public class LocalizationFormatServiceTests
         // 模式来源: DESIGNER_HQ_CP_COST_CHANGE
         // 值: §Y花费£command_power $OLD|0H$改为£command_power $NEW|0H$§!
         // 颜色块内含图标(£)和多个占位符
-        string result = _formatService.GetFormatText("COMPLEX_ICON_AND_PLACEHOLDER", "NEW", 50);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_ICON_AND_PLACEHOLDER", "NEW", 50);
 
         // 图标被跳过, OLD 被跳过 (含|), NEW 被替换
         Assert.That(result, Is.EqualTo("花费改为50"));
@@ -230,7 +230,7 @@ public class LocalizationFormatServiceTests
         // 值: §R$COUNT|H$场§!普通文本$RATE|0$§G$MAX|H$个§!$COMPLEX_DEEP_NESTED_INNER$
         // COMPLEX_DEEP_NESTED_INNER: §H$DEEP_VALUE|H$中§!
         // 替换 MAX → 解析路径跨越3个颜色块和1层键引用
-        string result = _formatService.GetFormatText("COMPLEX_MIXED_ALL", "MAX", 30);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_MIXED_ALL", "MAX", 30);
 
         // COUNT/RATE/DEEP_VALUE 均被跳过 (含|或不匹配), 仅 MAX 被替换
         Assert.That(result, Is.EqualTo("场普通文本30个中"));
@@ -240,7 +240,7 @@ public class LocalizationFormatServiceTests
     public void GetFormatText_MixedAll_ShouldSubstituteDeepNestedPlaceholder()
     {
         // 同一综合字符串, 替换深层嵌套引用中的 DEEP_VALUE
-        string result = _formatService.GetFormatText("COMPLEX_MIXED_ALL", "DEEP_VALUE", 7);
+        string result = _formatService.GetFormatTextInAll("COMPLEX_MIXED_ALL", "DEEP_VALUE", 7);
 
         // COUNT/RATE/MAX 被跳过, DEEP_VALUE 在深层引用中被替换
         Assert.That(result, Is.EqualTo("场普通文本个7中"));
@@ -254,7 +254,7 @@ public class LocalizationFormatServiceTests
     public void GetFormatText_EscapedDollar_PlainText_ShouldProduceLiteralDollar()
     {
         // 值: "价格$$100" → $$ 产生字面 $
-        string result = _formatService.GetFormatText("ESCAPED_DOLLAR_PLAIN");
+        string result = _formatService.GetFormatTextInAll("ESCAPED_DOLLAR_PLAIN");
 
         Assert.That(result, Is.EqualTo("价格$100"));
     }
@@ -264,7 +264,7 @@ public class LocalizationFormatServiceTests
     {
         // 值: "§R价格$$100§!" → 颜色块内的 $$ 也应被处理为字面 $
         // 这验证了 GetColorText 的修复: 即使没有占位符, 也应重新解析内部文本
-        string result = _formatService.GetFormatText("ESCAPED_DOLLAR_IN_COLOR");
+        string result = _formatService.GetFormatTextInAll("ESCAPED_DOLLAR_IN_COLOR");
 
         Assert.That(result, Is.EqualTo("价格$100"));
     }
@@ -274,7 +274,7 @@ public class LocalizationFormatServiceTests
     {
         // 值: "$$100$VAL|0$元"
         // $$100 → 字面 "$100", $VAL|0$ → 占位符, 元 → 文本
-        string result = _formatService.GetFormatText("ESCAPED_DOLLAR_WITH_PLACEHOLDER", "VAL", 50);
+        string result = _formatService.GetFormatTextInAll("ESCAPED_DOLLAR_WITH_PLACEHOLDER", "VAL", 50);
 
         Assert.That(result, Is.EqualTo("$10050元"));
     }
@@ -284,7 +284,7 @@ public class LocalizationFormatServiceTests
     {
         // 值: "$$100$VAL|0$"
         // $$100 → 字面 "$100", $VAL|0$ → 占位符
-        string result = _formatService.GetFormatText("ESCAPED_DOLLAR_ADJACENT_PLACEHOLDER", "VAL", 50);
+        string result = _formatService.GetFormatTextInAll("ESCAPED_DOLLAR_ADJACENT_PLACEHOLDER", "VAL", 50);
 
         Assert.That(result, Is.EqualTo("$10050"));
     }

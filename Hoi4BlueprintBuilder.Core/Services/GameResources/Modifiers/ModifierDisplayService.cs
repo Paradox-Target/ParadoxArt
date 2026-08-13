@@ -135,10 +135,10 @@ public sealed class ModifierDisplayService
             nodeModifier,
             leafModifier =>
             {
-                string modifierName = _localizationFormatService.GetFormatText(
+                string modifierName = _localizationFormatService.GetFormatTextInAll(
                     $"STAT_ADJUSTER_{leafModifier.Key}"
                 );
-                string modifierFormat = _localizationService.GetValue(
+                string modifierFormat = _localizationService.GetValueInAll(
                     $"STAT_ADJUSTER_{leafModifier.Key}_DIFF"
                 );
                 return
@@ -189,7 +189,7 @@ public sealed class ModifierDisplayService
     {
         var inlines = new List<Inline>(nodeModifier.AllArray.Length)
         {
-            new Run { Text = $"{_localizationFormatService.GetFormatText(nodeModifier.Key)}:" },
+            new Run { Text = $"{_localizationFormatService.GetFormatTextInAll(nodeModifier.Key)}:" },
             new LineBreak()
         };
 
