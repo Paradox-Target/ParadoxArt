@@ -401,67 +401,67 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.Hp,
                     _templateAttributesLocalization.HpDesc,
-                    FormatValue(_templateAttributesLocalization.HpKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.HpKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.Organization,
                     _templateAttributesLocalization.OrganizationDesc,
-                    FormatValue(_templateAttributesLocalization.OrganizationKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.OrganizationKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.RecoveryRate,
                     _templateAttributesLocalization.RecoveryRateDesc,
-                    FormatValue(_templateAttributesLocalization.RecoveryRateKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.RecoveryRateKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.Recon,
                     _templateAttributesLocalization.ReconDesc,
-                    FormatValue(_templateAttributesLocalization.ReconKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.ReconKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.Suppression,
                     _templateAttributesLocalization.SuppressionDesc,
-                    FormatValue(_templateAttributesLocalization.SuppressionKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.SuppressionKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.Weight,
                     _templateAttributesLocalization.WeightDesc,
-                    FormatValue(_templateAttributesLocalization.WeightKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.WeightKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.SupplyConsumption,
                     _templateAttributesLocalization.SupplyConsumptionDesc,
-                    FormatValue(_templateAttributesLocalization.SupplyConsumptionKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.SupplyConsumptionKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.CasualtyTrickleback,
                     _templateAttributesLocalization.CasualtyTricklebackDesc,
-                    FormatValue(_templateAttributesLocalization.CasualtyTricklebackKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.CasualtyTricklebackKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.ExperienceLoss,
                     _templateAttributesLocalization.ExperienceLossDesc,
-                    FormatValue(_templateAttributesLocalization.ExperienceLossKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.ExperienceLossKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.EquipmentCaptureRatio,
                     _templateAttributesLocalization.EquipmentCaptureRatioDesc,
-                    FormatValue(_templateAttributesLocalization.EquipmentCaptureRatioKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.EquipmentCaptureRatioKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.TrainingTime,
                     _templateAttributesLocalization.TrainingTimeDesc,
-                    FormatValue(_templateAttributesLocalization.TrainingTimeKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.TrainingTimeKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.Initiative,
                     _templateAttributesLocalization.InitiativeDesc,
-                    FormatValue(_templateAttributesLocalization.InitiativeKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.InitiativeKey, 0)
                 ),
                 new TemplateAttributeVo(
                     _templateAttributesLocalization.Entrenchment,
                     _templateAttributesLocalization.EntrenchmentDesc,
-                    FormatValue(_templateAttributesLocalization.EntrenchmentKey, 0)
+                    FormatValue(TemplateAttributesLocalizations.EntrenchmentKey, 0)
                 )
             ];
             return;
@@ -512,67 +512,67 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Hp,
                 _templateAttributesLocalization.HpDesc,
-                FormatValue(_templateAttributesLocalization.HpKey, maxStrength)
+                FormatValue(TemplateAttributesLocalizations.HpKey, maxStrength)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Organization,
                 _templateAttributesLocalization.OrganizationDesc,
-                FormatValue(_templateAttributesLocalization.OrganizationKey, organization)
+                FormatValue(TemplateAttributesLocalizations.OrganizationKey, organization)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.RecoveryRate,
                 _templateAttributesLocalization.RecoveryRateDesc,
-                FormatValue(_templateAttributesLocalization.RecoveryRateKey, recoveryRate)
+                FormatValue(TemplateAttributesLocalizations.RecoveryRateKey, recoveryRate)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Recon,
                 _templateAttributesLocalization.ReconDesc,
-                FormatValue(_templateAttributesLocalization.ReconKey, recon)
+                FormatValue(TemplateAttributesLocalizations.ReconKey, recon)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Suppression,
                 _templateAttributesLocalization.SuppressionDesc,
-                FormatValue(_templateAttributesLocalization.SuppressionKey, suppressionValue)
+                FormatValue(TemplateAttributesLocalizations.SuppressionKey, suppressionValue)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Weight,
                 _templateAttributesLocalization.WeightDesc,
-                FormatValue(_templateAttributesLocalization.WeightKey, weight)
+                FormatValue(TemplateAttributesLocalizations.WeightKey, weight)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.SupplyConsumption,
                 _templateAttributesLocalization.SupplyConsumptionDesc,
-                FormatValue(_templateAttributesLocalization.SupplyConsumptionKey, supplyConsumption)
+                FormatValue(TemplateAttributesLocalizations.SupplyConsumptionKey, supplyConsumption)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.CasualtyTrickleback,
                 _templateAttributesLocalization.CasualtyTricklebackDesc,
-                FormatValue(_templateAttributesLocalization.CasualtyTricklebackKey, casualtyTrickleback)
+                FormatValue(TemplateAttributesLocalizations.CasualtyTricklebackKey, casualtyTrickleback)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.ExperienceLoss,
                 _templateAttributesLocalization.ExperienceLossDesc,
-                FormatValue(_templateAttributesLocalization.ExperienceLossKey, experienceLossFactor)
+                FormatValue(TemplateAttributesLocalizations.ExperienceLossKey, experienceLossFactor)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.EquipmentCaptureRatio,
                 _templateAttributesLocalization.EquipmentCaptureRatioDesc,
-                FormatValue(_templateAttributesLocalization.EquipmentCaptureRatioKey, equipmentCaptureFactor)
+                FormatValue(TemplateAttributesLocalizations.EquipmentCaptureRatioKey, equipmentCaptureFactor)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.TrainingTime,
                 _templateAttributesLocalization.TrainingTimeDesc,
-                FormatValue(_templateAttributesLocalization.TrainingTimeKey, trainingTime)
+                FormatValue(TemplateAttributesLocalizations.TrainingTimeKey, trainingTime)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Initiative,
                 _templateAttributesLocalization.InitiativeDesc,
-                FormatValue(_templateAttributesLocalization.InitiativeKey, initiative)
+                FormatValue(TemplateAttributesLocalizations.InitiativeKey, initiative)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Entrenchment,
                 _templateAttributesLocalization.EntrenchmentDesc,
-                FormatValue(_templateAttributesLocalization.EntrenchmentKey, entrenchment)
+                FormatValue(TemplateAttributesLocalizations.EntrenchmentKey, entrenchment)
             )
         ];
     }
@@ -877,43 +877,44 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             WeightDesc = localizationService.GetFormatTextInAll($"{WeightKey}_DESC");
         }
 
-        public string HpKey { get; } = "STAT_COMMON_MAX_STRENGTH";
+        public const string HpKey = "STAT_COMMON_MAX_STRENGTH";
         public string Hp { get; }
         public string HpDesc { get; }
-        public string OrganizationKey { get; } = "STAT_COMMON_MAX_ORG";
+        public const string OrganizationKey = "STAT_COMMON_MAX_ORG";
         public string Organization { get; }
         public string OrganizationDesc { get; }
-        public string RecoveryRateKey { get; } = "STAT_ARMY_DEFAULT_MORALE";
+        public const string RecoveryRateKey = "STAT_ARMY_DEFAULT_MORALE";
         public string RecoveryRate { get; }
         public string RecoveryRateDesc { get; }
-        public string ReconKey { get; } = "STAT_ARMY_RECON";
+        public const string ReconKey = "STAT_ARMY_RECON";
         public string Recon { get; }
         public string ReconDesc { get; }
-        public string SuppressionKey { get; } = "STAT_ARMY_SUPRESSION";
+        public const string SuppressionKey = "STAT_ARMY_SUPRESSION";
         public string Suppression { get; }
         public string SuppressionDesc { get; }
-        public string SupplyConsumptionKey { get; } = "STAT_ARMY_SUPPLY_CONSUMPTION";
+        public const string SupplyConsumptionKey = "STAT_ARMY_SUPPLY_CONSUMPTION";
         public string SupplyConsumption { get; }
         public string SupplyConsumptionDesc { get; }
-        public string CasualtyTricklebackKey { get; } = "STAT_CASUALTY_TRICKLEBACK";
+
+        public const string CasualtyTricklebackKey = "STAT_CASUALTY_TRICKLEBACK";
         public string CasualtyTrickleback { get; }
         public string CasualtyTricklebackDesc { get; }
-        public string EquipmentCaptureRatioKey { get; } = "STAT_ARMY_EQUIPMENT_CAPTURE_FACTOR";
+        public const string EquipmentCaptureRatioKey = "STAT_ARMY_EQUIPMENT_CAPTURE_FACTOR";
         public string EquipmentCaptureRatio { get; }
         public string EquipmentCaptureRatioDesc { get; }
-        public string ExperienceLossKey { get; } = "STAT_ARMY_EXPERIENCE_LOSS_FACTOR";
+        public const string ExperienceLossKey = "STAT_ARMY_EXPERIENCE_LOSS_FACTOR";
         public string ExperienceLoss { get; }
         public string ExperienceLossDesc { get; }
-        public string TrainingTimeKey { get; } = "DESIGNER_TRAINING_TIME";
+        public const string TrainingTimeKey = "DESIGNER_TRAINING_TIME";
         public string TrainingTime { get; }
         public string TrainingTimeDesc { get; }
-        public string InitiativeKey { get; } = "STAT_ARMY_INITIATIVE";
+        public const string InitiativeKey = "STAT_ARMY_INITIATIVE";
         public string Initiative { get; }
         public string InitiativeDesc { get; }
-        public string EntrenchmentKey { get; } = "STAT_ARMY_ENTRENCHMENT";
+        public const string EntrenchmentKey = "STAT_ARMY_ENTRENCHMENT";
         public string Entrenchment { get; }
         public string EntrenchmentDesc { get; }
-        public string WeightKey { get; } = "STAT_COMMON_WEIGHT";
+        public const string WeightKey = "STAT_COMMON_WEIGHT";
         public string Weight { get; }
         public string WeightDesc { get; }
     }
