@@ -16,10 +16,14 @@
 
 **本软件现在在 [GitHub](https://github.com/Paradox-Target/ParadoxArt) 开放源代码.**
 
-- feat: 本地化文本支持占位符着色.
+- feat: 新增部队模板编辑器, 支持查看地形修正, 部分属性信息.
+- perf: 优化性能
+- deps: 更新了依赖的库
 
 ## English
 
 **This software is now open-sourced on [GitHub](https://github.com/Paradox-Target/ParadoxArt).**
 
-- feat: Added editing functionality for `ai_will_do`, `available`, `bypass`, and `select_effect` attributes in focus information cards.
+- feat: Added a unit template editor that supports viewing terrain modifiers and some attribute information.
+- perf: Performance optimizations
+- deps: Updated dependencies
