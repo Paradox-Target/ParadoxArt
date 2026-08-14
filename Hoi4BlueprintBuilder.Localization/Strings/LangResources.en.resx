@@ -684,7 +684,7 @@ Sprite Name: {1}</value>
         <value>Supply Priority</value>
     </data>
     <data name="OobEditorView_CopyToClipboard" xml:space="preserve">
-        <value>Copy to Clipboard</value>
+        <value>Copy Text</value>
     </data>
     <data name="OobEditorView_DivisionNamesGroup" xml:space="preserve">
         <value>Division Name Group</value>
