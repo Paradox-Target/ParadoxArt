@@ -36,7 +36,6 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
         "max_strength",
         "max_organisation",
         "default_morale",
-        "suppression_factor",
         "casualty_trickleback",
         "breakthrough",
         "soft_attack",
@@ -82,6 +81,8 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
         bool allowInNonArmyHq = true;
         var allowedGroups = new HashSet<string>();
         var requirements = new List<(string Name, int Quantity)>();
+        var categories = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var battalionMultipliers = new List<BattalionMultiplier>();
 
         foreach (var child in unitNode.AllArray)
         {
@@ -135,6 +136,21 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
                         allowedGroups.Add(group.Key);
                     }
                 }
+                else if (node.Key.EqualsIgnoreCase("categories"))
+                {
+                    foreach (var category in node.LeafValuesValue)
+                    {
+                        categories.Add(category.Key);
+                    }
+                }
+                else if (node.Key.EqualsIgnoreCase("battalion_mult"))
+                {
+                    var multiplier = ParseBattalionMultiplier(node, unitNode.Key);
+                    if (multiplier is not null)
+                    {
+                        battalionMultipliers.Add(multiplier);
+                    }
+                }
                 else if (node.Key.EqualsIgnoreCase("need"))
                 {
                     foreach (var requirement in node.LeavesValue)
@@ -153,6 +169,7 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
             return;
         }
         allowedGroups.TrimExcess();
+        categories.TrimExcess();
         map[unitNode.Key] = new UnitInfo(
             unitNode.Key,
             groupName,
@@ -165,6 +182,8 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
             allowedGroups,
             [.. requirements],
             ParseIntrinsicStats(unitNode),
+            categories,
+            battalionMultipliers,
             unitNode
                 .AllArray.AsValueEnumerable()
                 .Where(child =>
@@ -192,6 +211,42 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
                 })
                 .ToArray()
         );
+    }
+
+    private BattalionMultiplier? ParseBattalionMultiplier(Node node, string unitName)
+    {
+        string? category = null;
+        bool isAdditive = false;
+        bool foundCategory = false;
+        bool foundAdd = false;
+
+        foreach (var leaf in node.LeavesValue)
+        {
+            if (leaf.Key.EqualsIgnoreCase("category"))
+            {
+                category = leaf.ValueText;
+                foundCategory = true;
+            }
+            else if (leaf.Key.EqualsIgnoreCase("add") && leaf.Value.TryGetBool(out bool add))
+            {
+                isAdditive = add;
+                foundAdd = true;
+            }
+
+            if (foundAdd && foundCategory)
+            {
+                break;
+            }
+        }
+        var modifiers = ParseIntrinsicStats(node);
+
+        if (string.IsNullOrEmpty(category))
+        {
+            Log.Warn("{UnitName} 的 battalion_mult 缺少 category", unitName);
+            return null;
+        }
+
+        return new BattalionMultiplier(category, modifiers, isAdditive);
     }
 
     private static UnitIntrinsicStats ParseIntrinsicStats(Node unitNode)

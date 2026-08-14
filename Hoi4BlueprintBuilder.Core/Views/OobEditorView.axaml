@@ -122,6 +122,7 @@
                                         <TextBlock
                                             Grid.Column="0"
                                             VerticalAlignment="Center"
+                                            Classes="BodyTextBlock"
                                             Text="{Binding Name, Mode=OneTime}"
                                             TextTrimming="CharacterEllipsis" />
                                         <TextBlock
@@ -129,6 +130,7 @@
                                             Margin="12,0,0,0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Center"
+                                            Classes="BodyTextBlock"
                                             Text="{Binding Value, Mode=OneTime}" />
                                     </Grid>
                                 </DataTemplate>

@@ -116,6 +116,10 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     private string? _generatedText;
 
     private readonly Dictionary<PositionInfo, UnitInfo> _existingUnits = [];
+
+    /// <summary>
+    /// Key: 装备名称, Value: 数量
+    /// </summary>
     private readonly Dictionary<string, int> _equipments = [];
     private readonly Dictionary<string, Bitmap?> _terrainImages = new(StringComparer.OrdinalIgnoreCase);
     private readonly UnitInfo EmptyUnit =
@@ -131,10 +135,22 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             new HashSet<string>(),
             [],
             new UnitIntrinsicStats(),
+            new HashSet<string>(),
+            [],
             []
         );
 
-    private readonly TemplateAttributesLocalizations _templateAttributesLocalization;
+    /// <summary>
+    /// 每一点堑壕值可以增加的攻防加成
+    /// </summary>
+    private readonly double _digInFactor;
+
+    /// <summary>
+    /// 默认堑壕值上限
+    /// </summary>
+    private readonly double _unitDigInCap;
+
+    private static TemplateAttributesLocalizations? _templateAttributesLocalization;
 
     private const string Support = "support";
     private const string UnitPropertyChange = "UnitPropertyChange";
@@ -164,7 +180,8 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         _modifierValueService = modifierValueService;
         _terrainModifierCalculator = terrainModifierCalculator;
         _terrainService = terrainService;
-        _templateAttributesLocalization = new TemplateAttributesLocalizations(_localizationFormatService);
+        _templateAttributesLocalization ??= new TemplateAttributesLocalizations(_localizationFormatService);
+
         SupplyPriorities ??=
         [
             new SupplyPriorities(
@@ -190,6 +207,8 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         DivisionSupportHeight = definesService.GetInt("NDefines.NMilitary.MAX_DIVISION_SUPPORT_HEIGHT");
         RegimentalSupportWidth = definesService.GetInt("NDefines.NMilitary.MAX_REGIMENTAL_SUPPORT_WIDTH");
         RegimentalSupportHeight = definesService.GetInt("NDefines.NMilitary.MAX_REGIMENTAL_SUPPORT_HEIGHT");
+        _unitDigInCap = definesService.GetDouble("NDefines.NMilitary.UNIT_DIGIN_CAP");
+        _digInFactor = definesService.GetDouble("NDefines.NMilitary.DIG_IN_FACTOR");
         long[] array = definesService.GetLongs("NDefines.NMilitary.REGIMENTAL_SUPPORT_REQUIRED_BATTALIONS");
         MinUseRegimentalCount = (int)(array.Length > 0 ? array[0] : 0);
         PropertyChanged += (_, e) =>
@@ -393,6 +412,8 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
 
     private void RefreshTemplateAttributes()
     {
+        ArgumentNullException.ThrowIfNull(_templateAttributesLocalization);
+
         int unitCount = _existingUnits.Count;
         if (unitCount == 0)
         {
@@ -483,8 +504,28 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         double weight = 0;
         double supplyConsumptionFactor = 0;
 
-        foreach (var stats in _existingUnits.Values.AsValueEnumerable().Select(static unit => unit.Stats))
+        var battalionMultipliers = new Dictionary<string, List<BattalionMultiplier>>();
+
+        foreach (
+            var multiplier in _existingUnits
+                .AsValueEnumerable()
+                .Where(static pair =>
+                    pair.Key.SlotType != UnitSlotType.Common && pair.Value.BattalionMultipliers.IsNotEmpty
+                )
+                .SelectMany(static pair => pair.Value.BattalionMultipliers)
+        )
         {
+            if (!battalionMultipliers.TryGetValue(multiplier.Category, out var list))
+            {
+                list = new List<BattalionMultiplier>(4);
+                battalionMultipliers[multiplier.Category] = list;
+            }
+            list.Add(multiplier);
+        }
+
+        foreach (var unit in _existingUnits.Values)
+        {
+            var stats = ApplyBattalionMultipliers(unit);
             maxStrength += stats.MaxStrength;
             maxOrganisation += stats.MaxOrganisation;
             defaultMorale += stats.DefaultMorale;
@@ -502,10 +543,10 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             weight += stats.Weight;
         }
 
-        supplyConsumption = (1.0 + supplyConsumptionFactor) * supplyConsumption;
+        supplyConsumption *= 1.0 + supplyConsumptionFactor;
         double organization = maxOrganisation / unitCount;
         double recoveryRate = defaultMorale / unitCount;
-        double suppressionValue = suppression * (1 + suppressionFactor);
+        suppression *= 1 + suppressionFactor;
 
         TemplateAttributes =
         [
@@ -532,7 +573,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Suppression,
                 _templateAttributesLocalization.SuppressionDesc,
-                FormatValue(TemplateAttributesLocalizations.SuppressionKey, suppressionValue)
+                FormatValue(TemplateAttributesLocalizations.SuppressionKey, suppression)
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Weight,
@@ -571,10 +612,43 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             ),
             new TemplateAttributeVo(
                 _templateAttributesLocalization.Entrenchment,
-                _templateAttributesLocalization.EntrenchmentDesc,
-                FormatValue(TemplateAttributesLocalizations.EntrenchmentKey, entrenchment)
+                $"{_templateAttributesLocalization.EntrenchmentDesc}",
+                $"{FormatValue(TemplateAttributesLocalizations.EntrenchmentKey, entrenchment + _unitDigInCap)} ({entrenchment:#.##} + {_unitDigInCap})"
+            ),
+            new TemplateAttributeVo(
+                _templateAttributesLocalization.EntrenchmentModifier,
+                $"{_templateAttributesLocalization.EntrenchmentModifier}: {_modifierValueService.GetDisplayValue((entrenchment + _unitDigInCap) * _digInFactor, "+%")}",
+                _modifierValueService.GetDisplayValue((entrenchment + _unitDigInCap) * _digInFactor, "+%")
             )
         ];
+        return;
+
+        UnitIntrinsicStats ApplyBattalionMultipliers(UnitInfo unit)
+        {
+            if (battalionMultipliers.Count == 0)
+            {
+                return unit.Stats;
+            }
+
+            var stats = unit.Stats;
+            //TODO: 加乘还是叠乘?
+            foreach (var pair in battalionMultipliers)
+            {
+                if (!unit.IsInCategory(pair.Key))
+                {
+                    continue;
+                }
+
+                foreach (var battalionMultiplier in pair.Value)
+                {
+                    stats = battalionMultiplier.IsAdditive
+                        ? stats.Add(battalionMultiplier.Stats)
+                        : stats.Multiply(battalionMultiplier.Stats);
+                }
+            }
+
+            return stats;
+        }
     }
 
     private string FormatValue(string key, double value)
@@ -875,6 +949,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             EntrenchmentDesc = localizationService.GetFormatTextInAll($"{EntrenchmentKey}_DESC");
             Weight = localizationService.GetFormatTextInAll(WeightKey);
             WeightDesc = localizationService.GetFormatTextInAll($"{WeightKey}_DESC");
+            EntrenchmentModifier = localizationService.GetFormatTextInAll("MODIFIER_COMBAT_ENTRENCHMENT");
         }
 
         public const string HpKey = "STAT_COMMON_MAX_STRENGTH";
@@ -914,6 +989,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         public const string EntrenchmentKey = "STAT_ARMY_ENTRENCHMENT";
         public string Entrenchment { get; }
         public string EntrenchmentDesc { get; }
+        public string EntrenchmentModifier { get; }
         public const string WeightKey = "STAT_COMMON_WEIGHT";
         public string Weight { get; }
         public string WeightDesc { get; }

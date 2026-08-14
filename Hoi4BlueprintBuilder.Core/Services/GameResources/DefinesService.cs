@@ -58,6 +58,11 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
         using var table = _globalLua.GetTable(defineName);
         return [.. table.Values.Cast<long>()];
     }
+    
+    public double GetDouble(string defineName)
+    {
+        return _globalLua.GetNumber(defineName);
+    }
 
     protected override byte ParseFileToContent(byte result)
     {
