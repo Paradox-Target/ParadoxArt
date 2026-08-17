@@ -56,9 +56,14 @@ public sealed class DefinesService : ResourcesService<DefinesService, byte, byte
     public long[] GetLongs(string defineName)
     {
         using var table = _globalLua.GetTable(defineName);
+        if (table is null)
+        {
+            return [];
+        }
+
         return [.. table.Values.Cast<long>()];
     }
-    
+
     public double GetDouble(string defineName)
     {
         return _globalLua.GetNumber(defineName);
