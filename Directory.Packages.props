@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <!-- https://learn.microsoft.com/en-us/nuget/consume-packages/central-package-management -->
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
@@ -39,7 +39,7 @@
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.11" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11" />
     <PackageVersion Include="NaturalSort.Extension" Version="4.4.1" />
-    <PackageVersion Include="NLog" Version="6.1.4" />
+    <PackageVersion Include="NLog" Version="6.2.0" />
     <PackageVersion Include="ParadoxPower" Version="0.13.1-beta" />
     <PackageVersion Include="ParadoxPower.CSharpExtensions" Version="0.8.1-beta" />
     <PackageVersion Include="ParadoxPower.ZLinq" Version="0.2.1" />
@@ -59,11 +59,11 @@
     <PackageVersion Include="Fody" Version="6.9.3" />
     <PackageVersion Include="MethodTimer.Fody" Version="3.2.3" />
     <PackageVersion Include="HotAvalonia" Version="3.1.4" />
-    <PackageVersion Include="Vanara.Windows.Shell" Version="5.0.6" />
+    <PackageVersion Include="Vanara.Windows.Shell" Version="5.0.7" />
     <PackageVersion Include="ZString" Version="2.6.0" />
     <!-- 单元测试 -->
     <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
     <PackageVersion Include="NUnit" Version="4.6.1" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.14.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
