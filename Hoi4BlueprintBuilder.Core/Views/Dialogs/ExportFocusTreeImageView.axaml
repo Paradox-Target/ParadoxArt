@@ -1,0 +1,124 @@
+<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.Dialogs.ExportFocusTreeImageView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="using:FluentAvalonia.UI.Controls"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:DataType="vms:ExportFocusTreeImageViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="StackPanel">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Spacing" Value="4" />
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel>
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="{x:Static lang:LangResources.ExportFocusTreeImage_OutputFormat}" />
+            <ComboBox
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                ItemsSource="{Binding OutputFormatOptions, Mode=OneTime}"
+                SelectedItem="{Binding SelectedOutputFormat, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate x:DataType="vms:FocusTreeExportFormatOption">
+                        <TextBlock Text="{Binding DisplayName}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+
+        <Grid ColumnDefinitions="140,*" IsVisible="{Binding IsJpegSelected}">
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="{x:Static lang:LangResources.ExportFocusTreeImage_JpegQuality}" />
+            <fa:FANumberBox
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                LargeChange="10"
+                Maximum="100"
+                Minimum="0"
+                SmallChange="1"
+                Value="{Binding JpegQuality}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="{x:Static lang:LangResources.ExportFocusTreeImage_Padding}" />
+            <fa:FANumberBox
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                LargeChange="1"
+                Maximum="5"
+                Minimum="0"
+                SmallChange="0.5"
+                Value="{Binding Padding}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="{x:Static lang:LangResources.ExportFocusTreeImage_ShowNames}" />
+            <ToggleSwitch
+                Grid.Column="1"
+                Classes="CleanToggleSwitch"
+                IsChecked="{Binding ShowNames}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsEnabled="{Binding ShowNames}"
+                Text="{x:Static lang:LangResources.ExportFocusTreeImage_NameFontSize}" />
+            <fa:FANumberBox
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEnabled="{Binding ShowNames}"
+                Maximum="40"
+                Minimum="8"
+                Value="{Binding NameFontSize}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                IsEnabled="{Binding ShowNames}"
+                Text="{x:Static lang:LangResources.ExportFocusTreeImage_NameFontFamily}" />
+            <ComboBox
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                IsEditable="True"
+                IsEnabled="{Binding ShowNames}"
+                ItemsSource="{Binding FontFamilyOptions, Mode=OneTime}"
+                Text="{Binding NameFontFamily}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="140,*">
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Text="{x:Static lang:LangResources.ExportFocusTreeImage_ShowConnections}" />
+            <ToggleSwitch
+                Grid.Column="1"
+                Classes="CleanToggleSwitch"
+                IsChecked="{Binding ShowConnections}" />
+        </Grid>
+
+    </StackPanel>
+</UserControl>

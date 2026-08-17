@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using AsyncAwaitBestPractices;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -178,7 +178,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
 
     private void SaveToPng(SaveFocusTreeToPngMessage message)
     {
-        SaveToPngAsync()
+        ExportFocusTreeImageAsync()
             .SafeFireAndForget(exception =>
             {
                 Log.Error(exception, "导出国策树图片失败");
@@ -189,7 +189,7 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
             });
     }
 
-    private async Task SaveToPngAsync()
+    private async Task ExportFocusTreeImageAsync()
     {
         var nodes = ViewModel.Nodes;
         if (nodes.Count == 0)
@@ -201,20 +201,23 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
             return;
         }
 
-        using var file = await _fileService.SaveFileAsync(
-            new FilePickerSaveOptions
-            {
-                Title = LangResources.ExportImageTitle,
-                DefaultExtension = ".png",
-                SuggestedFileName = "FocusTree.png",
-                FileTypeChoices =
-                [
-                    new FilePickerFileType("PNG 图片") { Patterns = ["*.png"] },
-                    new FilePickerFileType("JPG 图片") { Patterns = ["*.jpg", "*.jpeg"] },
-                    new FilePickerFileType("BMP 图片") { Patterns = ["*.bmp"] }
-                ]
-            }
-        );
+        var exportViewModel = new ExportFocusTreeImageViewModel();
+        var optionsDialog = new FAContentDialog
+        {
+            Title = LangResources.ExportFocusTreeImage_OptionsTitle,
+            Content = new ExportFocusTreeImageView { DataContext = exportViewModel },
+            PrimaryButtonText = LangResources.ExportFocusTreeImage_Export,
+            CloseButtonText = LangResources.Common_Cancel,
+            DefaultButton = FAContentDialogButton.Primary
+        };
+
+        if (await optionsDialog.ShowAsync() != FAContentDialogResult.Primary)
+        {
+            return;
+        }
+
+        var exportOptions = exportViewModel.CreateOptions();
+        using var file = await _fileService.SaveFileAsync(CreateImageSaveOptions(exportOptions.OutputFormat));
 
         if (file is null)
         {
@@ -222,9 +225,41 @@ public sealed partial class FocusTreeEditorView : UserControl, ITabViewItem, ISa
         }
 
         var notificationService = App.Current.Services.GetRequiredService<NotificationService>();
-        await _screenshotService.SaveFocusTreeScreenshotAsync(nodes, file);
+        await _screenshotService.SaveFocusTreeScreenshotAsync(nodes, file, exportOptions);
         Log.Info("已导出图片: {FileName}", file.Path.LocalPath);
         notificationService.Show(LangResources.ExportImageSuccessfully);
+    }
+
+    private static FilePickerSaveOptions CreateImageSaveOptions(FocusTreeExportFormat outputFormat)
+    {
+        (string extension, FilePickerFileType fileType) = outputFormat switch
+        {
+            FocusTreeExportFormat.Png
+                => (
+                    ".png",
+                    new FilePickerFileType(LangResources.ExportFocusTreeImage_FormatPng)
+                    {
+                        Patterns = ["*.png"]
+                    }
+                ),
+            FocusTreeExportFormat.Jpeg
+                => (
+                    ".jpg",
+                    new FilePickerFileType(LangResources.ExportFocusTreeImage_FormatJpeg)
+                    {
+                        Patterns = ["*.jpg", "*.jpeg"]
+                    }
+                ),
+            _ => throw new ArgumentOutOfRangeException(nameof(outputFormat), outputFormat, null)
+        };
+
+        return new FilePickerSaveOptions
+        {
+            Title = LangResources.ExportImageTitle,
+            DefaultExtension = extension,
+            SuggestedFileName = $"FocusTree{extension}",
+            FileTypeChoices = [fileType]
+        };
     }
 
     #region 鼠标事件处理

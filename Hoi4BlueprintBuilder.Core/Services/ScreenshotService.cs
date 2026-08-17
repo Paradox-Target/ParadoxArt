@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -14,14 +14,15 @@ public sealed class ScreenshotService(ProjectConfigService projectConfigService)
 {
     public async Task SaveFocusTreeScreenshotAsync(
         IReadOnlyCollection<FocusNodeViewModel> nodes,
-        IStorageFile file
+        IStorageFile file,
+        FocusTreeExportOptions options
     )
     {
         double cellWidth = projectConfigService.FocusCellWidth;
         double cellHeight = projectConfigService.FocusCellHeight;
 
         (double minX, double minY, double maxX, double maxY) = CalculateBounds(nodes);
-        const double padding = 1.0;
+        double padding = options.Padding;
         double width = (maxX - minX + 1 + 2 * padding) * cellWidth;
         double height = (maxY - minY + 1 + 2 * padding) * cellHeight;
 
@@ -44,8 +45,12 @@ public sealed class ScreenshotService(ProjectConfigService projectConfigService)
             var pushedState = dc.PushTransform(transform.Value);
 
             // Draw Connections
-            FocusConnectionLinesControl.DrawNodeConnectionsLines(dc, nodes);
+            if (options.ShowConnections)
+            {
+                FocusConnectionLinesControl.DrawNodeConnectionsLines(dc, nodes);
+            }
 
+            var typeface = new Typeface(options.NameFontFamily);
             // Draw Nodes
             foreach (
                 var viewModel in nodes
@@ -53,14 +58,44 @@ public sealed class ScreenshotService(ProjectConfigService projectConfigService)
                     .Where(nodeViewModel => nodeViewModel.Node.IsVisible)
             )
             {
-                DrawNode(dc, viewModel);
+                DrawNode(dc, viewModel, typeface, options);
             }
 
             pushedState.Dispose();
         }
 
         await using var writeStream = await file.OpenWriteAsync();
-        renderBitmap.Save(writeStream);
+        SaveTo(renderBitmap, writeStream, options.OutputFormat, options.JpegQuality);
+    }
+
+    private static void SaveTo(
+        RenderTargetBitmap bitmap,
+        Stream stream,
+        FocusTreeExportFormat outputFormat,
+        int jpegQuality
+    )
+    {
+        switch (outputFormat)
+        {
+            case FocusTreeExportFormat.Jpeg:
+                bitmap.Save(
+                    stream,
+                    new JpegBitmapEncoderOptions
+                    {
+                        Quality = Math.Clamp(jpegQuality, 0, 100)
+                    }
+                );
+                return;
+            case FocusTreeExportFormat.Png:
+                bitmap.Save(stream, PngBitmapEncoderOptions.Default);
+                return;
+            default:
+                throw new ArgumentOutOfRangeException(
+                    nameof(outputFormat),
+                    outputFormat,
+                    "不支持的国策树截图导出格式"
+                );
+        }
     }
 
     private static (double MinX, double MinY, double MaxX, double MaxY) CalculateBounds(
@@ -110,7 +145,12 @@ public sealed class ScreenshotService(ProjectConfigService projectConfigService)
         return (minX, minY, maxX, maxY);
     }
 
-    private void DrawNode(DrawingContext dc, FocusNodeViewModel viewModel)
+    private void DrawNode(
+        DrawingContext dc,
+        FocusNodeViewModel viewModel,
+        Typeface typeface,
+        FocusTreeExportOptions options
+    )
     {
         double cellWidth = projectConfigService.FocusCellWidth;
         double cellHeight = projectConfigService.FocusCellHeight;
@@ -131,14 +171,14 @@ public sealed class ScreenshotService(ProjectConfigService projectConfigService)
         }
 
         // Draw Text
-        if (!string.IsNullOrEmpty(viewModel.Node.LocalizedName))
+        if (options.ShowNames && !string.IsNullOrEmpty(viewModel.Node.LocalizedName))
         {
             var formattedText = new FormattedText(
                 viewModel.Node.LocalizedName,
                 CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight,
-                new Typeface("Microsoft YaHei"),
-                13,
+                typeface,
+                options.NameFontSize,
                 Brushes.White
             )
             {

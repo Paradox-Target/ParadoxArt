@@ -5,6 +5,7 @@ using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
 using Hoi4BlueprintBuilder.Core.Views.Dialogs;
 using Hoi4BlueprintBuilder.Core.Views.Initialization;
+using Hoi4BlueprintBuilder.Core.ViewsModels.Dialogs;
 
 namespace Hoi4BlueprintBuilder.UnitTests.Avalonia;
 
@@ -26,6 +27,10 @@ public sealed class SmokeTests
             _ = new CreateNewProjectView();
             _ = new CreateNewFocusTreeFileView();
             _ = new CreateNewFocusView();
+            _ = new ExportFocusTreeImageView
+            {
+                DataContext = new ExportFocusTreeImageViewModel()
+            };
             _ = new NotSupportInfoControlView(new UserStatusService { CurrentSelectedFile = file });
             _ = new EulaView();
             _ = new LocalizationManagerView();

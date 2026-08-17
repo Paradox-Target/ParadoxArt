@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -438,6 +438,39 @@ SpriteName: {1}</value>
   </data>
   <data name="ExportFocusTreeImage" xml:space="preserve">
     <value>导出国策截图</value>
+  </data>
+  <data name="ExportFocusTreeImage_Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="ExportFocusTreeImage_FormatJpeg" xml:space="preserve">
+    <value>JPG/JPEG 图片</value>
+  </data>
+  <data name="ExportFocusTreeImage_FormatPng" xml:space="preserve">
+    <value>PNG 图片</value>
+  </data>
+  <data name="ExportFocusTreeImage_JpegQuality" xml:space="preserve">
+    <value>质量（0-100）</value>
+  </data>
+  <data name="ExportFocusTreeImage_NameFontFamily" xml:space="preserve">
+    <value>名称字体</value>
+  </data>
+  <data name="ExportFocusTreeImage_NameFontSize" xml:space="preserve">
+    <value>名称字号</value>
+  </data>
+  <data name="ExportFocusTreeImage_OptionsTitle" xml:space="preserve">
+    <value>导出选项</value>
+  </data>
+  <data name="ExportFocusTreeImage_OutputFormat" xml:space="preserve">
+    <value>输出格式</value>
+  </data>
+  <data name="ExportFocusTreeImage_Padding" xml:space="preserve">
+    <value>内边距（格）</value>
+  </data>
+  <data name="ExportFocusTreeImage_ShowConnections" xml:space="preserve">
+    <value>显示连线</value>
+  </data>
+  <data name="ExportFocusTreeImage_ShowNames" xml:space="preserve">
+    <value>显示国策名称</value>
   </data>
   <data name="Settings_GridSize" xml:space="preserve">
     <value>网格大小</value>
