@@ -44,7 +44,7 @@ public sealed class FileResourceService(SettingsService settingsService)
 
         bool isNeedConvertToDds =
             settingsService.IsAutoFocusPngConvertToDds
-            && Path.GetExtension(filePath.AsSpan()).Equals(".png", StringComparison.OrdinalIgnoreCase);
+            && ImageHelper.GetImageFormat(filePath) == ImageFormatType.Png;
 
         // 复制图片到 mod 文件夹中
         if (isNeedConvertToDds)

@@ -107,7 +107,7 @@ public sealed class ImageService : IDisposable
     {
         try
         {
-            var format = ImageFormatHelper.GetImageFormat(filePath);
+            var format = ImageHelper.GetImageFormat(filePath);
 
             Bitmap? bitmap = null;
             if (format == ImageFormatType.Png)
