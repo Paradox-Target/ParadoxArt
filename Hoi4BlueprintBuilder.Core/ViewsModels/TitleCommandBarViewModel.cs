@@ -131,7 +131,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
         {
             Title = LangResources.CreateNewFocusTreeFileView_Title,
             Content = content,
-            PrimaryButtonText = "创建",
+            PrimaryButtonText = LangResources.Common_Create,
             CloseButtonText = LangResources.Common_Cancel,
             IsPrimaryButtonEnabled = false
         };
@@ -194,7 +194,7 @@ public sealed partial class TitleCommandBarViewModel : ObservableObject
                 ChildHelper.Leaf("factor", 0),
                 ChildHelper.Node(
                     "modifier",
-                    [ChildHelper.Leaf("add", 100), ChildHelper.LeafString("tag", countryTag)]
+                    [ChildHelper.Leaf("add", 10000), ChildHelper.LeafString("tag", countryTag)]
                 )
             ];
         }
