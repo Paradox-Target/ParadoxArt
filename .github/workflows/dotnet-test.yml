@@ -26,8 +26,8 @@ jobs:
     - name: Build ${{ matrix.project }}
       env:
         SIXLABORS_LICENSE_KEY: ${{ secrets.SIXLABORS_LICENSE_KEY }}
-      run: dotnet build ${{ matrix.project }} --configuration Release -p:SixLaborsLicenseKey="${{ secrets.SIXLABORS_LICENSE_KEY }}"
+      run: dotnet build ${{ matrix.project }} --configuration Release
     - name: Test
       env:
         SIXLABORS_LICENSE_KEY: ${{ secrets.SIXLABORS_LICENSE_KEY }}
-      run: dotnet test --project Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj -p:SixLaborsLicenseKey="${{ secrets.SIXLABORS_LICENSE_KEY }}"
+      run: dotnet test --project Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj
