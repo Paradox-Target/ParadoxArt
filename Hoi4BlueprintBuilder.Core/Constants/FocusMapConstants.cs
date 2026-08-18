@@ -2,8 +2,8 @@ namespace Hoi4BlueprintBuilder.Core.Constants;
 
 public static class FocusMapConstants
 {
-    public const double CellWidth = 96;
-    public const double CellHeight = 130;
+    public const double DefaultCellWidth = 96;
+    public const double DefaultCellHeight = 130;
 
     /// <summary>
     /// 国策在单元格中的大小占比
