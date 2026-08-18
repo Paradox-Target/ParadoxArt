@@ -7,6 +7,7 @@
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
         <AssemblyName>ParadoxArt.Core</AssemblyName>
         <Version>0.24.0</Version>
+        <SixLaborsLicenseKey Condition="'$(SixLaborsLicenseKey)' == ''">$(SIXLABORS_LICENSE_KEY)</SixLaborsLicenseKey>
     </PropertyGroup>
 
     <ItemGroup>
