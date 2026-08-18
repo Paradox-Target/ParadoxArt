@@ -80,21 +80,14 @@ public sealed class ScreenshotService(ProjectConfigService projectConfigService)
             case FocusTreeExportFormat.Jpeg:
                 bitmap.Save(
                     stream,
-                    new JpegBitmapEncoderOptions
-                    {
-                        Quality = Math.Clamp(jpegQuality, 0, 100)
-                    }
+                    new JpegBitmapEncoderOptions { Quality = Math.Clamp(jpegQuality, 0, 100) }
                 );
                 return;
             case FocusTreeExportFormat.Png:
                 bitmap.Save(stream, PngBitmapEncoderOptions.Default);
                 return;
             default:
-                throw new ArgumentOutOfRangeException(
-                    nameof(outputFormat),
-                    outputFormat,
-                    "不支持的国策树截图导出格式"
-                );
+                throw new ArgumentOutOfRangeException(nameof(outputFormat), outputFormat, "不支持的国策树截图导出格式");
         }
     }
 
@@ -116,10 +109,10 @@ public sealed class ScreenshotService(ProjectConfigService projectConfigService)
             minY = double.PositiveInfinity;
             maxX = double.NegativeInfinity;
             maxY = double.NegativeInfinity;
-            foreach (var n in nodes)
+            foreach (var n in nodes.AsValueEnumerable().Select(n => n.Node).Where(n => n.IsVisible))
             {
-                int x = n.Node.X;
-                int y = n.Node.Y;
+                int x = n.X;
+                int y = n.Y;
                 if (x < minX)
                 {
                     minX = x;
