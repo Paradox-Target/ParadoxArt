@@ -1,6 +1,6 @@
 ﻿### **如果您觉得本工具帮到了您, 请通过爱发电支持我们, 这对我们真的很重要**
 
-[![Afdian](https://s41.ax1x.com/2026/08/19/pmv4bwD.png)](https://ifdian.net/a/textGamex/plan)
+[![Afdian](https://s41.ax1x.com/2026/08/19/pmv4bwD.png)](https://afdian.com/a/textGamex)
 
 ---
 
