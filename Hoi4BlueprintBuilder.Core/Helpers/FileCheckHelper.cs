@@ -1,4 +1,4 @@
-﻿using System.Collections.Frozen;
+using System.Collections.Frozen;
 using Avalonia.Platform.Storage;
 using DotNet.Globbing;
 
@@ -59,7 +59,8 @@ public static class FileCheckHelper
     public static async Task<bool> IsValidGameRootDirectoryAsync(IStorageFolder storageFolder)
     {
         string name = GameExeFileName;
-        bool isExist = await storageFolder.GetFileAsync(name).ConfigureAwait(false) is not null;
+        using var file = await storageFolder.GetFileAsync(name).ConfigureAwait(false);
+        bool isExist = file is not null;
         return isExist;
     }
 }
