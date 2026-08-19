@@ -238,9 +238,9 @@ public sealed partial class AppSettingsViewModel : ObservableObject
 
             var dialog = new FAContentDialog
             {
-                Title = "用户协议 (EULA)",
+                Title = LangResources.Settings_EULA,
                 Content = new MarkdownRenderer { MarkdownBuilder = sb, Margin = new Thickness(10) },
-                CloseButtonText = "关闭"
+                CloseButtonText = LangResources.Common_Close
             };
 
             await dialog.ShowAsync();

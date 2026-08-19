@@ -218,6 +218,10 @@ public sealed partial class FileTreeView : UserControl
         {
             _tabView.AddTabFromIoc<FocusTreeEditorView>(filePath);
         }
+        else if (FileCheckHelper.IsOobUnitsFile(filePath))
+        {
+            _tabView.AddTabFromIoc<DivisionTemplatePickerView>(filePath);
+        }
         else if (FileCheckHelper.IsTextFile(filePath))
         {
             _tabView.AddTabFromIoc<TextEditorView>(filePath);

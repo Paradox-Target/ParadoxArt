@@ -760,4 +760,34 @@ SpriteName: {1}</value>
   <data name="Common_Back" xml:space="preserve">
     <value>返回</value>
   </data>
+  <data name="DivisionTemplatePickerView_Empty" xml:space="preserve">
+    <value>该文件中没有找到 division_template 模板</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Unnamed" xml:space="preserve">
+    <value>未命名</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Battalions" xml:space="preserve">
+    <value>营数量</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Support" xml:space="preserve">
+    <value>支援连</value>
+  </data>
+  <data name="DivisionTemplatePickerView_CombatWidth" xml:space="preserve">
+    <value>战斗宽度</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Manpower" xml:space="preserve">
+    <value>人力</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Count" xml:space="preserve">
+    <value>数量</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Locked" xml:space="preserve">
+    <value>已锁定</value>
+  </data>
+  <data name="DivisionTemplatePickerView_LoadFailed" xml:space="preserve">
+    <value>部队模板文件加载失败</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
 </root>

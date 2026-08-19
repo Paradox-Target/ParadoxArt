@@ -19,6 +19,7 @@ using Hoi4BlueprintBuilder.Localization.Strings;
 using NLog;
 using ParadoxPower.CSharpExtensions;
 using ParadoxPower.Process;
+using ParadoxPower.ZLinq;
 using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.ViewsModels;
@@ -116,6 +117,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     private string? _generatedText;
 
     private readonly Dictionary<PositionInfo, UnitInfo> _existingUnits = [];
+    private Dictionary<string, UnitInfo>? _unitInfoLookup;
 
     /// <summary>
     /// Key: 装备名称, Value: 数量
@@ -351,19 +353,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             {
                 var unitInfo = unit.UnitInfo;
                 button.Content = new Image { Source = unit.Image, Stretch = Stretch.Uniform };
-                ToolTip.SetTip(
-                    button,
-                    new UnitToolTipView(
-                        unit.Name,
-                        _localizationFormatService.TryGetFormatTextInAll(
-                            $"{unitInfo.Name}_desc",
-                            out string? desc
-                        )
-                            ? desc
-                            : string.Empty,
-                        _modifierService.GetDescription(unitInfo.Modifiers).ToTextBlock()
-                    )
-                );
+                ToolTip.SetTip(button, CreateUnitToolTip(unitInfo));
 
                 if (!unitInfo.CanBeParachuted)
                 {
@@ -408,6 +398,183 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                 _equipments[name] = current;
             }
         }
+    }
+
+    private UnitToolTipView CreateUnitToolTip(UnitInfo unitInfo)
+    {
+        string description = _localizationFormatService.TryGetFormatTextInAll(
+            $"{unitInfo.Name}_desc",
+            out string? desc
+        )
+            ? desc
+            : string.Empty;
+        return new UnitToolTipView(
+            _localizationFormatService.GetFormatText(unitInfo.Name),
+            description,
+            _modifierService.GetDescription(unitInfo.Modifiers).ToTextBlock()
+        );
+    }
+
+    private UnitInfo? FindUnitInfo(string name)
+    {
+        if (_unitInfoLookup is null)
+        {
+            _unitInfoLookup = new Dictionary<string, UnitInfo>(StringComparer.OrdinalIgnoreCase);
+            foreach (var unit in _unitService.AllUnits)
+            {
+                _unitInfoLookup[unit.Name] = unit;
+            }
+        }
+
+        return _unitInfoLookup.GetValueOrDefault(name);
+    }
+
+    /// <summary>
+    /// 将现有的 <c>division_template</c> 节点载入编辑器
+    /// </summary>
+    /// <param name="templateNode">文件中的部队模板节点</param>
+    public void LoadTemplate(Node templateNode)
+    {
+        _existingUnits.Clear();
+        _equipments.Clear();
+        TotalWidth = 0;
+        TotalManpower = 0;
+        CanNotParachutedCount = 0;
+        TemplateName = string.Empty;
+        IsLocked = false;
+        SelectedSupplyPriorityIndex = 1;
+        DivisionNamesGroup = string.Empty;
+
+        foreach (var child in templateNode.AllArray)
+        {
+            if (child.TryGetLeaf(out var leaf))
+            {
+                if (leaf.Key.EqualsIgnoreCase("name"))
+                {
+                    TemplateName = leaf.ValueText;
+                }
+                else if (
+                    leaf.Key.EqualsIgnoreCase("is_locked") && leaf.Value.TryGetBool(out bool isLocked)
+                )
+                {
+                    IsLocked = isLocked;
+                }
+                else if (
+                    leaf.Key.EqualsIgnoreCase("priority") && leaf.Value.TryGetInt(out int priority)
+                )
+                {
+                    int index = SupplyPriorities is null
+                        ? -1
+                        : Array.FindIndex(SupplyPriorities, item => item.Priority == priority);
+                    SelectedSupplyPriorityIndex = index >= 0 ? index : 1;
+                }
+                else if (leaf.Key.EqualsIgnoreCase("division_names_group"))
+                {
+                    DivisionNamesGroup = leaf.ValueText;
+                }
+            }
+            else if (child.TryGetNode(out var node))
+            {
+                if (node.Key.EqualsIgnoreCase("regiments"))
+                {
+                    LoadUnits(node, UnitSlotType.Common);
+                }
+                else if (node.Key.EqualsIgnoreCase("support"))
+                {
+                    LoadUnits(node, UnitSlotType.DivisionalSupport);
+                }
+                else if (node.Key.EqualsIgnoreCase("regimental_support"))
+                {
+                    LoadUnits(node, UnitSlotType.RegimentalSupport);
+                }
+            }
+        }
+
+        RefreshTemplateAttributes();
+        // ReSharper disable once ExplicitCallerInfoArgument
+        OnPropertyChanged(UnitPropertyChange);
+        OnPropertyChanged(nameof(Equipments));
+        RefreshTerrainModifiers();
+    }
+
+    private void LoadUnits(Node containerNode, UnitSlotType slotType)
+    {
+        foreach (var child in containerNode.AllArray)
+        {
+            if (!child.TryGetNode(out var unitNode))
+            {
+                continue;
+            }
+
+            var unitInfo = FindUnitInfo(unitNode.Key);
+            if (unitInfo is null)
+            {
+                Log.Warn("部队模板编辑器中找不到单位 '{Name}'", unitNode.Key);
+                continue;
+            }
+
+            int x = 0;
+            int y = 0;
+            foreach (var leaf in unitNode.LeavesValue)
+            {
+                if (leaf.Key.EqualsIgnoreCase("x") && leaf.Value.TryGetInt(out int leafX))
+                {
+                    x = leafX;
+                }
+                else if (leaf.Key.EqualsIgnoreCase("y") && leaf.Value.TryGetInt(out int leafY))
+                {
+                    y = leafY;
+                }
+            }
+
+            if (slotType == UnitSlotType.RegimentalSupport)
+            {
+                // 团级支援在文件中以 1 开始
+                --x;
+            }
+
+            var position = new PositionInfo(new Point(x, y), slotType);
+            _existingUnits[position] = unitInfo;
+            TotalWidth += unitInfo.Width;
+            TotalManpower += unitInfo.Manpower;
+            if (!unitInfo.CanBeParachuted)
+            {
+                ++CanNotParachutedCount;
+            }
+
+            foreach ((string name, int quantity) in unitInfo.Equipments)
+            {
+                _equipments[name] = _equipments.GetValueOrDefault(name) + quantity;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 获取当前已放置在编辑器中的单位, 用于界面渲染
+    /// </summary>
+    public IReadOnlyList<PlacedUnitVo> GetPlacedUnits()
+    {
+        var list = new List<PlacedUnitVo>(_existingUnits.Count);
+        foreach (var (position, unitInfo) in _existingUnits)
+        {
+            var image = _imageService.GetIconByName(unitInfo.IconKey);
+            if (image is null)
+            {
+                Log.Warn("'{Name}' 找不到图片", unitInfo.IconKey);
+            }
+
+            list.Add(
+                new PlacedUnitVo(
+                    position.Point.X,
+                    position.Point.Y,
+                    position.SlotType,
+                    image is null ? null : new Image { Source = image, Stretch = Stretch.Uniform },
+                    CreateUnitToolTip(unitInfo)
+                )
+            );
+        }
+
+        return list;
     }
 
     private void RefreshTemplateAttributes()
@@ -736,6 +903,18 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
 
     private void GenerateText()
     {
+        var rootNode = new Node(string.Empty);
+        rootNode.AddChild(CreateTemplateNode());
+        _generatedText = rootNode.ToScript();
+        _setText?.Invoke(_generatedText);
+    }
+
+    /// <summary>
+    /// 根据编辑器当前状态生成 <c>division_template</c> 节点
+    /// </summary>
+    public Node CreateTemplateNode()
+    {
+        Debug.Assert(SupplyPriorities is not null, "SupplyPriorities is null");
         var regiments = new Node("regiments");
         var regimentsList = new List<Child>(8);
         var support = new Node("support");
@@ -787,7 +966,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         support.AllArray = [.. supportList];
         regimentalSupport.AllArray = [.. regimentalSupportList];
 
-        var template = new Node("division_template");
+        var template = new Node(Keywords.DivisionTemplate);
         var list = new List<Child>(8)
         {
             ChildHelper.LeafQString("name", TemplateName),
@@ -816,12 +995,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
             list.Add(regimentalSupport);
         }
         template.AllArray = [.. list];
-        var rootNode = new Node(string.Empty);
-        rootNode.AddChild(template);
-        _generatedText = rootNode.ToScript();
-        _setText?.Invoke(_generatedText);
-
-        Debug.Assert(SupplyPriorities is not null, "SupplyPriorities is null");
+        return template;
     }
 
     private void RefreshTerrainModifiers()
@@ -1008,6 +1182,17 @@ public sealed record UnitInfoVo(
 public sealed record EquipmentsVo(string Name, int Quantity);
 
 public sealed record TemplateAttributeVo(string Name, string Description, string Value);
+
+/// <summary>
+/// 已放置在编辑器网格中的单位
+/// </summary>
+public sealed record PlacedUnitVo(
+    int X,
+    int Y,
+    UnitSlotType SlotType,
+    Image? Image,
+    UnitToolTipView? ToolTip
+);
 
 public sealed record TerrainModifierVo(
     string Name,

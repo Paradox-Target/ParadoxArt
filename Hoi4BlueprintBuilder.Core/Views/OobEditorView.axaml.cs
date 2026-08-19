@@ -1,10 +1,12 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.ViewsModels;
 using Hoi4BlueprintBuilder.Localization.Strings;
+using ParadoxPower.Process;
+using ZLinq;
 
 namespace Hoi4BlueprintBuilder.Core.Views;
 
@@ -111,4 +113,53 @@ public sealed partial class OobEditorView : UserControl, ITabViewItem
     public string ToolTip => Header;
     public FAIconSource TabIcon { get; } =
         new FAPathIconSource { Data = (Geometry)App.Current.Resources["DivisionDesignerIconGeometry"]! };
+
+    public OobEditorViewModel ViewModel => (OobEditorViewModel)DataContext!;
+
+    /// <summary>
+    /// 载入现有的 <c>division_template</c> 节点, 并把单位渲染到编辑器网格中
+    /// </summary>
+    /// <param name="templateNode">文件中的部队模板节点</param>
+    public void LoadTemplate(Node templateNode)
+    {
+        ViewModel.LoadTemplate(templateNode);
+        RenderPlacedUnits();
+    }
+
+    private void RenderPlacedUnits()
+    {
+        var placedUnits = ViewModel.GetPlacedUnits();
+        RenderGrid(DivisionGrid, UnitSlotType.Common, placedUnits);
+        RenderGrid(DivisionalSupportPanel, UnitSlotType.DivisionalSupport, placedUnits);
+        RenderGrid(RegimentalSupportPanel, UnitSlotType.RegimentalSupport, placedUnits);
+    }
+
+    private void RenderGrid(Grid grid, UnitSlotType slotType, IReadOnlyList<PlacedUnitVo> placedUnits)
+    {
+        foreach (var child in grid.Children.OfType<Button>())
+        {
+            int x = Grid.GetColumn(child);
+            int y = Grid.GetRow(child);
+            var unit = placedUnits
+                .AsValueEnumerable()
+                .FirstOrDefault(item => item.SlotType == slotType && item.X == x && item.Y == y);
+
+            child.Content = unit?.Image;
+            if (unit?.ToolTip is not null)
+            {
+                Avalonia.Controls.ToolTip.SetTip(child, unit.ToolTip);
+            }
+            else if (slotType == UnitSlotType.RegimentalSupport)
+            {
+                Avalonia.Controls.ToolTip.SetTip(
+                    child,
+                    ViewModel.DesignerBlockedByRegimentBattalions.ToTextBlock()
+                );
+            }
+            else
+            {
+                Avalonia.Controls.ToolTip.SetTip(child, null);
+            }
+        }
+    }
 }

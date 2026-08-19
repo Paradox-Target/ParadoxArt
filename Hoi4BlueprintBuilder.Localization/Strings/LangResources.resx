@@ -756,4 +756,34 @@
   <data name="Common_Back" xml:space="preserve">
     <value>Common_Back</value>
   </data>
+  <data name="DivisionTemplatePickerView_Empty" xml:space="preserve">
+    <value>No division_template found in this file.</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Unnamed" xml:space="preserve">
+    <value>Unnamed</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Battalions" xml:space="preserve">
+    <value>Battalions</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="DivisionTemplatePickerView_CombatWidth" xml:space="preserve">
+    <value>Combat Width</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Manpower" xml:space="preserve">
+    <value>Manpower</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="DivisionTemplatePickerView_Locked" xml:space="preserve">
+    <value>Locked</value>
+  </data>
+  <data name="DivisionTemplatePickerView_LoadFailed" xml:space="preserve">
+    <value>Failed to load the division template file.</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Common_Close</value>
+  </data>
 </root>

@@ -40,10 +40,9 @@ public static class FileCheckHelper
     private static readonly FrozenSet<string>.AlternateLookup<ReadOnlySpan<char>> TextExtensionNamesLookup =
         TextExtensionNames.GetAlternateLookup<ReadOnlySpan<char>>();
 
-    private static readonly Glob FocusGlob = Glob.Parse(
-        "**/common/national_focus/*.txt",
-        new GlobOptions { Evaluation = new EvaluationOptions { CaseInsensitive = false } }
-    );
+    private static readonly Glob FocusGlob = Glob.Parse("**/common/national_focus/*.txt");
+
+    private static readonly Glob OobUnitsGlob = Glob.Parse("**/history/units/*.txt");
 
     public static bool IsTextFile(string filePath)
     {
@@ -54,6 +53,14 @@ public static class FileCheckHelper
     public static bool IsFocusTreeFile(string filePath)
     {
         return FocusGlob.IsMatch(filePath);
+    }
+
+    /// <summary>
+    /// 判断文件是否位于 <c>history/units</c> 目录下的部队模板文件
+    /// </summary>
+    public static bool IsOobUnitsFile(string filePath)
+    {
+        return OobUnitsGlob.IsMatch(filePath);
     }
 
     public static async Task<bool> IsValidGameRootDirectoryAsync(IStorageFolder storageFolder)

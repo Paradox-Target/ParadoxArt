@@ -9,6 +9,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Threading;
+using DotNet.Globbing;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
@@ -105,6 +106,8 @@ public sealed class App : Application
         {
             throw new InvalidOperationException("serviceCollection未初始化");
         }
+
+        GlobOptions.Default.Evaluation.CaseInsensitive = false;
 
         ConfiguringServices?.Invoke(_serviceCollection);
 

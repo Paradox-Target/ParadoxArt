@@ -1,0 +1,136 @@
+<UserControl
+    x:Class="Hoi4BlueprintBuilder.Core.Views.DivisionTemplatePickerView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lang="using:Hoi4BlueprintBuilder.Localization.Strings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vms="using:Hoi4BlueprintBuilder.Core.ViewsModels"
+    x:Name="MainControl"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vms:DivisionTemplatePickerViewModel"
+    mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="Border.TemplateCard">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.TemplateCard:pointerover">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+        </Style>
+        <Style Selector="Border.TemplateCard:pressed">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorClickBrush}" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+        <!--  编辑模式下的返回工具栏  -->
+        <Border
+            Grid.Row="0"
+            Margin="8"
+            Padding="12"
+            Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+            CornerRadius="8"
+            IsVisible="{Binding IsShowingEditor}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Command="{Binding BackCommand}" Content="{x:Static lang:LangResources.Common_Back}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Classes="BodyStrongTextBlock"
+                    Text="{Binding SelectedTemplateName}"
+                    TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+        </Border>
+
+        <!--  模板行卡片列表  -->
+        <Panel Grid.Row="1" IsVisible="{Binding !IsShowingEditor}">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" IsVisible="{Binding HasTemplates}">
+                <ItemsRepeater Margin="8" ItemsSource="{Binding Templates}">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Spacing="8" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="vms:DivisionTemplateCardVo">
+                            <Border Padding="16,12" Classes="TemplateCard">
+                                <Interaction.Behaviors>
+                                    <PointerPressedEventTrigger>
+                                        <InvokeCommandAction
+                                            Command="{Binding ((vms:DivisionTemplatePickerViewModel)DataContext).PickTemplateCommand, ElementName=MainControl}"
+                                            CommandParameter="{Binding}" />
+                                    </PointerPressedEventTrigger>
+                                </Interaction.Behaviors>
+                                <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        MaxWidth="360"
+                                        VerticalAlignment="Center"
+                                        FontSize="15"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Name, Mode=OneTime}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <Border
+                                        Grid.Column="1"
+                                        Margin="8,0,0,0"
+                                        Padding="6,1"
+                                        VerticalAlignment="Center"
+                                        Background="{DynamicResource AccentFillColorDefaultBrush}"
+                                        CornerRadius="4"
+                                        IsVisible="{Binding IsLocked, Mode=OneTime}">
+                                        <TextBlock FontSize="11" Text="{x:Static lang:LangResources.DivisionTemplatePickerView_Locked}" />
+                                    </Border>
+
+                                    <ItemsControl
+                                        Grid.Column="3"
+                                        VerticalAlignment="Center"
+                                        ItemsSource="{Binding Stats, Mode=OneTime}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" Spacing="28" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vms:DivisionTemplateStatVo">
+                                                <StackPanel MinWidth="44" Spacing="2">
+                                                    <TextBlock
+                                                        FontSize="11"
+                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                        Text="{Binding Label, Mode=OneTime}" />
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        FontWeight="SemiBold"
+                                                        Text="{Binding Value, Mode=OneTime}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </ScrollViewer>
+
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                IsVisible="{Binding !HasTemplates}"
+                Text="{x:Static lang:LangResources.DivisionTemplatePickerView_Empty}" />
+        </Panel>
+
+        <!--  编辑器  -->
+        <ContentControl
+            Grid.Row="1"
+            Content="{Binding EditorView}"
+            IsVisible="{Binding IsShowingEditor}" />
+    </Grid>
+</UserControl>

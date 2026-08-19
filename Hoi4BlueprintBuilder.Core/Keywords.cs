@@ -17,4 +17,5 @@ public static class Keywords
     public const string AiWillDo = "ai_will_do";
     public const string Bypass = "bypass";
     public const string SelectEffect = "select_effect";
+    public const string DivisionTemplate = "division_template";
 }
