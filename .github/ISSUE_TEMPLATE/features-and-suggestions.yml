@@ -1,4 +1,5 @@
 name: "💡Features and suggestions / 功能建议"
+description: "提出新功能或改进建议。 / Suggest a new feature or improvement."
 title: "[Feature]: "
 body:
   - type: checkboxes
