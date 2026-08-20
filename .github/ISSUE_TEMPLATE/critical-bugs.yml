@@ -1,4 +1,5 @@
 name: "Critical bugs / 严重Bug"
+description: "报告导致软件无法正常使用的严重问题。 / Report a critical problem that prevents normal use."
 title: "[Critical Bug]: "
 body:
   - type: checkboxes
@@ -18,7 +19,7 @@ body:
       label: "问题/建议/功能内容 / Issue/Suggestion/Feature Content"
     validations:
       required: true
-  - type: file
+  - type: upload
     id: attachment
     attributes:
       label: "附件 / Attachment"

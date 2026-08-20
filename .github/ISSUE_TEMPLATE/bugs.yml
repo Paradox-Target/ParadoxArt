@@ -1,4 +1,5 @@
 name: "Bugs"
+description: "报告 ParadoxArt 中的一般问题。 / Report a general problem in ParadoxArt."
 title: "[Bug]: "
 body:
   - type: checkboxes
@@ -16,7 +17,7 @@ body:
       label: "问题/建议/功能内容 / Issue/Suggestion/Feature Content"
     validations:
       required: true
-  - type: file
+  - type: upload
     id: attachment
     attributes:
       label: "附件 / Attachment"
