@@ -1,0 +1,17 @@
+name: "Question / 疑问"
+description: "Ask a question. / 提出疑问。"
+title: "[Question]: "
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: "Checklist / 前置检查"
+      options:
+        - label: "I have searched existing questions. / 我已搜索现有疑问。"
+          required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: "Question Details / 疑问说明"
+    validations:
+      required: true
