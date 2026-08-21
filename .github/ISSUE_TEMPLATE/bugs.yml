@@ -1,25 +1,25 @@
-name: "Bugs"
-description: "报告 ParadoxArt 中的一般问题。 / Report a general problem in ParadoxArt."
+name: "Bug / 问题"
+description: "Report a bug. / 报告一般问题。"
 title: "[Bug]: "
 body:
   - type: checkboxes
     id: checks
     attributes:
-      label: "前置检查 / Checklist"
+      label: "Checklist / 前置检查"
       options:
-        - label: "您要提交的相似问题在issues中是否不存在？ / Is the similar issue you are submitting non-existent in previous issues?"
+        - label: "I have searched existing issues. / 我已搜索现有问题。"
           required: true
-        - label: "您认可在issues中提交的文件中可能包含部分隐私，包括但不限于您电脑的账户名称，模组项目名称和文件路径等。 / Do you acknowledge that the files submitted in issues may contain partial privacy, including but not limited to your computer account name, MOD project name, and its file paths?"
+        - label: "I understand that attachments may contain personal information. / 我了解附件可能包含个人信息。"
           required: true
   - type: textarea
     id: content
     attributes:
-      label: "问题/建议/功能内容 / Issue/Suggestion/Feature Content"
+      label: "Bug Details / 问题说明"
     validations:
       required: true
   - type: upload
     id: attachment
     attributes:
-      label: "附件 / Attachment"
+      label: "Attachments / 附件"
     validations:
       required: true
