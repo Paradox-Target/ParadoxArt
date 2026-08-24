@@ -1,5 +1,5 @@
 name: "Feature Request / 功能建议"
-description: "Suggest a feature or improvement. / 提交功能建议。"
+description: "Suggest a feature or improvement. / 提交功能或改进建议。"
 title: "[Feature]: "
 body:
   - type: checkboxes
@@ -7,7 +7,7 @@ body:
     attributes:
       label: "Checklist / 前置检查"
       options:
-        - label: "I have searched existing feature requests. / 我已搜索现有功能建议。"
+        - label: "I have searched existing feature requests, but I couldn't find a suggestion that exactly describes my need. / 我已搜索现有功能建议，但未能找到准确描述我想法的建议。"
           required: true
         - label: "This suggestion is practical. / 此建议切实可行。"
           required: true
