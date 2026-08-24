@@ -14,13 +14,13 @@ body:
         - label: "This bug prevents normal use, or causes data loss, software/hardware failure. / 此问题已导致软件无法正常使用或已造成数据丢失、软硬件故障。"
           required: true
   - type: textarea
-    id: content
+    id: bug-details
     attributes:
       label: "Bug Details / 问题说明"
     validations:
       required: true
   - type: textarea
-    id: content
+    id: steps-to-reproduce
     attributes:
       label: "Steps to Reproduce / 复现方式"
     validations:
