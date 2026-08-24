@@ -7,9 +7,9 @@ body:
     attributes:
       label: "Checklist / 前置检查"
       options:
-        - label: "I have searched existing issues. / 我已搜索现有问题。"
+        - label: "I have searched existing issues, but I could not find a similar issue nor have my issues been resolved. / 我已搜索现有问题，但并未找到相关内容且我的问题仍未解决。"
           required: true
-        - label: "I understand that attachments may contain personal information. / 我了解附件可能包含个人信息。"
+        - label: "I acknowledge and agree that attachments may contain personal information. / 我知晓并同意附件可能包含个人信息。"
           required: true
   - type: textarea
     id: content
@@ -17,6 +17,12 @@ body:
       label: "Bug Details / 问题说明"
     validations:
       required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: "Steps to Reproduce / 复现方式"
+    validations:
+      required: false
   - type: upload
     id: attachment
     attributes:

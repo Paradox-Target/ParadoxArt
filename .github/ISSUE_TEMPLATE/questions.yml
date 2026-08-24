@@ -7,7 +7,7 @@ body:
     attributes:
       label: "Checklist / 前置检查"
       options:
-        - label: "I have searched existing questions. / 我已搜索现有疑问。"
+        - label: "I have searched existing questions but couldn't find an answer. / 我已搜索现有疑问但未能找到答案。"
           required: true
   - type: textarea
     id: content
