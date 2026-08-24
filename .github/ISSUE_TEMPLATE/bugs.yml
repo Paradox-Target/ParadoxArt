@@ -12,13 +12,13 @@ body:
         - label: "I acknowledge and agree that attachments may contain personal information. / 我知晓并同意附件可能包含个人信息。"
           required: true
   - type: textarea
-    id: content
+    id: bug-details
     attributes:
       label: "Bug Details / 问题说明"
     validations:
       required: true
   - type: textarea
-    id: content
+    id: steps-to-reproduce
     attributes:
       label: "Steps to Reproduce / 复现方式"
     validations:
