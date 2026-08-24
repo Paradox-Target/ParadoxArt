@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
-using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Services.GameResources;
 using Hoi4BlueprintBuilder.Core.Views;
@@ -160,13 +159,13 @@ public sealed partial class DivisionTemplatePickerViewModel : ObservableObject
             }
         }
 
-        foreach (var unitName in GetUnitNames(templateNode))
+        foreach (string unitName in GetUnitNames(templateNode))
         {
-            var unitInfo = FindUnitInfo(unitName);
-            if (unitInfo is null)
+            if (!_unitService.TryGetUnitInfo(unitName, out var unitInfo))
             {
                 continue;
             }
+
             width += unitInfo.Width;
             manpower += unitInfo.Manpower;
         }
@@ -222,11 +221,6 @@ public sealed partial class DivisionTemplatePickerViewModel : ObservableObject
 
         return names;
     }
-
-    private UnitInfo? FindUnitInfo(string name) =>
-        _unitService.AllUnits.FirstOrDefault(unit =>
-            unit.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
-        );
 
     [RelayCommand]
     private void PickTemplate(DivisionTemplateCardVo? card)

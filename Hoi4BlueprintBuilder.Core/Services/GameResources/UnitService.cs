@@ -1,4 +1,5 @@
 ﻿using System.Collections.Frozen;
+using System.Diagnostics.CodeAnalysis;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Models;
 using Hoi4BlueprintBuilder.Core.Services.GameResources.Base;
@@ -54,6 +55,20 @@ public sealed class UnitService : CommonResourcesService<UnitService, Dictionary
         ) { }
 
     public IEnumerable<UnitInfo> AllUnits => Resources.Values.SelectMany(map => map.Values);
+
+    public bool TryGetUnitInfo(string unitName, [NotNullWhen(true)] out UnitInfo? unitInfo)
+    {
+        foreach (var map in Resources.Values)
+        {
+            if (map.TryGetValue(unitName, out unitInfo))
+            {
+                return true;
+            }
+        }
+
+        unitInfo = null;
+        return false;
+    }
 
     protected override Dictionary<string, UnitInfo> ParseFileToContent(Node rootNode)
     {

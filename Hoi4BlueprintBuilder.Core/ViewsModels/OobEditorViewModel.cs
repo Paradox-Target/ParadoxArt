@@ -117,7 +117,6 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
     private string? _generatedText;
 
     private readonly Dictionary<PositionInfo, UnitInfo> _existingUnits = [];
-    private Dictionary<string, UnitInfo>? _unitInfoLookup;
 
     /// <summary>
     /// Key: 装备名称, Value: 数量
@@ -415,20 +414,6 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
         );
     }
 
-    private UnitInfo? FindUnitInfo(string name)
-    {
-        if (_unitInfoLookup is null)
-        {
-            _unitInfoLookup = new Dictionary<string, UnitInfo>(StringComparer.OrdinalIgnoreCase);
-            foreach (var unit in _unitService.AllUnits)
-            {
-                _unitInfoLookup[unit.Name] = unit;
-            }
-        }
-
-        return _unitInfoLookup.GetValueOrDefault(name);
-    }
-
     /// <summary>
     /// 将现有的 <c>division_template</c> 节点载入编辑器
     /// </summary>
@@ -453,15 +438,11 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                 {
                     TemplateName = leaf.ValueText;
                 }
-                else if (
-                    leaf.Key.EqualsIgnoreCase("is_locked") && leaf.Value.TryGetBool(out bool isLocked)
-                )
+                else if (leaf.Key.EqualsIgnoreCase("is_locked") && leaf.Value.TryGetBool(out bool isLocked))
                 {
                     IsLocked = isLocked;
                 }
-                else if (
-                    leaf.Key.EqualsIgnoreCase("priority") && leaf.Value.TryGetInt(out int priority)
-                )
+                else if (leaf.Key.EqualsIgnoreCase("priority") && leaf.Value.TryGetInt(out int priority))
                 {
                     int index = SupplyPriorities is null
                         ? -1
@@ -506,8 +487,7 @@ public sealed partial class OobEditorViewModel : ObservableObject, IClosed
                 continue;
             }
 
-            var unitInfo = FindUnitInfo(unitNode.Key);
-            if (unitInfo is null)
+            if (!_unitService.TryGetUnitInfo(unitNode.Key, out var unitInfo))
             {
                 Log.Warn("部队模板编辑器中找不到单位 '{Name}'", unitNode.Key);
                 continue;
