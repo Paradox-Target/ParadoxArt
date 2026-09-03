@@ -41,6 +41,15 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
     [ObservableProperty]
     public partial bool IsLoading { get; private set; }
 
+    [ObservableProperty]
+    public partial double Scale { get; set; } = 1.0;
+
+    [ObservableProperty]
+    public partial double TranslateX { get; set; }
+
+    [ObservableProperty]
+    public partial double TranslateY { get; set; }
+
     private readonly AvaloniaList<FocusNodeViewModel> _nodes = [];
 
     /// <summary>
@@ -338,14 +347,14 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         {
             Debug.Assert(maps.ContainsKey(filePath));
 
-            Save(filePath, maps[filePath]);
+            SaveToFile(filePath, maps[filePath]);
             Log.Debug("已保存国策树文件: {FilePath}", filePath);
         }
 
         _notificationService.Show(LangResources.SavedSuccessfully);
     }
 
-    private void Save(string filePath, Dictionary<string, FocusNode> editorNodesMap)
+    private void SaveToFile(string filePath, Dictionary<string, FocusNode> editorNodesMap)
     {
         if (!TextParser.TryParse(filePath, out var rootNode, out _))
         {
@@ -355,6 +364,13 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
         var focusTreeNode = rootNode.NodesValue.FirstOrDefault(static node =>
             node.Key.EqualsIgnoreCase("focus_tree")
         );
+
+        using var array = editorNodesMap.Values.AsValueEnumerable().ToArrayPool();
+        foreach (var node in array.Span.AsValueEnumerable().Where(item => string.IsNullOrWhiteSpace(item.Id)))
+        {
+            Log.Warn("保存国策树文件时发现 Focus 节点没有 Id, 将自动生成一个新的 Id: {FocusFilePath}", filePath);
+            node.Id = GetNextFocusId();
+        }
 
         var removedFocus = new List<Node>();
         foreach (var node in NodeHelper.GetFocusNodesFromAstRootNode(rootNode))
@@ -401,15 +417,6 @@ public sealed partial class FocusTreeEditorViewModel : ObservableObject, IClosed
             Log.Error("保存文件中遇到无法识别的文件来源: {FilePath}", filePath);
         }
     }
-
-    [ObservableProperty]
-    private double _scale = 1.0;
-
-    [ObservableProperty]
-    private double _translateX;
-
-    [ObservableProperty]
-    private double _translateY;
 
     public IReadOnlyCollection<string> AllFocusFiles => _focusTreeFiles;
 

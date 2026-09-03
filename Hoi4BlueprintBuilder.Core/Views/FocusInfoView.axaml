@@ -57,7 +57,13 @@
 
                     <StackPanel>
                         <TextBlock Text="ID" />
-                        <TextBox Margin="0,4,0,0" Text="{Binding FocusNode.Id, Mode=TwoWay}" />
+                        <TextBox Margin="0,4,0,0" Text="{Binding FocusNode.Id, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+                            <Interaction.Behaviors>
+                                <TextBoxValidationBehavior>
+                                    <RequiredTextValidationRule ErrorMessage="{x:Static lang:LangResources.Common_ValueIsRequired}" />
+                                </TextBoxValidationBehavior>
+                            </Interaction.Behaviors>
+                        </TextBox>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal">

@@ -790,4 +790,7 @@ SpriteName: {1}</value>
   <data name="Common_Close" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="Common_ValueIsRequired" xml:space="preserve">
+    <value>不可为空</value>
+  </data>
 </root>

@@ -375,6 +375,15 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Common_ValueIsRequired.
+        /// </summary>
+        public static string Common_ValueIsRequired {
+            get {
+                return ResourceManager.GetString("Common_ValueIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CompletionEffect.
         /// </summary>
         public static string CompletionEffect {
@@ -634,7 +643,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
                 return ResourceManager.GetString("DivisionTemplatePickerView_Battalions", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Combat Width.
         /// </summary>
@@ -643,7 +652,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
                 return ResourceManager.GetString("DivisionTemplatePickerView_CombatWidth", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Count.
         /// </summary>
@@ -652,7 +661,7 @@ namespace Hoi4BlueprintBuilder.Localization.Strings {
                 return ResourceManager.GetString("DivisionTemplatePickerView_Count", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to No division_template found in this file..
         /// </summary>

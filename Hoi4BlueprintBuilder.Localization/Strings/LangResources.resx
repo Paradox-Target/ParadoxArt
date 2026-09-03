@@ -786,4 +786,7 @@
   <data name="Common_Close" xml:space="preserve">
     <value>Common_Close</value>
   </data>
+  <data name="Common_ValueIsRequired" xml:space="preserve">
+    <value>Common_ValueIsRequired</value>
+  </data>
 </root>

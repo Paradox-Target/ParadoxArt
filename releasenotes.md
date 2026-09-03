@@ -16,16 +16,20 @@
 
 **本软件现在在 [GitHub](https://github.com/Paradox-Target/ParadoxArt) 开放源代码.**
 
+- feat: 支持可视化 `history\units` 下的文件, 并提供更直观的编辑体验, 可直接点击顶部栏的保存按钮写入文件中.
 - feat: 国策树截图导出功能新增配置页面.
 - feat: 现在国策树截图导出功能在计算图片总大小时仅计算可见国策.
 - fix: 现在在创建新国策树时会使用更高的优先级 (100 → 10000), 以防止游戏不使用编辑器创建的国策树.
 - fix: 罕见的资源泄漏
+- 保存文件时, 若 id 为空时自动生成一个 id
 
 ## English
 
 **This software is now open-sourced on [GitHub](https://github.com/Paradox-Target/ParadoxArt).**
 
+- feat: Support for visualizing files under `history\units` and providing a more intuitive editing experience, allowing direct saving to files by clicking the save button in the top bar.
 - feat: Added a configuration page for the national focus tree screenshot export feature.
 - feat: The national focus tree screenshot export feature now only calculates the total image size based on visible national focuses.
 - fix: The creation of new national focus trees now uses a higher priority (100 → 10000) to prevent the game from not using the editor-created national focus trees.
 - fix: Rare resource leak
+- When saving files, if the id is empty, an id will be automatically generated.
