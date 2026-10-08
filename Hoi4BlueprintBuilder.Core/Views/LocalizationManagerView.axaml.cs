@@ -61,11 +61,11 @@ public sealed partial class LocalizationManagerView : UserControl, ITabViewItem
                         };
 
                         // 绑定显示的文本
-                        textBlock.Bind(TextBlock.TextProperty, new Binding($"[{lang}]"));
+                        textBlock.Bind(TextBlock.TextProperty, new ReflectionBinding($"[{lang}]"));
                         // 绑定 ToolTip，显示 FilePath
                         textBlock.Bind(
                             Avalonia.Controls.ToolTip.TipProperty,
-                            new Binding(".")
+                            new ReflectionBinding(".")
                             {
                                 Converter = new FuncValueConverter<LocalizationRow, string?>(row =>
                                     row?.Languages.Find(l => l.Language == lang)?.FilePath
@@ -83,7 +83,7 @@ public sealed partial class LocalizationManagerView : UserControl, ITabViewItem
                         var textBox = new TextBox();
                         textBox.Bind(
                             TextBox.TextProperty,
-                            new Binding($"[{lang}]") { Mode = BindingMode.TwoWay }
+                            new ReflectionBinding($"[{lang}]") { Mode = BindingMode.TwoWay }
                         );
                         return textBox;
                     }
