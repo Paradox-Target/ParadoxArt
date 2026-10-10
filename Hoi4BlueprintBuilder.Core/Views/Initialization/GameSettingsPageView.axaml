@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Hoi4BlueprintBuilder.Core.Views.Initialization.GameSettingsPageView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,25 +10,58 @@
     d:DesignWidth="800"
     x:DataType="vms:GameSettingsPageViewModel"
     mc:Ignorable="d">
-    <Grid
-        VerticalAlignment="Center"
-        ColumnDefinitions="*,*,*"
-        RowDefinitions="*,*,*,*">
+    <OnPlatform>
+        <On Options="Windows, Linux">
+            <Grid
+                VerticalAlignment="Center"
+                ColumnDefinitions="*,*,*"
+                RowDefinitions="*,*,*,*">
 
-        <StackPanel
-            Grid.RowSpan="3"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <Image Classes="SettingsIconImage" Source="{StaticResource GameSettingsMainIcon}" />
-        </StackPanel>
+                <Border
+                    Grid.RowSpan="3"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <Image Classes="SettingsIconImage" Source="{StaticResource GameSettingsMainIcon}" />
+                </Border>
 
-        <StackPanel
-            Grid.Row="0"
-            Grid.RowSpan="3"
-            Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="20">
-            <StackPanel Margin="0,16">
+                <StackPanel
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Margin="20">
+                    <StackPanel Margin="0,16">
+                        <TextBlock Classes="SettingsTitleTextBlock" Text="{x:Static lang:LangResources.GameRootPath}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBox
+                                Classes="SettingsPathTextBox"
+                                IsReadOnly="True"
+                                Text="{Binding GamePath, Mode=OneWay}" />
+                            <Button
+                                Grid.Column="1"
+                                Classes="SettingsPickButton"
+                                Command="{Binding PickGamePathCommand}"
+                                Content="..." />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+
+                <Border
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Margin="0,28"
+                    HorizontalAlignment="Center">
+                    <Button
+                        HorizontalAlignment="Right"
+                        Classes="SettingsStepButton accent"
+                        Command="{Binding GoToNextPageCommand, Mode=Default}"
+                        Content="{x:Static lang:LangResources.Initialization_Next}" />
+                </Border>
+            </Grid>
+        </On>
+
+        <On Options="Android">
+            <StackPanel>
                 <TextBlock Classes="SettingsTitleTextBlock" Text="{x:Static lang:LangResources.GameRootPath}" />
                 <Grid ColumnDefinitions="*,Auto">
                     <TextBox
@@ -41,19 +74,12 @@
                         Command="{Binding PickGamePathCommand}"
                         Content="..." />
                 </Grid>
+                <Button
+                    HorizontalAlignment="Right"
+                    Classes="SettingsStepButton accent"
+                    Command="{Binding GoToNextPageCommand, Mode=Default}"
+                    Content="{x:Static lang:LangResources.Initialization_Next}" />
             </StackPanel>
-        </StackPanel>
-
-        <StackPanel
-            Grid.Row="3"
-            Grid.Column="2"
-            Margin="0,28"
-            HorizontalAlignment="Center">
-            <Button
-                HorizontalAlignment="Right"
-                Classes="SettingsStepButton accent"
-                Command="{Binding GoToNextPageCommand, Mode=Default}"
-                Content="{x:Static lang:LangResources.Initialization_Next}" />
-        </StackPanel>
-    </Grid>
+        </On>
+    </OnPlatform>
 </UserControl>

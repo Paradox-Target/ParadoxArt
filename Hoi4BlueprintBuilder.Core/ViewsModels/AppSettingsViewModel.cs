@@ -164,24 +164,24 @@ public sealed partial class AppSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task PickGameRootPath()
     {
-        using var storageFolder = await _fileService.OpenFolderAsync();
+        string? directoryPath = await _fileService.OpenFolderLocalPathAsync();
 
-        if (storageFolder is not null)
+        if (directoryPath is not null)
         {
-            bool isExist = await FileCheckHelper.IsValidGameRootDirectoryAsync(storageFolder);
+            bool isExist = FileCheckHelper.IsValidGameRootDirectory(directoryPath);
             if (!isExist)
             {
                 await _messageBoxService
                     .ShowErrorAsync(
                         string.Format(
                             LangResources.AppSettings_Hoi4ExeNotFound,
-                            FileCheckHelper.GameExeFileName
+                            string.Join(", ", FileCheckHelper.GameExeFileNames)
                         )
                     )
                     .ConfigureAwait(false);
                 return;
             }
-            GameRootFolderPath = storageFolder.TryGetLocalPath() ?? throw new InvalidOperationException();
+            GameRootFolderPath = directoryPath;
         }
     }
 

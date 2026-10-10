@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,24 +28,25 @@ public sealed partial class GameSettingsPageViewModel(
     [RelayCommand]
     private async Task PickGamePath()
     {
-        using var storageFolder = await fileService.OpenFolderAsync();
+        string? folderPath = await fileService.OpenFolderLocalPathAsync();
 
-        if (storageFolder is not null)
+        if (folderPath is not null)
         {
-            bool isExist = await FileCheckHelper.IsValidGameRootDirectoryAsync(storageFolder);
+            bool isExist = FileCheckHelper.IsValidGameRootDirectory(folderPath);
             if (!isExist)
             {
                 await messageBoxService
                     .ShowErrorAsync(
                         string.Format(
                             LangResources.AppSettings_Hoi4ExeNotFound,
-                            FileCheckHelper.GameExeFileName
+                            string.Join(", ", FileCheckHelper.GameExeFileNames)
                         )
                     )
                     .ConfigureAwait(false);
                 return;
             }
-            GamePath = storageFolder.TryGetLocalPath() ?? throw new InvalidOperationException();
+
+            GamePath = folderPath;
             settings.GameRootFolderPath = GamePath;
         }
     }

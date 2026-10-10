@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
-using Hoi4BlueprintBuilder.Core.Views;
-using JetBrains.Annotations;
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -10,7 +9,7 @@ public sealed class NotificationService
 {
     private WindowNotificationManager? _notificationManager;
 
-    [LocalizationRequired]
+    [JetBrains.Annotations.LocalizationRequired]
     public void Show(
         string message,
         string title = "",
@@ -20,7 +19,7 @@ public sealed class NotificationService
         _notificationManager?.Show(new Notification(title, message, notificationType));
     }
 
-    public void Initialize(MainWindow mainWindow)
+    public void Initialize(Window mainWindow)
     {
         Debug.Assert(_notificationManager is null);
 

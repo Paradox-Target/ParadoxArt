@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <!--If you are willing to use platform-specific APIs, use conditional compilation.
+        See https://docs.avaloniaui.net/docs/guides/platforms/platform-specific-code/dotnet for more details.-->
+        <Nullable>enable</Nullable>
+        <TargetFramework>net10.0-android</TargetFramework>
+        <SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
+        <ApplicationIcon>..\Hoi4BlueprintBuilder.Core\Assets\logo.ico</ApplicationIcon>
+        <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+<!--        <SelfContained>true</SelfContained>-->
+        <ApplicationId>com.paradoxtarget.art</ApplicationId>
+        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <AndroidPackageFormat>apk</AndroidPackageFormat>
+        <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+        <HotAvalonia>false</HotAvalonia>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia.Android" />
+      <!--<PackageReference Include="Avalonia.Maui" />-->
+      <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hoi4BlueprintBuilder.Core\Hoi4BlueprintBuilder.Core.csproj" />
+    </ItemGroup>
+
+</Project>

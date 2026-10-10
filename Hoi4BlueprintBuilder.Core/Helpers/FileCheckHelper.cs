@@ -1,26 +1,35 @@
 using System.Collections.Frozen;
 using Avalonia.Platform.Storage;
 using DotNet.Globbing;
+using Hoi4BlueprintBuilder.Core.Extensions;
 
 namespace Hoi4BlueprintBuilder.Core.Helpers;
 
 public static class FileCheckHelper
 {
-    public static string GameExeFileName => GetGameExeFileName();
+    /// <summary>
+    /// 获取当前平台配置的游戏可执行文件名称列表
+    /// </summary>
+    public static IReadOnlyCollection<string> GameExeFileNames => GetGameExeFileNames();
 
-    private static string GetGameExeFileName()
+    private static IReadOnlyCollection<string> GetGameExeFileNames()
     {
         if (OperatingSystem.IsWindows())
         {
-            return "hoi4.exe";
+            return ["hoi4.exe"];
         }
 
         if (OperatingSystem.IsLinux())
         {
-            return "hoi4";
+            return ["hoi4"];
         }
 
-        throw new PlatformNotSupportedException();
+        if (OperatingSystem.IsMobile)
+        {
+            return ["hoi4.exe", "hoi4"];
+        }
+
+        throw new PlatformNotSupportedException("当前平台不存在配置的游戏可执行文件名称");
     }
 
     private static readonly FrozenSet<string> TextExtensionNames = new HashSet<string>
@@ -63,11 +72,18 @@ public static class FileCheckHelper
         return OobUnitsGlob.IsMatch(filePath);
     }
 
-    public static async Task<bool> IsValidGameRootDirectoryAsync(IStorageFolder storageFolder)
+    public static bool IsValidGameRootDirectory(string directoryPath)
     {
-        string name = GameExeFileName;
-        using var file = await storageFolder.GetFileAsync(name).ConfigureAwait(false);
-        bool isExist = file is not null;
-        return isExist;
+        var names = GameExeFileNames;
+        foreach (string name in names)
+        {
+            bool isExist = File.Exists(Path.Combine(directoryPath, name));
+            if (isExist)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

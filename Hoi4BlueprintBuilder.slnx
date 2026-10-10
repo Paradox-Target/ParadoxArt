@@ -1,4 +1,4 @@
-﻿<Solution>
+<Solution>
   <Folder Name="/Solution Items/">
     <File Path=".csharpierrc" />
     <File Path=".editorconfig" />
@@ -18,6 +18,9 @@
   <Project Path="Hoi4BlueprintBuilder.Localization/Hoi4BlueprintBuilder.Localization.csproj" />
   <Project Path="Hoi4BlueprintBuilder.UnitTests/Hoi4BlueprintBuilder.UnitTests.csproj" />
   <Project Path="Hoi4BlueprintBuilder.Windows/Hoi4BlueprintBuilder.Windows.csproj" />
+  <Project Path="Hoi4BlueprintBuilder.Android/Hoi4BlueprintBuilder.Androi.csproj">
+    <Deploy />
+  </Project>
   <Project Path="Hoi4BlueprintBuilder.Benchmark/Hoi4BlueprintBuilder.Benchmark.csproj" />
   <Project Path="Hoi4BlueprintBuilder.Core/Hoi4BlueprintBuilder.Core.csproj" />
 </Solution>

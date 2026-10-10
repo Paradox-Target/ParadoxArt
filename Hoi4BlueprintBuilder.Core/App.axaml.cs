@@ -14,6 +14,8 @@ using Hoi4BlueprintBuilder.Core.Extensions;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Services;
 using Hoi4BlueprintBuilder.Core.Views;
+using Hoi4BlueprintBuilder.Core.Views.Android;
+using Hoi4BlueprintBuilder.Core.Views.Initialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using NLog;
@@ -32,7 +34,12 @@ public sealed class App : Application
     public static readonly string[] AppUpdateChannels = ["stable", "beta"];
 
     public static string AppFolder { get; } =
+#if ANDROID
+        Android.App.Application.Context.GetExternalFilesDir(null)?.AbsolutePath
+        ?? throw new InvalidOperationException("Failed to get external files directory");
+#else
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppName);
+#endif
 
     public const string ProjectConfigDirectoryName = ".paradoxart";
     public const string UpdatePackageDownloadUrl = "https://packages.paradoxtarget.top";
@@ -41,16 +48,15 @@ public sealed class App : Application
 
     private static string GetLogsFolder()
     {
-        if (OperatingSystem.IsMobile)
-        {
-            return Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                AppName,
-                "Logs"
-            );
-        }
-
+#if ANDROID
+        return Path.Combine(
+            Android.App.Application.Context.GetExternalFilesDir(null)?.AbsolutePath
+                ?? throw new InvalidOperationException("Failed to get external files directory"),
+            "Logs"
+        );
+#else
         return Path.Combine(Environment.CurrentDirectory, "Logs");
+#endif
     }
 
     public event Action<IServiceCollection>? ConfiguringServices;
@@ -141,7 +147,6 @@ public sealed class App : Application
         string? screenScaling = null;
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.ShutdownRequested += OnOSShutdownRequested;
             desktop.MainWindow = Services.GetRequiredService<MainWindow>();
             desktop.Exit += OnDesktopExit;
 
@@ -154,23 +159,12 @@ public sealed class App : Application
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = Services.GetRequiredService<MainWindow>();
+            singleViewPlatform.MainView = Services.GetRequiredService<MainAndroidView>();
         }
 
         Task.Run(() => telemetryService.TrackSystemEnvironment(rawCulture, screenSize, screenScaling));
 
         base.OnFrameworkInitializationCompleted();
-    }
-
-    private static void OnOSShutdownRequested(object? sender, ShutdownRequestedEventArgs e)
-    {
-        //TODO: FIX
-        // if (OperatingSystem.IsWindows())
-        // {
-        //     e.Cancel = true;
-        //     var service = Current.Services.GetRequiredService<IOperatingSystemService>();
-        //     service.ShutdownBlockReasonCreate("有工作正在进行中...");
-        // }
     }
 
     public void UpdateApplicationFont(string? fontName)

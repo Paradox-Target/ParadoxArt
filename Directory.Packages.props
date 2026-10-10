@@ -7,12 +7,14 @@
     <!-- Avalonia packages -->
     <!-- Important: keep version in sync! -->
     <PackageVersion Include="AsyncAwaitBestPractices" Version="10.0.0" />
-    <PackageVersion Include="Avalonia" Version="12.1.2" />
+    <PackageVersion Include="Avalonia" Version="12.1.4" />
+    <PackageVersion Include="Avalonia.Android" Version="12.1.4" />
     <PackageVersion Include="Avalonia.Controls.ItemsRepeater" Version="12.0.0" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.2" />
-    <PackageVersion Include="Avalonia.Desktop" Version="12.1.2" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.4" />
+    <PackageVersion Include="Avalonia.Desktop" Version="12.1.4" />
     <PackageVersion Include="Avalonia.Headless.NUnit" Version="12.1.2" />
-    <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.1.2" />
+    <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.1.4" />
+    <PackageVersion Include="Avalonia.Maui" Version="11.3.0" />
     <PackageVersion Include="AvaloniaEdit.TextMate" Version="12.0.0" />
     <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" />
     <PackageVersion Include="BCnEncoder.Net" Version="2.3.0" />
@@ -38,6 +40,7 @@
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="3.1.2" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
+    <PackageVersion Include="Microsoft.Maui.Essentials" Version="10.0.110" />
     <PackageVersion Include="NaturalSort.Extension" Version="4.4.1" />
     <PackageVersion Include="NLog" Version="6.2.1" />
     <PackageVersion Include="ParadoxPower" Version="0.13.1-beta" />
@@ -49,7 +52,8 @@
     <PackageVersion Include="SixLabors.ImageSharp" Version="4.1.2" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.34.0.3385" />
     <PackageVersion Include="UTF.Unknown" Version="2.7.0" />
-    <PackageVersion Include="Velopack" Version="1.2.158" />
+    <PackageVersion Include="Velopack" Version="1.2.161" />
+    <PackageVersion Include="Xamarin.AndroidX.Core.SplashScreen" Version="1.0.1.15" />
     <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.7" />
     <PackageVersion Include="ZLinq" Version="1.5.6" />
     <PackageVersion Include="Ardalis.SmartEnum" Version="8.2.0" />
