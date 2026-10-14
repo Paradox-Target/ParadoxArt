@@ -54,7 +54,6 @@
         <PackageReference Include="Microsoft.ApplicationInsights" />
         <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-        <PackageReference Include="Microsoft.Maui.Essentials" />
         <PackageReference Include="NaturalSort.Extension" />
         <PackageReference Include="NLog" />
         <PackageReference Include="ParadoxPower.ZLinq" />

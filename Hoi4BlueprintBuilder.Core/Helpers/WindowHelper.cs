@@ -1,4 +1,4 @@
-﻿using Avalonia.Controls;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 
 namespace Hoi4BlueprintBuilder.Core.Helpers;
@@ -9,9 +9,17 @@ public static class WindowHelper
     {
         return lifetime switch
         {
-            null => null,
             IClassicDesktopStyleApplicationLifetime desktopLifetime => desktopLifetime.MainWindow,
-            ISingleViewApplicationLifetime singleViewLifetime => singleViewLifetime.MainView as Window,
+            _ => null
+        };
+    }
+
+    public static TopLevel? TryGetTopLevel()
+    {
+        return App.Current.ApplicationLifetime switch
+        {
+            IClassicDesktopStyleApplicationLifetime desktop => desktop.MainWindow,
+            ISingleViewApplicationLifetime single => TopLevel.GetTopLevel(single.MainView),
             _ => null
         };
     }

@@ -8,7 +8,6 @@ using Hoi4BlueprintBuilder.Core.Views.Android;
 using Hoi4BlueprintBuilder.Localization.Strings;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Maui.ApplicationModel;
 using Microsoft.VisualBasic.FileIO;
 using NLog;
 

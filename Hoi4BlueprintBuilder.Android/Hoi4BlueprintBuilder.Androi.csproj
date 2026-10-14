@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -18,10 +18,19 @@
         <HotAvalonia>false</HotAvalonia>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <!-- 内嵌程序集的完整 APK 部署：
+             1. 消除 FastDev 增量部署产生的大量 "failed to load bundled assembly" 警告；
+             2. 避免 VS 向 fastdev 目录注入设计器/热重载支持程序集（会引发 MessagePipe 扫描崩溃）；
+             3. 启动时无需逐个从磁盘加载程序集，冷启动明显加快。 -->
+        <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="Avalonia.Android" />
-      <!--<PackageReference Include="Avalonia.Maui" />-->
+      <PackageReference Include="Xamarin.AndroidX.Core.Core.Ktx" />
       <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" />
+      <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True" />
     </ItemGroup>
 
     <ItemGroup>

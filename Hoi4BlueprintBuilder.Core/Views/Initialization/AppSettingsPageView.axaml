@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="Hoi4BlueprintBuilder.Core.Views.Initialization.AppSettingsPageView"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -72,7 +72,7 @@
                 HorizontalAlignment="Right"
                 Classes="SettingsStepButton accent"
                 Click="Next_OnClick"
-                Content="完成" />
+                Content="{x:Static lang:LangResources.Common_Ok}" />
         </StackPanel>
     </Grid>
 </UserControl>
