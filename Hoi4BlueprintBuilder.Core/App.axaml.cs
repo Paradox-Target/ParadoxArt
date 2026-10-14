@@ -96,7 +96,14 @@ public sealed class App : Application
             return ProjectConfigService.Load(settings);
         });
         _serviceCollection.AddParadoxArtCore();
-        _serviceCollection.AddMessagePipe();
+        _serviceCollection.AddMessagePipe(options =>
+        {
+            // 限定自动注册只扫描自身程序集。
+            // 默认会全量扫描 AppDomain 中所有程序集，VS 注入的损坏程序集（如热重载支持 DLL）
+            // 会导致 GetTypes 抛出 ReflectionTypeLoadException 使启动崩溃。
+            // 新增 IRequestHandler/IAsyncRequestHandler 实现时需保证其位于本程序集。
+            options.SetAutoRegistrationSearchAssemblies(typeof(App).Assembly);
+        });
         // 设计模式下 ApplicationLifetime 为 null
         if (!Design.IsDesignMode)
         {
