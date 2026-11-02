@@ -7,10 +7,10 @@
 
 **2. 许可的授予**
 2.1. 许可授予。许可方特此授予您一项有限加、非排他性的、不可转让的许可，允许您在一台您拥有或控制的计算机设备上安装和使用本应用，且仅供您个人使用或内部业务运营使用。
-2.2. 范围。本应用旨在协助用户制作、编辑和管理《钢铁雄心 IV》相关的游戏文件，特别是国策树文件。本许可不授予您对本应用任何源代码的权利。
+2.2. 范围。本应用旨在协助用户制作、编辑和管理《钢铁雄心 IV》相关的游戏文件，特别是国策树文件。
 
 **3. 限制与禁止行为**
-您不得且同意不执行以下操作：复制或分发本应用；修改、改编、翻译或创作本应用的衍生作品；对本应用进行反向工程、反向编译或反向汇编；出租、租赁、出借、出售、再许可或分发本应用；规避或禁用本应用中包含的任何技术保护措施；将本应用用于任何非法目的。
+您不得且同意不进行以下操作：将本应用用于任何非法目的。
 
 **4. 知识产权**
 本应用及其所有副本（包括但不限于所有版权、商标、商业秘密和其他知识产权）均由许可方拥有并保留所有权利。本 EULA 仅授予您使用本应用的有限许可，并未向您转让本应用的任何所有权。
@@ -45,10 +45,10 @@
 
 **2. 授權的授予**
 2.1. 授權授予。授權方特此授予您一項有限的、非排他性的、不可轉讓的授權，允許您在一台您擁有或控制的電腦設備上安裝和使用本應用程式，且僅供您個人使用或內部業務營運使用。
-2.2. 範圍。本應用程式旨在協助用戶製作、編輯和管理《鋼鐵雄心 IV》相關的檔案，特別是國策樹檔案。本授權不授予您對本應用程式任何原始碼的權利。
+2.2. 範圍。本應用程式旨在協助用戶製作、編輯和管理《鋼鐵雄心 IV》相關的檔案，特別是國策樹檔案。
 
 **3. 限制與禁止行為**
-您不得且同意不執行以下操作：複製或分發本應用程式；修改、改編、翻譯或創作本應用程式的衍生作品；對本應用程式進行反向工程、反向編譯或反向彙編；出租、租賃、出借、出售、再授權或分發本應用程式；規避或禁用本應用程式中包含的任何技術保護措施；將本應用程式用於任何非法目的。
+您不得且同意不執行以下操作：將本應用程式用於任何非法目的。
 
 **4. 智慧財產權**
 本應用程式及其所有副本（包括但不限於所有版權、商標、商業機密和其他智慧財產權）均由授權方擁有並保留所有權利。本 EULA 僅授予您使用本應用程式的有限授權，並未向您轉讓本應用程式的任何所有權。
@@ -83,10 +83,10 @@ This End-User License Agreement ("EULA") is a legally binding agreement between 
 
 **2. GRANT OF LICENSE**
 2.1. License Grant. The Licensor hereby grants you a limited, non-exclusive, non-transferable license to install and use the Application on one computer device owned or controlled by you, solely for your personal use or internal business operations.
-2.2. Scope. The Application is designed to assist users in creating, editing, and managing Hearts of Iron IV-related game files, specifically national focus tree files. This license does not grant you any rights to the Application's source code.
+2.2. Scope. The Application is designed to assist users in creating, editing, and managing Hearts of Iron IV-related game files, specifically national focus tree files.
 
 **3. RESTRICTIONS AND PROHIBITED ACTS**
-You agree not to: copy or distribute the Application; modify, adapt, translate, or create derivative works of the Application; reverse engineer, decompile, or disassemble the Application; rent, lease, lend, sell, sublicense, or distribute the Application; circumvent any technical protection measures; or use the Application for any unlawful purpose.
+You agree not to: Use the Application for any unlawful purpose.
 
 **4. INTELLECTUAL PROPERTY**
 The Application and all copies thereof are owned by the Licensor, which reserves all rights therein. This EULA only grants you a limited license and does not transfer any ownership of the Application to you.
