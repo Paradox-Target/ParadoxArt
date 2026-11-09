@@ -1,6 +1,5 @@
 ﻿using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using CsvHelper;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
@@ -24,7 +23,7 @@ public sealed class ModiferLocalizationFormatService
 
     public ModiferLocalizationFormatService(TextReader reader)
     {
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        using var csv = CsvReader.Create(reader);
         var formatMap = new Dictionary<string, string>(8);
         foreach (var record in csv.GetRecords<ModifierLocalizationFormatInfo>())
         {

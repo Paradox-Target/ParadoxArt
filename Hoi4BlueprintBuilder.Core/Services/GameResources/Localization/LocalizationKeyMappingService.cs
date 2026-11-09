@@ -1,6 +1,5 @@
 using System.Collections.Frozen;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using CsvHelper;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using Hoi4BlueprintBuilder.Core.Models;
@@ -31,7 +30,7 @@ public sealed class LocalizationKeyMappingService
         // TODO: 使用二进制? 因为内嵌了.
 
         var localisationKeyMapping = new Dictionary<string, string>(16);
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        using var csv = CsvReader.Create(reader);
         foreach (var info in csv.GetRecords<LocalizationKeyMappingInfo>())
         {
             if (string.IsNullOrWhiteSpace(info.RawKey) || string.IsNullOrWhiteSpace(info.MappingKey))
