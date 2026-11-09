@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Platform.Storage;
 using AvaloniaEdit.Utils;
 using Hoi4BlueprintBuilder.Core.Constants;
@@ -11,20 +11,15 @@ namespace Hoi4BlueprintBuilder.Core.Helpers;
 
 public static class ModHelper
 {
-    public static async Task<string?> GetModNameAsync(IStorageFolder modRootDirectory)
+    public static async Task<string?> GetModNameAsync(string modRootDirectory)
     {
-        var modStorageFile = await modRootDirectory.GetFileAsync(GameConstants.ModDescriptorFileName);
-        if (modStorageFile is null)
+        string modFile = Path.Combine(modRootDirectory, GameConstants.ModDescriptorFileName);
+        if (!File.Exists(modFile))
         {
             return null;
         }
 
-        await using var reader = await modStorageFile.OpenReadAsync();
-        string? content = FileReader.ReadFileContent(reader, Encoding.UTF8);
-        if (content is null)
-        {
-            return null;
-        }
+        string content = await File.ReadAllTextAsync(modFile, App.Utf8EncodingWithoutBom).ConfigureAwait(false);
 
         if (!TextParser.TryParse(string.Empty, content, out var rootNode, out _))
         {
