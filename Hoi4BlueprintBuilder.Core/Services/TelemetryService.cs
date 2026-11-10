@@ -1,11 +1,13 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Globalization;
 using ByteSizeLib;
-using Hardware.Info;
 using Hoi4BlueprintBuilder.Core.Extensions;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using ZLinq;
+#if !ANDROID
+using Hardware.Info;
+#endif
 
 namespace Hoi4BlueprintBuilder.Core.Services;
 
@@ -111,11 +113,18 @@ public sealed class TelemetryService : IDisposable
             return "Linux";
         }
 
+        if (OperatingSystem.IsAndroid())
+        {
+            return "Android";
+        }
+
         return "Unknown";
     }
 
     private void TrackHardwareInfo(string? screenSize, string? screenScaling)
     {
+        // TODO: 支持 Android 平台的硬件信息收集
+#if !ANDROID
         // 我们只在第一次运行时记录硬件信息
         if (OperatingSystem.IsMobile || !_settingsService.IsFirstRun)
         {
@@ -159,6 +168,7 @@ public sealed class TelemetryService : IDisposable
         {
             // 忽略
         }
+#endif
     }
 
     public void TrackAppMemoryUsage()

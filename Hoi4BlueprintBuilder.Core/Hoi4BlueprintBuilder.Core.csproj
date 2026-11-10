@@ -3,7 +3,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFrameworks>net10.0;net10.0-android</TargetFrameworks>
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
         <AssemblyName>ParadoxArt.Core</AssemblyName>
         <Version>0.25.0</Version>
@@ -12,6 +12,12 @@
 
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Remove="Android.App" />
+        <Using Remove="Android.Widget" />
+        <Using Remove="Android.OS.Bundle" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,7 +42,7 @@
         <PackageReference Include="DotNet.Glob" />
         <PackageReference Include="DynamicData" />
         <PackageReference Include="FluentAvaloniaUI" />
-        <PackageReference Include="Hardware.Info" />
+        <PackageReference Include="Hardware.Info" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'android'" />
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="LiveMarkdown.Avalonia" />
         <PackageReference Include="MessageBox.Avalonia" />

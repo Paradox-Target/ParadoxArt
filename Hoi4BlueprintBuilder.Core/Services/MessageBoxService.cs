@@ -3,6 +3,7 @@ using Avalonia.Threading;
 using Hoi4BlueprintBuilder.Core.Helpers;
 using JetBrains.Annotations;
 using MsBox.Avalonia;
+using MsBox.Avalonia.Dto;
 using MsBox.Avalonia.Enums;
 
 namespace Hoi4BlueprintBuilder.Core.Services;

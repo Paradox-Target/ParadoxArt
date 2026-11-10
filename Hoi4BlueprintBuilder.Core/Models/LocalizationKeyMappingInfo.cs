@@ -1,10 +1,11 @@
-﻿using CsvHelper.Configuration.Attributes;
+﻿using CsvHelper;
 
 namespace Hoi4BlueprintBuilder.Core.Models;
 
-public sealed class LocalizationKeyMappingInfo(
-    [Name("Raw Key")] string rawKey,
-    [Name("Mapping Key")] string mappingKey
+[CsvRecord]
+public sealed partial class LocalizationKeyMappingInfo(
+    [CsvColumn("Raw Key")] string rawKey,
+    [CsvColumn("Mapping Key")] string mappingKey
 )
 {
     public string RawKey { get; } = rawKey;

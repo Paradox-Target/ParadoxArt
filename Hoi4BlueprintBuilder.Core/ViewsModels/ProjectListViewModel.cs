@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Avalonia.Input;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -160,15 +160,15 @@ public sealed partial class ProjectListViewModel : ObservableObject
     [RelayCommand]
     private async Task OpenProject()
     {
-        using var storageFolder = await _fileService.OpenFolderAsync(
+        string? modRootPath = await _fileService.OpenFolderLocalPathAsync(
             LangResources.ProjectList_SelectModRootFolder
         );
-        if (storageFolder is null)
+        if (modRootPath is null)
         {
             return;
         }
 
-        string? modName = await ModHelper.GetModNameAsync(storageFolder);
+        string? modName = await ModHelper.GetModNameAsync(modRootPath);
 
         if (modName is null)
         {
@@ -182,11 +182,10 @@ public sealed partial class ProjectListViewModel : ObservableObject
             return;
         }
 
-        string modPath = storageFolder.TryGetLocalPath() ?? throw new ArgumentException();
-        _settingsService.Projects.Insert(0, new ProjectItem(modName, modPath));
+        _settingsService.Projects.Insert(0, new ProjectItem(modName, modRootPath));
 
         NavigateToMainView(
-            modPath,
+            modRootPath,
             () =>
             {
                 var service = App.Current.Services.GetRequiredService<GameModDescriptorService>();

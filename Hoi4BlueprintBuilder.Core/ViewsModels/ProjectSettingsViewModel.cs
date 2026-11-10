@@ -1,4 +1,4 @@
-﻿using Avalonia.Collections;
+using Avalonia.Collections;
 using Avalonia.Platform.Storage;
 using ByteSizeLib;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -96,22 +96,25 @@ public sealed partial class ProjectSettingsViewModel : ObservableObject
     [RelayCommand]
     private async Task PickDependencyModDirectory()
     {
-        using var storageFolder = await _fileService.OpenFolderAsync(
+        string? rootDirectory = await _fileService.OpenFolderLocalPathAsync(
             LangResources.ProjectSettings_SelectDependencyModFolder
         );
-        if (storageFolder is null)
+        if (rootDirectory is null)
         {
             return;
         }
 
-        string rootDir = storageFolder.TryGetLocalPath() ?? throw new InvalidOperationException();
-        if (DependenciesPath.AsValueEnumerable().Any(path => path.Equals(rootDir, PlatformHelper.Comparison)))
+        if (
+            DependenciesPath
+                .AsValueEnumerable()
+                .Any(path => path.Equals(rootDirectory, PlatformHelper.Comparison))
+        )
         {
             return;
         }
 
-        string? modName = await ModHelper.GetModNameAsync(storageFolder);
-        _projectConfigService.Dependencies.Add(new DependencyModInfo(modName ?? "Unknown", rootDir));
-        DependenciesPath.Add(rootDir);
+        string? modName = await ModHelper.GetModNameAsync(rootDirectory);
+        _projectConfigService.Dependencies.Add(new DependencyModInfo(modName ?? "Unknown", rootDirectory));
+        DependenciesPath.Add(rootDirectory);
     }
 }

@@ -171,32 +171,32 @@
   <data name="DeleteFile_EnsureFile" xml:space="preserve">
     <value>确认删除 '{0}' 吗？</value>
   </data>
-  <data name="Common_Ok" xml:space="preserve">
-    <value>确定</value>
-  </data>
-  <data name="Common_Rename" xml:space="preserve">
-    <value>重命名</value>
-  </data>
-  <data name="Common_Cancel" xml:space="preserve">
-    <value>取消</value>
+  <data name="DeleteFile_EnsureFolder" xml:space="preserve">
+    <value>确认删除 '{0}' 及其内容吗？</value>
   </data>
   <data name="DeleteFile_CanFindBack" xml:space="preserve">
     <value>您可以从回收站还原此文件</value>
   </data>
-  <data name="DeleteFile_EnsureFolder" xml:space="preserve">
-    <value>确认删除 '{0}' 及其内容吗？</value>
+  <data name="Common_Rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="Common_Ok" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>取消</value>
   </data>
   <data name="DeleteFile_Failed" xml:space="preserve">
     <value>删除失败，原因：</value>
+  </data>
+  <data name="RenameFile_InvalidFileOrFolderName" xml:space="preserve">
+    <value>无效的文件或文件夹名称</value>
   </data>
   <data name="RenameFile_NameContainInvalidChar" xml:space="preserve">
     <value>文件或文件夹名称包含非法字符</value>
   </data>
   <data name="File_NameAlreadyExists" xml:space="preserve">
     <value>此位置已存在同名文件或文件夹 {0}, 请重新命名</value>
-  </data>
-  <data name="RenameFile_InvalidFileOrFolderName" xml:space="preserve">
-    <value>无效的文件或文件夹名称</value>
   </data>
   <data name="Menu_CopyRelativePath" xml:space="preserve">
     <value>复制相对路径</value>
@@ -309,6 +309,9 @@ SpriteName: {1}</value>
   <data name="Common_ConfirmDelete" xml:space="preserve">
     <value>确认删除</value>
   </data>
+  <data name="InvalidGamePath" xml:space="preserve">
+    <value>游戏文件夹路径无效，请重新设置</value>
+  </data>
   <data name="GameRootPath" xml:space="preserve">
     <value>游戏根目录</value>
   </data>
@@ -369,9 +372,6 @@ SpriteName: {1}</value>
   <data name="Settings_ContactUs" xml:space="preserve">
     <value>联系我们</value>
   </data>
-  <data name="InvalidGamePath" xml:space="preserve">
-    <value>游戏文件夹路径无效，请重新设置</value>
-  </data>
   <data name="Initialization_Next" xml:space="preserve">
     <value>下一步</value>
   </data>
@@ -420,9 +420,14 @@ SpriteName: {1}</value>
   <data name="Settings_GridWidth" xml:space="preserve">
     <value>网格宽度</value>
   </data>
-<data name="Setting" xml:space="preserve"><value>设置</value></data>
+  <data name="Setting" xml:space="preserve">
+    <value>设置</value>
+  </data>
   <data name="LocalizationManager_Title" xml:space="preserve">
     <value>本地化管理器</value>
+  </data>
+  <data name="LocalizationManager_ToolTip" xml:space="preserve">
+    <value>管理此模组的所有本地化</value>
   </data>
   <data name="NotSupportInfoControl_Title" xml:space="preserve">
     <value>暂不支持该文件类型</value>
@@ -643,9 +648,6 @@ SpriteName: {1}</value>
   <data name="FocusInfoCard_PrerequisitesTip" xml:space="preserve">
     <value>前置条件组 (任意达成)</value>
   </data>
-  <data name="LocalizationManager_ToolTip" xml:space="preserve">
-    <value>管理此模组的所有本地化</value>
-  </data>
   <data name="Common_Create" xml:space="preserve">
     <value>创建</value>
   </data>
@@ -792,5 +794,8 @@ SpriteName: {1}</value>
   </data>
   <data name="Common_ValueIsRequired" xml:space="preserve">
     <value>不可为空</value>
+  </data>
+  <data name="GetBookmarkFailed" xml:space="preserve">
+    <value>尝试保存路径失败</value>
   </data>
 </root>

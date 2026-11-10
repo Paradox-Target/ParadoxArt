@@ -10,7 +10,7 @@ namespace Hoi4BlueprintBuilder.Core.ViewsModels;
 public sealed partial class MainWindowViewModel : ObservableObject
 {
     private readonly NavigationService _navigationService;
-
+        
     [ObservableProperty]
     public partial object? CurrentView { get; set; }
 

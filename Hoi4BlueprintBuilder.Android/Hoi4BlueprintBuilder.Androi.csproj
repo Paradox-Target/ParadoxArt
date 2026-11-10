@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <!--If you are willing to use platform-specific APIs, use conditional compilation.
+        See https://docs.avaloniaui.net/docs/guides/platforms/platform-specific-code/dotnet for more details.-->
+        <Nullable>enable</Nullable>
+        <TargetFramework>net10.0-android</TargetFramework>
+        <SupportedOSPlatformVersion>23</SupportedOSPlatformVersion>
+        <ApplicationIcon>..\Hoi4BlueprintBuilder.Core\Assets\logo.ico</ApplicationIcon>
+        <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+<!--        <SelfContained>true</SelfContained>-->
+        <ApplicationId>com.paradoxtarget.art</ApplicationId>
+        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <AndroidPackageFormat>apk</AndroidPackageFormat>
+        <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+        <HotAvalonia>false</HotAvalonia>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <!-- 内嵌程序集的完整 APK 部署：
+             1. 消除 FastDev 增量部署产生的大量 "failed to load bundled assembly" 警告；
+             2. 避免 VS 向 fastdev 目录注入设计器/热重载支持程序集（会引发 MessagePipe 扫描崩溃）；
+             3. 启动时无需逐个从磁盘加载程序集，冷启动明显加快。 -->
+        <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia.Android" />
+      <PackageReference Include="Xamarin.AndroidX.Core.Core.Ktx" />
+      <PackageReference Include="Xamarin.AndroidX.Core.SplashScreen" />
+      <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Hoi4BlueprintBuilder.Core\Hoi4BlueprintBuilder.Core.csproj" />
+    </ItemGroup>
+
+</Project>
